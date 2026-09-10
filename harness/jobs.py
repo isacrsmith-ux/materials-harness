@@ -24,6 +24,28 @@ def relax_job(job: dict) -> dict:
     }
 
 
+def eos_job(job: dict) -> dict:
+    """Energy-volume points: isotropically scale job['structure'] by job['volume_factors'] and relax
+    shape + positions at constant volume at each point. Failed points are reported, not raised."""
+    from harness import engine
+
+    s0 = job["structure"]
+    points = []
+    for f in job["volume_factors"]:
+        s = s0.copy()
+        s.scale_lattice(s0.volume * f)
+        try:
+            r = engine.relax(s, DEFAULT_RELAX, job["device"], job["dtype"], relax_cell=True, constant_volume=True)
+            points.append({"factor": float(f), "volume_per_atom": r.structure.volume / len(r.structure),
+                           "energy_per_atom": r.energy_per_atom, "converged": r.converged, "n_steps": r.n_steps,
+                           "min_distance_ratio": r.min_distance_ratio, "wall_time_s": r.wall_time_s})
+        except engine.RelaxTimeout as exc:
+            points.append({"factor": float(f), "error": f"timeout: {exc}"})
+    return {"points": points,
+            "metadata": engine.engine_metadata(job["device"], job["dtype"], DEFAULT_RELAX)
+            | {"calculation": "EOS", "constant_volume": True, "volume_factors": [float(x) for x in job["volume_factors"]]}}
+
+
 def static_job(job: dict) -> dict:
     """Single-point energy of job['structure'] (no relaxation)."""
     from harness import engine

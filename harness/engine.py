@@ -30,6 +30,14 @@ class RelaxTimeout(Exception):
     pass
 
 
+def stress_residual(stress_voigt, constant_volume: bool = False) -> float:
+    """max |stress| (eV/Å^3); at constant volume only the deviatoric part (hydrostatic removed)."""
+    s = np.asarray(stress_voigt, dtype=float).copy()
+    if constant_volume:
+        s[:3] -= s[:3].mean()
+    return float(np.abs(s).max())
+
+
 def get_calculator(device: str = "cpu", dtype: str = "float64"):
     key = (device, dtype)
     if key not in _CALCS:
@@ -127,14 +135,19 @@ def relax(
     device: str = "cpu",
     dtype: str = "float64",
     relax_cell: bool = True,
+    constant_volume: bool = False,
 ) -> RelaxResult:
-    """Relax positions (and cell) with FrechetCellFilter + BFGS. Raises RelaxTimeout."""
+    """Relax positions (and cell) with FrechetCellFilter + BFGS. Raises RelaxTimeout.
+
+    constant_volume=True relaxes cell shape at fixed volume (equation-of-state points); the stress
+    criterion then applies to the deviatoric stress only, since the hydrostatic part is the point.
+    """
     from ase.filters import FrechetCellFilter
     from ase.optimize import BFGS
 
     atoms = _to_atoms(structure)
     atoms.calc = get_calculator(device, dtype)
-    target = FrechetCellFilter(atoms) if relax_cell else atoms
+    target = FrechetCellFilter(atoms, constant_volume=constant_volume) if relax_cell else atoms
     opt = BFGS(target, logfile=None)
     stress_limit = settings.max_stress_gpa / EV_PER_A3_TO_GPA
     filter_fmax = settings.fmax
@@ -143,7 +156,7 @@ def relax(
         while (remaining := settings.max_steps - opt.get_number_of_steps()) > 0:
             opt.run(fmax=filter_fmax, steps=remaining)
             forces_ok = np.linalg.norm(atoms.get_forces(), axis=1).max() <= settings.fmax
-            stress_ok = not relax_cell or np.abs(atoms.get_stress(voigt=True)).max() <= stress_limit
+            stress_ok = not relax_cell or stress_residual(atoms.get_stress(voigt=True), constant_volume) <= stress_limit
             if (forces_ok and stress_ok) or filter_fmax < 1e-5:
                 break
             # The filter scales stress by V/N; tighten its criterion (same BFGS, Hessian kept)
@@ -159,7 +172,8 @@ def relax(
     final = _to_structure(atoms)
     mdr = min_distance_ratio(final)
     # An unphysical geometry (collapsed atoms) is never reported as a converged result.
-    converged = (fmax_final <= settings.fmax and (not relax_cell or float(np.abs(stress).max()) <= stress_limit)
+    converged = (fmax_final <= settings.fmax
+                 and (not relax_cell or stress_residual(stress, constant_volume) <= stress_limit)
                  and mdr >= UNPHYSICAL_DISTANCE_RATIO)
     return RelaxResult(
         structure=final,
@@ -170,7 +184,7 @@ def relax(
         fmax_final=fmax_final,
         max_stress_gpa=float(np.abs(stress).max() * EV_PER_A3_TO_GPA),
         wall_time_s=wall,
-        metadata=engine_metadata(device, dtype, settings) | {"relax_cell": relax_cell},
+        metadata=engine_metadata(device, dtype, settings) | {"relax_cell": relax_cell, "constant_volume": constant_volume},
     )
 
 

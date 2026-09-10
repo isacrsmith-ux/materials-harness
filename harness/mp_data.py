@@ -255,12 +255,18 @@ def entries_in_chemsys(chemsys: str) -> list:
 
 
 def elasticity(material_id: str) -> dict | None:
+    """MP elasticity summary (GPa). The elasticity doc does not state the functional; recorded as such."""
+
     def fetch():
         with _rester() as mpr:
             docs = mpr.materials.elasticity.search(material_ids=[material_id])
         if not docs:
             return None
-        d = docs[0].model_dump()
-        return {k: d.get(k) for k in ("material_id", "bulk_modulus", "shear_modulus", "state", "warnings")}
+        d = docs[0].model_dump(mode="json")
+        keep = ("material_id", "bulk_modulus", "shear_modulus", "state", "warnings", "fitting_method", "order",
+                "last_updated", "deprecated")
+        out = {k: d.get(k) for k in keep}
+        out["database_version"] = (d.get("builder_meta") or {}).get("database_version")
+        return out
 
-    return cached("elasticity", {"material_id": material_id}, fetch)
+    return cached("elasticity", {"material_id": material_id, "fields": "v2"}, fetch)
