@@ -1,0 +1,166 @@
+"""The simulation engine under test: MACE-MP-0 + ASE relaxations.
+
+One calculator per (device, dtype) per process. mace_mp() sets torch's global default
+dtype, so never mix float32 and float64 engines in the same process — the benchmark and
+the process pool each use fresh spawned workers for that reason.
+"""
+
+from __future__ import annotations
+
+import contextlib
+import os
+import signal
+import threading
+import time
+import warnings
+from dataclasses import dataclass, field
+from importlib.metadata import version
+
+import numpy as np
+from pymatgen.core import Structure
+
+from harness import config
+from harness.config import RelaxSettings
+
+_CALCS: dict[tuple[str, str], object] = {}
+
+
+class RelaxTimeout(Exception):
+    pass
+
+
+def get_calculator(device: str = "cpu", dtype: str = "float64"):
+    key = (device, dtype)
+    if key not in _CALCS:
+        if device == "mps":
+            os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
+        if device == "mps" and dtype == "float64":
+            raise ValueError("PyTorch MPS does not support float64.")
+        from mace.calculators import mace_mp
+
+        # The checkpoint is stored in float64, and torch.load(map_location="mps") fails on
+        # float64 tensors — so for MPS, load + downcast on CPU, then move to the GPU.
+        load_device = "cpu" if device == "mps" else device
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            with contextlib.redirect_stdout(open(os.devnull, "w")):
+                calc = mace_mp(model=str(config.model_path()), device=load_device, default_dtype=dtype)
+        if device == "mps":
+            import torch
+
+            calc.models = [m.to("mps") for m in calc.models]
+            calc.device = torch.device("mps")
+        _CALCS[key] = calc
+    return _CALCS[key]
+
+
+def engine_metadata(device: str, dtype: str, settings: RelaxSettings | None = None) -> dict:
+    """Everything needed to reproduce a simulated value. Stored with every result row."""
+    meta = {
+        "model_name": config.MODEL["name"],
+        "model_file": config.MODEL["file"],
+        "model_sha256": config.MODEL["sha256"],
+        "mace_torch_version": version("mace-torch"),
+        "torch_version": version("torch"),
+        "ase_version": version("ase"),
+        "device": device,
+        "dtype": dtype,
+    }
+    if settings is not None:
+        meta["relax"] = settings.as_dict()
+    return meta
+
+
+@contextlib.contextmanager
+def wall_clock_limit(seconds: float | None):
+    """Raise RelaxTimeout after `seconds` (SIGALRM; only possible on the main thread)."""
+    if not seconds or threading.current_thread() is not threading.main_thread():
+        yield
+        return
+
+    def _handler(signum, frame):
+        raise RelaxTimeout(f"exceeded {seconds:.0f} s wall-clock limit")
+
+    previous = signal.signal(signal.SIGALRM, _handler)
+    signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
+
+
+@dataclass
+class RelaxResult:
+    structure: Structure
+    energy_per_atom: float  # eV/atom, raw MACE (MP-compatible PBE/PBE+U reference, uncorrected)
+    converged: bool
+    n_steps: int
+    fmax_final: float  # eV/Å, max atomic force
+    max_stress_gpa: float
+    wall_time_s: float
+    metadata: dict = field(default_factory=dict)
+
+    @property
+    def time_per_step_s(self) -> float:
+        return self.wall_time_s / max(self.n_steps, 1)
+
+
+def _to_atoms(structure: Structure):
+    from pymatgen.io.ase import AseAtomsAdaptor
+
+    s = structure.copy()
+    s.remove_site_property("magmom") if "magmom" in s.site_properties else None
+    return AseAtomsAdaptor.get_atoms(s)
+
+
+def _to_structure(atoms) -> Structure:
+    return Structure(atoms.cell.array.copy(), atoms.get_chemical_symbols(), atoms.positions.copy(),
+                     coords_are_cartesian=True)
+
+
+def relax(
+    structure: Structure,
+    settings: RelaxSettings = config.DEFAULT_RELAX,
+    device: str = "cpu",
+    dtype: str = "float64",
+    relax_cell: bool = True,
+) -> RelaxResult:
+    """Relax positions (and cell) with FrechetCellFilter + BFGS. Raises RelaxTimeout."""
+    from ase.filters import FrechetCellFilter
+    from ase.optimize import BFGS
+
+    atoms = _to_atoms(structure)
+    atoms.calc = get_calculator(device, dtype)
+    target = FrechetCellFilter(atoms) if relax_cell else atoms
+    opt = BFGS(target, logfile=None)
+    t0 = time.perf_counter()
+    with wall_clock_limit(settings.timeout_s):
+        converged = bool(opt.run(fmax=settings.fmax, steps=settings.max_steps))
+    wall = time.perf_counter() - t0
+
+    forces = atoms.get_forces()
+    stress = atoms.get_stress(voigt=True)  # eV/Å^3
+    return RelaxResult(
+        structure=_to_structure(atoms),
+        energy_per_atom=float(atoms.get_potential_energy() / len(atoms)),
+        converged=converged,
+        n_steps=int(opt.get_number_of_steps()),
+        fmax_final=float(np.linalg.norm(forces, axis=1).max()),
+        max_stress_gpa=float(np.abs(stress).max() * 160.21766208),
+        wall_time_s=wall,
+        metadata=engine_metadata(device, dtype, settings) | {"relax_cell": relax_cell},
+    )
+
+
+def single_point(structure: Structure, device: str = "cpu", dtype: str = "float64") -> dict:
+    """Energy (eV/atom), forces (eV/Å), stress (eV/Å^3) for a fixed structure."""
+    atoms = _to_atoms(structure)
+    calc = get_calculator(device, dtype)
+    calc.reset()  # ASE caches results for identical positions; always compute fresh
+    atoms.calc = calc
+    return {
+        "energy_per_atom": float(atoms.get_potential_energy() / len(atoms)),
+        "forces": atoms.get_forces().copy(),
+        "stress": atoms.get_stress(voigt=True).copy(),
+    }

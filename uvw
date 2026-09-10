@@ -1,0 +1,10 @@
+#!/bin/bash
+# Project-local uv wrapper: keeps uv's cache and managed Pythons inside this folder.
+# Usage: ./uvw sync | ./uvw run python -m harness ...
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+export UV_CACHE_DIR="$ROOT/.uv-cache"
+export UV_PYTHON_INSTALL_DIR="$ROOT/.uv-python"
+export UV_PYTHON_PREFERENCE=only-managed
+export UV_PYTHON_BIN_DIR="$ROOT/.uv-python/bin"   # never link pythons into ~/.local/bin
+exec "$ROOT/.tools/bin/uv" "$@"

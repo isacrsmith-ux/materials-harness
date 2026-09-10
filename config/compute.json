@@ -1,0 +1,127 @@
+{
+  "generated_at": "2026-09-10T19:28:29+00:00",
+  "machine": {
+    "chip": "Apple M4 Max",
+    "model": "Mac16,6",
+    "macos": "26.6.2",
+    "arch": "arm64",
+    "memory_gb": 36.0,
+    "python": "3.12.14",
+    "performance_cores": 10,
+    "efficiency_cores": 4,
+    "physical_cores": 14
+  },
+  "device": "cpu",
+  "dtype": "float64",
+  "workers": 10,
+  "threads_per_worker": 1,
+  "device_reason": "MPS/float32 could not run (3/3 structures failed: TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.); CPU/float64 required.",
+  "device_benchmark": {
+    "tolerances": {
+      "energy_mev_per_atom": 1.0,
+      "volume_pct": 0.1,
+      "lattice_angstrom": 0.005,
+      "single_point_force_ev_per_a": 0.005
+    },
+    "threads": 10,
+    "per_structure": {
+      "Si_diamond_64": {
+        "n_atoms": 64,
+        "cpu_float64": {
+          "single_point_ms": 132.21550000016578,
+          "relax_wall_s": 4.513149375008652,
+          "n_steps": 34,
+          "converged": true,
+          "energy_per_atom": -5.342038236673642
+        },
+        "mps_float32": null
+      },
+      "MgO_rocksalt_64": {
+        "n_atoms": 64,
+        "cpu_float64": {
+          "single_point_ms": 169.61119580082595,
+          "relax_wall_s": 5.086517374991672,
+          "n_steps": 29,
+          "converged": true,
+          "energy_per_atom": -5.974492394513781
+        },
+        "mps_float32": null
+      },
+      "GaN_wurtzite_72": {
+        "n_atoms": 72,
+        "cpu_float64": {
+          "single_point_ms": 183.29347500111908,
+          "relax_wall_s": 7.432896625017747,
+          "n_steps": 38,
+          "converged": true,
+          "energy_per_atom": -6.147644940143046
+        },
+        "mps_float32": null
+      }
+    },
+    "errors": [
+      {
+        "Si_diamond_64": {
+          "cpu": null,
+          "mps": "TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead."
+        }
+      },
+      {
+        "MgO_rocksalt_64": {
+          "cpu": null,
+          "mps": "TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead."
+        }
+      },
+      {
+        "GaN_wurtzite_72": {
+          "cpu": null,
+          "mps": "TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead."
+        }
+      }
+    ],
+    "all_agree": false,
+    "mean_single_point_speedup_mps": NaN,
+    "recommend": {
+      "device": "cpu",
+      "dtype": "float64"
+    },
+    "reason": "MPS/float32 could not run (3/3 structures failed: TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.); CPU/float64 required."
+  },
+  "pool_benchmark": {
+    "layouts": [
+      {
+        "workers": 1,
+        "threads_per_worker": 10,
+        "wall_s": 21.57359283301048,
+        "n_jobs": 48,
+        "n_ok": 48,
+        "s_per_structure": 0.4494498506877183
+      },
+      {
+        "workers": 5,
+        "threads_per_worker": 2,
+        "wall_s": 9.243578958004946,
+        "n_jobs": 48,
+        "n_ok": 48,
+        "s_per_structure": 0.19257456162510303
+      },
+      {
+        "workers": 10,
+        "threads_per_worker": 1,
+        "wall_s": 8.367203666013665,
+        "n_jobs": 48,
+        "n_ok": 48,
+        "s_per_structure": 0.17431674304195136
+      }
+    ],
+    "best": {
+      "workers": 10,
+      "threads_per_worker": 1,
+      "wall_s": 8.367203666013665,
+      "n_jobs": 48,
+      "n_ok": 48,
+      "s_per_structure": 0.17431674304195136
+    }
+  },
+  "source": "benchmark"
+}

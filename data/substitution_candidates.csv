@@ -1,0 +1,51 @@
+family,parent,parent_sg,target,mapping,expected_target_sg,note
+elemental-diamond,Si,227,Ge,Si:Ge,227,group-14 diamond
+elemental-diamond,Si,227,C,Si:C,227,large size mismatch (-34% in a); diamond is metastable vs graphite
+elemental-diamond,Ge,227,Sn,Ge:Sn,227,alpha-Sn; near-metallic
+elemental-fcc,Cu,225,Ag,Cu:Ag,225,noble metal
+elemental-fcc,Cu,225,Au,Cu:Au,225,noble metal (relativistic)
+elemental-fcc,Ni,225,Pd,Ni:Pd,225,magnetic parent
+elemental-bcc,Mo,229,W,Mo:W,229,refractory
+elemental-bcc,V,229,Nb,V:Nb,229,refractory
+elemental-bcc,Fe,229,Cr,Fe:Cr,229,magnetic parent; Cr is antiferromagnetic in reality
+rocksalt,NaCl,225,KCl,Na:K,225,halide
+rocksalt,LiF,225,NaF,Li:Na,225,fluoride (radiation dosimetry / optics)
+rocksalt,MgO,225,CaO,Mg:Ca,225,refractory oxide
+rocksalt,MgO,225,NiO,Mg:Ni,225,antiferromagnetic TM oxide
+rocksalt,TiN,225,ZrN,Ti:Zr,225,refractory nitride coating
+rocksalt,TiC,225,ZrC,Ti:Zr,225,ultra-high-temperature carbide
+rocksalt,TiC,225,HfC,Ti:Hf,225,ultra-high-temperature carbide
+zincblende,GaAs,216,InP,Ga:In;As:P,216,double substitution; space solar cells
+zincblende,ZnS,216,ZnSe,S:Se,216,II-VI
+zincblende,SiC,216,BN,Si:B;C:N,216,cubic BN (superhard)
+zincblende,GaP,216,BP,Ga:B,216,large size mismatch
+wurtzite,GaN,186,AlN,Ga:Al,186,wide-gap nitride (space electronics)
+wurtzite,GaN,186,InN,Ga:In,186,nitride
+wurtzite,ZnO,186,BeO,Zn:Be,186,large size mismatch; thermal management oxide
+wurtzite,AlN,186,SiC,Al:Si;N:C,186,2H-SiC
+wurtzite,AlN,186,BN,Al:B,186,wurtzite BN (metastable)
+fluorite,CaF2,225,SrF2,Ca:Sr,225,optical fluoride
+fluorite,CaF2,225,BaF2,Ca:Ba,225,scintillator fluoride
+fluorite,CaF2,225,CeO2,Ca:Ce;F:O,225,f-electron oxide
+fluorite,CaF2,225,ThO2,Ca:Th;F:O,225,f-electron oxide (nuclear/RTG-adjacent)
+fluorite,CaF2,225,HfO2,Ca:Hf;F:O,225,cubic HfO2 (metastable polymorph)
+fluorite,Li2O,225,Na2O,Li:Na,225,antifluorite oxide
+perovskite,SrTiO3,221,BaTiO3,Sr:Ba,221,cubic polymorph (ground state is distorted)
+perovskite,SrTiO3,221,SrZrO3,Ti:Zr,221,cubic polymorph (ground state is distorted)
+perovskite,SrTiO3,221,KTaO3,Sr:K;Ti:Ta,221,double substitution
+perovskite,SrTiO3,221,CaTiO3,Sr:Ca,221,cubic polymorph is dynamically unstable (hard case)
+perovskite,KMgF3,221,KZnF3,Mg:Zn,221,fluoride perovskite
+perovskite,KMgF3,221,KNiF3,Mg:Ni,221,antiferromagnetic fluoride
+spinel,MgAl2O4,227,ZnAl2O4,Mg:Zn,227,gahnite
+spinel,MgAl2O4,227,MgGa2O4,Al:Ga,227,normal vs inverse spinel ambiguity
+spinel,MgAl2O4,227,MgCr2O4,Al:Cr,227,magnetic spinel
+spinel,MgAl2O4,227,CoAl2O4,Mg:Co,227,magnetic spinel
+corundum,Al2O3,167,Ga2O3,Al:Ga,167,alpha-Ga2O3 (metastable; beta is ground state)
+corundum,Al2O3,167,Cr2O3,Al:Cr,167,antiferromagnetic
+corundum,Al2O3,167,Fe2O3,Al:Fe,167,hematite; antiferromagnetic
+corundum,Al2O3,167,V2O3,Al:V,167,correlated / magnetic
+corundum,Al2O3,167,Ti2O3,Al:Ti,167,transition-metal sesquioxide
+rutile,TiO2,136,SnO2,Ti:Sn,136,cassiterite
+rutile,TiO2,136,GeO2,Ti:Ge,136,rutile GeO2
+rutile,TiO2,136,SiO2,Ti:Si,136,stishovite (high-pressure SiO2)
+rutile,TiO2,136,MgF2,Ti:Mg;O:F,136,rutile fluoride (space optics)

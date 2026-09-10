@@ -1,0 +1,24 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Environments and tool caches (all kept project-local)
+.venv/
+.tools/
+.uv-cache/
+.uv-python/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mplconfig/
+
+# Downloaded / generated data
+cache/
+models/
+results/
+logs/
+reports/figures/
+
+# macOS
+.DS_Store
