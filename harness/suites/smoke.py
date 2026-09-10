@@ -13,9 +13,13 @@ SUITE = "smoke"
 PARENT_ID = "mp-149"
 DIAMOND_SG = 227
 
-# Experimental reference for this one check was supplied in the task spec (~5.658 Å) and is
-# NOT yet tied to a citation. The experimental suite (phase 4) replaces it with a cited value.
-GE_EXPERIMENTAL_A = {"value": 5.658, "source": "task spec (~5.658 Å, room temperature)", "verified": False}
+# Verified against Lucero, Henderson & Scuseria, J. Phys.: Condens. Matter 24, 145504 (2012),
+# Tables I/II (see data/experimental_lattice_constants.csv). NOTE: that source gives 5.658 Å as
+# an uncorrected extrapolation to 0 K, not a room-temperature measurement.
+GE_EXPERIMENTAL_A = {"value": 5.658,
+                     "source": "Lucero et al., J. Phys.: Condens. Matter 24, 145504 (2012), Table II "
+                               "(0 K extrapolation, uncorrected)",
+                     "verified": True}
 
 # Pass/fail thresholds, fixed up front:
 #  - vs MP (the data MACE was trained to reproduce): 1 % on a.
@@ -107,7 +111,8 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
         f"\nSMOKE  Si({PARENT_ID}) -> Ge, MP target {out['target_id']}\n"
         f"  converged={out['converged']} in {out['n_steps']} steps, {out['wall_time_s']:.2f} s, "
         f"relaxed SG {out['sim_spacegroup']}, matches MP structure: {out['relaxed_into_target']}\n"
-        f"  a(MACE) = {out['a_sim']:.4f} Å | a(MP PBE) = {out['a_mp']:.4f} Å | a(exp) = {out['a_exp']:.3f} Å (unverified)\n"
+        f"  a(MACE) = {out['a_sim']:.4f} Å | a(MP PBE) = {out['a_mp']:.4f} Å | a(exp) = {out['a_exp']:.3f} Å "
+        f"({'verified: ' + GE_EXPERIMENTAL_A['source'] if GE_EXPERIMENTAL_A['verified'] else 'UNVERIFIED'})\n"
         f"  MACE vs MP:  {out['a_pct_err_vs_mp']:+.2f} %  [{'PASS' if ok_mp else 'FAIL'} ≤{TOL_VS_MP_PCT}%]\n"
         f"  MACE vs exp: {out['a_pct_err_vs_exp']:+.2f} %  [{'PASS' if ok_exp else 'FAIL'} ≤{TOL_VS_EXP_PCT}%]"
         f"   (MP PBE itself vs exp: {out['mp_pct_err_vs_exp']:+.2f} %)\n"

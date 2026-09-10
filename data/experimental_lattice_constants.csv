@@ -1,0 +1,41 @@
+material,formula,structure,a_exp,c_exp,status,note
+Ge,Ge,di,5.658,,zero_k,Table II: uncorrected extrapolation to 0 K (not room temperature)
+Si,Si,di,5.430,,zero_k,Table II: uncorrected extrapolation to 0 K (not room temperature)
+beta-SiC,SiC,zb,4.358,,zero_k,"Table II: uncorrected extrapolation to 0 K; Table I labels the type 'di' — a two-element diamond lattice is zincblende, built as such"
+BP,BP,zb,4.538,,rt,
+AlP,AlP,zb,5.463,,rt,
+AlAs,AlAs,zb,5.661,,rt,
+GaP,GaP,zb,5.451,,rt,
+GaAs,GaAs,zb,5.648,,zero_k,Table II: uncorrected extrapolation to 0 K (not room temperature)
+GaSb,GaSb,zb,6.096,,rt,
+InP,InP,zb,5.869,,rt,
+InAs,InAs,zb,6.058,,rt,
+InSb,InSb,zb,6.479,,rt,
+ZnS,ZnS,zb,5.409,,rt,
+ZnSe,ZnSe,zb,5.668,,rt,
+ZnTe,ZnTe,zb,6.089,,rt,
+CdSe,CdSe,zb,6.052,,rt,
+CdTe,CdTe,zb,6.480,,rt,
+beta-GaN,GaN,wu,4.523,,ambiguous,"Table I labels beta-GaN 'wu' but gives a single lattice constant (no c); not run — structure cannot be determined from the source"
+alpha-GaN,GaN,wu,3.189,5.185,rt,
+InN,InN,wu,3.537,5.704,rt,
+C,C,di,3.567,,zero_k,Table II: uncorrected extrapolation to 0 K (not room temperature)
+AlSb,AlSb,zb,6.136,,rt,
+BN,BN,zb,3.616,,rt,
+CdS,CdS,zb,5.818,,rt,
+MgS,MgS,zb,5.622,,rt,
+AlN,AlN,wu,3.111,4.981,rt,
+MgTe,MgTe,zb,6.420,,rt,
+MgO,MgO,rs,4.207,,zero_k,Table II: uncorrected extrapolation to 0 K (not room temperature)
+BAs,BAs,zb,4.777,,rt,
+MgSe,MgSe,rs,5.460,,rt,Table I footnote c: value from the paper's Ref. 56 rather than Ref. 52
+CaS,CaS,rs,5.689,,rt,
+CaSe,CaSe,rs,5.916,,rt,
+CaTe,CaTe,rs,6.348,,rt,
+SrS,SrS,rs,5.990,,rt,
+SrSe,SrSe,rs,6.234,,rt,
+SrTe,SrTe,rs,6.640,,rt,
+BaS,BaS,rs,6.389,,rt,
+BaSe,BaSe,rs,6.595,,rt,
+BaTe,BaTe,rs,7.007,,rt,
+BSb,BSb,zb,5.278,,rt,
