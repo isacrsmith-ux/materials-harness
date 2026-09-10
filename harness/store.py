@@ -64,6 +64,7 @@ def connect(path: Path = DB_PATH):
     path.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(path, timeout=60)
     con.row_factory = sqlite3.Row
+    con.execute("PRAGMA journal_mode=WAL")  # the unattended runner writes while reports read
     con.executescript(SCHEMA)
     try:
         yield con

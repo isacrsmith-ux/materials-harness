@@ -18,6 +18,8 @@ cache/
 models/
 results/
 logs/
+config/launchd/
+reports/[0-9]*/
 
 # macOS
 .DS_Store

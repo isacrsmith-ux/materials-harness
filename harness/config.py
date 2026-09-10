@@ -22,6 +22,8 @@ REPORTS_DIR = ROOT / "reports"
 FIG_DIR = REPORTS_DIR / "figures"
 CONFIG_DIR = ROOT / "config"
 COMPUTE_CONFIG = CONFIG_DIR / "compute.json"
+UNATTENDED_CONFIG = CONFIG_DIR / "unattended.json"
+QUEUE_DB = RESULTS_DIR / "queue.sqlite"
 
 # The engine under test. Pinned by file hash: mace-torch >= 0.3.10 silently switched its
 # default "mace_mp()" model to MACE-MPA-0, so we never rely on library defaults.
@@ -91,3 +93,35 @@ def load_compute_config() -> dict:
 def save_compute_config(cfg: dict) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     COMPUTE_CONFIG.write_text(json.dumps(cfg, indent=2, default=str) + "\n")
+
+
+# Unattended-run (orchestration) settings. Nothing here changes what is computed or how it is scored;
+# config/unattended.json overrides these defaults key by key.
+UNATTENDED_DEFAULTS = {
+    "max_pairs": 2000,               # auto-generated substitution pairs to queue
+    "max_atoms": 40,                 # max atoms per cell (both parent and target, PBE structures)
+    "ood_sample": 2000,              # WBM out-of-distribution sample size
+    "auto_pair_kinds": ["sub", "ctrl"],  # add "sub_rattled" for 2x2x2 symmetry-broken runs (8x the atoms)
+    "max_attempts": 2,               # first try + one retry
+    "hard_timeout_s": 1800,          # watchdog for hung workers (the engine's own limit is 900 s/relaxation)
+    "report_every": 100,             # partial report every N completed jobs
+    "power_poll_s": 300,             # pmset check interval
+    "polite_reserved_cores": 2,      # performance cores left free in polite mode
+    "polite_nice": 10,               # scheduling niceness of polite-mode workers
+    "failure_alert_fraction": 0.10,  # notify when more than this fraction of jobs fail
+    "failure_alert_min_jobs": 20,    # ...once at least this many finished (always checked at the end)
+    "schedule": {"start": "23:00", "stop": "07:00", "mode": "full"},
+}
+
+
+def load_unattended_config() -> dict:
+    cfg = json.loads(json.dumps(UNATTENDED_DEFAULTS))
+    if UNATTENDED_CONFIG.is_file():
+        for k, v in json.loads(UNATTENDED_CONFIG.read_text()).items():
+            if k.startswith("_"):
+                continue
+            if isinstance(v, dict) and isinstance(cfg.get(k), dict):
+                cfg[k].update(v)
+            else:
+                cfg[k] = v
+    return cfg

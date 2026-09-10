@@ -7,9 +7,11 @@ Verdicts come from the explicit thresholds in VERDICT_RULES, never from judgemen
 
 from __future__ import annotations
 
+import json
 import logging
 import subprocess
 from datetime import datetime, timezone
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -171,10 +173,17 @@ def collect(tag: str) -> dict:
             log.warning("report: %s unavailable: %s", fn.__module__, exc)
             return pd.DataFrame()
 
+    def auto_pairs(t):
+        from harness import pairgen
+
+        pairs = pairgen.load_pairs()
+        return substitution.pair_table(t, suite="substitution_auto", pairs=pairs) if pairs else pd.DataFrame()
+
     jobs = store.load_table("jobs")
     jobs = jobs[jobs.job_key.str.endswith(f"@{tag}")] if len(jobs) else jobs
     results = store.load_table("results")
-    return {"sub": safe(substitution.pair_table), "st": safe(stability.target_table), "ex": safe(experimental.table),
+    return {"sub": safe(substitution.pair_table), "auto": safe(auto_pairs), "st": safe(stability.target_table),
+            "ex": safe(experimental.table),
             "ood": safe(ood.table), "bulk": safe(bulk.table), "jobs": jobs,
             "results": results[results.job_key.str.endswith(f"@{tag}")] if len(results) else results}
 
@@ -212,10 +221,74 @@ def likely_cause(formula: str, source: str, magnetic: bool | None = None) -> str
 
 # --- report -------------------------------------------------------------------------------------
 
-def write_report() -> str:
+SCORECARD_METRICS = [  # key, label, format, lower_is_better (None = informational)
+    ("curated_volume_mae_pct", "Volume error, curated pairs (%)", "{:.2f}", True),
+    ("auto_volume_mae_pct", "Volume error, auto-generated pairs (%)", "{:.2f}", True),
+    ("curated_energy_mae_mev", "Energy MAE, curated known materials (meV/atom)", "{:.1f}", True),
+    ("auto_energy_mae_mev", "Energy MAE, auto-generated pairs (meV/atom)", "{:.1f}", True),
+    ("ood_energy_mae_mev", "Energy MAE, new WBM materials (meV/atom)", "{:.1f}", True),
+    ("ood_precision_at_0", "Stable-call precision @ 0 eV/atom, WBM", "{:.2f}", False),
+    ("ood_f1_at_0", "F1 @ 0 eV/atom, WBM", "{:.2f}", False),
+    ("stability_b_mae_mev", "Energy above hull MAE, mode (b) (meV/atom)", "{:.1f}", True),
+    ("stability_a_mae_mev", "Energy above hull MAE, mode (a) (meV/atom)", "{:.1f}", True),
+    ("experimental_mace_mean_pct", "Lattice constant vs experiment, mean (%)", "{:+.2f}", None),
+    ("bulk_mae_pct", "Bulk modulus MAE (%)", "{:.1f}", True),
+    ("n_auto_pairs", "Auto-generated pairs scored", "{:.0f}", None),
+    ("n_ood", "WBM structures scored", "{:.0f}", None),
+]
+
+
+def _num(x) -> bool:
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and np.isfinite(x)
+
+
+def previous_scorecard(out_dir: Path) -> Path | None:
+    """Most recent earlier run's scorecard (reports/<timestamp>/scorecard.json), else reports/scorecard.json."""
+    out_dir = Path(out_dir).resolve()
+    is_run = out_dir.parent == REPORTS_DIR.resolve()
+    runs = sorted(p for p in REPORTS_DIR.glob("*/scorecard.json")
+                  if p.parent.resolve() != out_dir and (not is_run or p.parent.name < out_dir.name))
+    if runs:
+        return runs[-1]
+    base = REPORTS_DIR / "scorecard.json"
+    return base if base.is_file() and REPORTS_DIR.resolve() != out_dir else None
+
+
+def comparison_lines(out_dir: Path, cur: dict) -> list[str]:
+    lines = ["### Compared with the previous run", ""]
+    prev_path = previous_scorecard(out_dir)
+    if prev_path is None:
+        return lines + ["_No earlier run with a scorecard to compare against._", ""]
+    prev = json.loads(prev_path.read_text())
+    rows = []
+    for key, label, fmt, lower in SCORECARD_METRICS:
+        a, b = prev.get(key), cur.get(key)
+        if a is None and b is None:
+            continue
+        change = "—"
+        if _num(a) and _num(b):
+            d = b - a
+            spec = fmt[2:-1].lstrip("+")
+            change = "no change" if abs(d) < 1e-9 else format(d, "+" + spec) + (
+                "" if lower is None else (" (better)" if (d < 0) == lower else " (worse)"))
+        rows.append({"metric": label, "previous": fmt.format(a) if _num(a) else "—",
+                     "this run": fmt.format(b) if _num(b) else "—", "change": change})
+    rel = prev_path.parent.relative_to(ROOT) if str(ROOT) in str(prev_path) else prev_path.parent
+    lines += [f"Previous: `{rel}` (generated {prev.get('generated_at', '?')}, settings `{prev.get('settings_tag')}`)."
+              + (" **Settings differ — numbers are not directly comparable.**"
+                 if prev.get("settings_tag") != cur.get("settings_tag") else ""), "", _md(pd.DataFrame(rows)), "",
+              "Sample sizes grow as the queue drains, so early partial runs have wide uncertainty.", ""]
+    return lines
+
+
+def write_report(out_dir: Path | None = None, compare_previous: bool = False) -> str:
+    """Write validation_report.md, figures/ and scorecard.json into out_dir (default reports/).
+    compare_previous adds a comparison with the most recent earlier run's scorecard."""
     compute = load_compute_config()
     tag = settings_tag(compute["device"], compute["dtype"])
-    FIG_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(out_dir) if out_dir else REPORTS_DIR
+    fig_dir = FIG_DIR if out_dir.resolve() == REPORTS_DIR.resolve() else out_dir / "figures"
+    fig_dir.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     d = collect(tag)
     sub, st, ex, oo, bk, jobs = d["sub"], d["st"], d["ex"], d["ood"], d["bulk"], d["jobs"]
@@ -249,6 +322,10 @@ def write_report() -> str:
     bk_ok = bk[bk.fit.map(lambda f: f["rms_mev"] <= 1.0 and f["v0_in_range"])] if len(bk) else bk
     bulk_mae = float(bk_ok.err_pct_vrh.abs().mean()) if len(bk_ok) else float("nan")
     bulk_ci = boot_ci(bk_ok.err_pct_vrh) if len(bk_ok) else (float("nan"),) * 3
+    au = d["auto"]
+    au_done = au[au["ctrl_dE_mev"].notna()] if len(au) and "ctrl_dE_mev" in au.columns else pd.DataFrame()
+    au_vol = boot_ci(au_done.get("ctrl_vol_pct", []))
+    au_e = boot_ci(au_done.get("ctrl_dE_mev", []))
 
     # ---------- header ----------
     mi = machine_info()
@@ -291,7 +368,37 @@ def write_report() -> str:
         ("Bulk modulus vs MP elastic K_VRH", f"MAE {_ci_str(bulk_ci)} % (n={len(bk_ok)})" if len(bk_ok) else "not run",
          verdict_ci("bulk_mae_pct", bulk_ci)),
     ]
+    if len(au_done):
+        card[3:3] = [
+            ("Geometry — auto-generated pairs (MP targets relaxed)",
+             f"volume error {_ci_str(au_vol, '{:.2f}')} % (n={len(au_done)})", verdict_ci("volume_mae_pct", au_vol)),
+            ("Energies — auto-generated pairs (known MP materials)", f"MAE {_ci_str(au_e)} meV/atom (n={len(au_done)})",
+             verdict_ci("energy_mae_mev", au_e)),
+        ]
     L += [_md(pd.DataFrame(card, columns=["Question", "Result", "Verdict"])), ""]
+
+    def _f(x):
+        try:
+            x = float(x)
+        except (TypeError, ValueError):
+            return None
+        return x if np.isfinite(x) else None
+
+    scorecard = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "settings_tag": tag, "commit": commit,
+        "n_curated": len(sub), "curated_volume_mae_pct": _f(vol[0]), "curated_energy_mae_mev": _f(e_id[0]),
+        "n_auto_pairs": len(au_done), "auto_volume_mae_pct": _f(au_vol[0]), "auto_energy_mae_mev": _f(au_e[0]),
+        "n_ood": len(ood_ok), "ood_energy_mae_mev": _f(e_ood[0]), "ood_mean_signed_mev": _f(e_ood_mean[0]),
+        "ood_precision_at_0": _f(so["thr0.0"]["precision"]) if so and so.get("n") else None,
+        "ood_f1_at_0": _f(so["thr0.0"]["f1"]) if so and so.get("n") else None,
+        "stability_a_mae_mev": _f(sa["mae_ev"] * 1000) if sa else None,
+        "stability_b_mae_mev": _f(sb["mae_ev"] * 1000) if sb else None,
+        "stability_b_acc_0.1": _f(sb["thr0.1"]["accuracy"]) if sb else None,
+        "experimental_mace_mean_pct": _f(ex_rt.a_err_pct.mean()) if len(ex_rt) else None,
+        "bulk_mae_pct": _f(bulk_ci[0]),
+    }
+    if compare_previous:
+        L += comparison_lines(out_dir, scorecard)
     L += ["**In plain language.**", ""]
     plain = []
     if np.isfinite(vol[0]):
@@ -370,12 +477,12 @@ def write_report() -> str:
                              "sim": lat["vol_per_atom_sim"]})
     vr = pd.DataFrame(vol_rows)
     if len(vr):
-        figs["vol"] = parity(FIG_DIR / "parity_volume.png",
+        figs["vol"] = parity(fig_dir / "parity_volume.png",
                              [("substituted parent, relaxed", vr[vr.kind == "sub"].ref, vr[vr.kind == "sub"].sim, vr[vr.kind == "sub"].pair.tolist(), KNOWN),
                               ("MP target, relaxed (control)", vr[vr.kind == "ctrl"].ref, vr[vr.kind == "ctrl"].sim, vr[vr.kind == "ctrl"].pair.tolist(), KNOWN)],
                              "MP PBE volume (Å³/atom)", "MACE volume (Å³/atom)", "Volume per atom: MACE vs MP")
     if len(ex):
-        figs["exp"] = parity(FIG_DIR / "parity_lattice_experiment.png",
+        figs["exp"] = parity(fig_dir / "parity_lattice_experiment.png",
                              [("MACE", ex.a_exp, ex.a_mace, ex.material.tolist(), KNOWN),
                               ("MP PBE (reference functional)", ex.dropna(subset=["a_pbe"]).a_exp, ex.dropna(subset=["a_pbe"]).a_pbe,
                                ex.dropna(subset=["a_pbe"]).material.tolist(), PBE)],
@@ -389,7 +496,7 @@ def write_report() -> str:
             ser.append(("known materials (MP)", e_id_df.ref, e_id_df.sim, e_id_df.label.tolist(), KNOWN))
         if len(ood_ok):
             ser.append(("new materials (WBM)", ood_ok.e_dft, ood_ok.e_mace, ood_ok.formula.tolist(), NEW))
-        figs["energy"] = parity(FIG_DIR / "parity_energy.png", ser, "DFT energy (eV/atom)", "MACE energy (eV/atom)",
+        figs["energy"] = parity(fig_dir / "parity_energy.png", ser, "DFT energy (eV/atom)", "MACE energy (eV/atom)",
                                 "Energy per atom: MACE vs DFT")
     if len(st) or len(ood_ok):
         ser = []
@@ -398,15 +505,15 @@ def write_report() -> str:
             ser.append(("known, mode (a): MACE target", st.ref_e_hull, st.a_e_hull, st.pair_id.map(lambda p: p.split("->")[1]).tolist(), KNOWN))
         if len(ood_ok):
             ser.append(("new materials (WBM)", ood_ok.each_true, ood_ok.each_pred, ood_ok.formula.tolist(), NEW))
-        figs["ehull"] = parity(FIG_DIR / "parity_e_above_hull.png", ser, "DFT energy above hull (eV/atom)",
+        figs["ehull"] = parity(fig_dir / "parity_e_above_hull.png", ser, "DFT energy above hull (eV/atom)",
                                "MACE energy above hull (eV/atom)", "Energy above hull: MACE vs DFT")
     if len(bk_ok):
-        figs["bulk"] = parity(FIG_DIR / "parity_bulk_modulus.png",
+        figs["bulk"] = parity(fig_dir / "parity_bulk_modulus.png",
                               [("EOS B0 vs K_VRH", bk_ok.k_vrh, bk_ok.b0_gpa, bk_ok.label.tolist(), KNOWN)],
                               "MP K_VRH (GPa)", "MACE Birch–Murnaghan B0 (GPa)", "Bulk modulus: MACE vs MP")
     for key, cap in [("vol", "Volume per atom (substitution suite). Grey line: perfect agreement."),
                      ("exp", "Room-temperature and 0 K-extrapolated lattice constants (Lucero et al. 2012). MACE and PBE sit together above the line: the offset is the functional."),
-                     ("energy", "Raw MACE vs uncorrected DFT energies. Known materials: MP control relaxations; new materials: 300 random WBM unique prototypes."),
+                     ("energy", f"Raw MACE vs uncorrected DFT energies. Known materials: MP control relaxations; new materials: {len(ood_ok)} random WBM unique prototypes."),
                      ("ehull", "Energy above the convex hull. Mode (b) = all competing phases also computed with MACE."),
                      ("bulk", "Equation-of-state bulk modulus vs MP elastic K_VRH (fits with rms ≤ 1 meV/atom).")]:
         if key in figs and figs[key]:
@@ -424,7 +531,7 @@ def write_report() -> str:
               _md(el_id.head(20).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
         top = el_id.head(15)
         if len(top):
-            figs["el_id"] = hbar(FIG_DIR / "element_energy_mae_known.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
+            figs["el_id"] = hbar(fig_dir / "element_energy_mae_known.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
                                  "mean |energy error| of compounds containing the element (meV/atom)",
                                  "Energy error by element — known materials")
             L += [f"![Energy error by element, known materials](figures/{figs['el_id']})", ""]
@@ -435,7 +542,7 @@ def write_report() -> str:
               _md(el_ood.head(20).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
         top = el_ood.head(15)
         if len(top):
-            figs["el_ood"] = hbar(FIG_DIR / "element_energy_mae_new.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
+            figs["el_ood"] = hbar(fig_dir / "element_energy_mae_new.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
                                   "mean |energy error| of compounds containing the element (meV/atom)",
                                   "Energy error by element — new (WBM) materials")
             L += [f"![Energy error by element, new materials](figures/{figs['el_ood']})", ""]
@@ -443,7 +550,7 @@ def write_report() -> str:
         fam = sub.groupby("family").agg(n=("pair_id", "size"), vol_mae=("ctrl_vol_pct", lambda v: v.abs().mean()),
                                         lat_mae=("ctrl_max_lat_pct", lambda v: v.abs().mean()),
                                         e_mae=("ctrl_dE_mev", lambda v: v.abs().mean())).reset_index().sort_values("vol_mae", ascending=False)
-        figs["fam"] = hbar(FIG_DIR / "family_volume_mae.png", fam.family.tolist(), fam.vol_mae.tolist(),
+        figs["fam"] = hbar(fig_dir / "family_volume_mae.png", fam.family.tolist(), fam.vol_mae.tolist(),
                            "mean |volume error| vs MP PBE (%)", "Volume error by structure family", fmt="{:.2f}")
         L += ["**By structure family (MP control relaxations):**", "",
               _md(fam.rename(columns={"vol_mae": "volume MAE %", "lat_mae": "lattice MAE %", "e_mae": "energy MAE meV/atom"})),
@@ -525,11 +632,73 @@ def write_report() -> str:
                              "precision@0": s["thr0.0"]["precision"], "recall@0": s["thr0.0"]["recall"], "F1@0": s["thr0.0"]["f1"]})
         L += ["**New materials (WBM), split by spin caveat:**", "", _md(pd.DataFrame(rows)), ""]
 
+    # ---------- auto-generated pairs ----------
+    if len(au):
+        from harness import pairgen
+
+        meta = pairgen.load_meta()
+        apairs = pairgen.load_pairs()
+        fmap = {p["pair_id"]: p["target_formula"] for p in apairs}
+        n_mat = meta.get("n_materials")
+        L += ["## Automatically generated substitution pairs", "",
+              f"{len(apairs)} pairs generated from {n_mat:,} Materials Project materials with ≤ "
+              f"{meta.get('config', {}).get('max_atoms')} atoms per cell ({meta.get('accepted_prototypes')} prototypes, "
+              f"{meta.get('accepted_space_relevant')} space-relevant targets). A pair shares a prototype (anonymized "
+              "StructureMatcher on the PBE structures) and differs by exactly one element; space-relevant targets were "
+              "queued first, round-robin across prototypes. Each pair is scored by the curated suite's own code: the "
+              "substituted parent relaxed (sub) and the MP target relaxed (ctrl). "
+              f"**{len(au_done)} pairs have results so far.**" if n_mat else
+              f"{len(apairs)} auto-generated pairs; {len(au_done)} have results so far.", ""]
+        grp = []
+        for label, g in [("all", au_done), ("no spin caveat", au_done[au_done.spin_caveat == False]),  # noqa: E712
+                         ("spin caveat (magnetic / TM / f)", au_done[au_done.spin_caveat == True]),  # noqa: E712
+                         ("space-relevant targets", au_done[au_done.space_relevant == True]),  # noqa: E712
+                         ("other targets", au_done[au_done.space_relevant == False])]:  # noqa: E712
+            if len(g):
+                s = sub_mod.group_stats(g)
+                grp.append({"group": label, "n": s["n"], "sub volume MAE %": s["sub_vol_mae_pct"],
+                            "ctrl volume MAE %": s["ctrl_vol_mae_pct"], "sub match": s["sub_match_rate"],
+                            "ctrl match": s["ctrl_match_rate"], "ctrl energy MAE meV/atom": s["ctrl_E_mae_mev"]})
+        L += [_md(pd.DataFrame(grp)), ""]
+        if "diagnosis" in au_done:
+            L += ["Diagnosis: " + ", ".join(f"{k}: {v}" for k, v in au_done.diagnosis.value_counts().items()), ""]
+        if len(au_done):
+            fam = au_done.groupby("family").agg(n=("pair_id", "size"), vol_mae=("ctrl_vol_pct", lambda v: v.abs().mean()),
+                                                e_mae=("ctrl_dE_mev", lambda v: v.abs().mean()),
+                                                match=("sub_match", "mean")).reset_index().sort_values("n", ascending=False)
+            L += [f"**Most common prototypes** (of {au_done.family.nunique()}):", "",
+                  _md(fam.head(15).rename(columns={"family": "prototype", "vol_mae": "volume MAE %",
+                                                   "e_mae": "energy MAE meV/atom", "match": "sub match rate"})), ""]
+            el = per_element(au_done.assign(formula=au_done.pair_id.map(fmap)), "formula", "ctrl_dE_mev")
+            el = el[el.n >= 5]
+            if len(el):
+                L += ["**Energy error by element** (elements in ≥ 5 scored targets):", "",
+                      _md(el.head(15).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
+            w = au_done.reindex(au_done.ctrl_dE_mev.abs().sort_values(ascending=False).index).head(10)
+            L += ["**10 worst auto-generated pairs by energy error:**", "",
+                  _md(pd.DataFrame([{"pair": r.pair_id, "prototype": r.family, "energy error meV/atom": r.ctrl_dE_mev,
+                                     "volume error %": r.ctrl_vol_pct,
+                                     "likely cause": likely_cause(fmap.get(r.pair_id, r.pair_id.split("->")[1].split()[0]),
+                                                                  "ID", bool(r.magnetic))} for r in w.itertuples()]), ".1f"), ""]
+            ap = [pl for pl in store.load_payloads("substitution_auto", tag=tag).values() if pl["kind"] == "ctrl"]
+            if ap:
+                figs["auto"] = parity(fig_dir / "parity_auto_pairs.png",
+                                      [("volume per atom (Å³/atom)", [p["lattice"]["vol_per_atom_ref"] for p in ap],
+                                        [p["lattice"]["vol_per_atom_sim"] for p in ap],
+                                        [fmap.get(p["pair_id"], "") for p in ap], KNOWN)],
+                                      "MP PBE", "MACE", "Auto-generated pairs: MP target relaxed with MACE")
+                figs["auto_e"] = parity(fig_dir / "parity_auto_pairs_energy.png",
+                                        [("energy per atom (eV/atom)", [p["energy_per_atom"] - p["energy_mev_vs_mp"] / 1000 for p in ap],
+                                          [p["energy_per_atom"] for p in ap], [fmap.get(p["pair_id"], "") for p in ap], KNOWN)],
+                                        "MP PBE (uncorrected)", "MACE", "Auto-generated pairs: energy")
+                L += [f"![Auto-generated pairs, volume](figures/{figs['auto']})", "",
+                      f"![Auto-generated pairs, energy](figures/{figs['auto_e']})", ""]
+
     # ---------- OOD vs ID ----------
     L += ["## Out-of-distribution score next to the in-distribution score", "",
           "MACE-MP-0 was trained on Materials Project data, so MP-based scores overstate accuracy on new materials. "
-          "The WBM sample (300 random structures from the 215,488 unique-prototype set, seed 20260910, ids in "
-          "`data/ood_wbm_sample.json`) was never in its training data. **These two columns are never averaged together.**", ""]
+          f"The WBM sample ({len(oo)} structures drawn at random from the 215,488 unique-prototype set, seed 20260910; ids "
+          "in `data/ood_wbm_sample*.json`) was never in its training data. **These two columns are never averaged together.**", ""]
     if len(sub) and len(ood_ok):
         f1_ood = so["thr0.0"]["f1"] if so else float("nan")
         L += [_md(pd.DataFrame([
@@ -603,6 +772,22 @@ def write_report() -> str:
         status = jobs.groupby(["suite", "status"]).size().unstack(fill_value=0)
         L += ["**Job outcomes (current settings):**", "", status.reset_index().to_markdown(index=False), ""]
 
+    # ---------- unattended queue ----------
+    from harness.config import QUEUE_DB
+
+    if QUEUE_DB.exists():
+        from harness import jobqueue
+
+        qc = jobqueue.counts(QUEUE_DB)
+        if qc:
+            L += ["## Unattended job queue", "",
+                  _md(pd.DataFrame([{"suite": s, **{k: v.get(k, 0) for k in jobqueue.STATUSES}} for s, v in sorted(qc.items())]),
+                      ".0f"), ""]
+            fails = jobqueue.failures_by_type(QUEUE_DB)
+            if fails:
+                L += ["**Queue failures by type** (after one retry):", "",
+                      _md(pd.DataFrame(fails)[["error_type", "n", "suites", "example"]]), ""]
+
     # ---------- method notes ----------
     L += ["## Method notes and fixes made along the way", "",
           "* MP's summary endpoint now serves **r2SCAN** structures and energies for many materials (Ge: 5.675 Å, −13.87 eV/atom); "
@@ -620,15 +805,17 @@ def write_report() -> str:
     L += ["## Files", "",
           "* `results/results.sqlite` — every job and every structure × test row with provenance and settings",
           "* `results/results.parquet` — the same results table (all settings tags; filter on `settings_tag`)",
-          "* `reports/figures/` — the plots above", ""]
+          "* `figures/` (next to this report) — the plots above",
+          "* `scorecard.json` (next to this report) — the headline numbers, used to compare runs", ""]
 
     # ---------- write ----------
-    out = REPORTS_DIR / "validation_report.md"
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / "validation_report.md"
     out.write_text("\n".join(L) + "\n")
+    (out_dir / "scorecard.json").write_text(json.dumps(scorecard, indent=1) + "\n")
     res = store.load_table("results")
     if len(res):
         res["settings_tag"] = res.job_key.map(lambda k: k.rsplit("@", 1)[1] if "@" in k else "pre-tag")
         res.to_parquet(RESULTS_DIR / "results.parquet", index=False)
     log.info("report written: %s (%d figures)", out, sum(1 for v in figs.values() if v))
-    return str(out.relative_to(ROOT))
+    return str(out.relative_to(ROOT)) if out.resolve().is_relative_to(ROOT) else str(out)

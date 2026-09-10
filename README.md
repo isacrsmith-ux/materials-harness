@@ -10,9 +10,9 @@ The harness answers four questions:
 | Question | Suite | Compared against |
 |---|---|---|
 | Does the engine run and relax correctly at all? | `smoke` | Si → Ge vs Materials Project (MP) and experiment |
-| If I substitute elements into a known structure, do I get the known target? | `substitution` | 50 MP parent→target pairs, 11 structure families |
+| If I substitute elements into a known structure, do I get the known target? | `substitution` | 50 curated MP parent→target pairs, 11 structure families, plus up to 2,000 auto-generated pairs (unattended queue) |
 | Does it call stable / unstable materials correctly? | `stability` | MP convex hulls (MP2020-corrected) |
-| Does accuracy hold on materials it was *not* trained on? | `ood` | 300 random WBM structures (Matbench Discovery test set) |
+| Does accuracy hold on materials it was *not* trained on? | `ood` | random WBM structures (Matbench Discovery test set): 300 in `run`, 2,000 in the unattended queue |
 | How close is it to *measured* reality? | `experimental` | 33 room-temperature lattice constants (Lucero et al. 2012) |
 | Does it get stiffness right? | `bulk` | MP elastic bulk moduli (K_VRH) |
 
@@ -62,6 +62,49 @@ Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the scripted
 * **Materials Project downloads are cached forever** in `cache/mp/` (exponential backoff on rate limits), so
   reruns never re-query the API.
 
+## Unattended runs (in the background or overnight)
+
+```bash
+./uvw run python -m harness prepare        # once: bulk-download + cache MP/WBM inputs, generate pairs, fill the queue
+./run_unattended.sh                        # polite mode (default): leaves 2 performance cores free while you work
+./run_unattended.sh full                   # all performance cores (overnight)
+./run_unattended.sh full --stop-at 07:00   # finish running jobs and exit at 7 AM
+./uvw run python -m harness status         # progress, ETA, mode, running/paused, failures grouped by error type
+./uvw run python -m harness stop           # graceful: finish running jobs, then exit
+```
+
+* **Scale** (`config/unattended.json`): up to `max_pairs` (2,000) auto-generated substitution pairs — MP
+  materials with ≤ `max_atoms` (40) atoms that share a prototype (anonymized StructureMatcher on the PBE
+  structures) and differ by exactly one element; oxides, nitrides, carbides and fluorides first, round-robin
+  across prototypes; magnetic and f-electron targets tagged — plus `ood_sample` (2,000) WBM structures. Each
+  pair runs `sub` and `ctrl`; add `sub_rattled` to `auto_pair_kinds` for the symmetry-broken supercell run
+  (8× the atoms). `prepare` downloads and caches everything once (chunked, resumable, rate-limit backoff), so
+  the runner itself never needs the network. None of this changes the validation logic, tolerances or metrics.
+* **`run_unattended.sh`** starts the runner with `nohup`, wrapped in `caffeinate -ims`, logging to
+  `logs/<timestamp>.log`. Closing the terminal does not stop it.
+* **Crash-safe queue** (`results/queue.sqlite`): one row per job with status, attempts, runtime, error, model
+  and settings, timestamps. After a killed process, a reboot or a crash, just start it again: jobs left
+  "running" go back to pending and finished jobs are never redone. A failed or timed-out job is retried once,
+  then kept as failed with its error. A watchdog restarts a hung worker pool.
+* **Modes**: polite = benchmarked layout minus 2 performance cores (8 workers × 1 thread on this Mac, lowered
+  priority); full = all performance cores (10 × 1).
+* **Battery**: `pmset -g batt` is checked every 5 minutes. On battery the runner finishes the jobs in progress,
+  pauses, and resumes automatically on AC. Note that `caffeinate -i` still keeps the Mac from idle-sleeping while
+  it is paused, so it will keep using battery until you stop it or plug in.
+* **Lid**: `caffeinate` does **not** prevent sleep when the lid is closed. Keep the lid open for unattended runs
+  unless an external display (plus power and a keyboard/mouse) is connected. If the Mac does sleep, the runner
+  freezes and continues on wake; a relaxation that timed out across the sleep is retried without penalty.
+* **Notifications**: a macOS notification when a run finishes, pauses for battery, or more than 10 % of jobs
+  fail. Optional phone push via [ntfy.sh](https://ntfy.sh): set `NTFY_TOPIC` in `.env` (off when empty; use a
+  long random topic — anyone who knows it can read the messages).
+* **Reports**: a partial report every 100 completed jobs in `reports/<run>/partial/`; the final report in
+  `reports/<run>/validation_report.md` with `scorecard.json` and a comparison against the previous run's
+  scorecard.
+* **Nightly schedule (optional, not installed)**: a launchd user agent starts `full` mode at 23:00 and stops
+  gracefully by 07:00 (times in `config/unattended.json`). `./uvw run python -m harness schedule` shows it;
+  `./scripts/install_schedule.sh` installs it and `./scripts/uninstall_schedule.sh` removes it. If the Mac is
+  asleep at the start time, launchd starts the run at the next wake.
+
 ## Engine settings (recorded with every simulated value)
 
 | Setting | Value | Why |
@@ -101,10 +144,13 @@ temperature label), or `wbm_computed` (WBM DFT). Every simulated value is `simul
 
 ```
 harness/            engine.py (MACE + relaxation), mp_data.py (cached MP access), compare.py (math),
-                    store.py (SQLite), runner.py (process pool), curation.py, report.py, suites/*.py
-data/               curated inputs: substitution pairs, experimental table, WBM sample ids
-config/compute.json benchmark result and chosen compute layout
-reports/            validation_report.md + figures/ (tracked, so the report renders from git)
+                    store.py (SQLite), runner.py (process pool), curation.py, report.py, suites/*.py,
+                    pairgen.py (auto pairs), jobqueue.py + orchestrator.py (unattended runs),
+                    power.py, notify.py, schedule.py (launchd)
+data/               curated inputs: substitution pairs, experimental table, WBM sample ids, auto_pairs.json
+config/             compute.json (benchmark layout), unattended.json (queue/scale/schedule settings)
+run_unattended.sh   background launcher (nohup + caffeinate); scripts/ install/uninstall the nightly agent
+reports/            validation_report.md + figures/ (tracked); reports/<run>/ per unattended run
 tests/              unit tests (substitution, comparison, stability, OOD, bulk, guard, report) + smoke test
 cache/ models/ results/ logs/   generated, gitignored (results.sqlite / results.parquet are rebuilt by rerunning)
 ```

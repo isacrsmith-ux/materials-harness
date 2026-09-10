@@ -1,7 +1,12 @@
 """CLI:  python -m harness run --suite smoke|substitution|stability|ood|experimental|bulk|all
-       python -m harness report
+       python -m harness report [--out DIR] [--compare-previous]
        python -m harness benchmark
        python -m harness info
+       python -m harness prepare      bulk-download inputs, generate pairs, fill the job queue
+       python -m harness unattended   drain the queue (use ./run_unattended.sh to run it in the background)
+       python -m harness status       progress, ETA, mode, failures
+       python -m harness stop         graceful stop (finish running jobs, then exit)
+       python -m harness schedule     nightly launchd agent: generate the plist, print install commands
 """
 
 from __future__ import annotations
@@ -14,7 +19,7 @@ import sys
 import time
 
 import harness  # noqa: F401  (sets cache env vars first)
-from harness.config import LOG_DIR, load_compute_config
+from harness.config import LOG_DIR, QUEUE_DB, load_compute_config, load_unattended_config
 from harness.platform_check import PlatformError, assert_native_arm64, machine_info
 
 SUITES = ["smoke", "substitution", "stability", "ood", "experimental", "bulk"]
@@ -41,9 +46,36 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--threads", type=int, help="torch threads per worker (override)")
     run.add_argument("--limit", type=int, help="only the first N jobs (debugging)")
 
-    sub.add_parser("report", help="write reports/validation_report.md from the results table")
+    rep = sub.add_parser("report", help="write a validation report from the results table")
+    rep.add_argument("--out", help="output directory (default: reports/)")
+    rep.add_argument("--compare-previous", action="store_true", help="compare the scorecard with the previous run")
     sub.add_parser("benchmark", help="CPU/float64 vs MPS/float32 + worker/thread layouts -> config/compute.json")
     sub.add_parser("info", help="print machine + compute config")
+
+    cfg = load_unattended_config()
+    prep = sub.add_parser("prepare", help="bulk-download MP/WBM inputs, generate substitution pairs, fill the queue")
+    prep.add_argument("--max-pairs", type=int, default=cfg["max_pairs"])
+    prep.add_argument("--max-atoms", type=int, default=cfg["max_atoms"])
+    prep.add_argument("--ood-n", type=int, default=cfg["ood_sample"], help="WBM out-of-distribution sample size")
+    prep.add_argument("--skip-pairs", action="store_true")
+    prep.add_argument("--skip-ood", action="store_true")
+    prep.add_argument("--force-pairs", action="store_true", help="regenerate data/auto_pairs.json")
+    prep.add_argument("--queue-db", default=str(QUEUE_DB))
+
+    un = sub.add_parser("unattended", help="drain the job queue (see ./run_unattended.sh)")
+    un.add_argument("--mode", choices=["polite", "full"], default="polite")
+    un.add_argument("--stop-at", help="HH:MM — finish running jobs and exit at this time")
+    un.add_argument("--queue-db", default=str(QUEUE_DB))
+    un.add_argument("--max-jobs", type=int, help="dispatch at most N jobs, then drain (testing)")
+    un.add_argument("--power-poll", type=float, help="seconds between pmset checks (default from config)")
+    un.add_argument("--workers", type=int, help="override the mode's worker count")
+    un.add_argument("--report-every", type=int, help="partial report every N completed jobs")
+
+    for name, text in (("status", "queue progress, ETA, mode, failures"), ("stop", "graceful stop request")):
+        p = sub.add_parser(name, help=text)
+        p.add_argument("--queue-db", default=str(QUEUE_DB))
+    sch = sub.add_parser("schedule", help="generate the nightly launchd plist and print install commands")
+    sch.add_argument("--write", action="store_true", help="(re)write config/launchd/<label>.plist")
 
     args = parser.parse_args(argv)
     _setup_logging(args.verbose)
@@ -63,10 +95,49 @@ def main(argv: list[str] | None = None) -> int:
         run_benchmark()
         return 0
     if args.cmd == "report":
+        from pathlib import Path
+
         from harness.report import write_report
 
-        path = write_report()
+        path = write_report(out_dir=Path(args.out) if args.out else None, compare_previous=args.compare_previous)
         print(f"Wrote {path}")
+        return 0
+    if args.cmd == "prepare":
+        from harness.orchestrator import prepare
+
+        cfg.update(max_pairs=args.max_pairs, max_atoms=args.max_atoms, ood_sample=args.ood_n)
+        info = prepare(cfg, queue_db=args.queue_db, do_pairs=not args.skip_pairs, do_ood=not args.skip_ood,
+                       force_pairs=args.force_pairs)
+        print(json.dumps(info, indent=1, default=str))
+        return 0
+    if args.cmd == "unattended":
+        from harness.orchestrator import AlreadyRunning, Runner
+
+        try:
+            status = Runner(mode=args.mode, queue_db=args.queue_db, stop_at=args.stop_at, max_jobs=args.max_jobs,
+                            power_poll_s=args.power_poll, workers=args.workers, report_every=args.report_every).run()
+        except AlreadyRunning as exc:
+            print(f"Not started: {exc}", file=sys.stderr)
+            return 3
+        return 0 if status in ("finished", "stopped") else 1
+    if args.cmd == "status":
+        from harness.orchestrator import status_report
+
+        print(status_report(args.queue_db))
+        return 0
+    if args.cmd == "stop":
+        from harness.orchestrator import request_stop
+
+        pid = request_stop(args.queue_db)
+        print(f"Stop requested: runner pid {pid} will finish its running jobs and exit." if pid
+              else "No runner is working on that queue.")
+        return 0
+    if args.cmd == "schedule":
+        from harness.schedule import instructions, write_plist
+
+        if args.write:
+            print(f"Wrote {write_plist()}")
+        print(instructions())
         return 0
 
     compute = load_compute_config()

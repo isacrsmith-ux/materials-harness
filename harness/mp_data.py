@@ -179,12 +179,89 @@ def _pbe_from_thermo(t: dict, requested_id: str | None = None) -> dict:
     }
 
 
+PBE_REF_CATEGORY = "pbe_ref"
+
+
+def _pbe_ref_path(material_id: str) -> Path:
+    return _cache_path(PBE_REF_CATEGORY, {"material_id": material_id})
+
+
 def pbe_reference(material_id: str) -> dict:
-    """PBE/PBE+U structure, uncorrected energy and GGA-hull stability for one material."""
-    docs = [t for t in _thermo(material_ids=[material_id]) if t.get("thermo_type") == PBE_THERMO_TYPE]
+    """PBE/PBE+U structure, uncorrected energy and GGA-hull stability for one material.
+
+    Served from the bulk prefetch (prefetch_pbe) when present, otherwise from a single cached thermo
+    query; both hold the same GGA_GGA+U thermo document.
+    """
+    path = _pbe_ref_path(material_id)
+    docs = json.loads(path.read_text(), cls=MontyDecoder)["value"] if path.is_file() else _thermo(material_ids=[material_id])
+    docs = [t for t in docs if t.get("thermo_type") == PBE_THERMO_TYPE]
     if not docs:
         raise KeyError(f"{material_id}: no {PBE_THERMO_TYPE} thermo document (no PBE reference)")
     return _pbe_from_thermo(docs[0], requested_id=material_id)
+
+
+def prefetch_pbe(material_ids, batch: int = 500) -> dict:
+    """Bulk-download GGA_GGA+U thermo documents (with PBE structures) for many materials: one request
+    per batch with rate-limit backoff, cached per material. Materials without a PBE document are
+    cached as empty results so they are never re-queried."""
+    ids = sorted({str(m) for m in material_ids})
+    todo = [m for m in ids if not _pbe_ref_path(m).is_file() and not _cache_path("thermo", {"material_ids": [m]}).is_file()]
+    for i in range(0, len(todo), batch):
+        chunk = todo[i:i + batch]
+
+        def fetch(chunk=chunk):
+            with _rester() as mpr:
+                docs = mpr.materials.thermo.search(material_ids=chunk, thermo_types=[PBE_THERMO_TYPE])
+            return [d.model_dump(mode="json") for d in docs]
+
+        by_id: dict[str, list] = {m: [] for m in chunk}
+        for d in _retry(fetch)():
+            by_id.setdefault(str(d["material_id"]), []).append(d)
+        for m, value in by_id.items():
+            path = _pbe_ref_path(m)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = path.with_suffix(".tmp")
+            tmp.write_text(json.dumps({"query": {"material_id": m, "thermo_types": [PBE_THERMO_TYPE]}, "value": value},
+                                      cls=MontyEncoder))
+            tmp.replace(path)
+        log.info("prefetched PBE thermo documents: %d/%d", min(i + batch, len(todo)), len(todo))
+    return {"requested": len(ids), "downloaded": len(todo), "cached_already": len(ids) - len(todo)}
+
+
+# --- bulk metadata for the automatic pair generator ------------------------------------------------
+BULK_SUMMARY_FIELDS = ["material_id", "formula_pretty", "nsites", "symmetry", "elements", "composition_reduced",
+                       "is_magnetic", "ordering", "total_magnetization_normalized_formula_units",
+                       "energy_above_hull", "theoretical", "deprecated"]
+
+
+def _slim_summary(d: dict) -> dict:
+    sym = d.get("symmetry") or {}
+    return {"material_id": str(d["material_id"]), "formula": d.get("formula_pretty"), "nsites": d.get("nsites"),
+            "sg_number": sym.get("number"), "sg_symbol": sym.get("symbol"),
+            "elements": [str(e) for e in d.get("elements") or []],
+            "composition_reduced": {str(k): float(v) for k, v in (d.get("composition_reduced") or {}).items()},
+            "is_magnetic": d.get("is_magnetic"), "ordering": d.get("ordering"),
+            "total_magnetization_normalized_formula_units": d.get("total_magnetization_normalized_formula_units"),
+            "energy_above_hull": d.get("energy_above_hull"), "theoretical": d.get("theoretical")}
+
+
+def bulk_summary(max_atoms: int) -> list[dict]:
+    """Light metadata (no structures) for every non-deprecated MP material with 1..max_atoms sites.
+
+    One cached request per site count, so an interrupted download resumes where it stopped. This
+    metadata is only used to *find* candidate pairs; every compared value comes from pbe_reference.
+    """
+    out: list[dict] = []
+    for n in range(1, max_atoms + 1):
+        def fetch(n=n):
+            with _rester() as mpr:
+                docs = mpr.materials.summary.search(num_sites=(n, n), deprecated=False, fields=BULK_SUMMARY_FIELDS)
+            return [_slim_summary(d.model_dump(mode="json")) for d in docs]
+
+        chunk = cached("bulk_summary", {"num_sites": n, "fields": BULK_SUMMARY_FIELDS}, fetch)
+        out.extend(chunk)
+        log.info("bulk summary: %2d sites -> %5d materials (running total %d)", n, len(chunk), len(out))
+    return out
 
 
 def pbe_candidates(formula: str) -> list[dict]:

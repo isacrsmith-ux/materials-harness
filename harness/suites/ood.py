@@ -66,21 +66,30 @@ def load_summary() -> pd.DataFrame:
     return pd.read_csv(SUMMARY)
 
 
-def load_sample(summary: pd.DataFrame) -> list[str]:
-    if SAMPLE_FILE.is_file():
-        return json.loads(SAMPLE_FILE.read_text())["ids"]
-    ids = sample_ids(summary)
-    SAMPLE_FILE.write_text(json.dumps({
+def sample_file(n: int = N_SAMPLE):
+    return SAMPLE_FILE if n == N_SAMPLE else DATA_DIR / f"ood_wbm_sample_{n}.json"
+
+
+def sample_structs_path(n: int = N_SAMPLE):
+    return SAMPLE_STRUCTS if n == N_SAMPLE else WBM_DIR / f"ood_sample_{n}_init_structs.json"
+
+
+def load_sample(summary: pd.DataFrame, n: int = N_SAMPLE) -> list[str]:
+    path = sample_file(n)
+    if path.is_file():
+        return json.loads(path.read_text())["ids"]
+    ids = sample_ids(summary, n=n)
+    path.write_text(json.dumps({
         "source": SOURCE, "pool": "unique_prototype == True with required columns present",
         "pool_size": int(((summary["unique_prototype"] == True) & summary[REQUIRED].notna().all(axis=1)).sum()),  # noqa: E712
         "n": len(ids), "seed": SEED, "method": "pandas.DataFrame.sample(random_state=seed)", "ids": ids}, indent=1) + "\n")
     return ids
 
 
-def load_structures(ids: list[str]) -> dict[str, Structure]:
-    """Initial (unrelaxed) WBM structures for the sample; scanned once, then cached."""
-    if SAMPLE_STRUCTS.is_file():
-        raw = json.loads(SAMPLE_STRUCTS.read_text())
+def load_structures(ids: list[str], cache_file=SAMPLE_STRUCTS) -> dict[str, Structure]:
+    """Initial (unrelaxed) WBM structures for the sample; scanned once, then cached in cache_file."""
+    if cache_file.is_file():
+        raw = json.loads(cache_file.read_text())
     else:
         wanted, raw = set(ids), {}
         with gzip.open(INIT_STRUCTS, "rt") as fh:
@@ -91,7 +100,7 @@ def load_structures(ids: list[str]) -> dict[str, Structure]:
                     raw[d["material_id"]] = d["initial_structure"]
                     if len(raw) == len(wanted):
                         break
-        SAMPLE_STRUCTS.write_text(json.dumps(raw))
+        cache_file.write_text(json.dumps(raw))
     missing = set(ids) - set(raw)
     if missing:
         log.warning("%d sampled ids have no initial structure: %s", len(missing), sorted(missing)[:5])
@@ -210,7 +219,7 @@ def print_summary(tag: str) -> None:
     if df.empty:
         print("No OOD results yet.")
         return
-    print(f"\n=== OUT-OF-DISTRIBUTION: WBM unique prototypes, random {N_SAMPLE} (seed {SEED}) — settings {tag} ===")
+    print(f"\n=== OUT-OF-DISTRIBUTION: WBM unique prototypes, {len(df)} random (seed {SEED}) — settings {tag} ===")
     print(f"{'ALL':<18} {_fmt(score(df))}")
     print(f"{'no spin caveat':<18} {_fmt(score(df[~df.spin_caveat]))}")
     print(f"{'spin caveat':<18} {_fmt(score(df[df.spin_caveat]))}")

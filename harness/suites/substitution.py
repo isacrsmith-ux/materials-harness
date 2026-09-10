@@ -35,9 +35,10 @@ def _ref_source(target: dict) -> str:
 
 def _record(job: dict, res: dict) -> None:
     pair, kind, key = job["pair"], job["kind"], job["job_key"]
+    suite = job.get("suite", SUITE)  # "substitution_auto" for queue-generated pairs; same logic
     if res.get("status") != "ok":
         log.warning("%s failed: %s", key, res.get("error"))
-        store.record_job(SUITE, key, res["status"], payload={"pair_id": pair["pair_id"], "kind": kind},
+        store.record_job(suite, key, res["status"], payload={"pair_id": pair["pair_id"], "kind": kind},
                          settings=job["settings"], error=res.get("error"), runtime_s=res.get("job_wall_s"))
         return
     target = mp_data.pbe_reference(pair["target_id"])
@@ -48,7 +49,7 @@ def _record(job: dict, res: dict) -> None:
     flags = {**pair["flags"], "converged": res["converged"], "n_steps": res["n_steps"],
              "max_stress_gpa": res["max_stress_gpa"]}
     src = _ref_source(target)
-    base = {"suite": SUITE, "job_key": key, "structure": f"{pair['pair_id']} [{kind}]", "formula": pair["target_formula"],
+    base = {"suite": suite, "job_key": key, "structure": f"{pair['pair_id']} [{kind}]", "formula": pair["target_formula"],
             "family": pair["family"], "flags": flags, "settings": res["metadata"] | {"rattle": RATTLE if kind == "sub_rattled" else None},
             "runtime_s": res["wall_time_s"], "reference_provenance": "mp_computed", "reference_source": src}
     rows = []
@@ -72,7 +73,7 @@ def _record(job: dict, res: dict) -> None:
                "converged": res["converged"], "n_steps": res["n_steps"], "fmax_final": res["fmax_final"],
                "max_stress_gpa": res["max_stress_gpa"], "lattice": lat, "structure_match": match,
                "energy_mev_vs_mp": e_mev, "wall_time_s": res["wall_time_s"], "n_atoms": len(relaxed)}
-    store.record_job(SUITE, key, "ok", payload=payload, settings=res["metadata"], runtime_s=res["wall_time_s"])
+    store.record_job(suite, key, "ok", payload=payload, settings=res["metadata"], runtime_s=res["wall_time_s"])
     log.info("%-26s %-11s vol %+6.2f%%  SG %3s  match=%s  dE %+7.1f meV/atom  steps %3d  σmax %.3f GPa  %.1fs",
              pair["pair_id"], kind, lat["vol_per_atom_pct_err"], lat["sim_spacegroup"], match, e_mev,
              res["n_steps"], res["max_stress_gpa"], res["wall_time_s"])
@@ -114,11 +115,12 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
 
 # --- analysis (also used by the report) ---------------------------------------------------------
 
-def pair_table(tag: str | None = None) -> pd.DataFrame:
-    """One row per pair with sub / ctrl / sub_rattled metrics side by side."""
-    pairs = {p["pair_id"]: p for p in resolve_pairs()}
-    payloads = store.load_payloads(SUITE, tag=tag)
-    jobs = store.load_table("jobs", SUITE)
+def pair_table(tag: str | None = None, suite: str = SUITE, pairs: list[dict] | None = None) -> pd.DataFrame:
+    """One row per pair with sub / ctrl / sub_rattled metrics side by side (curated pairs by default;
+    pass suite="substitution_auto" and the auto pair list for queue-generated pairs)."""
+    pairs = {p["pair_id"]: p for p in (pairs if pairs is not None else resolve_pairs())}
+    payloads = store.load_payloads(suite, tag=tag)
+    jobs = store.load_table("jobs", suite)
     recs = {}
     for key, pl in payloads.items():
         pid, kind = pl["pair_id"], pl["kind"]

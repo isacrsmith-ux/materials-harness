@@ -1,0 +1,16 @@
+{
+  "_comment": "Unattended-run settings (orchestration only). Validation settings live in harness/config.py and are not affected by this file. Defaults and meanings: harness/config.py UNATTENDED_DEFAULTS.",
+  "max_pairs": 2000,
+  "max_atoms": 40,
+  "ood_sample": 2000,
+  "auto_pair_kinds": ["sub", "ctrl"],
+  "max_attempts": 2,
+  "hard_timeout_s": 1800,
+  "report_every": 100,
+  "power_poll_s": 300,
+  "polite_reserved_cores": 2,
+  "polite_nice": 10,
+  "failure_alert_fraction": 0.10,
+  "failure_alert_min_jobs": 20,
+  "schedule": {"start": "23:00", "stop": "07:00", "mode": "full"}
+}
