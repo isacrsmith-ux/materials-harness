@@ -224,14 +224,32 @@ def ground_state(formula: str, spacegroup_number: int | None = None) -> dict:
                                     d["uncorrected_energy_per_atom"]))
 
 
+def str_keys(obj):
+    """Recursively turn dict keys into strings (Element('O') -> 'O')."""
+    if isinstance(obj, dict):
+        return {str(k): str_keys(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [str_keys(v) for v in obj]
+    return obj
+
+
 def entries_in_chemsys(chemsys: str) -> list:
-    """GGA/GGA+U ComputedStructureEntries for a chemical system, as MP serves them."""
+    """GGA/GGA+U ComputedStructureEntries for a chemical system.
+
+    MP serves entry.data["oxidation_states"] keyed by Element objects, but pymatgen's
+    MaterialsProject2020Compatibility looks anions up by symbol string (.get("F", 0)); an
+    Element key never matches, silently dropping to its electronegativity fallback. Keys are
+    normalised to strings here (this also makes the entries JSON-cacheable).
+    """
 
     def fetch():
         with _rester() as mpr:
-            return mpr.get_entries_in_chemsys(
+            entries = mpr.get_entries_in_chemsys(
                 chemsys.split("-"), additional_criteria={"thermo_types": ["GGA_GGA+U"]}
             )
+        for e in entries:
+            e.data = str_keys(e.data)
+        return entries
 
     return cached("entries_chemsys", {"chemsys": "-".join(sorted(chemsys.split("-"))), "thermo": "GGA_GGA+U"}, fetch)
 

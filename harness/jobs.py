@@ -18,6 +18,7 @@ def relax_job(job: dict) -> dict:
         "n_steps": res.n_steps,
         "fmax_final": res.fmax_final,
         "max_stress_gpa": res.max_stress_gpa,
+        "min_distance_ratio": res.min_distance_ratio,
         "wall_time_s": res.wall_time_s,
         "metadata": res.metadata,
     }

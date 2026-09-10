@@ -111,9 +111,11 @@ def load_table(table: str, suite: str | None = None):
         return pd.read_sql_query(q, con, params=(suite,) if suite else None)
 
 
-def load_payloads(suite: str, status: str = "ok") -> dict[str, dict]:
+def load_payloads(suite: str, status: str = "ok", tag: str | None = None) -> dict[str, dict]:
+    """Payloads of finished jobs; with `tag`, only jobs run at that settings tag ("...@<tag>")."""
     from monty.json import MontyDecoder
 
     with connect() as con:
         rows = con.execute("SELECT job_key, payload FROM jobs WHERE suite=? AND status=?", (suite, status))
-        return {r["job_key"]: json.loads(r["payload"], cls=MontyDecoder) for r in rows if r["payload"]}
+        return {r["job_key"]: json.loads(r["payload"], cls=MontyDecoder) for r in rows
+                if r["payload"] and (tag is None or r["job_key"].endswith(f"@{tag}"))}

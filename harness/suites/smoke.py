@@ -71,7 +71,9 @@ def run_smoke(device: str = "cpu", dtype: str = "float64", record: bool = True) 
 
 
 def _record(out: dict, res) -> None:
-    key = f"{PARENT_ID}:Si->Ge:{out['target_id']}"
+    from harness.config import settings_tag
+
+    key = f"{PARENT_ID}:Si->Ge:{out['target_id']}@{settings_tag(out['settings']['device'], out['settings']['dtype'])}"
     label = f"Si->Ge ({PARENT_ID} -> {out['target_id']})"
     base = {"suite": SUITE, "job_key": key, "structure": label, "formula": "Ge", "family": "elemental-diamond",
             "flags": compare.system_flags(["Ge"]), "settings": out["settings"], "runtime_s": out["wall_time_s"]}

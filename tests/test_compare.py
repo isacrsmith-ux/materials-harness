@@ -53,6 +53,33 @@ def test_substitute_rejects_absent_element():
         compare.substitute(diamond(), {"Ge": "Sn"})
 
 
+def test_perturb_is_deterministic_and_breaks_symmetry():
+    s = diamond(a=5.43).get_primitive_structure()
+    p1 = compare.perturb(s, seed=7)
+    p2 = compare.perturb(s, seed=7)
+    p3 = compare.perturb(s, seed=8)
+    assert len(p1) == 8 * len(s)
+    np.testing.assert_allclose(p1.cart_coords, p2.cart_coords)
+    assert not np.allclose(p1.cart_coords, p3.cart_coords)
+    assert p1.composition.reduced_formula == "Si"
+    assert compare.conventional_cell(p1, symprec=1e-3).spacegroup < 227  # symmetry actually broken
+    assert compare.relaxed_into_target(p1, s, allow_supercell=True)  # small enough to still match
+
+
+def test_stable_seed_is_stable():
+    assert compare.stable_seed("CaF2->SrF2") == compare.stable_seed("CaF2->SrF2")
+    assert compare.stable_seed("a") != compare.stable_seed("b")
+
+
+def test_settings_tag_changes_with_protocol():
+    from harness.config import DEFAULT_RELAX, RelaxSettings, settings_tag
+
+    base = settings_tag("cpu", "float64")
+    assert base == settings_tag("cpu", "float64", DEFAULT_RELAX)
+    assert base != settings_tag("cpu", "float32")
+    assert base != settings_tag("cpu", "float64", RelaxSettings(max_stress_gpa=0.1))
+
+
 # --- scalar math ----------------------------------------------------------------------------
 
 def test_pct_error_sign_and_value():

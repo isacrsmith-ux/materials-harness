@@ -53,7 +53,10 @@ def model_path() -> Path:
 class RelaxSettings:
     """Relaxation protocol recorded with every simulated value."""
 
-    fmax: float = 0.01  # eV/Å (FrechetCellFilter also applies it to volume-scaled stress)
+    fmax: float = 0.01  # eV/Å on every atom
+    # Explicit cell criterion. FrechetCellFilter applies fmax to stress * V / N, which lets small
+    # cells stop with ~0.1-0.2 GPa residual stress; we additionally require max |stress| <= this.
+    max_stress_gpa: float = 0.01
     max_steps: int = 500
     optimizer: str = "BFGS"
     cell_filter: str = "FrechetCellFilter"
@@ -64,6 +67,14 @@ class RelaxSettings:
 
 
 DEFAULT_RELAX = RelaxSettings()
+
+
+def settings_tag(device: str, dtype: str, relax: RelaxSettings = DEFAULT_RELAX) -> str:
+    """Short hash of everything that changes a simulated value. Appended to every job key
+    ("...@<tag>"), so changing the protocol can never silently reuse stale results."""
+    blob = json.dumps({"model": MODEL["sha256"], "device": device, "dtype": dtype, "relax": relax.as_dict()},
+                      sort_keys=True)
+    return hashlib.sha256(blob.encode()).hexdigest()[:8]
 
 # Used until `python -m harness benchmark` writes config/compute.json.
 _FALLBACK_COMPUTE = {"device": "cpu", "dtype": "float64", "workers": 1, "threads_per_worker": None}

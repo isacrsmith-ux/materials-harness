@@ -32,6 +32,50 @@ def substitute(structure: Structure, mapping: dict[str, str]) -> Structure:
     return out
 
 
+def perturb(structure: Structure, seed: int, rattle_angstrom: float = 0.03, strain: float = 0.01,
+            supercell=(2, 2, 2)) -> Structure:
+    """Deterministically break symmetry: supercell (so zone-boundary distortions such as
+    octahedral tilts are representable), random symmetric cell strain, Gaussian atom rattle."""
+    rng = np.random.default_rng(seed)
+    s = structure.copy()
+    s.make_supercell(list(supercell))
+    eps = rng.normal(0.0, strain, (3, 3))
+    eps = (eps + eps.T) / 2
+    lattice = s.lattice.matrix @ (np.eye(3) + eps)
+    cart = s.frac_coords @ lattice + rng.normal(0.0, rattle_angstrom, (len(s), 3))
+    return Structure(lattice, s.species, cart, coords_are_cartesian=True)
+
+
+def stable_seed(text: str) -> int:
+    """Seed derived from a label, stable across runs and Python processes (unlike hash())."""
+    import hashlib
+
+    return int(hashlib.sha256(text.encode()).hexdigest()[:8], 16)
+
+
+# Physical-sanity guard. Real bonds sit at >= ~0.75 of the covalent-radius sum (N2 0.78, O2 0.91);
+# a MACE relaxation that collapsed solid O2 reached 0.05 with E = -1.2e11 eV/atom. Anything below
+# this ratio is treated as an unphysical (failed) relaxation, never as a result.
+UNPHYSICAL_DISTANCE_RATIO = 0.5
+
+
+def min_distance_ratio(structure: Structure, cutoff: float = 4.0) -> float:
+    """min over atom pairs (incl. periodic images) of d_ij / (r_cov_i + r_cov_j)."""
+    from pymatgen.analysis.molecule_structure_comparator import CovalentRadius
+
+    radii = CovalentRadius.radius
+    best = np.inf
+    for i, neighbors in enumerate(structure.get_all_neighbors(cutoff)):
+        ri = radii[structure[i].specie.symbol]
+        for n in neighbors:
+            best = min(best, n.nn_distance / (ri + radii[n.specie.symbol]))
+    return float(best)
+
+
+def is_unphysical(structure: Structure) -> bool:
+    return min_distance_ratio(structure) < UNPHYSICAL_DISTANCE_RATIO
+
+
 def volume_per_atom(structure: Structure) -> float:
     return structure.volume / len(structure)
 
@@ -98,11 +142,12 @@ def same_prototype(s1: Structure, s2: Structure) -> bool:
     return bool(StructureMatcher().fit_anonymous(s1, s2))
 
 
-def relaxed_into_target(relaxed: Structure, target: Structure) -> bool:
-    """Species-aware StructureMatcher at default tolerances."""
+def relaxed_into_target(relaxed: Structure, target: Structure, allow_supercell: bool = False) -> bool:
+    """Species-aware StructureMatcher at default tolerances. allow_supercell only lets it compare
+    a supercell with a primitive cell (needed for the rattled runs); tolerances are unchanged."""
     from pymatgen.analysis.structure_matcher import StructureMatcher
 
-    return bool(StructureMatcher().fit(relaxed, target))
+    return bool(StructureMatcher(attempt_supercell=allow_supercell).fit(relaxed, target))
 
 
 def energy_diff_mev(sim_ev_per_atom: float, ref_ev_per_atom: float) -> float:

@@ -43,3 +43,4 @@ def test_settings_recorded(result):
     s = result["settings"]
     assert s["model_name"] == "MACE-MP-0 medium" and s["dtype"] == "float64" and s["device"] == "cpu"
     assert s["relax"]["fmax"] == 0.01 and s["relax"]["cell_filter"] == "FrechetCellFilter"
+    assert s["relax"]["max_stress_gpa"] == 0.01

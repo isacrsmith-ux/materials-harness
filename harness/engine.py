@@ -23,6 +23,7 @@ from harness import config
 from harness.config import RelaxSettings
 
 _CALCS: dict[tuple[str, str], object] = {}
+EV_PER_A3_TO_GPA = 160.21766208
 
 
 class RelaxTimeout(Exception):
@@ -99,6 +100,7 @@ class RelaxResult:
     fmax_final: float  # eV/Å, max atomic force
     max_stress_gpa: float
     wall_time_s: float
+    min_distance_ratio: float = float("nan")  # see compare.UNPHYSICAL_DISTANCE_RATIO
     metadata: dict = field(default_factory=dict)
 
     @property
@@ -134,20 +136,39 @@ def relax(
     atoms.calc = get_calculator(device, dtype)
     target = FrechetCellFilter(atoms) if relax_cell else atoms
     opt = BFGS(target, logfile=None)
+    stress_limit = settings.max_stress_gpa / EV_PER_A3_TO_GPA
+    filter_fmax = settings.fmax
     t0 = time.perf_counter()
     with wall_clock_limit(settings.timeout_s):
-        converged = bool(opt.run(fmax=settings.fmax, steps=settings.max_steps))
+        while (remaining := settings.max_steps - opt.get_number_of_steps()) > 0:
+            opt.run(fmax=filter_fmax, steps=remaining)
+            forces_ok = np.linalg.norm(atoms.get_forces(), axis=1).max() <= settings.fmax
+            stress_ok = not relax_cell or np.abs(atoms.get_stress(voigt=True)).max() <= stress_limit
+            if (forces_ok and stress_ok) or filter_fmax < 1e-5:
+                break
+            # The filter scales stress by V/N; tighten its criterion (same BFGS, Hessian kept)
+            # until the explicit stress limit holds or the step cap is reached.
+            filter_fmax /= 2
     wall = time.perf_counter() - t0
+
+    from harness.compare import UNPHYSICAL_DISTANCE_RATIO, min_distance_ratio
 
     forces = atoms.get_forces()
     stress = atoms.get_stress(voigt=True)  # eV/Å^3
+    fmax_final = float(np.linalg.norm(forces, axis=1).max())
+    final = _to_structure(atoms)
+    mdr = min_distance_ratio(final)
+    # An unphysical geometry (collapsed atoms) is never reported as a converged result.
+    converged = (fmax_final <= settings.fmax and (not relax_cell or float(np.abs(stress).max()) <= stress_limit)
+                 and mdr >= UNPHYSICAL_DISTANCE_RATIO)
     return RelaxResult(
-        structure=_to_structure(atoms),
+        structure=final,
+        min_distance_ratio=mdr,
         energy_per_atom=float(atoms.get_potential_energy() / len(atoms)),
         converged=converged,
         n_steps=int(opt.get_number_of_steps()),
-        fmax_final=float(np.linalg.norm(forces, axis=1).max()),
-        max_stress_gpa=float(np.abs(stress).max() * 160.21766208),
+        fmax_final=fmax_final,
+        max_stress_gpa=float(np.abs(stress).max() * EV_PER_A3_TO_GPA),
         wall_time_s=wall,
         metadata=engine_metadata(device, dtype, settings) | {"relax_cell": relax_cell},
     )
