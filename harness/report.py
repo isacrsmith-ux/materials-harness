@@ -176,7 +176,7 @@ def _wbm_outcomes(tag: str, df: pd.DataFrame) -> pd.Series:
     return df.wbm_id.map(lambda w: outcome(have.get(w)))
 
 
-def _start_changed(tag: str, df: pd.DataFrame) -> pd.Series:
+def _start_changed(tag: str, df: pd.DataFrame, init_cache: str = "calibration_init_structs.json") -> pd.Series:
     """Did the relaxation leave its starting (WBM initial) structure? The signal a real candidate has — the
     DFT-relaxed structure is not known for new materials. Cached per settings tag."""
     from harness.suites import ood
@@ -185,7 +185,7 @@ def _start_changed(tag: str, df: pd.DataFrame) -> pd.Series:
     have = json.loads(cache.read_text()) if cache.is_file() else {}
     todo = [w for w in df.wbm_id if w not in have]
     if todo:
-        starts = ood.load_structures(sorted(set(df.wbm_id)), cache_file=ood.WBM_DIR / "calibration_init_structs.json")
+        starts = ood.load_structures(sorted(set(df.wbm_id)), cache_file=ood.WBM_DIR / init_cache)
         rel = dict(zip(df.wbm_id, df.relaxed))
         for w in todo:
             have[w] = (not compare.relaxed_into_target(rel[w], starts[w])) if w in starts else None
@@ -211,8 +211,10 @@ def collect(tag: str) -> dict:
     split = splits.load_split() if splits.SPLIT_FILE.is_file() else None
     wb, wb_rej = pd.DataFrame(), pd.DataFrame()
     if len(oo) and split:
+        from harness import final_eval
+
         leaked = set(oo.wbm_id) & set(split["test"]["ids"])
-        if leaked:
+        if leaked and not final_eval.started():
             raise RuntimeError(f"{len(leaked)} locked WBM test ids have results — the test set must not be run before the final evaluation")
         cal = oo[oo.wbm_id.isin(set(split["calibration"]["ids"]))]
         wb_rej = cal[cal.rejection.notna()]

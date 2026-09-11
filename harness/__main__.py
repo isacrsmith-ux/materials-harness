@@ -90,6 +90,10 @@ def main(argv: list[str] | None = None) -> int:
                        ("requeue-failed", "put failed / timed-out queue jobs back to pending (after a fix)")):
         p = sub.add_parser(name, help=text)
         p.add_argument("--queue-db", default=str(QUEUE_DB))
+    ft = sub.add_parser("final-test", help="ONE-TIME locked-test evaluation (start -> queue -> evaluate)")
+    ft.add_argument("action", choices=["start", "queue", "evaluate"])
+    ft.add_argument("--models", help="comma list of registry keys: primary first, second engine for disagreement")
+    ft.add_argument("--queue-db", default=str(QUEUE_DB))
     sub.add_parser("candidates", help="Phase 3 candidate table -> reports/phase3/candidates.md")
     sub.add_parser("compare-models", help="Phase 3 screening comparison -> reports/phase3/screening.md")
     p0 = sub.add_parser("phase0", help="Phase 0 audits, queue ETA, before/after report")
@@ -162,6 +166,19 @@ def main(argv: list[str] | None = None) -> int:
         pid = request_stop(args.queue_db)
         print(f"Stop requested: runner pid {pid} will finish its running jobs and exit." if pid
               else "No runner is working on that queue.")
+        return 0
+    if args.cmd == "final-test":
+        from harness import final_eval, jobqueue, screening
+
+        if args.action == "start":
+            print(json.dumps(final_eval.start(args.models.split(",")), indent=1))
+        elif args.action == "queue":
+            jobs = final_eval.build_test_jobs(load_compute_config())
+            print(jobqueue.enqueue(jobs, args.queue_db))
+        else:
+            setting = {k: (k, d, t) for k, d, t in screening.benchmarked_models()}
+            keys = args.models.split(",")
+            print(f"Wrote {final_eval.evaluate(setting[keys[0]], setting[keys[1]] if len(keys) > 1 else None)}")
         return 0
     if args.cmd == "candidates":
         from harness import candidates
