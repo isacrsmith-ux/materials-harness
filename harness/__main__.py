@@ -89,6 +89,8 @@ def main(argv: list[str] | None = None) -> int:
                        ("requeue-failed", "put failed / timed-out queue jobs back to pending (after a fix)")):
         p = sub.add_parser(name, help=text)
         p.add_argument("--queue-db", default=str(QUEUE_DB))
+    sub.add_parser("candidates", help="Phase 3 candidate table -> reports/phase3/candidates.md")
+    sub.add_parser("compare-models", help="Phase 3 screening comparison -> reports/phase3/screening.md")
     p0 = sub.add_parser("phase0", help="Phase 0 audits, queue ETA, before/after report")
     p0.add_argument("action", choices=["audit", "eta", "report"])
     p0.add_argument("--queue-db", default=str(QUEUE_DB))
@@ -158,6 +160,16 @@ def main(argv: list[str] | None = None) -> int:
         pid = request_stop(args.queue_db)
         print(f"Stop requested: runner pid {pid} will finish its running jobs and exit." if pid
               else "No runner is working on that queue.")
+        return 0
+    if args.cmd == "candidates":
+        from harness import candidates
+
+        print(f"Wrote {candidates.write()}")
+        return 0
+    if args.cmd == "compare-models":
+        from harness import screening
+
+        print(f"Wrote {screening.write_report()}")
         return 0
     if args.cmd == "phase0":
         from harness import phase0

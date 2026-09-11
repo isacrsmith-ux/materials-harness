@@ -1,0 +1,214 @@
+{
+  "generated_at": "2026-09-11T14:54:30+00:00",
+  "model": "sevennet-omni",
+  "machine": {
+    "chip": "Apple M4 Max",
+    "model": "Mac16,6",
+    "macos": "26.6.2",
+    "arch": "arm64",
+    "memory_gb": 36.0,
+    "python": "3.12.14",
+    "performance_cores": 10,
+    "efficiency_cores": 4,
+    "physical_cores": 14
+  },
+  "device": "mps",
+  "dtype": "float32",
+  "workers": 2,
+  "threads_per_worker": 5,
+  "device_reason": "mps/float32 agreed with cpu/float32 within tolerance on all 5 structures and relaxed 1.46x faster.",
+  "device_benchmark": {
+    "tolerances": {
+      "energy_mev_per_atom": 1.0,
+      "volume_pct": 0.1,
+      "lattice_angstrom": 0.005,
+      "single_point_force_ev_per_a": 0.005
+    },
+    "threads": 10,
+    "per_structure": {
+      "Si_diamond_64": {
+        "n_atoms": 64,
+        "cpu_float32": {
+          "single_point_ms": 714.9701499991352,
+          "relax_wall_s": 28.14742454199586,
+          "n_steps": 34,
+          "converged": true,
+          "energy_per_atom": -5.42104959487915
+        },
+        "mps_float32": {
+          "run": {
+            "single_point_ms": 438.94436660048086,
+            "relax_wall_s": 18.700176540995017,
+            "n_steps": 34,
+            "converged": true,
+            "energy_per_atom": -5.421049118041992
+          },
+          "differences": {
+            "energy_mev_per_atom": 0.000476837158203125,
+            "volume_pct": 2.8203577571826695e-06,
+            "lattice_angstrom": 1.0875711531355137e-07,
+            "single_point_force_ev_per_a": 1.9073486328125e-06,
+            "structure_match": true,
+            "test_converged": true,
+            "agrees": true
+          }
+        }
+      },
+      "MgO_rocksalt_64": {
+        "n_atoms": 64,
+        "cpu_float32": {
+          "single_point_ms": 1387.7697707997868,
+          "relax_wall_s": 38.74281820899341,
+          "n_steps": 28,
+          "converged": true,
+          "energy_per_atom": -5.983395099639893
+        },
+        "mps_float32": {
+          "run": {
+            "single_point_ms": 948.3168625010876,
+            "relax_wall_s": 26.683804166008485,
+            "n_steps": 28,
+            "converged": true,
+            "energy_per_atom": -5.983394622802734
+          },
+          "differences": {
+            "energy_mev_per_atom": 0.000476837158203125,
+            "volume_pct": 1.6205028977198234e-06,
+            "lattice_angstrom": 6.221617532276014e-08,
+            "single_point_force_ev_per_a": 1.7881393432617188e-06,
+            "structure_match": true,
+            "test_converged": true,
+            "agrees": true
+          }
+        }
+      },
+      "GaN_wurtzite_72": {
+        "n_atoms": 72,
+        "cpu_float32": {
+          "single_point_ms": 1428.2338207995053,
+          "relax_wall_s": 86.31093716601026,
+          "n_steps": 58,
+          "converged": true,
+          "energy_per_atom": -6.155969831678602
+        },
+        "mps_float32": {
+          "run": {
+            "single_point_ms": 972.0735000009881,
+            "relax_wall_s": 59.08302691698191,
+            "n_steps": 58,
+            "converged": true,
+            "energy_per_atom": -6.155969407823351
+          },
+          "differences": {
+            "energy_mev_per_atom": 0.00042385525134136515,
+            "volume_pct": 2.13262575909324e-06,
+            "lattice_angstrom": 8.56003108395953e-08,
+            "single_point_force_ev_per_a": 1.6987323760986328e-06,
+            "structure_match": true,
+            "test_converged": true,
+            "agrees": true
+          }
+        }
+      },
+      "Cu_fcc_108": {
+        "n_atoms": 108,
+        "cpu_float32": {
+          "single_point_ms": 2157.3644457996124,
+          "relax_wall_s": 73.15357729099924,
+          "n_steps": 34,
+          "converged": true,
+          "energy_per_atom": -4.099385579427083
+        },
+        "mps_float32": {
+          "run": {
+            "single_point_ms": 1542.788550001569,
+            "relax_wall_s": 52.51524420801434,
+            "n_steps": 34,
+            "converged": true,
+            "energy_per_atom": -4.099385014286748
+          },
+          "differences": {
+            "energy_mev_per_atom": 0.0005651403354178797,
+            "volume_pct": 1.2643665928360544e-06,
+            "lattice_angstrom": 5.2532506344959984e-08,
+            "single_point_force_ev_per_a": 8.791685104370117e-07,
+            "structure_match": true,
+            "test_converged": true,
+            "agrees": true
+          }
+        }
+      },
+      "SrTiO3_perovskite_40": {
+        "n_atoms": 40,
+        "cpu_float32": {
+          "single_point_ms": 830.1295624987688,
+          "relax_wall_s": 141.74376512499293,
+          "n_steps": 172,
+          "converged": true,
+          "energy_per_atom": -8.02637939453125
+        },
+        "mps_float32": {
+          "run": {
+            "single_point_ms": 532.752929101116,
+            "relax_wall_s": 94.6615074169822,
+            "n_steps": 172,
+            "converged": true,
+            "energy_per_atom": -8.026378631591797
+          },
+          "differences": {
+            "energy_mev_per_atom": 0.0007629394538355427,
+            "volume_pct": 0.00015179634034787068,
+            "lattice_angstrom": 7.35245967318221e-05,
+            "single_point_force_ev_per_a": 1.6093254089355469e-06,
+            "structure_match": true,
+            "test_converged": true,
+            "agrees": true
+          }
+        }
+      }
+    },
+    "errors": [],
+    "settings": {
+      "mps/float32": {
+        "all_agree": true,
+        "mean_relax_speedup": 1.4616663276712858,
+        "failures": 0,
+        "first_error": null
+      }
+    },
+    "recommend": {
+      "device": "mps",
+      "dtype": "float32"
+    },
+    "reason": "mps/float32 agreed with cpu/float32 within tolerance on all 5 structures and relaxed 1.46x faster."
+  },
+  "pool_benchmark": {
+    "layouts": [
+      {
+        "workers": 1,
+        "threads_per_worker": 10,
+        "wall_s": 55.1567520420067,
+        "n_jobs": 16,
+        "n_ok": 16,
+        "s_per_structure": 3.447297002625419
+      },
+      {
+        "workers": 2,
+        "threads_per_worker": 5,
+        "wall_s": 37.71804241699283,
+        "n_jobs": 16,
+        "n_ok": 16,
+        "s_per_structure": 2.357377651062052
+      }
+    ],
+    "best": {
+      "workers": 2,
+      "threads_per_worker": 5,
+      "wall_s": 37.71804241699283,
+      "n_jobs": 16,
+      "n_ok": 16,
+      "s_per_structure": 2.357377651062052
+    }
+  },
+  "source": "benchmark"
+}

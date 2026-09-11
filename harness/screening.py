@@ -110,6 +110,50 @@ def model_summary(key: str, device: str, dtype: str, subset: dict, costs: dict, 
     return out
 
 
+def benchmarked_models() -> list[tuple[str, str, str]]:
+    """(key, device, dtype) of every registry model with a compute config (the baseline's is config/compute.json)."""
+    from harness.config import compute_config_path
+
+    out = []
+    for key in MODELS:
+        p = compute_config_path(key)
+        if p.is_file():
+            c = json.loads(p.read_text())
+            out.append((key, c["device"], c["dtype"]))
+    return out
+
+
+def write_report(models: list[tuple[str, str, str]] | None = None) -> str:
+    from harness.config import REPORTS_DIR, ROOT
+    from harness.report import _costs
+
+    costs = _costs()
+    df = compare_models(models or benchmarked_models(), costs)
+    fmt = lambda c, s="{:.1f}": M.fmt_ci(c, s) if isinstance(c, tuple) else "n/a"  # noqa: E731
+    show = pd.DataFrame({
+        "model": df.model, "setting": df.setting, "compliant": df.compliant,
+        "WBM done / rejected": [f"{a} / {b}" for a, b in zip(df.get("wbm_done", 0), df.get("wbm_rejected", 0))],
+        "cost-optimal threshold (meV/atom)": df.get("threshold_mev"),
+        "expected cost per candidate": df.get("expected_cost", pd.Series(dtype=object)).map(lambda c: fmt(c, "{:.3f}")),
+        "precision at that threshold": df.get("precision", pd.Series(dtype=object)).map(lambda c: fmt(c, "{:.2f}")),
+        "recall": df.get("recall", pd.Series(dtype=object)).map(lambda c: fmt(c, "{:.2f}")),
+        "F1 at 0": df.get("f1_at_0")})
+    bins = pd.DataFrame({"model": df.model, **{c: df[c].map(fmt) for c in df.columns if c.startswith(("new ", "known "))}})
+    L = ["# Phase 3 — engine screening", "",
+         f"Paired comparison on the fixed screening subset (`data/screening_subset.json`: {PAIRS_PER_BIN} MP pairs per hull bin + "
+         f"{N_WBM} WBM calibration structures; the locked test set is not used). Ranked by the upper bound of the expected cost per "
+         f"screened candidate at each engine's cost-optimal threshold (costs in `config/costs.json`: wasted lab test "
+         f"{costs['cost_false_positive']}, missed stable material {costs['cost_missed_stable']}), then by the lower bound of precision. "
+         "Engines whose training data is not verified free of WBM ('compliant' ≠ True) may look better on WBM than they are.", "",
+         show.to_markdown(index=False, floatfmt=".3f"), "",
+         "Energy MAE (meV/atom) by hull bin — 'new' = WBM screening structures (relaxed energy), 'known' = MP pairs whose control "
+         "stays in the target structure:", "", bins.to_markdown(index=False), ""]
+    out = REPORTS_DIR / "phase3" / "screening.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(L) + "\n")
+    return str(out.relative_to(ROOT))
+
+
 def compare_models(models: list[tuple[str, str, str]], costs: dict | None = None) -> pd.DataFrame:
     """models: (registry key, device, dtype) of each engine's benchmarked setting."""
     from harness.report import _costs

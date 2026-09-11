@@ -1,0 +1,14 @@
+{
+ "_source": "Matbench Discovery model metadata files, github.com/janosh/matbench-discovery/tree/main/models (read 2026-09-11); discovery metrics on the unique-prototype subset; kappa_SRME = phonon thermal-conductivity error (lower is better)",
+ "mace-mp-0-medium": {"file": "models/mace/mace-mp-0.yml", "F1": 0.669, "DAF": 3.777, "precision": 0.577, "recall": 0.796, "MAE_eV": 0.057, "RMSE_eV": 0.101, "R2": 0.697, "kappa_SRME": 0.682, "params": 4690000, "relax": "FIRE, fmax 0.05, 500 steps, FrechetCellFilter"},
+ "mace-mpa-0-medium": {"file": "models/mace/mace-mpa-0.yml", "F1": 0.852, "DAF": 5.582, "precision": 0.853, "recall": 0.851, "MAE_eV": 0.028, "RMSE_eV": 0.073, "R2": 0.842, "kappa_SRME": 0.412, "params": 9063204, "relax": "FIRE, fmax 0.05, 500 steps, FrechetCellFilter"},
+ "esen-30m-oam": {"file": "models/esen/esen-30m-oam.yml", "F1": 0.925, "DAF": 6.069, "precision": 0.928, "recall": 0.923, "MAE_eV": 0.018, "RMSE_eV": 0.067, "R2": 0.866, "kappa_SRME": 0.170, "params": 30161153, "relax": "FIRE, fmax 0.02, 500 steps, FrechetCellFilter"},
+ "sevennet-omni": {"file": "models/sevennet/sevennet-omni-i12.yml", "F1": 0.906, "DAF": 5.954, "precision": 0.91, "recall": 0.901, "MAE_eV": 0.021, "RMSE_eV": 0.067, "R2": 0.868, "kappa_SRME": 0.192, "params": 54921363, "relax": "FIRE, fmax 0.02, 800 steps, FrechetCellFilter"},
+ "_excluded": {
+  "grace-3l-oam-l": {"F1": 0.925, "reason": "Academic Software Licence (non-commercial) for code and checkpoint"},
+  "orb-v3": {"F1": 0.905, "reason": "trained on full Alexandria, which overlaps WBM (~97k prototypes): WBM scores contaminated"},
+  "mattersim-v1-5m": {"F1": 0.862, "reason": "closed training data; WBM overlap cannot be verified"},
+  "tece-oam-rra-1.0": {"F1": 0.929, "reason": "222M parameters, 891 MB checkpoint, CUDA-only kernel library (openequivariance)"},
+  "uma": {"F1": null, "reason": "not submitted to Matbench Discovery; no published WBM score to cross-check"}
+ }
+}
