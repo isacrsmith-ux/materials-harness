@@ -70,7 +70,7 @@ def retry_jobs(suite: str, pairs: list[dict], compute: dict, tag: str, done: set
     settings = {"device": compute["device"], "dtype": compute["dtype"], "settings_tag": tag}
     jobs = []
     for key, pl in store.load_payloads(suite, tag=tag).items():
-        if pl["kind"] == "static" or "ladder" in pl or pl["pair_id"] not in pmap:
+        if pl["kind"] in ("static", "ladder") or "relaxed" not in pl or "ladder" in pl or pl["pair_id"] not in pmap:
             continue
         why = rejection_reason(pl)
         lkey = key.replace(f"@{tag}", f":ladder@{tag}")
