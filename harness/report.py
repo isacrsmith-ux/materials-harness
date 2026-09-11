@@ -532,6 +532,18 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
                          "recall": _ci(dm["recall_ci"], "{:.2f}"), "F1": _ci(dm["f1_ci"], "{:.2f}"), "NPV": _ci(dm["npv_ci"], "{:.3f}")})
         body += ["Stable calls at 0 eV/atom on these systems (the sample over-represents stable materials by design — one bin in "
                  "five is '<0' — so precision here is not the population precision of section 4):", "", _md(pd.DataFrame(rows)), ""]
+        both = mb[np.isfinite(mb.b_err_mev.astype(float))]
+        rows = []
+        for b in list(compare.HULL_BINS_WBM) + ["all"]:
+            g = both if b == "all" else both[both.bin == b]
+            diff = M.boot_ci(g.b_err_mev.abs() - g.a_err_mev.abs(), M.MEAN, N_BOOT)
+            rows.append({"bin": b, "systems scored in both": len(g), "|b| − |a| mean": _ci(diff, "{:+.1f}"),
+                         "mode (b) closer": f"{(g.b_err_mev.abs() < g.a_err_mev.abs()).mean():.0%}" if len(g) else "n/a",
+                         "mean signed a": g.a_err_mev.mean(), "mean signed b": g.b_err_mev.mean()})
+        body += ["**Paired comparison** on systems scored in both modes (meV/atom; positive = mode (b) worse):", "",
+                 _md(pd.DataFrame(rows), ".1f"), ""]
+        mode_b_diff = M.boot_ci(both.b_err_mev.abs() - both.a_err_mev.abs(), M.MEAN, N_BOOT)
+        score["mode_b_minus_a_abs_mev"] = mode_b_diff[0]
         for b in compare.HULL_BINS_WBM:
             s = M.error_summary(mb[mb.bin == b].b_err_mev, N_BOOT)
             score[f"mode_b_mae_{b}"] = s["mae"][0]
@@ -682,9 +694,12 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
             parts.append(f"{b}: ≤ {s['mae'][2]:.0f} meV/atom ({verdict_ci('energy_mae_mev', s['mae'])})")
         verdict_lines.append("* **Energy error on new materials, upper bound by true hull distance:** " + "; ".join(parts) + ".")
         if "diff_share" in locals():
+            same_mae = wb[wb.outcome == "same structure"].de_mev.abs().mean()
+            diff_mae = wb[wb.outcome == "relaxed into a different structure"].de_mev.abs().mean()
             verdict_lines.append("* **Relaxation changes the structure** for " + ", ".join(
                 f"{diff_share.get(b, np.nan):.0%} ({b})" for b in compare.HULL_BINS_WBM)
-                + " of new materials; those results carry roughly twice the error and should go to DFT, not to the lab.")
+                + f" of new materials; those results carry {diff_mae / same_mae:.1f}× the energy error of the rest "
+                  f"({diff_mae:.0f} vs {same_mae:.0f} meV/atom MAE) and should go to DFT, not to the lab.")
     if len(au):
         parts = []
         same = au[au.ctrl_outcome == "same structure"]
@@ -699,7 +714,19 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
         verdict_lines.append(f"* **Chemistries (new materials, ≥ {MIN_ELEMENT_COUNT} compounds):** error upper bound ≤ 30 meV/atom for "
                              f"{', '.join(good) or 'no element'}; error lower bound > 60 meV/atom (not trustworthy) for "
                              f"{', '.join(bad) or 'no element'}.")
-    verdict_lines.append("* **Not yet shown:** the locked WBM test set (final evaluation), mode (b) on new materials (Phase 4), other engines (Phase 3).")
+    if "mode_b_diff" in locals() and np.isfinite(mode_b_diff[0]):
+        lo, hi = mode_b_diff[1], mode_b_diff[2]
+        if lo > 0:
+            txt = (f"relaxing every competing phase with the engine makes the hull-distance error **larger** by "
+                   f"{_ci(mode_b_diff, '{:+.1f}')} meV/atom per system than placing the engine's energy on the MP DFT hull (mode a). "
+                   "On new materials the error belongs to the new structure and does not cancel against the competitors; "
+                   "mode (a) is the better construction for the product, and it needs no competitor relaxations.")
+        elif hi < 0:
+            txt = f"mode (b) reduces the hull-distance error by {_ci(mode_b_diff, '{:+.1f}')} meV/atom per system versus mode (a)."
+        else:
+            txt = f"mode (b) and mode (a) are not distinguishable ({_ci(mode_b_diff, '{:+.1f}')} meV/atom per system)."
+        verdict_lines.append(f"* **Hull construction for new materials:** {txt}")
+    verdict_lines.append("* **Not yet shown:** the locked WBM test set (final evaluation) and other engines (Phase 3: downloads awaiting approval).")
     verdict_lines.append("")
 
     # ---------- write ----------
