@@ -83,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     un.add_argument("--max-jobs", type=int, help="dispatch at most N jobs, then drain (testing)")
     un.add_argument("--power-poll", type=float, help="seconds between pmset checks (default from config)")
     un.add_argument("--workers", type=int, help="override the mode's worker count")
+    un.add_argument("--threads", type=int, help="override torch threads per worker")
     un.add_argument("--report-every", type=int, help="partial report every N completed jobs")
 
     for name, text in (("status", "queue progress, ETA, mode, failures"), ("stop", "graceful stop request"),
@@ -139,7 +140,8 @@ def main(argv: list[str] | None = None) -> int:
 
         try:
             status = Runner(mode=args.mode, queue_db=args.queue_db, stop_at=args.stop_at, max_jobs=args.max_jobs,
-                            power_poll_s=args.power_poll, workers=args.workers, report_every=args.report_every).run()
+                            power_poll_s=args.power_poll, workers=args.workers, report_every=args.report_every,
+                            threads=args.threads).run()
         except AlreadyRunning as exc:
             print(f"Not started: {exc}", file=sys.stderr)
             return 3

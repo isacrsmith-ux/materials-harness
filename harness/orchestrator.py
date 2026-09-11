@@ -330,7 +330,7 @@ def _size_summary(jobs: list[dict]) -> dict:
 class Runner:
     def __init__(self, mode: str = "polite", queue_db=QUEUE_DB, stop_at: str | None = None, max_jobs: int | None = None,
                  power_poll_s: float | None = None, workers: int | None = None, report_every: int | None = None,
-                 cfg: dict | None = None):
+                 cfg: dict | None = None, threads: int | None = None):
         self.cfg = cfg or load_unattended_config()
         self.compute = load_compute_config()
         self.mode = mode
@@ -339,6 +339,8 @@ class Runner:
         self.workers, self.threads = layout(mode, self.compute, self.cfg)
         if workers:
             self.workers = workers
+        if threads:
+            self.threads = threads
         self.tag = settings_tag(self.compute["device"], self.compute["dtype"])
         self.stop_at = parse_stop_at(stop_at)
         self.max_jobs = max_jobs
