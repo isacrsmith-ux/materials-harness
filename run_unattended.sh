@@ -18,7 +18,13 @@ if [ "${1:-}" = "polite" ] || [ "${1:-}" = "full" ]; then MODE="$1"; shift; fi
 mkdir -p logs
 TS="$(date +%Y%m%d-%H%M%S)"
 LOG="logs/${TS}.log"
-CMD=(caffeinate -ims ./uvw run --quiet python -m harness unattended --mode "$MODE" "$@")
+# HARNESS_PYTHON: the interpreter of a model's own venv (e.g. .envs/sevenn/bin/python); HARNESS_MODEL picks the
+# registry model. Default: this project's venv and the baseline model.
+if [ -n "${HARNESS_PYTHON:-}" ]; then
+  CMD=(caffeinate -ims "$HARNESS_PYTHON" -m harness unattended --mode "$MODE" "$@")
+else
+  CMD=(caffeinate -ims ./uvw run --quiet python -m harness unattended --mode "$MODE" "$@")
+fi
 
 if [ "$FOREGROUND" = 1 ]; then
   echo "[$TS] foreground unattended run, mode=$MODE, log $LOG"

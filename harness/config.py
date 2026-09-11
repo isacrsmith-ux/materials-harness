@@ -47,20 +47,24 @@ MODELS = {
         "name": "MACE-MPA-0 medium", "loader": "mace", "env": None,
         "file": "mace-mpa-0-medium.model",
         "url": "https://github.com/ACEsuit/mace-foundations/releases/download/mace_mpa_0/mace-mpa-0-medium.model",
-        "size_bytes": 79462305, "sha256": None,  # pinned when the file is first downloaded (with approval)
+        "size_bytes": 79462305,
+        "sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",  # downloaded 2026-09-11
         "training_data": "MPtrj + sAlex (subsampled Alexandria, WBM-overlapping structures removed)",
         "license": "MIT (code and checkpoint)", "compliant": True,
     },
     "esen-30m-oam": {
         "name": "eSEN-30M-OAM", "loader": "fairchem", "env": ".envs/fairchem",
         "file": "esen_30m_oam.pt", "url": "https://huggingface.co/fairchem/OMAT24/resolve/main/esen_30m_oam.pt",
-        "gated": True, "sha256": None,
+        "gated": True, "sha256": None, "dtypes": ["float32"],
         "training_data": "OMat24 + MPtrj + sAlex", "compliant": True,
         "license": "code MIT; checkpoint OMat24 license (commercial use permitted, FAIR acceptable-use policy)",
     },
     "sevennet-omni": {
         "name": "SevenNet-Omni", "loader": "sevenn", "env": ".envs/sevenn",
-        "file": "checkpoint_sevennet_omni.pth", "url": "https://figshare.com/files/60977863", "sha256": None,
+        "file": "checkpoint_sevennet_omni_i12.pth", "url": "https://ndownloader.figshare.com/files/60977863",
+        "sha256": "771543388f360d2762e09f62de685bfb85e9f637a06575f2545f03974d6f0522", "size_bytes": 219904945,
+        "modal": "mpa",  # PBE(+U) task used for Matbench Discovery (SevenNet docs)
+        "dtypes": ["float32"],  # the calculator runs float32 only; a float64 request is refused, never relabelled
         "training_data": "15 datasets incl. MPtrj, OMat24 and a 12.1M-structure Alexandria subsample (WBM filtering not stated)",
         "compliant": "unverified", "license": "MIT (code and checkpoint)",
     },

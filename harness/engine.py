@@ -73,9 +73,15 @@ def _fairchem_calculator(device: str, dtype: str):
 
 
 def _sevenn_calculator(device: str, dtype: str):
+    """SevenNet (own venv). modal from the registry ('mpa': the PBE(+U) task used for Matbench Discovery);
+    cuEquivariance / flash kernels are CUDA-only and stay off."""
     from sevenn.calculator import SevenNetCalculator
 
-    return SevenNetCalculator(model=str(config.model_path()), modal="mpa", device=device)
+    kw = {"model": str(config.model_path()), "modal": config.MODEL.get("modal", "mpa"), "device": device}
+    try:
+        return SevenNetCalculator(**kw, enable_cueq=False, enable_flash=False)
+    except TypeError:  # older sevenn without these switches
+        return SevenNetCalculator(**kw)
 
 
 _LOADERS = {"mace": _mace_calculator, "fairchem": _fairchem_calculator, "sevenn": _sevenn_calculator}
@@ -89,6 +95,8 @@ def get_calculator(device: str = "cpu", dtype: str = "float64"):
             os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
         if device == "mps" and dtype == "float64":
             raise ValueError("PyTorch MPS does not support float64.")
+        if dtype not in config.MODEL.get("dtypes", ("float64", "float32")):
+            raise ValueError(f"{config.MODEL['name']} runs {config.MODEL['dtypes']} only; {dtype} would be mislabelled")
         _CALCS[key] = _LOADERS[config.MODEL["loader"]](device, dtype)
     return _CALCS[key]
 

@@ -30,10 +30,15 @@ def _device_structures():
     from ase.build import bulk
     from pymatgen.io.ase import AseAtomsAdaptor
 
+    from ase.spacegroup import crystal
+
     specs = {
         "Si_diamond_64": bulk("Si", "diamond", a=5.43, cubic=True).repeat(2),
         "MgO_rocksalt_64": bulk("MgO", "rocksalt", a=4.21, cubic=True).repeat(2),
         "GaN_wurtzite_72": bulk("GaN", "wurtzite", a=3.19, c=5.19).repeat((3, 3, 2)),
+        "Cu_fcc_108": bulk("Cu", "fcc", a=3.61, cubic=True).repeat(3),
+        "SrTiO3_perovskite_40": crystal(["Sr", "Ti", "O"], basis=[(0, 0, 0), (0.5, 0.5, 0.5), (0.5, 0.5, 0)],
+                                        spacegroup=221, cellpar=[3.905] * 3 + [90] * 3).repeat(2),
     }
     out = {}
     for i, (name, atoms) in enumerate(specs.items()):
@@ -98,7 +103,7 @@ def _device_job(job: dict) -> dict:
 def _pool_job(job: dict) -> dict:
     from harness import engine
 
-    res = engine.relax(job["structure"], config.DEFAULT_RELAX, "cpu", "float64")
+    res = engine.relax(job["structure"], config.DEFAULT_RELAX, job.get("device", "cpu"), job.get("dtype", "float64"))
     return {"converged": res.converged, "n_steps": res.n_steps, "energy_per_atom": res.energy_per_atom}
 
 
@@ -116,57 +121,72 @@ def _compare(ref: dict, test: dict) -> dict:
     }
 
 
+ALL_SETTINGS = (("cpu", "float64"), ("cpu", "float32"), ("mps", "float32"))
+
+
 def device_benchmark(threads: int) -> dict:
+    """Reference = the most precise CPU setting the ACTIVE model supports (CPU/float64, or CPU/float32 for
+    float32-only models); candidates = the other supported settings, on 5 rattled cells.
+
+    A faster setting is recommended only if it agrees with the reference within AGREEMENT_TOL on every
+    structure (energy, volume, lattice, forces, same structure, converged) and is > 1.1x faster per
+    relaxation; otherwise the reference is kept. Settings that cannot run are recorded with their error."""
     structures = _device_structures()
+    supported = config.MODEL.get("dtypes", ("float64", "float32"))
+    usable = [s for s in ALL_SETTINGS if s[1] in supported]
+    ref_setting, CANDIDATE_SETTINGS = usable[0], tuple(usable[1:])
+    ref_label = "/".join(ref_setting)
     runs: dict[str, dict] = {}
-    for device, dtype, env in [("cpu", "float64", {}), ("mps", "float32", {"PYTORCH_ENABLE_MPS_FALLBACK": "1"})]:
+    for device, dtype in usable:
         label = f"{device}/{dtype}"
         runs[label] = {}
+        env = {"PYTORCH_ENABLE_MPS_FALLBACK": "1"} if device == "mps" else {}
         jobs = [{"name": n, "structure": s, "device": device, "dtype": dtype} for n, s in structures.items()]
         run_pool(_device_job, jobs, workers=1, threads=threads, extra_env=env,
                  on_result=lambda job, r, lab=label: runs[lab].__setitem__(job["name"], r))
         print(f"  {label}: done")
 
-    timing_keys = ("single_point_ms", "relax_wall_s", "n_steps", "converged", "energy_per_atom")
-    per_structure, all_agree, errors = {}, True, []
+    keys = ("single_point_ms", "relax_wall_s", "n_steps", "converged", "energy_per_atom")
+    per_structure: dict = {n: {"n_atoms": len(s)} for n, s in structures.items()}
+    summary, errors = {}, []
     for name in structures:
-        ref, test = runs["cpu/float64"][name], runs["mps/float32"][name]
-        if ref.get("status") != "ok" or test.get("status") != "ok":
-            errors.append({name: {"cpu": ref.get("error"), "mps": test.get("error")}})
-            all_agree = False
-            per_structure[name] = {"n_atoms": len(structures[name]),
-                                   "cpu_float64": {k: ref.get(k) for k in timing_keys},
-                                   "mps_float32": None}
-            continue
-        cmp = _compare(ref, test)
-        cmp["agrees"] = all(cmp[k] <= tol for k, tol in AGREEMENT_TOL.items()) and cmp["structure_match"] and cmp["test_converged"]
-        all_agree &= cmp["agrees"]
-        per_structure[name] = {
-            "n_atoms": len(structures[name]),
-            "cpu_float64": {k: ref[k] for k in ("single_point_ms", "relax_wall_s", "n_steps", "converged", "energy_per_atom")},
-            "mps_float32": {k: test[k] for k in ("single_point_ms", "relax_wall_s", "n_steps", "converged", "energy_per_atom")},
-            "differences": cmp,
-            "single_point_speedup_mps": ref["single_point_ms"] / test["single_point_ms"],
-        }
-    speedups = [v["single_point_speedup_mps"] for v in per_structure.values() if "single_point_speedup_mps" in v]
-    mean_speedup = float(np.mean(speedups)) if speedups else float("nan")
-    use_mps = bool(all_agree and mean_speedup > 1.1)
-    mps_errors = {n: runs["mps/float32"][n].get("error") for n in structures
-                  if runs["mps/float32"][n].get("status") != "ok"}
-    if use_mps:
-        reason = f"MPS/float32 agreed within tolerance on every structure and was {mean_speedup:.2f}x faster."
-    elif mps_errors:
-        first = next(iter(mps_errors.values())) or "unknown error"
-        reason = (f"MPS/float32 could not run ({len(mps_errors)}/{len(structures)} structures failed: "
-                  f"{first.splitlines()[0][:200]}); CPU/float64 required.")
-    elif not all_agree:
-        reason = "MPS/float32 did NOT agree with CPU/float64 within tolerance on every structure; CPU/float64 required."
+        per_structure[name][ref_label.replace("/", "_")] = {k: runs[ref_label][name].get(k) for k in keys}
+    for device, dtype in CANDIDATE_SETTINGS:
+        label = f"{device}/{dtype}"
+        agree, speed, fails = True, [], []
+        for name in structures:
+            ref, test = runs[ref_label][name], runs[label][name]
+            entry = {"run": {k: test.get(k) for k in keys}}
+            if ref.get("status") != "ok" or test.get("status") != "ok":
+                fails.append(test.get("error") or ref.get("error") or "unknown error")
+                agree = False
+                entry["error"] = fails[-1]
+            else:
+                cmp = _compare(ref, test)
+                cmp["agrees"] = all(cmp[k] <= tol for k, tol in AGREEMENT_TOL.items()) and cmp["structure_match"] and cmp["test_converged"]
+                agree &= cmp["agrees"]
+                entry["differences"] = cmp
+                speed.append(ref["relax_wall_s"] / test["relax_wall_s"])
+            per_structure[name][label.replace("/", "_")] = entry
+        summary[label] = {"all_agree": agree, "mean_relax_speedup": float(np.mean(speed)) if speed else float("nan"),
+                          "failures": len(fails), "first_error": fails[0].splitlines()[0][:200] if fails else None}
+        if fails:
+            errors.append({label: summary[label]["first_error"]})
+    ok = [(lab, s) for lab, s in summary.items() if s["all_agree"] and s["mean_relax_speedup"] > 1.1]
+    if ok:
+        lab, s = max(ok, key=lambda x: x[1]["mean_relax_speedup"])
+        device, dtype = lab.split("/")
+        reason = f"{lab} agreed with {ref_label} within tolerance on all {len(structures)} structures and relaxed {s['mean_relax_speedup']:.2f}x faster."
     else:
-        reason = f"MPS/float32 agreed but was not meaningfully faster ({mean_speedup:.2f}x); CPU/float64 kept."
+        device, dtype = ref_setting
+        reason = "; ".join(f"{lab}: " + ("could not run (" + (s["first_error"] or "") + ")" if s["failures"] else
+                                         f"disagreed with {ref_label}" if not s["all_agree"] else
+                                         f"agreed but only {s['mean_relax_speedup']:.2f}x faster")
+                           for lab, s in summary.items()) + f" — {ref_label} kept."
+        if not summary:
+            reason = f"{ref_label} is the only setting this model supports."
     return {"tolerances": AGREEMENT_TOL, "threads": threads, "per_structure": per_structure, "errors": errors,
-            "all_agree": all_agree, "mean_single_point_speedup_mps": mean_speedup,
-            "recommend": {"device": "mps", "dtype": "float32"} if use_mps else {"device": "cpu", "dtype": "float64"},
-            "reason": reason}
+            "settings": summary, "recommend": {"device": device, "dtype": dtype}, "reason": reason}
 
 
 def layout_candidates(perf: int) -> list[tuple[int, int]]:
@@ -178,13 +198,18 @@ def layout_candidates(perf: int) -> list[tuple[int, int]]:
 POOL_REPEATS = 3  # 48 jobs, so worker spawn + model load is amortized as in the real suites
 
 
-def pool_benchmark(perf: int) -> dict:
-    jobs = _pool_structures() * POOL_REPEATS
+def pool_benchmark(perf: int, device: str = "cpu", dtype: str = "float64") -> dict:
+    """Wall time of worker x thread layouts on a batch shaped like the real suites. MPS shares one GPU, so
+    only 1-2 workers are tried there; non-baseline models use one repeat (16 jobs) to bound the cost."""
+    repeats = POOL_REPEATS if config.ACTIVE_MODEL == config.BASELINE_MODEL else 1
+    jobs = [{**j, "device": device, "dtype": dtype} for j in _pool_structures() * repeats]
+    layouts = layout_candidates(perf) if device == "cpu" else [(1, perf), (2, max(1, perf // 2))]
+    env = {"PYTORCH_ENABLE_MPS_FALLBACK": "1"} if device == "mps" else {}
     results = []
-    for workers, threads in layout_candidates(perf):
+    for workers, threads in layouts:
         statuses = []
         t0 = time.perf_counter()
-        run_pool(_pool_job, jobs, workers, threads, on_result=lambda j, r: statuses.append(r.get("status")))
+        run_pool(_pool_job, jobs, workers, threads, extra_env=env, on_result=lambda j, r: statuses.append(r.get("status")))
         wall = time.perf_counter() - t0
         results.append({"workers": workers, "threads_per_worker": threads, "wall_s": wall,
                         "n_jobs": len(jobs), "n_ok": statuses.count("ok"), "s_per_structure": wall / len(jobs)})
@@ -193,7 +218,10 @@ def pool_benchmark(perf: int) -> dict:
     return {"layouts": results, "best": best}
 
 
-def run_benchmark() -> dict:
+def run_benchmark(save_compute: bool = True) -> dict:
+    """Benchmark the ACTIVE model. Full results always go to config/benchmark-<model>.json; the compute config
+    (which sets device/dtype and therefore the settings tag) is written only when save_compute is True — the
+    baseline's is never rewritten, since changing its setting would orphan every existing result."""
     assert_native_arm64()
     cores = core_counts()
     perf = cores["performance"]
@@ -202,10 +230,11 @@ def run_benchmark() -> dict:
     dev = device_benchmark(threads=perf)
     print(f"  -> {dev['reason']}")
     print("Pool benchmark (workers x threads) ...")
-    pool = pool_benchmark(perf)
+    pool = pool_benchmark(perf, dev["recommend"]["device"], dev["recommend"]["dtype"])
     best = pool["best"] or {"workers": 1, "threads_per_worker": perf}
     cfg = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "model": config.ACTIVE_MODEL,
         "machine": machine_info(),
         "device": dev["recommend"]["device"],
         "dtype": dev["recommend"]["dtype"],
@@ -216,9 +245,13 @@ def run_benchmark() -> dict:
         "pool_benchmark": pool,
         "source": "benchmark",
     }
-    config.save_compute_config(cfg)
-    print(f"Saved {config.COMPUTE_CONFIG.relative_to(config.ROOT)}: device={cfg['device']} dtype={cfg['dtype']} "
+    detail = config.CONFIG_DIR / f"benchmark-{config.ACTIVE_MODEL}.json"
+    detail.write_text(json.dumps(cfg, indent=2, default=str) + "\n")
+    print(f"Wrote {detail.relative_to(config.ROOT)}: recommends device={cfg['device']} dtype={cfg['dtype']} "
           f"workers={cfg['workers']} threads/worker={cfg['threads_per_worker']}")
+    if save_compute:
+        config.save_compute_config(cfg)
+        print(f"Saved {config.compute_config_path().relative_to(config.ROOT)}")
     return cfg
 
 

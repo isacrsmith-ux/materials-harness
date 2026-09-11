@@ -239,9 +239,26 @@ def build_mode_b_jobs(compute: dict) -> tuple[list[dict], dict]:
                   "to_relax": len(rows), "n_atoms_median": float(np.median(n)) if n else 0, "n_atoms_max": max(n, default=0)}
 
 
+def build_screening_jobs(compute: dict, pair_kinds=("sub", "sub_rescaled", "ctrl", "static")) -> list[dict]:
+    """The screening subset (harness/screening.py) for the ACTIVE model: every pair kind for the subset's pairs,
+    relaxation + DFT-geometry single point for its WBM calibration structures."""
+    from harness import pairgen, screening
+    from harness.suites import ood
+
+    subset = screening.make_subset()
+    ids = set(subset["pair_ids"])
+    pairs = [p for p in pairgen.load_pairs() if p["pair_id"] in ids]
+    rows = build_auto_substitution_jobs(pairs, list(pair_kinds), compute)
+    wbm = set(subset["wbm_ids"])
+    rows += [j for j in build_wbm_calibration_jobs(compute) if j["inputs"]["wbm_id"] in wbm]
+    for j in rows:
+        j["priority"] = -j["n_atoms"]  # large cells first: the tail is short
+    return rows
+
+
 def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, do_ood: bool = True,
             force_pairs: bool = False, curated_kinds: list[str] | None = None, competitor_retries: bool = False,
-            retries: bool = False, wbm_calibration: bool = False, mode_b: bool = False) -> dict:
+            retries: bool = False, wbm_calibration: bool = False, mode_b: bool = False, screening: bool = False) -> dict:
     """Bulk-download and cache MP/WBM inputs, generate pairs, and enqueue every job (idempotent).
 
     curated_kinds queues curated-pair substitution kinds; competitor_retries queues the fallback ladder
@@ -252,6 +269,9 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
     compute = load_compute_config()
     info: dict = {"config": {k: cfg[k] for k in ("max_pairs", "max_atoms", "ood_sample", "auto_pair_kinds")}}
     sub_jobs, ood_jobs, first = [], [], []
+    if screening:
+        first += build_screening_jobs(compute)
+        info["screening"] = len(first)
     if competitor_retries or retries:
         retry = build_retry_jobs(compute) if retries else build_competitor_retry_jobs(compute)
         for j in retry:

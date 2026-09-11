@@ -49,7 +49,9 @@ def main(argv: list[str] | None = None) -> int:
     rep = sub.add_parser("report", help="write a validation report from the results table")
     rep.add_argument("--out", help="output directory (default: reports/)")
     rep.add_argument("--compare-previous", action="store_true", help="compare the scorecard with the previous run")
-    sub.add_parser("benchmark", help="CPU/float64 vs MPS/float32 + worker/thread layouts -> config/compute.json")
+    bench = sub.add_parser("benchmark", help="device/dtype + worker layouts for the active model -> config/benchmark-<model>.json")
+    bench.add_argument("--no-save-compute", action="store_true",
+                       help="do not rewrite the model's compute config (always implied for the baseline model)")
     sub.add_parser("info", help="print machine + compute config")
 
     cfg = load_unattended_config()
@@ -66,6 +68,8 @@ def main(argv: list[str] | None = None) -> int:
                       help="queue the fallback ladder for rejected stability competitor relaxations")
     prep.add_argument("--wbm-calibration", action="store_true",
                       help="queue relaxation + DFT-geometry single point for every WBM calibration id (never the test set)")
+    prep.add_argument("--screening", action="store_true",
+                      help="queue the model-screening subset (data/screening_subset.json) for the ACTIVE model (HARNESS_MODEL)")
     prep.add_argument("--mode-b", action="store_true",
                       help="queue competitor relaxations for the mode (b) sample of WBM calibration systems")
     prep.add_argument("--retries", action="store_true",
@@ -105,8 +109,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.cmd == "benchmark":
         from harness.benchmark import run_benchmark
+        from harness.config import ACTIVE_MODEL, BASELINE_MODEL
 
-        run_benchmark()
+        run_benchmark(save_compute=not args.no_save_compute and ACTIVE_MODEL != BASELINE_MODEL)
         return 0
     if args.cmd == "report":
         from pathlib import Path
@@ -124,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
                        force_pairs=args.force_pairs,
                        curated_kinds=[k for k in (args.curated_kinds or "").split(",") if k] or None,
                        competitor_retries=args.competitor_retries, retries=args.retries,
-                       wbm_calibration=args.wbm_calibration, mode_b=args.mode_b)
+                       wbm_calibration=args.wbm_calibration, mode_b=args.mode_b, screening=args.screening)
         print(json.dumps(info, indent=1, default=str))
         return 0
     if args.cmd == "unattended":
