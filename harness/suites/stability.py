@@ -119,10 +119,11 @@ def _sub_energies(tag: str) -> dict[str, dict]:
     return out
 
 
-def window_structures(pairs: list) -> dict:
-    """material id -> MP (PBE) starting structure of every competing phase in any target's window."""
+def window_structures(pairs: list, extra_chemsys=()) -> dict:
+    """material id -> MP (PBE) starting structure of every competing phase in any target's window (plus the
+    windows of extra_chemsys, e.g. the mode (b) sample of new-material systems)."""
     out = {}
-    for cs in sorted({chemsys_of(p["target_formula"]) for p in pairs}):
+    for cs in sorted({chemsys_of(p["target_formula"]) for p in pairs} | {"-".join(sorted(c.split("-"))) for c in extra_chemsys}):
         for e in window_phases(process(mp_data.entries_in_chemsys(cs))):
             out.setdefault(material_id(e), e.structure)
     return out
@@ -133,14 +134,14 @@ def competitor_payloads(tag: str) -> dict[str, dict]:
             if "relaxed" in pl and "pair_id" not in pl}
 
 
-def retry_jobs(pairs: list, compute: dict, tag: str, done: set | frozenset = frozenset()) -> list[dict]:
+def retry_jobs(pairs: list, compute: dict, tag: str, done: set | frozenset = frozenset(), extra_chemsys=()) -> list[dict]:
     """Fallback-ladder jobs (config.FALLBACK_LADDER) for every competitor relaxation the guard
     rejects that has not been through the ladder yet. The queue key is '<id>:ladder@<tag>'; the result
     replaces the competitor's payload under '<id>@<tag>' with every rung recorded."""
     todo = {mid: pl for mid, pl in competitor_payloads(tag).items() if rejection_reason(pl) and "ladder" not in pl}
     if not todo:
         return []
-    starts = window_structures(pairs)
+    starts = window_structures(pairs, extra_chemsys)
     jobs = []
     for mid, pl in sorted(todo.items()):
         key = f"{mid}:ladder@{tag}"

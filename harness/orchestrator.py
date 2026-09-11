@@ -152,8 +152,11 @@ def resolve_curated() -> list[dict]:
 def build_competitor_retry_jobs(compute: dict) -> list[dict]:
     from harness.suites import stability
 
+    from harness.suites import mode_b
+
     tag, settings = _settings(compute)
-    jobs = stability.retry_jobs(resolve_curated(), compute, tag)
+    extra = mode_b.chemsys_list(mode_b.make_sample()) if mode_b.SAMPLE_FILE.is_file() else ()
+    jobs = stability.retry_jobs(resolve_curated(), compute, tag, extra_chemsys=extra)
     return _queue_rows(jobs, stability.SUITE, settings)
 
 
