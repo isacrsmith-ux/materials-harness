@@ -26,9 +26,9 @@ from pymatgen.analysis.compatibility import MaterialsProject2020Compatibility
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from harness import compare, mp_data, store
-from harness.config import settings_tag
+from harness.config import LADDER_BUDGET_S, settings_tag
 from harness.curation import resolve_pairs
-from harness.jobs import relax_job
+from harness.jobs import run_job
 from harness.platform_check import core_counts
 from harness.runner import run_pool
 
@@ -99,12 +99,60 @@ def window_phases(processed: list, window: float = COMPETITOR_WINDOW) -> list:
 
 
 def _sub_energies(tag: str) -> dict[str, dict]:
-    """MACE results of the substitution suite's 'sub' runs (current settings only)."""
+    """Best substitution start per pair (current settings only): of the 'sub' and 'sub_rescaled'
+    relaxations, the lowest-energy one that passes the convergence / sanity guard (else the lowest
+    one, which evaluate_target will then reject). 'start' records which start won."""
+    from harness.suites.substitution import SUB_STARTS, best_start
+
+    by_pair: dict[str, dict] = {}
+    for pl in store.load_payloads("substitution", tag=tag).values():
+        if pl["kind"] in SUB_STARTS:
+            by_pair.setdefault(pl["pair_id"], {})[pl["kind"]] = pl
     out = {}
-    for key, pl in store.load_payloads("substitution", tag=tag).items():
-        if pl["kind"] == "sub":
-            out[pl["pair_id"]] = pl
+    for pid, starts in by_pair.items():
+        r = {}
+        for k, pl in starts.items():
+            r[f"{k}_E"], r[f"{k}_converged"] = pl["energy_per_atom"], rejection_reason(pl) is None
+        # No usable start: hand over the lowest one so evaluate_target rejects it and the failure is recorded.
+        win = best_start(r, SUB_STARTS) or min(starts, key=lambda k: starts[k]["energy_per_atom"])
+        out[pid] = {**starts[win], "start": win, "n_starts": len(starts)}
     return out
+
+
+def window_structures(pairs: list) -> dict:
+    """material id -> MP (PBE) starting structure of every competing phase in any target's window."""
+    out = {}
+    for cs in sorted({chemsys_of(p["target_formula"]) for p in pairs}):
+        for e in window_phases(process(mp_data.entries_in_chemsys(cs))):
+            out.setdefault(material_id(e), e.structure)
+    return out
+
+
+def competitor_payloads(tag: str) -> dict[str, dict]:
+    return {pl["material_id"]: pl for pl in store.load_payloads(SUITE, tag=tag).values()
+            if "relaxed" in pl and "pair_id" not in pl}
+
+
+def retry_jobs(pairs: list, compute: dict, tag: str, done: set | frozenset = frozenset()) -> list[dict]:
+    """Fallback-ladder jobs (config.FALLBACK_LADDER) for every competitor relaxation the guard
+    rejects that has not been through the ladder yet. The queue key is '<id>:ladder@<tag>'; the result
+    replaces the competitor's payload under '<id>@<tag>' with every rung recorded."""
+    todo = {mid: pl for mid, pl in competitor_payloads(tag).items() if rejection_reason(pl) and "ladder" not in pl}
+    if not todo:
+        return []
+    starts = window_structures(pairs)
+    jobs = []
+    for mid, pl in sorted(todo.items()):
+        key = f"{mid}:ladder@{tag}"
+        if key in done:
+            continue
+        jobs.append({"job_key": key, "record_key": f"{mid}@{tag}", "job_fn": "ladder", "suite": SUITE,
+                     "material_id": mid, "rung1": pl, "rung1_rejection": rejection_reason(pl),
+                     "original": starts.get(mid, pl["relaxed"]),
+                     "original_source": "MP PBE structure" if mid in starts else "rung-1 end point (MP start not found)",
+                     "seed": compare.stable_seed(mid), "structure": pl["relaxed"], "budget_s": LADDER_BUDGET_S,
+                     "device": compute["device"], "dtype": compute["dtype"]})
+    return jobs
 
 
 def _competitor_jobs(pairs: list, compute: dict, tag: str, done: set) -> tuple[list, dict]:
@@ -127,7 +175,37 @@ def _competitor_jobs(pairs: list, compute: dict, tag: str, done: set) -> tuple[l
     return sorted(jobs.values(), key=lambda j: -len(j["structure"])), by_chemsys
 
 
+def _record_ladder(job: dict, res: dict) -> None:
+    """Store a fallback-ladder result as the competitor's result; the rung-1 outcome and every rung stay
+    in the payload. If the ladder job itself failed, rung 1 stays in place, marked as retried."""
+    mid, rung1 = job["material_id"], job["rung1"]
+    summary1 = {k: rung1.get(k) for k in ("energy_per_atom", "converged", "n_steps", "wall_time_s")} | {
+        "rejection": job["rung1_rejection"]}
+    if res.get("status") != "ok":
+        payload = {**rung1, "rung": None, "ladder": [], "ladder_error": res.get("error"), "rung1": summary1}
+        log.warning("competitor %s fallback ladder %s: %s", mid, res.get("status"), res.get("error"))
+    else:
+        payload = {"material_id": mid, "relaxed": res["relaxed"], "energy_per_atom": res["energy_per_atom"],
+                   "converged": res["converged"], "n_steps": res["n_steps"], "wall_time_s": res["wall_time_s"],
+                   "fmax_final": res.get("fmax_final"), "max_stress_gpa": res.get("max_stress_gpa"),
+                   "min_distance_ratio": res.get("min_distance_ratio"), "n_atoms": len(res["relaxed"]),
+                   "rung": res["rung"], "ladder": res["ladder"], "rung1": summary1,
+                   "original_source": job.get("original_source")}
+        log.info("competitor %s fallback ladder: %s", mid, f"converged on rung '{res['rung']}'" if res["rung"]
+                 else "no rung converged — stays rejected")
+    runtime = res.get("job_wall_s")
+    store.record_job(SUITE, job["record_key"], "ok", payload=payload,
+                     settings=(res.get("metadata") or {}) | {"fallback_ladder": True, "layout": job.get("layout")},
+                     runtime_s=runtime)
+    store.record_job(SUITE, job["job_key"], res.get("status", "failed"),
+                     payload={"material_id": mid, "ladder_of": job["record_key"], "rung": payload.get("rung")},
+                     error=res.get("error"), runtime_s=runtime)
+
+
 def _record_competitor(job: dict, res: dict) -> None:
+    if job.get("job_fn") == "ladder":
+        _record_ladder(job, res)
+        return
     if res.get("status") != "ok":
         log.warning("competitor %s %s: %s", job["material_id"], res.get("status"), res.get("error"))
         store.record_job(SUITE, job["job_key"], res["status"], payload={"material_id": job["material_id"]},
@@ -138,7 +216,8 @@ def _record_competitor(job: dict, res: dict) -> None:
                      payload={"material_id": job["material_id"], "relaxed": res["relaxed"],
                               "energy_per_atom": res["energy_per_atom"], "converged": res["converged"],
                               "n_steps": res["n_steps"], "wall_time_s": res["wall_time_s"],
-                              "n_atoms": len(res["relaxed"])},
+                              "fmax_final": res.get("fmax_final"), "max_stress_gpa": res.get("max_stress_gpa"),
+                              "min_distance_ratio": res.get("min_distance_ratio"), "n_atoms": len(res["relaxed"])},
                      settings=res["metadata"] | {"layout": job.get("layout")}, runtime_s=res["wall_time_s"])
 
 
@@ -152,6 +231,14 @@ def rejection_reason(m: dict) -> str | None:
     if ratio < compare.UNPHYSICAL_DISTANCE_RATIO:
         return f"unphysical geometry (min d/r_cov = {ratio:.2f})"
     return None
+
+
+def b_status_of(absent, absent_on_hull) -> str:
+    if not absent:
+        return "complete"
+    if absent_on_hull:
+        return "not scored: reference hull phase missing"
+    return "scored: off-hull phases missing"
 
 
 def evaluate_target(pair: dict, sub: dict, mace_competitors: dict[str, dict]) -> dict:
@@ -201,11 +288,28 @@ def evaluate_target(pair: dict, sub: dict, mace_competitors: dict[str, dict]) ->
     compat_dropped = sorted({material_id(e) for e in b_comp} ^ {mid for mid in win_ids - {tid}
                                                                if mid not in missing and mid not in rejected})
     assert len(compat_dropped) == n_built - len(b_comp)
+    # A mode (b) hull without one of the MP reference hull's own phases is not the same hull: such a
+    # target is NOT scored (counted as unscored). Missing phases that are off the reference hull leave
+    # a usable hull; the target is scored and flagged.
+    absent = set(missing) | set(rejected) | set(compat_dropped)
+    ref_hull_ids = {material_id(e) for e in PhaseDiagram(processed).stable_entries} - {tid}
+    absent_on_hull = sorted(absent & ref_hull_ids)
+    b_status = b_status_of(absent, absent_on_hull)
     try:
-        b_signed = signed_hull_energy(b_comp, a_entry[0]) if b_comp else float("nan")
+        b_signed = signed_hull_energy(b_comp, a_entry[0]) if b_comp and not absent_on_hull else float("nan")
     except ValueError as exc:  # e.g. an elemental endpoint failed to relax
         log.warning("%s mode (b) hull failed: %s", pair["pair_id"], exc)
-        b_signed = float("nan")
+        b_signed, b_status = float("nan"), f"not scored: hull construction failed ({exc})"
+    # Reported SEPARATELY, never merged into mode (b): if every missing reference-hull phase has a usable
+    # MACE polymorph of the same formula in the window, the hull built with that stand-in polymorph.
+    b_sub_signed, b_sub_for = float("nan"), []
+    if absent_on_hull and b_comp:
+        have = {e.composition.reduced_formula for e in b_comp}
+        if all(raw_by_id[m].composition.reduced_formula in have for m in absent_on_hull):
+            try:
+                b_sub_signed, b_sub_for = signed_hull_energy(b_comp, a_entry[0]), absent_on_hull
+            except ValueError:
+                pass
 
     spin_in_hull = any(set(Composition(raw_by_id[m].composition).chemical_system.split("-"))
                        & (compare.MAGNETIC_PRONE | compare.F_ELECTRON) for m in win_ids)
@@ -214,6 +318,10 @@ def evaluate_target(pair: dict, sub: dict, mace_competitors: dict[str, dict]) ->
         "n_entries": len(raw), "n_processed": len(processed), "n_window": len(win_ids),
         "n_window_missing": len(missing) + len(rejected) + len(compat_dropped),
         "missing": missing, "rejected": rejected, "compat_dropped": compat_dropped,
+        "absent_on_ref_hull": absent_on_hull, "b_status": b_status,
+        "b_sub_signed": b_sub_signed, "b_sub_e_hull": max(b_sub_signed, 0.0) if np.isfinite(b_sub_signed) else float("nan"),
+        "b_substituted_for": b_sub_for,
+        "sub_start": sub.get("start"), "sub_n_starts": sub.get("n_starts"),
         "mp_stored_e_hull": pair["target_e_above_hull"],
         "ref_signed": ref_signed, "ref_e_hull": max(ref_signed, 0.0), "ref_window_signed": ref_window_signed,
         "a_signed": a_signed, "a_e_hull": max(a_signed, 0.0),
@@ -272,10 +380,15 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
         log.info("mode (b) %s cells: %d jobs on %d workers x %d threads", name, len(tier_jobs), workers, threads)
         for j in tier_jobs:
             j["layout"] = {"tier": name, "workers": workers, "threads_per_worker": threads}
-        run_pool(relax_job, tier_jobs, workers, threads, on_result=_record_competitor)
+        run_pool(run_job, tier_jobs, workers, threads, on_result=_record_competitor)
 
-    mace_comp = {pl["material_id"]: pl for key, pl in store.load_payloads(SUITE, tag=tag).items()
-                 if "relaxed" in pl and "pair_id" not in pl}
+    retries = retry_jobs(pairs, compute, tag, done=done)
+    if retries:
+        log.info("fallback ladder for %d rejected competitor relaxations on %d workers x %d threads",
+                 len(retries), big_workers, big_threads)
+        run_pool(run_job, retries, big_workers, big_threads, on_result=_record_competitor)
+
+    mace_comp = competitor_payloads(tag)
     for pl in mace_comp.values():  # evaluate the sanity guard once per competitor, not per target
         pl["rejection"] = rejection_reason(pl)
     bad = {mid: pl["rejection"] for mid, pl in mace_comp.items() if pl["rejection"]}
@@ -304,7 +417,8 @@ def target_table(tag: str) -> pd.DataFrame:
 def metrics(df: pd.DataFrame, mode: str) -> dict:
     col = f"{mode}_e_hull"
     d = df[np.isfinite(df[col].astype(float))] if len(df) else df
-    out = {"n": len(d), "mae_ev": compare.mae(d[col] - d["ref_e_hull"]) if len(d) else float("nan")}
+    out = {"n": len(d), "n_unscored": len(df) - len(d),
+           "mae_ev": compare.mae(d[col] - d["ref_e_hull"]) if len(d) else float("nan")}
     for thr in THRESHOLDS:
         m = compare.classification_metrics(d[col] <= thr + ON_HULL_TOL, d["ref_e_hull"] <= thr + ON_HULL_TOL)
         out[f"thr{thr}"] = m

@@ -60,6 +60,12 @@ def main(argv: list[str] | None = None) -> int:
     prep.add_argument("--skip-pairs", action="store_true")
     prep.add_argument("--skip-ood", action="store_true")
     prep.add_argument("--force-pairs", action="store_true", help="regenerate data/auto_pairs.json")
+    prep.add_argument("--curated-kinds", help="comma list of curated-pair substitution kinds to queue "
+                                              "(e.g. sub_rescaled,sub_rattled_rescaled,static)")
+    prep.add_argument("--competitor-retries", action="store_true",
+                      help="queue the fallback ladder for rejected stability competitor relaxations")
+    prep.add_argument("--retries", action="store_true",
+                      help="queue the fallback ladder for every guard-rejected relaxation in every suite")
     prep.add_argument("--queue-db", default=str(QUEUE_DB))
 
     un = sub.add_parser("unattended", help="drain the job queue (see ./run_unattended.sh)")
@@ -71,9 +77,13 @@ def main(argv: list[str] | None = None) -> int:
     un.add_argument("--workers", type=int, help="override the mode's worker count")
     un.add_argument("--report-every", type=int, help="partial report every N completed jobs")
 
-    for name, text in (("status", "queue progress, ETA, mode, failures"), ("stop", "graceful stop request")):
+    for name, text in (("status", "queue progress, ETA, mode, failures"), ("stop", "graceful stop request"),
+                       ("requeue-failed", "put failed / timed-out queue jobs back to pending (after a fix)")):
         p = sub.add_parser(name, help=text)
         p.add_argument("--queue-db", default=str(QUEUE_DB))
+    p0 = sub.add_parser("phase0", help="Phase 0 audits, queue ETA, before/after report")
+    p0.add_argument("action", choices=["audit", "eta", "report"])
+    p0.add_argument("--queue-db", default=str(QUEUE_DB))
     sch = sub.add_parser("schedule", help="generate the nightly launchd plist and print install commands")
     sch.add_argument("--write", action="store_true", help="(re)write config/launchd/<label>.plist")
 
@@ -107,7 +117,9 @@ def main(argv: list[str] | None = None) -> int:
 
         cfg.update(max_pairs=args.max_pairs, max_atoms=args.max_atoms, ood_sample=args.ood_n)
         info = prepare(cfg, queue_db=args.queue_db, do_pairs=not args.skip_pairs, do_ood=not args.skip_ood,
-                       force_pairs=args.force_pairs)
+                       force_pairs=args.force_pairs,
+                       curated_kinds=[k for k in (args.curated_kinds or "").split(",") if k] or None,
+                       competitor_retries=args.competitor_retries, retries=args.retries)
         print(json.dumps(info, indent=1, default=str))
         return 0
     if args.cmd == "unattended":
@@ -125,12 +137,23 @@ def main(argv: list[str] | None = None) -> int:
 
         print(status_report(args.queue_db))
         return 0
+    if args.cmd == "requeue-failed":
+        from harness import jobqueue
+
+        print(f"{jobqueue.requeue_failed(args.queue_db)} failed / timed-out jobs put back to pending.")
+        return 0
     if args.cmd == "stop":
         from harness.orchestrator import request_stop
 
         pid = request_stop(args.queue_db)
         print(f"Stop requested: runner pid {pid} will finish its running jobs and exit." if pid
               else "No runner is working on that queue.")
+        return 0
+    if args.cmd == "phase0":
+        from harness import phase0
+
+        out = {"audit": phase0.audit, "eta": lambda: phase0.eta(args.queue_db), "report": phase0.report}[args.action]()
+        print(json.dumps(out, indent=1, default=str) if isinstance(out, dict) else f"Wrote {out}")
         return 0
     if args.cmd == "schedule":
         from harness.schedule import instructions, write_plist

@@ -153,13 +153,48 @@ def _thermo(**criteria) -> list[dict]:
     return cached("thermo", criteria, fetch)
 
 
+# MP2020 GGA/GGA+U mixing: oxides and fluorides containing these metals are computed with +U; every
+# other chemistry with plain GGA. MaterialsProject2020Compatibility rejects the other combination, so
+# the GGA_GGA+U hull (and MPtrj, MACE-MP-0's training set) only ever contains the run type chosen here.
+U_ELEMENTS = frozenset(["Co", "Cr", "Fe", "Mn", "Mo", "Ni", "V", "W"])
+U_ANIONS = frozenset(["O", "F"])
+
+
+def mp2020_run_type(elements) -> str:
+    """The run type MP2020 accepts for a chemistry: 'GGA+U' for O/F compounds of U_ELEMENTS, else 'GGA'."""
+    els = {str(e) for e in elements}
+    return "GGA+U" if (els & U_ANIONS and els & U_ELEMENTS) else "GGA"
+
+
+def choose_run_type(run_types, elements) -> tuple[str, str]:
+    """(run type, rule) for a GGA_GGA+U thermo document. With one entry, that one; with both GGA and
+    GGA+U, the one MP2020 mixing accepts for this chemistry (never simply the first found)."""
+    have = [rt for rt in ("GGA", "GGA+U") if rt in run_types]
+    if not have:
+        raise KeyError(f"no GGA/GGA+U entry ({sorted(run_types)})")
+    if len(have) == 1:
+        return have[0], f"only {have[0]} present"
+    want = mp2020_run_type(elements)
+    return want, f"both GGA and GGA+U present: {want} chosen by the MP2020 mixing rule"
+
+
+def _entry_elements(raw) -> list[str]:
+    if isinstance(raw, dict):
+        return [str(k) for k in (raw.get("composition") or {})]
+    return [e.symbol for e in raw.composition.elements]
+
+
 def _pbe_from_thermo(t: dict, requested_id: str | None = None) -> dict:
     from pymatgen.entries.computed_entries import ComputedStructureEntry
 
     entries = t.get("entries") or {}
-    run_type = next((rt for rt in ("GGA", "GGA+U") if rt in entries), None)
-    if run_type is None:
-        raise KeyError(f"{t.get('material_id')}: GGA_GGA+U thermo doc has no GGA/GGA+U entry ({list(entries)})")
+    try:
+        first = next(entries[rt] for rt in ("GGA", "GGA+U") if rt in entries)
+        run_type, rule = choose_run_type(entries, _entry_elements(first))
+    except (KeyError, StopIteration):
+        raise KeyError(f"{t.get('material_id')}: GGA_GGA+U thermo doc has no GGA/GGA+U entry ({list(entries)})") from None
+    if rule.startswith("both"):
+        log.warning("%s: %s", t.get("material_id"), rule)
     raw = entries[run_type]
     entry = raw if isinstance(raw, ComputedStructureEntry) else ComputedStructureEntry.from_dict(raw)
     return {
@@ -169,6 +204,7 @@ def _pbe_from_thermo(t: dict, requested_id: str | None = None) -> dict:
         "structure": entry.structure,
         "entry": entry,
         "run_type": run_type,  # "GGA" (PBE) or "GGA+U" (PBE+U)
+        "run_type_rule": rule,
         "functional": "PBE+U" if run_type == "GGA+U" else "PBE",
         "thermo_type": t.get("thermo_type"),
         "uncorrected_energy_per_atom": entry.uncorrected_energy_per_atom,
@@ -262,6 +298,26 @@ def bulk_summary(max_atoms: int) -> list[dict]:
         out.extend(chunk)
         log.info("bulk summary: %2d sites -> %5d materials (running total %d)", n, len(chunk), len(out))
     return out
+
+
+def bulk_gga_hull() -> dict[str, float]:
+    """GGA/GGA+U energy above hull (eV/atom) for every material with a GGA_GGA+U thermo document.
+
+    One cached bulk request (ids + one number each). Used to stratify pair sampling by hull bin: the
+    summary endpoint's energy_above_hull comes from MP's r2SCAN-mixed hull and moves ~2 % of targets to
+    another bin (see reports/phase0), so it is never used for binning.
+    """
+    def fetch():
+        with _rester() as mpr:
+            docs = mpr.materials.thermo.search(thermo_types=[PBE_THERMO_TYPE], fields=["material_id", "energy_above_hull"])
+        out = {}
+        for d in docs:
+            dd = d.model_dump() if hasattr(d, "model_dump") else dict(d)
+            if dd.get("energy_above_hull") is not None:
+                out[str(dd["material_id"])] = float(dd["energy_above_hull"])
+        return out
+
+    return cached("bulk_gga_hull", {"thermo_type": PBE_THERMO_TYPE, "fields": ["material_id", "energy_above_hull"]}, fetch)
 
 
 def pbe_candidates(formula: str) -> list[dict]:

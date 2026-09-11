@@ -107,9 +107,102 @@ def load_structures(ids: list[str], cache_file=SAMPLE_STRUCTS) -> dict[str, Stru
     return {k: Structure.from_dict(v) for k, v in raw.items()}
 
 
+# DFT-relaxed WBM structures + calculation parameters (run type, U values, POTCARs), md5-checked on download.
+CSE_FILE = WBM_DIR / "2022-10-19-wbm-computed-structure-entries.jsonl.gz"
+CSE_MD5 = "655b7a9c368e136dd8747f1ef8002e7a"  # figshare file 53161832 (Matbench Discovery data files)
+
+
+def load_entries(ids: list[str], cache_file=None) -> dict:
+    """WBM ComputedStructureEntries (DFT-relaxed) for the given ids; scanned once, then cached."""
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
+
+    cache_file = cache_file or WBM_DIR / f"cse_{len(ids)}_{compare.stable_seed(','.join(sorted(ids))):08x}.json"
+    if cache_file.is_file():
+        raw = json.loads(cache_file.read_text())
+    else:
+        if not CSE_FILE.is_file():
+            raise FileNotFoundError(f"{CSE_FILE} missing — see README (figshare doi:10.6084/m9.figshare.22715158)")
+        wanted, raw = set(ids), {}
+        with gzip.open(CSE_FILE, "rt") as fh:
+            for line in fh:
+                m = ID_RE.search(line[:200])
+                if m and m.group(1) in wanted:
+                    raw[m.group(1)] = json.loads(line)["computed_structure_entry"]
+                    if len(raw) == len(wanted):
+                        break
+        cache_file.write_text(json.dumps(raw))
+    missing = set(ids) - set(raw)
+    if missing:
+        log.warning("%d ids have no WBM computed structure entry: %s", len(missing), sorted(missing)[:5])
+    return {k: ComputedStructureEntry.from_dict(v) for k, v in raw.items()}
+
+
+def retry_jobs(compute: dict, tag: str, done: set | frozenset = frozenset()) -> list[dict]:
+    """Fallback-ladder jobs for WBM relaxations rejected by the convergence / sanity guard (not for
+    composition mismatches), restarting the perturbed rung from the WBM initial structure."""
+    from harness.config import LADDER_BUDGET_S
+    from harness.suites.stability import rejection_reason
+
+    todo = {key: pl for key, pl in store.load_payloads(SUITE, tag=tag).items()
+            if "each_pred" in pl and "ladder" not in pl and rejection_reason(pl)
+            and key.replace(f"@{tag}", f":ladder@{tag}") not in done}
+    if not todo:
+        return []
+    ids = sorted(pl["wbm_id"] for pl in todo.values())
+    starts = load_structures(ids, cache_file=WBM_DIR / f"ladder_init_{compare.stable_seed(','.join(ids)):08x}.json")
+    summary = load_summary().set_index("material_id")
+    jobs = []
+    for key, pl in todo.items():
+        wid = pl["wbm_id"]
+        jobs.append({"job_key": key.replace(f"@{tag}", f":ladder@{tag}"), "record_key": key, "job_fn": "ladder",
+                     "wbm_id": wid, "ref": {k: (v.item() if hasattr(v, "item") else v) for k, v in summary.loc[wid].to_dict().items()},
+                     "rung1": pl, "rung1_rejection": rejection_reason(pl), "original": starts.get(wid, pl["relaxed"]),
+                     "seed": compare.stable_seed(key), "structure": pl["relaxed"], "budget_s": LADDER_BUDGET_S,
+                     "device": compute["device"], "dtype": compute["dtype"]})
+    return jobs
+
+
+def _record_static(job: dict, res: dict) -> None:
+    """Single-point MACE energy at WBM's DFT-relaxed structure: the model's energy error with no
+    relaxation in the way (key '<id>:static@<tag>')."""
+    ref, key, wid = job["ref"], job["job_key"], job["wbm_id"]
+    if res.get("status") != "ok":
+        store.record_job(SUITE, key, res["status"], payload={"wbm_id": wid, "kind": "static"}, error=res.get("error"))
+        return
+    e_dft = ref["uncorrected_energy_from_cse"] / ref["n_sites"]
+    d = res["energy_per_atom"] - e_dft
+    store.record_results([{"suite": SUITE, "job_key": key, "structure": f"{wid} [static]", "formula": ref["formula"],
+                           "family": "wbm-unique-prototype", "units": "eV/atom", "test": "static:energy_per_atom",
+                           "simulated_value": res["energy_per_atom"], "reference_value": e_dft, "error_abs": d,
+                           "reference_provenance": "wbm_computed", "settings": res["metadata"],
+                           "reference_source": f"{wid} uncorrected DFT energy; MACE single point at the DFT-relaxed structure, {SOURCE}"}])
+    store.record_job(SUITE, key, "ok", payload={"wbm_id": wid, "kind": "static", "e_static": res["energy_per_atom"],
+                                                "de_static_mev": d * 1000}, settings=res["metadata"], runtime_s=res.get("wall_time_s"))
+
+
+def _record_ladder(job: dict, res: dict) -> None:
+    r1 = job["rung1"]
+    summary1 = {k: r1.get(k) for k in ("e_mace", "converged", "n_steps", "wall_time_s")} | {"rejection": job["rung1_rejection"]}
+    if res.get("status") == "ok":
+        _record({**job, "job_key": job["record_key"], "job_fn": "relax",
+                 "payload_extra": {"rung": res.get("rung"), "ladder": res.get("ladder", []), "rung1": summary1}}, res)
+    else:
+        store.record_job(SUITE, job["record_key"], "ok",
+                         payload={**r1, "rung": None, "ladder": [], "ladder_error": res.get("error"), "rung1": summary1})
+    store.record_job(SUITE, job["job_key"], res.get("status", "failed"),
+                     payload={"wbm_id": job["wbm_id"], "ladder_of": job["record_key"], "rung": res.get("rung")},
+                     error=res.get("error"), runtime_s=res.get("job_wall_s"))
+
+
 def _record(job: dict, res: dict) -> None:
     from harness.suites.stability import rejection_reason
 
+    if job.get("job_fn") == "ladder":
+        _record_ladder(job, res)
+        return
+    if job.get("job_fn") == "static":
+        _record_static(job, res)
+        return
     ref, key, wid = job["ref"], job["job_key"], job["wbm_id"]
     if res.get("status") != "ok":
         store.record_job(SUITE, key, res["status"], payload={"wbm_id": wid}, error=res.get("error"),
@@ -145,7 +238,7 @@ def _record(job: dict, res: dict) -> None:
                "e_mace": e_mace, "e_dft": e_dft, "de_mev": d * 1000, "each_true": each_true, "each_pred": each_pred,
                "e_form_true": e_form_true, "rejection": rejection, "converged": res["converged"],
                "n_steps": res["n_steps"], "wall_time_s": res["wall_time_s"],
-               "spin_caveat": flags["spin_caveat"], "relaxed": relaxed}
+               "spin_caveat": flags["spin_caveat"], "relaxed": relaxed, **job.get("payload_extra", {})}
     store.record_job(SUITE, key, "ok", payload=payload, settings=base["settings"], runtime_s=res["wall_time_s"])
     log.info("%-14s %-14s dE %+8.1f meV/atom  e_hull true %.3f pred %.3f  steps %3d  %.1fs%s", wid,
              relaxed.composition.reduced_formula, d * 1000, each_true, each_pred, res["n_steps"], res["wall_time_s"],
@@ -184,7 +277,12 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
 # --- analysis ------------------------------------------------------------------------------------
 
 def table(tag: str) -> pd.DataFrame:
-    return pd.DataFrame([pl for pl in store.load_payloads(SUITE, tag=tag).values() if "each_pred" in pl])
+    pls = store.load_payloads(SUITE, tag=tag).values()
+    df = pd.DataFrame([pl for pl in pls if "each_pred" in pl])
+    static = {pl["wbm_id"]: pl["de_static_mev"] for pl in pls if pl.get("kind") == "static"}
+    if len(df):
+        df["de_static_mev"] = df.wbm_id.map(static)
+    return df
 
 
 def score(df: pd.DataFrame) -> dict:

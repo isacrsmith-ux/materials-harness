@@ -21,7 +21,7 @@ import logging
 
 import numpy as np
 import pandas as pd
-from pymatgen.core import Lattice, Structure
+from pymatgen.core import Composition, Lattice, Structure
 
 from harness import compare, mp_data, store
 from harness.config import DATA_DIR, settings_tag
@@ -34,7 +34,12 @@ SUITE = "experimental"
 TABLE = DATA_DIR / "experimental_lattice_constants.csv"
 CITATION = ("Lucero, Henderson & Scuseria, J. Phys.: Condens. Matter 24, 145504 (2012), "
             "doi:10.1088/0953-8984/24/14/145504, Table I")
-PROTOTYPE_SG = {"di": 227, "zb": 216, "rs": 225, "wu": 186}
+# Second set (metals + ionic solids): experimental lattice constants with the zero-point anharmonic expansion
+# (ZPAE) removed, i.e. the static 0 K lattice a ground-state calculation should reproduce.
+CSONKA_TABLE = DATA_DIR / "experimental_csonka2009.csv"
+CSONKA_CITATION = "Csonka, Perdew et al., Phys. Rev. B 79, 155107 (2009), arXiv:0903.4037, Table II (Expt. − ZPAE)"
+CSONKA_STRUCTURE = {"fcc": "fcc", "bcc": "bcc", "diamond": "di", "rocksalt": "rs", "zincblende": "zb"}
+PROTOTYPE_SG = {"di": 227, "zb": 216, "rs": 225, "wu": 186, "fcc": 225, "bcc": 229}
 WURTZITE_U = 0.375  # ideal internal parameter; relaxed by MACE
 PBE_EXPECTED_OVERESTIMATE_PCT = 1.0  # typical PBE lattice-constant overestimate
 
@@ -45,7 +50,24 @@ def load_table() -> list[dict]:
     for r in rows:
         r["a_exp"] = float(r["a_exp"])
         r["c_exp"] = float(r["c_exp"]) if r["c_exp"] else None
-    return rows
+        r["citation"], r["key_prefix"] = CITATION, ""
+    return rows + load_csonka()
+
+
+def load_csonka() -> list[dict]:
+    """Csonka et al. (2009) Table II rows in the suite's schema; status 'zpae_removed' (static 0 K)."""
+    if not CSONKA_TABLE.is_file():
+        return []
+    with CSONKA_TABLE.open() as fh:
+        rows = list(csv.DictReader(line for line in fh if not line.startswith("#")))
+    out = []
+    for r in rows:
+        out.append({"material": r["material"], "formula": r["material"], "structure": CSONKA_STRUCTURE[r["structure"]],
+                    "a_exp": float(r["a_exp_minus_zpae"]), "c_exp": None, "status": "zpae_removed",
+                    "note": f"ZPAE {r['zpae']} Å subtracted; 0 K value with ZPAE {r['a_exp_low_t']} Å",
+                    "citation": CSONKA_CITATION, "key_prefix": "csonka2009:", "verified": r.get("verified") == "True",
+                    "metal": all(e.is_metal for e in Composition(r["material"]).elements)})
+    return out
 
 
 def build(row: dict) -> Structure:
@@ -54,6 +76,8 @@ def build(row: dict) -> Structure:
 
     els = sorted(Composition(row["formula"]).elements, key=lambda e: e.X)  # cation first
     a, kind = row["a_exp"], row["structure"]
+    if kind in ("fcc", "bcc"):
+        return Structure.from_spacegroup(PROTOTYPE_SG[kind], Lattice.cubic(a), [els[0].symbol], [[0, 0, 0]])
     if kind == "di":
         return Structure.from_spacegroup(227, Lattice.cubic(a), [els[0].symbol], [[0, 0, 0]])
     if kind == "zb":
@@ -99,14 +123,17 @@ def _record(job: dict, res: dict) -> None:
     params = [("a", row["a_exp"], cell.a, pbe["a"] if pbe else None)]
     if row["structure"] == "wu":
         params.append(("c", row["c_exp"], cell.c, pbe["c"] if pbe else None))
-    exp_src = f"{CITATION} [{'room temperature' if row['status'] == 'rt' else row['status']}]"
+    label = {"rt": "room temperature", "zpae_removed": "0 K, zero-point expansion removed"}.get(row["status"], row["status"])
+    exp_src = f"{row.get('citation', CITATION)} [{label}]"
     flags = {"status": row["status"], "keeps_prototype_sg": keeps_sg, "sim_spacegroup": cell.spacegroup,
              "converged": res["converged"], "note": row["note"] or None}
     base = {"suite": SUITE, "job_key": key, "structure": f"{row['material']} ({row['structure']})",
             "formula": row["formula"], "family": row["structure"], "units": "Å", "flags": flags,
             "settings": res["metadata"], "runtime_s": res["wall_time_s"]}
     rows, out = [], {"material": row["material"], "formula": row["formula"], "structure": row["structure"],
-                     "status": row["status"], "keeps_prototype_sg": keeps_sg, "converged": res["converged"],
+                     "status": row["status"], "source": row.get("citation", CITATION),
+                     "metal": all(e.is_metal for e in Composition(row["formula"]).elements),
+                     "keeps_prototype_sg": keeps_sg, "converged": res["converged"],
                      "wall_time_s": res["wall_time_s"], "pbe_material_id": pbe["material_id"] if pbe else None}
     for p, exp, sim, pbe_val in params:
         err = compare.pct_error(sim, exp)
@@ -136,7 +163,7 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
     done = store.completed_keys(SUITE, retry_failed=retry_failed)
     jobs = []
     for row in rows:
-        key = f"{row['material']}:{row['structure']}@{tag}"
+        key = f"{row.get('key_prefix', '')}{row['material']}:{row['structure']}@{tag}"
         if row["status"] == "ambiguous":
             log.warning("not run: %s — %s", row["material"], row["note"])
             store.record_job(SUITE, key, "skipped", payload={"material": row["material"], "status": "ambiguous"},
@@ -172,7 +199,8 @@ def print_summary(tag: str) -> None:
         return
     print(f"\n=== EXPERIMENTAL CHECK (settings {tag}) — {CITATION} ===")
     for label, sub in [("room temperature (headline)", df[df.status == "rt"]),
-                       ("0 K extrapolated (reported separately)", df[df.status == "zero_k"])]:
+                       ("0 K extrapolated (reported separately)", df[df.status == "zero_k"]),
+                       ("0 K, ZPAE removed — Csonka 2009", df[df.status == "zpae_removed"])]:
         s = summarize(sub)
         print(f"{label:<40} n={len(sub):>2}  a: MACE vs exp mean {s['mace_vs_exp'][0]:+.2f}% (MAE {s['mace_vs_exp'][1]:.2f}%)"
               f"  |  MP PBE vs exp mean {s['pbe_vs_exp'][0]:+.2f}% (n={s['pbe_vs_exp'][2]})"

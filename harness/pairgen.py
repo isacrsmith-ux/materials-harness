@@ -20,6 +20,7 @@ import json
 import logging
 from collections import defaultdict, deque
 from datetime import datetime, timezone
+from functools import lru_cache
 
 from pymatgen.core import Composition
 
@@ -205,6 +206,181 @@ def supported_elements() -> set[str]:
 
     calc = engine.get_calculator("cpu", "float64")
     return {chemical_symbols[int(z)] for z in calc.models[0].atomic_numbers}
+
+
+# --- stratified pair design (round 2) -------------------------------------------------------------------
+# Pairs are sampled per hull bin of the TARGET (GGA/GGA+U hull, mp_data.bulk_gga_hull), with a labelled
+# implausible stratum and a minimum share of metallic targets (metals, intermetallics, alloys), several
+# pairs per prototype allowed up to a cap. Plausibility of the swap A -> B:
+#   ionic   Hautier et al., Inorg. Chem. 50, 656 (2011) substitution model (pymatgen lambda table): pair
+#           correlation of the oxidation-state-decorated species; plausible if >= 1 (observed in ICSD at least
+#           as often as chance). Oxidation states from Composition.oxi_state_guesses.
+#   metallic the lambda table has no oxidation-state-0 species, so swaps with no usable ionic species are
+#           scored by distance on Pettifor's chemical scale (Element.mendeleev_no); substitution frequency
+#           in ICSD falls with this distance (Glawe et al., New J. Phys. 18, 093011 (2016)).
+STRATIFIED_DEFAULTS = {"per_bin": 500, "implausible_frac": 0.10, "metallic_frac": 0.30, "max_per_prototype": 5,
+                       "seed": 20260911, "pettifor_plausible_max": 15, "pair_corr_plausible_min": 1.0}
+
+
+def chem_class(formula: str) -> str:
+    """'metallic' (every element a metal: metals, intermetallics, alloys) or 'compound'."""
+    return "metallic" if all(e.is_metal for e in Composition(formula).elements) else "compound"
+
+
+_SUB_PROB = None
+
+
+def _substitution_probability():
+    global _SUB_PROB
+    if _SUB_PROB is None:
+        from pymatgen.core.structure_prediction.substitution_probability import SubstitutionProbability
+
+        _SUB_PROB = SubstitutionProbability()
+        _SUB_PROB.known_species = {str(s) for key in _SUB_PROB._l for s in key}
+    return _SUB_PROB
+
+
+@lru_cache(maxsize=200_000)
+def _oxi_guess(formula: str) -> tuple:
+    try:
+        guesses = Composition(formula).oxi_state_guesses(max_sites=-50)
+    except Exception:  # noqa: BLE001 — no guess is a valid outcome (falls back to the Pettifor score)
+        return ()
+    return tuple(sorted(guesses[0].items())) if guesses else ()
+
+
+def plausibility(parent_formula: str, target_formula: str, mapping: str, params: dict | None = None) -> dict:
+    """Plausibility label and score of the swap in `mapping` ('A:B')."""
+    from pymatgen.core import Element, Species
+
+    p = {**STRATIFIED_DEFAULTS, **(params or {})}
+    src, dst = mapping.split(":")
+    qa = dict(_oxi_guess(Composition(parent_formula).reduced_formula)).get(src)
+    qb = dict(_oxi_guess(Composition(target_formula).reduced_formula)).get(dst)
+    sp = _substitution_probability()
+    if qa and qb and float(qa).is_integer() and float(qb).is_integer():
+        a, b = Species(src, int(qa)), Species(dst, int(qb))
+        if str(a) in sp.known_species and str(b) in sp.known_species:
+            corr = float(sp.pair_corr(a, b))
+            return {"scorer": "ionic (Hautier 2011 pair correlation)", "species": [str(a), str(b)], "score": corr,
+                    "plausible": corr >= p["pair_corr_plausible_min"]}
+    d = abs(Element(src).mendeleev_no - Element(dst).mendeleev_no)
+    return {"scorer": "Pettifor chemical-scale distance", "species": [src, dst], "score": float(d),
+            "plausible": d <= p["pettifor_plausible_max"]}
+
+
+def cell_quotas(per_bin: int, implausible_frac: float, metallic_frac: float) -> dict[tuple[str, bool], int]:
+    """Per-bin quotas for (chemistry class, plausible) cells; they sum to per_bin."""
+    n_met = round(per_bin * metallic_frac)
+    q = {}
+    for cls, n in (("metallic", n_met), ("compound", per_bin - n_met)):
+        n_imp = round(n * implausible_frac)
+        q[(cls, False)], q[(cls, True)] = n_imp, n - n_imp
+    return q
+
+
+def fill_stratified(streams: dict, quotas: dict, classify, accept, max_per_prototype: int) -> tuple[dict, dict]:
+    """Fill each (class, plausible) cell of one bin from shuffled candidate streams (one per class).
+
+    classify(c) -> (class, plausible); accept(c) -> (reason, pair) as in _check. Cells that run out of
+    candidates are recorded as shortfalls, never silently padded from another cell.
+    """
+    picked = {cell: [] for cell in quotas}
+    stats = defaultdict(int)
+    proto_count = defaultdict(int)
+    for cls, stream in streams.items():
+        for c in stream:
+            if all(len(picked[(cls, pl)]) >= quotas[(cls, pl)] for pl in (True, False)):
+                break
+            if proto_count[c["prototype"]] >= max_per_prototype:
+                stats["skipped: prototype cap"] += 1
+                continue
+            cell = classify(c)
+            if len(picked[cell]) >= quotas[cell]:
+                continue
+            reason, pair = accept(c)
+            if pair is None:
+                stats[f"rejected: {reason}"] += 1
+                continue
+            picked[cell].append(pair)
+            proto_count[c["prototype"]] += 1
+    shortfall = {f"{cls}/{'plausible' if pl else 'implausible'}": quotas[(cls, pl)] - len(v)
+                 for (cls, pl), v in picked.items() if len(v) < quotas[(cls, pl)]}
+    return picked, {"counts": dict(stats), "shortfall": shortfall}
+
+
+def generate_stratified(max_atoms: int, params: dict | None = None, force: bool = False) -> dict:
+    """Round-2 pair set: stratified by target hull bin, plausibility and chemistry class (see above)."""
+    import random
+
+    p = {**STRATIFIED_DEFAULTS, **(params or {})}
+    config = {"design": "stratified", "max_atoms": max_atoms, **p}
+    meta = load_meta()
+    if AUTO_PAIRS.is_file() and meta.get("config") == config and not force:
+        log.info("stratified pairs already generated for %s — reusing data/auto_pairs.json", config)
+        return meta
+    if AUTO_PAIRS.is_file() and meta.get("config", {}).get("design") != "stratified":
+        (DATA_DIR / "auto_pairs_v1.json").write_text(AUTO_PAIRS.read_text())  # keep the round-1 set on disk
+        (DATA_DIR / "auto_pairs_v1_meta.json").write_text(AUTO_META.read_text())
+    hull = mp_data.bulk_gga_hull()
+    docs = []
+    for d in mp_data.bulk_summary(max_atoms):
+        if d["material_id"] in hull:  # no GGA/GGA+U document -> no PBE reference; counted below
+            docs.append({**d, "energy_above_hull": hull[d["material_id"]]})
+    cands = candidate_pairs(docs, supported_elements())
+    curated = {(x["parent_id"], x["target_id"]) for x in resolve_pairs()}
+    cands = [c for c in cands if (c["parent_id"], c["target_id"]) not in curated]
+    by_id = {d["material_id"]: d for d in docs}
+    rng = random.Random(p["seed"])
+    streams: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
+    for c in cands:
+        b = compare.hull_bin(by_id[c["target_id"]]["energy_above_hull"])
+        c["target_bin"] = b
+        streams[b][chem_class(c["target_formula"])].append(c)
+    for b in streams:
+        for cls in streams[b]:
+            rng.shuffle(streams[b][cls])
+    quotas = cell_quotas(p["per_bin"], p["implausible_frac"], p["metallic_frac"])
+    plaus_cache: dict[str, dict] = {}
+
+    def classify(c):
+        pl = plaus_cache.setdefault(c["parent_id"] + ">" + c["target_id"],
+                                    plausibility(c["parent_formula"], c["target_formula"], c["mapping"], p))
+        return chem_class(c["target_formula"]), pl["plausible"]
+
+    position = {id(c): (lst, i) for b in streams for lst in streams[b].values() for i, c in enumerate(lst)}
+    fetched: set[str] = set()
+
+    def accept(c):
+        if c["target_id"] not in fetched:  # prefetch the next 300 candidates of this stream in one request batch
+            lst, i = position[id(c)]
+            ids = {x[k] for x in lst[i:i + 300] for k in ("parent_id", "target_id")}
+            mp_data.prefetch_pbe(ids)
+            fetched.update(ids)
+        reason, pair = _check(c, max_atoms)
+        if pair is not None:
+            pl = plaus_cache[c["parent_id"] + ">" + c["target_id"]]
+            pair.update(target_bin=compare.hull_bin(pair["target_e_above_hull"]), chem_class=chem_class(pair["target_formula"]),
+                        plausibility=pl, plausible=pl["plausible"], candidate_bin=c["target_bin"])
+        return reason, pair
+
+    pairs, per_bin_stats = [], {}
+    for b in compare.HULL_BINS_MP:
+        picked, st = fill_stratified({cls: streams[b].get(cls, []) for cls in ("metallic", "compound")}, quotas,
+                                     classify, accept, p["max_per_prototype"])
+        per_bin_stats[b] = {**st, "candidates": {cls: len(v) for cls, v in streams[b].items()},
+                            "accepted": {f"{cls}/{'plausible' if pl else 'implausible'}": len(v) for (cls, pl), v in picked.items()}}
+        for v in picked.values():
+            pairs += v
+        log.info("bin %s: %s", b, per_bin_stats[b]["accepted"])
+    meta = {"config": config, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "n_materials_with_gga_hull": len(docs), "n_candidates": len(cands), "quotas": {f"{k[0]}/{'plausible' if k[1] else 'implausible'}": v for k, v in quotas.items()},
+            "per_bin": per_bin_stats, "accepted": len(pairs),
+            "bin_moved_between_summary_and_pbe_reference": sum(p_["target_bin"] != p_["candidate_bin"] for p_ in pairs),
+            "excluded_curated_pairs": len(curated)}
+    AUTO_PAIRS.write_text(json.dumps(pairs, indent=1, default=str) + "\n")
+    AUTO_META.write_text(json.dumps(meta, indent=1, default=str) + "\n")
+    return meta
 
 
 def load_pairs() -> list[dict]:

@@ -37,7 +37,7 @@ from pathlib import Path
 from harness import ROOT, jobqueue, notify, power, store
 from harness.config import (DEFAULT_RELAX, LOG_DIR, MODEL, QUEUE_DB, REPORTS_DIR, load_compute_config,
                             load_unattended_config, settings_tag)
-from harness.jobs import relax_job
+from harness.jobs import run_job
 from harness.platform_check import core_counts
 from harness.runner import _init_worker, _safe_call
 
@@ -97,6 +97,9 @@ def _recorder(suite: str):
     if suite == "ood":
         from harness.suites.ood import _record
         return _record
+    if suite == "stability":
+        from harness.suites.stability import _record_competitor
+        return _record_competitor
     raise KeyError(f"no recorder for suite {suite!r}")
 
 
@@ -112,20 +115,60 @@ def _plain(d: dict) -> dict:
     return {k: (v.item() if hasattr(v, "item") else v) for k, v in d.items()}
 
 
+def _queue_rows(jobs: list[dict], suite: str, settings: dict, rank_of=None) -> list[dict]:
+    """Wrap suite job dicts as queue rows (device/dtype are added by the runner at dispatch)."""
+    rows = []
+    for i, j in enumerate(jobs):
+        inputs = {k: v for k, v in j.items() if k not in ("device", "dtype")} | {"suite": suite}
+        if "settings" in inputs:
+            inputs["settings"] = settings
+        rows.append({"suite": suite, "job_key": j["job_key"], "rank": rank_of(j) if rank_of else i,
+                     "n_atoms": len(j["structure"]), "model": MODEL["file"], "settings": settings, "inputs": inputs})
+    return rows
+
+
 def build_auto_substitution_jobs(pairs: list[dict], kinds: list[str], compute: dict) -> list[dict]:
-    from harness.suites.substitution import start_structure
+    from harness.suites.substitution import build_jobs
 
     tag, settings = _settings(compute)
-    jobs = []
-    for rank, pair in enumerate(pairs):
-        for kind in kinds:
-            key = f"{pair['pair_id']}:{pair['parent_id']}->{pair['target_id']}:{kind}@{tag}"
-            s = start_structure(pair, kind)
-            jobs.append({"suite": AUTO_SUITE, "job_key": key, "rank": rank, "n_atoms": len(s), "model": MODEL["file"],
-                         "settings": settings,
-                         "inputs": {"job_key": key, "kind": kind, "pair": pair, "structure": s, "suite": AUTO_SUITE,
-                                    "settings": settings}})
-    return jobs
+    rank = {p["pair_id"]: i for i, p in enumerate(pairs)}
+    jobs = build_jobs(pairs, kinds, compute, suite=AUTO_SUITE)
+    return _queue_rows(jobs, AUTO_SUITE, settings, rank_of=lambda j: rank[j["pair"]["pair_id"]])
+
+
+def build_curated_substitution_jobs(kinds: list[str], compute: dict) -> list[dict]:
+    from harness.suites.substitution import SUITE, build_jobs
+
+    tag, settings = _settings(compute)
+    return _queue_rows(build_jobs(resolve_curated(), kinds, compute, suite=SUITE), SUITE, settings)
+
+
+def resolve_curated() -> list[dict]:
+    from harness.curation import resolve_pairs
+
+    return resolve_pairs()
+
+
+def build_competitor_retry_jobs(compute: dict) -> list[dict]:
+    from harness.suites import stability
+
+    tag, settings = _settings(compute)
+    jobs = stability.retry_jobs(resolve_curated(), compute, tag)
+    return _queue_rows(jobs, stability.SUITE, settings)
+
+
+def build_retry_jobs(compute: dict) -> list[dict]:
+    """Fallback ladder for every relaxation the guard rejects, in every suite (competitors, curated and
+    auto substitution pairs, WBM). Each result is recorded under its original key, all rungs kept."""
+    from harness import pairgen
+    from harness.suites import ood, substitution
+
+    tag, settings = _settings(compute)
+    rows = build_competitor_retry_jobs(compute)
+    for suite, pairs in (("substitution", resolve_curated()), (AUTO_SUITE, pairgen.load_pairs())):
+        rows += _queue_rows(substitution.retry_jobs(suite, pairs, compute, tag), suite, settings)
+    rows += _queue_rows(ood.retry_jobs(compute, tag), "ood", settings)
+    return rows
 
 
 def build_ood_jobs(n: int, compute: dict) -> list[dict]:
@@ -149,15 +192,58 @@ def build_ood_jobs(n: int, compute: dict) -> list[dict]:
     return jobs
 
 
+def build_wbm_calibration_jobs(compute: dict) -> list[dict]:
+    """Relaxation (from the WBM initial structure) + single point (at the DFT-relaxed structure) for every
+    WBM CALIBRATION id. The locked test ids are never queued here (splits.test_ids is locked)."""
+    from harness import splits
+    from harness.suites import ood
+
+    tag, settings = _settings(compute)
+    ids = splits.calibration_ids()
+    starts = ood.load_structures(ids, cache_file=ood.WBM_DIR / "calibration_init_structs.json")
+    cses = ood.load_entries(ids, ood.WBM_DIR / "calibration_cse.json")
+    summary = ood.load_summary().set_index("material_id")
+    jobs = []
+    for rank, wid in enumerate(ids):
+        ref = _plain(summary.loc[wid].to_dict())
+        if wid in starts:
+            key = f"{wid}@{tag}"
+            jobs.append({"suite": "ood", "job_key": key, "rank": rank, "n_atoms": len(starts[wid]), "model": MODEL["file"],
+                         "settings": settings, "inputs": {"job_key": key, "wbm_id": wid, "structure": starts[wid], "ref": ref,
+                                                          "suite": "ood"}})
+        if wid in cses:
+            key = f"{wid}:static@{tag}"
+            jobs.append({"suite": "ood", "job_key": key, "rank": rank, "n_atoms": len(cses[wid].structure), "model": MODEL["file"],
+                         "settings": settings, "inputs": {"job_key": key, "wbm_id": wid, "structure": cses[wid].structure,
+                                                          "ref": ref, "job_fn": "static", "suite": "ood"}})
+    return jobs
+
+
 def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, do_ood: bool = True,
-            force_pairs: bool = False) -> dict:
-    """Bulk-download and cache MP/WBM inputs, generate pairs, and enqueue every job (idempotent)."""
+            force_pairs: bool = False, curated_kinds: list[str] | None = None, competitor_retries: bool = False,
+            retries: bool = False) -> dict:
+    """Bulk-download and cache MP/WBM inputs, generate pairs, and enqueue every job (idempotent).
+
+    curated_kinds queues curated-pair substitution kinds; competitor_retries queues the fallback ladder
+    for rejected stability competitors. Both run first (longest jobs first keeps the tail short)."""
     from harness import pairgen
 
     cfg = cfg or load_unattended_config()
     compute = load_compute_config()
     info: dict = {"config": {k: cfg[k] for k in ("max_pairs", "max_atoms", "ood_sample", "auto_pair_kinds")}}
-    sub_jobs, ood_jobs = [], []
+    sub_jobs, ood_jobs, first = [], [], []
+    if competitor_retries or retries:
+        retry = build_retry_jobs(compute) if retries else build_competitor_retry_jobs(compute)
+        for j in retry:
+            j["priority"] = -2000
+        first += retry
+        info["competitor_retries"] = len(retry)
+    if curated_kinds:
+        cur = build_curated_substitution_jobs(curated_kinds, compute)
+        for j in cur:
+            j["priority"] = -1000 - j["n_atoms"]
+        first += cur
+        info["curated_kinds"] = {"kinds": curated_kinds, "jobs": len(cur)}
     if do_pairs:
         info["pairs"] = pairgen.generate(cfg["max_pairs"], cfg["max_atoms"], force=force_pairs)
         sub_jobs = build_auto_substitution_jobs(pairgen.load_pairs(), cfg["auto_pair_kinds"], compute)
@@ -171,10 +257,12 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
         j["priority"] = 10 * j["rank"]
     for j in ood_jobs:
         j["priority"] = int(10 * j["rank"] * (n_pairs / n_ood if sub_jobs else 1)) + 5
-    done = store.completed_keys(AUTO_SUITE, retry_failed=True) | store.completed_keys("ood", retry_failed=True)
-    info["enqueue"] = jobqueue.enqueue(sub_jobs + ood_jobs, queue_db, done_keys=done)
-    info["jobs"] = {AUTO_SUITE: len(sub_jobs), "ood": len(ood_jobs)}
-    info["n_atoms"] = _size_summary(sub_jobs + ood_jobs)
+    done = set()
+    for suite in (AUTO_SUITE, "ood", "substitution", "stability"):
+        done |= store.completed_keys(suite, retry_failed=True)
+    info["enqueue"] = jobqueue.enqueue(first + sub_jobs + ood_jobs, queue_db, done_keys=done)
+    info["jobs"] = {AUTO_SUITE: len(sub_jobs), "ood": len(ood_jobs), "first": len(first)}
+    info["n_atoms"] = _size_summary(first + sub_jobs + ood_jobs)
     return info
 
 
@@ -358,11 +446,11 @@ class Runner:
                        layout={"tier": "unattended", "mode": self.mode, "workers": self.workers,
                                "threads_per_worker": self.threads})
             try:
-                fut = self.pool.submit(_safe_call, relax_job, job)
+                fut = self.pool.submit(_safe_call, run_job, job)
             except (BrokenProcessPool, RuntimeError):
                 log.warning("process pool unusable; restarting it")
                 self._restart_pool()
-                fut = self.pool.submit(_safe_call, relax_job, job)
+                fut = self.pool.submit(_safe_call, run_job, job)
             self.inflight[fut] = {"row": row, "job": job, "mono0": time.monotonic(), "wall0": time.time()}
             self.dispatched += 1
         if rows:
@@ -391,7 +479,9 @@ class Runner:
     def _watchdog(self) -> None:
         hard = float(self.cfg["hard_timeout_s"])
         now_m = time.monotonic()
-        stuck = {f for f, m in self.inflight.items() if now_m - m["mono0"] > hard}
+        # Multi-rung jobs (fallback ladder) carry their own budget; the watchdog never cuts them shorter.
+        stuck = {f for f, m in self.inflight.items()
+                 if now_m - m["mono0"] > max(hard, float(m["job"].get("budget_s") or 0))}
         if not stuck:
             return
         metas = dict(self.inflight)

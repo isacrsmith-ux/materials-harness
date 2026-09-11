@@ -1,0 +1,30 @@
+# Csonka, Perdew et al., Phys. Rev. B 79, 155107 (2009), arXiv:0903.4037, Table II. a_exp_minus_zpae: experimental
+# lattice constant (low-T 5-50 K or room-T corrected to 0 K with thermal expansion) with the zero-point
+# anharmonic expansion subtracted, as printed; zpae: printed ZPAE estimate; a_exp_low_t = sum of the two (0 K,
+# ZPAE included); a_pbe_paper: the paper's own PBE value. Transcribed from the PDF text layer; every row
+# re-parsed to exactly 7 printed values. verified = read from the cited source (not from memory).
+material,structure,strukturbericht,a_exp_minus_zpae,zpae,a_exp_low_t,a_pbe_paper,verified,source
+Li,bcc,A2,3.449,0.028,3.477,3.429,True,Csonka et al. PRB 79 155107 (2009) Table II
+Na,bcc,A2,4.21,0.015,4.225,4.203,True,Csonka et al. PRB 79 155107 (2009) Table II
+K,bcc,A2,5.212,0.013,5.225,5.284,True,Csonka et al. PRB 79 155107 (2009) Table II
+Rb,bcc,A2,5.576,0.009,5.585,5.667,True,Csonka et al. PRB 79 155107 (2009) Table II
+Cs,bcc,A2,6.039,0.006,6.045,6.207,True,Csonka et al. PRB 79 155107 (2009) Table II
+Ca,fcc,A1,5.553,0.011,5.564,5.521,True,Csonka et al. PRB 79 155107 (2009) Table II
+Sr,fcc,A1,6.045,0.008,6.053,6.004,True,Csonka et al. PRB 79 155107 (2009) Table II
+Ba,bcc,A2,4.995,0.005,5.0,5.022,True,Csonka et al. PRB 79 155107 (2009) Table II
+Al,fcc,A1,4.02,0.012,4.032,4.037,True,Csonka et al. PRB 79 155107 (2009) Table II
+Pb,fcc,A1,4.902,0.003,4.905,5.035,True,Csonka et al. PRB 79 155107 (2009) Table II
+Cu,fcc,A1,3.595,0.007,3.602,3.628,True,Csonka et al. PRB 79 155107 (2009) Table II
+Rh,fcc,A1,3.793,0.005,3.798,3.829,True,Csonka et al. PRB 79 155107 (2009) Table II
+Pd,fcc,A1,3.875,0.004,3.879,3.942,True,Csonka et al. PRB 79 155107 (2009) Table II
+Ag,fcc,A1,4.056,0.005,4.061,4.147,True,Csonka et al. PRB 79 155107 (2009) Table II
+C,diamond,A4,3.543,0.023,3.566,3.569,True,Csonka et al. PRB 79 155107 (2009) Table II
+Si,diamond,A4,5.416,0.014,5.43,5.466,True,Csonka et al. PRB 79 155107 (2009) Table II
+SiC,zincblende,B3,4.342,0.018,4.36,4.377,True,Csonka et al. PRB 79 155107 (2009) Table II
+Ge,diamond,A4,5.64,0.012,5.652,5.759,True,Csonka et al. PRB 79 155107 (2009) Table II
+GaAs,zincblende,B3,5.638,0.01,5.648,5.746,True,Csonka et al. PRB 79 155107 (2009) Table II
+NaCl,rocksalt,B1,5.565,0.029,5.594,5.7,True,Csonka et al. PRB 79 155107 (2009) Table II
+NaF,rocksalt,B1,4.579,0.03,4.609,4.705,True,Csonka et al. PRB 79 155107 (2009) Table II
+LiCl,rocksalt,B1,5.056,0.032,5.088,5.142,True,Csonka et al. PRB 79 155107 (2009) Table II
+LiF,rocksalt,B1,3.964,0.046,4.01,4.062,True,Csonka et al. PRB 79 155107 (2009) Table II
+MgO,rocksalt,B1,4.184,0.019,4.203,4.255,True,Csonka et al. PRB 79 155107 (2009) Table II

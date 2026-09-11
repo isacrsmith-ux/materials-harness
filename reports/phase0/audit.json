@@ -1,0 +1,108 @@
+{
+ "run_types": {
+  "thermo_docs": 6792,
+  "docs_with_both_gga_and_gga_u": 0,
+  "both_by_chemistry": {},
+  "single_entry_differs_from_mp2020_rule": {},
+  "chemsys_entries": 3976,
+  "chemsys_materials_with_several_run_types": 0
+ },
+ "training_energy": {
+  "table": [
+   {
+    "functional": "PBE",
+    "MP2020 correction": "zero",
+    "n": 15,
+    "median |err| vs uncorrected (meV/atom)": 6.576686732993053,
+    "median |err| vs corrected (meV/atom)": 6.576686732993053
+   },
+   {
+    "functional": "PBE",
+    "MP2020 correction": "nonzero",
+    "n": 331,
+    "median |err| vs uncorrected (meV/atom)": 4.444233372998596,
+    "median |err| vs corrected (meV/atom)": 383.0853836816619
+   },
+   {
+    "functional": "PBE+U",
+    "MP2020 correction": "nonzero",
+    "n": 208,
+    "median |err| vs uncorrected (meV/atom)": 8.5860575559642,
+    "median |err| vs corrected (meV/atom)": 740.1958897970085
+   }
+  ]
+ },
+ "hull_provenance": {
+  "n": 2000,
+  "differ_by_more_than_1_mev": 315,
+  "differ_by_more_than_25_mev": 25,
+  "median_abs_diff_mev": 0.0,
+  "bin_would_change": 41
+ },
+ "curated_hull_reproduction": {
+  "n": 50,
+  "max_abs_diff_mev": 0.0
+ },
+ "wbm_mp2020_corrections": {
+  "n": 2000,
+  "rejected_by_mp2020": 0,
+  "max_abs_diff_mev": 314.66633333333334,
+  "n_diff_over_1_mev": 27,
+  "diff_over_1_mev_by_chemistry": {
+   "other": 24,
+   "other with Co": 1,
+   "other with V": 1,
+   "oxide": 1
+  },
+  "diff_over_1_mev_elements": {
+   "Si": 12,
+   "Au": 12,
+   "Pt": 10,
+   "Sb": 7,
+   "Te": 3,
+   "Se": 2,
+   "Ba": 2,
+   "H": 2
+  },
+  "diff_over_1_mev_ours_zero": 20,
+  "diff_over_1_mev_examples": [
+   {
+    "wbm_id": "wbm-2-51002",
+    "chem": "other with V",
+    "ours": -0.06316666666666666,
+    "shipped": -0.377833,
+    "diff_mev": 314.66633333333334
+   },
+   {
+    "wbm_id": "wbm-2-52791",
+    "chem": "other",
+    "ours": 0.0,
+    "shipped": -0.211,
+    "diff_mev": 211.0
+   },
+   {
+    "wbm_id": "wbm-3-40172",
+    "chem": "other",
+    "ours": 0.0,
+    "shipped": -0.211,
+    "diff_mev": 211.0
+   },
+   {
+    "wbm_id": "wbm-3-74237",
+    "chem": "other",
+    "ours": 0.0,
+    "shipped": -0.211,
+    "diff_mev": 211.0
+   },
+   {
+    "wbm_id": "wbm-3-44831",
+    "chem": "other",
+    "ours": -0.20466666666666666,
+    "shipped": -0.325,
+    "diff_mev": 120.33333333333334
+   }
+  ],
+  "run_type_differs_from_mp2020_rule": 0,
+  "uncorrected_energy_max_abs_diff_mev": 0.00024500000073146566
+ }
+}

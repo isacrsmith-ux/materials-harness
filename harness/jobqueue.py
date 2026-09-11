@@ -175,6 +175,15 @@ def finish(job_id: int, status: str, path: Path | str = QUEUE_DB, runtime_s: flo
                     (status, runtime_s, error, classify_error(error), now(), worker_pid, attempts, job_id))
 
 
+def requeue_failed(path: Path | str = QUEUE_DB, suite: str | None = None) -> int:
+    """Put failed / timed-out rows back to pending with a fresh attempt budget (after a fix). The old
+    error stays in the row, prefixed, until the job finishes again."""
+    with connect(path) as con:
+        q = ("UPDATE queue SET status='pending', attempts=0, started_at=NULL, finished_at=NULL, worker_pid=NULL, "
+             "error='requeued after: ' || COALESCE(error, '') WHERE status IN ('failed','timeout')")
+        return con.execute(q + (" AND suite=?" if suite else ""), (suite,) if suite else ()).rowcount
+
+
 def requeue(job_id: int, path: Path | str = QUEUE_DB, error: str | None = None, count_attempt: bool = True) -> None:
     with connect(path) as con:
         con.execute("UPDATE queue SET status='pending', started_at=NULL, worker_pid=NULL, error=?, error_type=?, "

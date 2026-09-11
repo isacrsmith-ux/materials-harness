@@ -70,6 +70,18 @@ class RelaxSettings:
 
 DEFAULT_RELAX = RelaxSettings()
 
+# Retry ladder for relaxations that do not converge (or fail the sanity guard) under DEFAULT_RELAX.
+# The convergence criteria (fmax, max |stress|) are identical on every rung and are never loosened;
+# only the optimizer, the step cap and the starting point change. Rung 1 is DEFAULT_RELAX itself.
+#   "continue": start from the previous rung's end point;  "perturb": restart from the original
+#   structure with a small fixed-seed rattle + strain (PERTURB_RESTART).
+FALLBACK_LADDER = (
+    ("fire", RelaxSettings(optimizer="FIRE", max_steps=1500, timeout_s=3000.0), "continue"),
+    ("perturbed_restart", RelaxSettings(max_steps=1000, timeout_s=2400.0), "perturb"),
+)
+PERTURB_RESTART = {"rattle_angstrom": 0.02, "strain": 0.005, "supercell": (1, 1, 1)}
+LADDER_BUDGET_S = sum(s.timeout_s for _, s, _ in FALLBACK_LADDER) + 600.0  # watchdog allowance per ladder job
+
 
 def settings_tag(device: str, dtype: str, relax: RelaxSettings = DEFAULT_RELAX) -> str:
     """Short hash of everything that changes a simulated value. Appended to every job key
@@ -101,7 +113,9 @@ UNATTENDED_DEFAULTS = {
     "max_pairs": 2000,               # auto-generated substitution pairs to queue
     "max_atoms": 40,                 # max atoms per cell (both parent and target, PBE structures)
     "ood_sample": 2000,              # WBM out-of-distribution sample size
-    "auto_pair_kinds": ["sub", "ctrl"],  # add "sub_rattled" for 2x2x2 symmetry-broken runs (8x the atoms)
+    # sub = unscaled start, sub_rescaled = predicted-volume start, static = single point at the PBE
+    # structure; add "sub_rattled" for 2x2x2 symmetry-broken runs (8x the atoms)
+    "auto_pair_kinds": ["sub", "sub_rescaled", "ctrl", "static"],
     "max_attempts": 2,               # first try + one retry
     "hard_timeout_s": 1800,          # watchdog for hung workers (the engine's own limit is 900 s/relaxation)
     "report_every": 100,             # partial report every N completed jobs

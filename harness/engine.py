@@ -137,18 +137,22 @@ def relax(
     relax_cell: bool = True,
     constant_volume: bool = False,
 ) -> RelaxResult:
-    """Relax positions (and cell) with FrechetCellFilter + BFGS. Raises RelaxTimeout.
+    """Relax positions (and cell) with FrechetCellFilter + settings.optimizer (BFGS or FIRE).
+    Raises RelaxTimeout.
 
     constant_volume=True relaxes cell shape at fixed volume (equation-of-state points); the stress
     criterion then applies to the deviatoric stress only, since the hydrostatic part is the point.
     """
     from ase.filters import FrechetCellFilter
-    from ase.optimize import BFGS
+    from ase.optimize import BFGS, FIRE
 
+    optimizers = {"BFGS": BFGS, "FIRE": FIRE}
+    if settings.optimizer not in optimizers:
+        raise ValueError(f"unknown optimizer {settings.optimizer!r}")
     atoms = _to_atoms(structure)
     atoms.calc = get_calculator(device, dtype)
     target = FrechetCellFilter(atoms, constant_volume=constant_volume) if relax_cell else atoms
-    opt = BFGS(target, logfile=None)
+    opt = optimizers[settings.optimizer](target, logfile=None)
     stress_limit = settings.max_stress_gpa / EV_PER_A3_TO_GPA
     filter_fmax = settings.fmax
     t0 = time.perf_counter()

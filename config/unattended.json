@@ -3,7 +3,7 @@
   "max_pairs": 2000,
   "max_atoms": 40,
   "ood_sample": 2000,
-  "auto_pair_kinds": ["sub", "ctrl"],
+  "auto_pair_kinds": ["sub", "sub_rescaled", "ctrl", "static"],
   "max_attempts": 2,
   "hard_timeout_s": 1800,
   "report_every": 100,

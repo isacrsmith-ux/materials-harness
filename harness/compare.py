@@ -46,6 +46,39 @@ def perturb(structure: Structure, seed: int, rattle_angstrom: float = 0.03, stra
     return Structure(lattice, s.species, cart, coords_are_cartesian=True)
 
 
+def rescale_to_predicted_volume(sub: Structure, ref: Structure) -> tuple[Structure, dict]:
+    """Isotropically rescale a substituted structure to a predicted volume (pymatgen volume predictors).
+
+    ref is the structure the substitution was made in (the parent, at its PBE volume). Tried in order:
+    reference-lattice scaling with ionic radii (oxidation states from BVAnalyzer), with atomic radii,
+    then data-mined bond lengths (DLS). If all fail the unscaled structure is returned with
+    method=None, so the caller can record that no rescaled start exists.
+    """
+    import warnings
+
+    from pymatgen.core.structure_prediction.volume_predictor import DLSVolumePredictor, RLSVolumePredictor
+
+    methods = (("RLS ionic radii", lambda: RLSVolumePredictor(radii_type="ionic").predict(sub, ref)),
+               ("RLS atomic radii", lambda: RLSVolumePredictor(radii_type="atomic").predict(sub, ref)),
+               ("DLS bond lengths", lambda: DLSVolumePredictor().predict(sub)))
+    failed = []
+    for name, predict in methods:
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                vol = predict()
+        except Exception as exc:  # noqa: BLE001 — try the next predictor
+            failed.append(f"{name}: {type(exc).__name__}")
+            continue
+        if vol is None or not np.isfinite(vol) or vol <= 0:
+            failed.append(f"{name}: no volume")
+            continue
+        out = sub.copy()
+        out.scale_lattice(float(vol))
+        return out, {"method": name, "volume_factor": float(vol) / sub.volume, "failed_methods": failed}
+    return sub.copy(), {"method": None, "volume_factor": 1.0, "failed_methods": failed}
+
+
 def stable_seed(text: str) -> int:
     """Seed derived from a label, stable across runs and Python processes (unlike hash())."""
     import hashlib
@@ -105,13 +138,22 @@ class ConventionalCell:
 
 
 def conventional_cell(structure: Structure, symprec: float = SYMPREC) -> ConventionalCell:
+    """Conventional standard cell. If spglib cannot determine the symmetry (e.g. a badly distorted
+    relaxation end point), the raw cell is returned with crystal_system 'undetermined' and spacegroup 0,
+    so the caller falls back to a volume-only comparison instead of crashing."""
     from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-    sga = SpacegroupAnalyzer(structure, symprec=symprec)
-    conv = sga.get_conventional_standard_structure()
+    try:
+        sga = SpacegroupAnalyzer(structure, symprec=symprec)
+        conv = sga.get_conventional_standard_structure()
+        system, number = sga.get_crystal_system(), sga.get_space_group_number()
+    except Exception as exc:  # noqa: BLE001 — pymatgen raises SymmetryUndeterminedError (and others) here
+        if "symmetry" not in f"{type(exc).__name__} {exc}".lower():
+            raise
+        conv, system, number = structure, "undetermined", 0
     a, b, c = conv.lattice.abc
     al, be, ga = conv.lattice.angles
-    return ConventionalCell(sga.get_crystal_system(), sga.get_space_group_number(), a, b, c, al, be, ga)
+    return ConventionalCell(system, number, a, b, c, al, be, ga)
 
 
 def compare_lattices(sim: Structure, ref: Structure, symprec: float = SYMPREC) -> dict:
@@ -120,7 +162,7 @@ def compare_lattices(sim: Structure, ref: Structure, symprec: float = SYMPREC) -
     out = {
         "sim_spacegroup": cs.spacegroup,
         "ref_spacegroup": cr.spacegroup,
-        "same_spacegroup": cs.spacegroup == cr.spacegroup,
+        "same_spacegroup": cs.spacegroup == cr.spacegroup and cs.spacegroup != 0,
         "vol_per_atom_sim": volume_per_atom(sim),
         "vol_per_atom_ref": volume_per_atom(ref),
     }
@@ -167,6 +209,27 @@ def system_flags(elements, mp_doc: dict | None = None) -> dict:
     return {"transition_metal": bool(tm), "f_electron": bool(f), "magnetic": magnetic,
             "tm_elements": tm, "f_elements": f,
             "spin_caveat": magnetic or bool(f) or bool(els & MAGNETIC_PRONE)}
+
+
+# Hull-distance bins (eV/atom) used for every reported metric. MP references are >= 0 by construction;
+# WBM is measured against the MP hull and can be below it, so it gets an extra "<0" bin.
+HULL_BIN_EDGES = (0.025, 0.1, 0.3)
+HULL_BINS_MP = ("≤0.025", "0.025–0.1", "0.1–0.3", ">0.3")
+HULL_BINS_WBM = ("<0", "0–0.025", "0.025–0.1", "0.1–0.3", ">0.3")
+
+
+def hull_bin(e_above_hull, below_zero_bin: bool = False) -> str | None:
+    """Bin label of a hull distance; with below_zero_bin, negative values get their own '<0' bin."""
+    if e_above_hull is None or not np.isfinite(e_above_hull):
+        return None
+    e = float(e_above_hull)
+    if below_zero_bin and e < 0:
+        return "<0"
+    labels = HULL_BINS_WBM[1:] if below_zero_bin else HULL_BINS_MP
+    for edge, label in zip(HULL_BIN_EDGES, labels):
+        if e <= edge:
+            return label
+    return labels[-1]
 
 
 def mae(values) -> float:

@@ -39,9 +39,11 @@ cp .env.example .env   # then paste your key after MP_API_KEY=
 `./uvw` is a thin wrapper that pins uv's cache and managed Pythons to this folder. The harness refuses to
 run under Rosetta (`platform.machine()` must be `arm64`) and detects core counts at runtime.
 
-**WBM data for the `ood` suite** (59 MiB, md5-checked) goes in `cache/external/wbm/`:
-`wbm/2023-12-13-wbm-summary.csv.gz` and `wbm/2022-10-19-wbm-init-structs.jsonl.gz` from the Matbench
-Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the scripted download is refused
+**WBM data for the `ood` suite** (146 MiB, md5-checked) goes in `cache/external/wbm/`:
+`wbm/2023-12-13-wbm-summary.csv.gz`, `wbm/2022-10-19-wbm-init-structs.jsonl.gz` and
+`wbm/2022-10-19-wbm-computed-structure-entries.jsonl.gz` (86.5 MB, md5 `655b7a9c…`; DFT-relaxed structures and
+run parameters, used for the MP2020-correction audit and the MACE-vs-DFT structure classification) from the
+Matbench Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the scripted download is refused
 (figshare sometimes returns 403), download them in a browser and drop them there.
 
 ## Running
@@ -59,6 +61,20 @@ Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the scripted
   silently reusing stale numbers. `--retry-failed` reruns failures and timeouts.
 * **Failures never crash a batch.** Per-structure wall-clock timeout (900 s) and step cap (500); failures,
   timeouts and rejected relaxations are logged and counted in the report.
+* **Fallback ladder** (`config.FALLBACK_LADDER`) for stability competitors the guard rejects: FIRE from the end
+  point (≤ 1,500 steps), then a perturbed restart from the MP structure (BFGS, ≤ 1,000 steps). The convergence
+  criteria are identical on every rung; every rung is recorded. A target whose mode (b) hull still lacks one of
+  the MP reference hull's own phases is **not scored** (counted as unscored); missing off-hull phases are flagged.
+* **Two substitution starts.** `sub` relaxes the substituted parent cell as is; `sub_rescaled` first rescales it to
+  a predicted volume (pymatgen RLS volume predictor: ionic radii, else atomic radii, else DLS bond lengths). The
+  lowest-energy converged start is kept (`sub_best`) and the winner recorded. `static` is a single-point energy at
+  the MP PBE structure. Every relaxed result is labelled *same structure* or *relaxed into a different structure*
+  (species-aware StructureMatcher vs the target) and the two are reported separately.
+* **Reference provenance.** Energies are compared with MP's *uncorrected* GGA/GGA+U energies (what MACE-MP-0 was
+  trained on); hulls apply MaterialsProject2020Compatibility identically to MACE and DFT entries; hull distances
+  come from the GGA/GGA+U hull, never MP's r2SCAN-mixed default. Where a document has both GGA and GGA+U
+  entries, `mp_data.choose_run_type` picks the one MP2020 mixing accepts. `python -m harness phase0 audit`
+  re-checks all of this against the caches.
 * **Materials Project downloads are cached forever** in `cache/mp/` (exponential backoff on rate limits), so
   reruns never re-query the API.
 
@@ -66,6 +82,8 @@ Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the scripted
 
 ```bash
 ./uvw run python -m harness prepare        # once: bulk-download + cache MP/WBM inputs, generate pairs, fill the queue
+#   --curated-kinds sub_rescaled,static     also queue curated-pair kinds;  --competitor-retries  queue the fallback ladder
+./uvw run python -m harness phase0 eta     # ETA of pending jobs from each job's measured counterpart (polite / full)
 ./run_unattended.sh                        # polite mode (default): leaves 2 performance cores free while you work
 ./run_unattended.sh full                   # all performance cores (overnight)
 ./run_unattended.sh full --stop-at 07:00   # finish running jobs and exit at 7 AM

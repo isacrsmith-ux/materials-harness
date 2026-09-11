@@ -59,8 +59,35 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+_DB_OVERRIDE: list[Path] = []
+
+
 @contextmanager
-def connect(path: Path = DB_PATH):
+def using(path: Path):
+    """Read (and write) another results database inside this block — e.g. a pre-change snapshot."""
+    _DB_OVERRIDE.append(Path(path))
+    try:
+        yield
+    finally:
+        _DB_OVERRIDE.pop()
+
+
+def snapshot(dest: Path) -> Path:
+    """Consistent copy of the live results database (sqlite online backup; safe while the runner writes)."""
+    dest = Path(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    src = sqlite3.connect(DB_PATH, timeout=60)
+    dst = sqlite3.connect(dest)
+    with dst:
+        src.backup(dst)
+    src.close()
+    dst.close()
+    return dest
+
+
+@contextmanager
+def connect(path: Path | None = None):
+    path = Path(path) if path else (_DB_OVERRIDE[-1] if _DB_OVERRIDE else DB_PATH)
     path.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(path, timeout=60)
     con.row_factory = sqlite3.Row
