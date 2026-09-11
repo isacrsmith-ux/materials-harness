@@ -226,8 +226,11 @@ def suites(path: Path | str = QUEUE_DB) -> list[str]:
 
 
 def median_runtime(path: Path | str = QUEUE_DB, suite: str | None = None) -> float | None:
+    """Median runtime of finished jobs; fallback-ladder retries (multi-rung, up to ~100 min) are excluded so
+    they do not stand in for ordinary relaxations of the same suite in the ETA."""
     with connect(path) as con:
-        q = "SELECT runtime_s FROM queue WHERE status='done' AND runtime_s IS NOT NULL" + (" AND suite=?" if suite else "")
+        q = ("SELECT runtime_s FROM queue WHERE status='done' AND runtime_s IS NOT NULL AND job_key NOT LIKE '%:ladder@%'"
+             + (" AND suite=?" if suite else ""))
         vals = [r["runtime_s"] for r in con.execute(q, (suite,) if suite else ())]
     return float(median(vals)) if vals else None
 

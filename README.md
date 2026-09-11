@@ -158,6 +158,32 @@ temperature label), or `wbm_computed` (WBM DFT). Every simulated value is `simul
 * *Rattled substitution* — the same substitution in a symmetry-broken supercell. "Distorts to lower energy"
   can be physically correct (cubic CaTiO₃ → Pnma); "trapped higher" is a genuine failure mode.
 
+## Round-2 evaluation design
+
+* **Hull-distance bins everywhere.** ≤0.025, 0.025–0.1, 0.1–0.3, >0.3 eV/atom (MP targets on the GGA/GGA+U hull;
+  WBM against the MP hull, with an extra <0 bin). Every metric is reported per bin with its median next to its mean
+  and a 95 % bootstrap interval (`harness/metrics.py`); verdicts use the **pessimistic end** of the interval.
+* **WBM calibration / locked test split** (`data/wbm_split.json`, `harness/splits.py`): made once, before any tuning.
+  Calibration = the round-1 2,000-structure sample (already used for threshold exploration, so it may not enter the
+  test set) + 2,000 new; test = 4,000 fresh; both in the pool's bin proportions. `splits.test_ids()` is locked; the
+  report refuses to run if a test id has a result. The test set is evaluated once, at the end.
+* **Stratified substitution pairs** (`pairgen.generate_stratified`, `config/unattended.json` → `stratified`): ~500
+  per target bin, 30 % metallic targets, a labelled 10 % implausible-swap stratum (Hautier 2011 substitution model
+  for ionic swaps, Pettifor distance where no ionic species exist), ≤ 5 pairs per prototype. Shortfalls are recorded.
+* **Experiment:** Lucero 2012 (semiconductors/insulators) plus Csonka 2009 Table II (14 metals + 10 others, zero-point
+  expansion removed). No bcc transition metals or oxides beyond MgO yet — stated in the report.
+* **Stability decisions** (report §4) on the calibration set only: precision, recall, F1, NPV, discovery acceleration,
+  a threshold sweep with precision–recall curve, and the cost-optimal threshold for the costs in `config/costs.json`
+  (placeholders — set real numbers), with a sensitivity table.
+* **Mode (b) on new materials** (`harness/suites/mode_b.py`, `prepare --mode-b`): 60 calibration systems per bin; all
+  competing MP phases relaxed with the engine, cached by material id and settings tag (shared phases relaxed once).
+* **Confidence and routing** (`harness/confidence.py`, `harness/routing.py`): conformal bounds are shown as the
+  uncertainty; labels ('likely stable' / 'likely unstable' / 'send to DFT') use per-family thresholds **certified**
+  on precision / NPV (Clopper–Pearson, Bonferroni over the threshold grid) because marginal conformal coverage did not
+  control precision among selected candidates. DFT is a stub (`routing.FileQueueDFT`).
+* **Model registry** (`config.MODELS`, env `HARNESS_MODEL`): each model's key enters the settings tag; the baseline keeps
+  `207ccc81`. Models with conflicting dependencies run from their own venv (`MODELS[key]["env"]`).
+
 ## Layout
 
 ```

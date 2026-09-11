@@ -176,6 +176,23 @@ def _wbm_outcomes(tag: str, df: pd.DataFrame) -> pd.Series:
     return df.wbm_id.map(lambda w: outcome(have.get(w)))
 
 
+def _start_changed(tag: str, df: pd.DataFrame) -> pd.Series:
+    """Did the relaxation leave its starting (WBM initial) structure? The signal a real candidate has — the
+    DFT-relaxed structure is not known for new materials. Cached per settings tag."""
+    from harness.suites import ood
+
+    cache = RESULTS_DIR / f"wbm_start_match_{tag}.json"
+    have = json.loads(cache.read_text()) if cache.is_file() else {}
+    todo = [w for w in df.wbm_id if w not in have]
+    if todo:
+        starts = ood.load_structures(sorted(set(df.wbm_id)), cache_file=ood.WBM_DIR / "calibration_init_structs.json")
+        rel = dict(zip(df.wbm_id, df.relaxed))
+        for w in todo:
+            have[w] = (not compare.relaxed_into_target(rel[w], starts[w])) if w in starts else None
+        cache.write_text(json.dumps(have))
+    return df.wbm_id.map(have.get)
+
+
 def collect(tag: str) -> dict:
     from harness import pairgen, splits
     from harness.suites import bulk, experimental, ood, stability, substitution
@@ -203,11 +220,15 @@ def collect(tag: str) -> dict:
         wb["bin"] = wb.each_true.map(lambda e: compare.hull_bin(e, below_zero_bin=True))
         wb["pred_bin"] = wb.each_pred.map(lambda e: compare.hull_bin(e, below_zero_bin=True))
         wb["outcome"] = _wbm_outcomes(tag, wb)
+        wb["structure_changed"] = _start_changed(tag, wb)
+    from harness.suites import mode_b
+
+    mb = safe(mode_b.table, tag)
     jobs = store.load_table("jobs")
     jobs = jobs[jobs.job_key.str.endswith(f"@{tag}")] if len(jobs) else jobs
     return {"au": au, "cu": safe(substitution.pair_table, tag), "wb": wb, "wb_rej": wb_rej, "split": split,
             "st": safe(stability.target_table, tag), "ex": safe(experimental.table, tag), "bk": safe(bulk.table, tag),
-            "jobs": jobs, "pair_meta": pairgen.load_meta()}
+            "jobs": jobs, "pair_meta": pairgen.load_meta(), "mb": mb}
 
 
 # --- tables -----------------------------------------------------------------------------------------------
@@ -484,6 +505,90 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
                  "50 curated known materials (all within 0.3 eV/atom of the hull). Mode (b) is not scored when one of the MP reference "
                  "hull's own phases has no usable MACE relaxation (MACE-MP-0 collapses solid O₂, the oxygen corner of every oxide "
                  "hull here). Mode (b) on new materials is Phase 4.", "", _md(pd.DataFrame(rows), ".3f"), ""]
+
+    # ---------- 6b. mode (b) on new materials ----------
+    mb = d.get("mb", pd.DataFrame())
+    if len(mb):
+        body += ["## 6b. New materials in mode (b): every competing phase relaxed with the engine", "",
+                 f"{len(mb)} WBM calibration systems (data/mode_b_sample.json: a fixed number per hull bin, one structure per "
+                 "chemical system). Reference = WBM DFT entry on the current MP GGA/GGA+U hull, MP2020 re-applied to every entry "
+                 "with this pymatgen (so it differs slightly from WBM's shipped hull distance). Mode (a): engine-relaxed target vs "
+                 "MP DFT phases. Mode (b): engine-relaxed target vs engine-relaxed MP phases within "
+                 f"{0.1:.1f} eV/atom of the MP hull, against the reference on the same phases. Errors in meV/atom.", "",
+                 "Status of the mode (b) hulls: " + ", ".join(f"{k}: {v}" for k, v in mb.b_status.value_counts().items()) + ".", ""]
+        rows = []
+        for b in compare.HULL_BINS_WBM:
+            g = mb[mb.bin == b]
+            ra, rb, rs = (M.error_summary(g[c], N_BOOT) for c in ("a_err_mev", "b_err_mev", "b_sub_err_mev"))
+            rows.append({"bin (reference)": b, "systems": len(g), "mode (a) MAE": _ci(ra["mae"]), "mode (a) median": _ci(ra["median_abs"]),
+                         "mode (b) scored": rb["n"], "mode (b) MAE": _ci(rb["mae"]), "mode (b) median": _ci(rb["median_abs"]),
+                         "stand-in only (flagged)": rs["n"], "mode (b) verdict (upper bound)": verdict_ci("e_hull_mae_mev", rb["mae"])})
+        body += [_md(pd.DataFrame(rows)), ""]
+        rows = []
+        for mode, col, ref in (("a", "a_signed", "ref_signed"), ("b", "b_signed", "ref_window_signed")):
+            ok = mb[np.isfinite(mb[col].astype(float))]
+            dm = M.decision_metrics(ok[col].values, ok[ref].values, 0.0, N_BOOT)
+            rows.append({"mode": mode, "scored": dm["n"], "precision": _ci(dm["precision_ci"], "{:.2f}"),
+                         "recall": _ci(dm["recall_ci"], "{:.2f}"), "F1": _ci(dm["f1_ci"], "{:.2f}"), "NPV": _ci(dm["npv_ci"], "{:.3f}")})
+        body += ["Stable calls at 0 eV/atom on these systems (the sample over-represents stable materials by design — one bin in "
+                 "five is '<0' — so precision here is not the population precision of section 4):", "", _md(pd.DataFrame(rows)), ""]
+        for b in compare.HULL_BINS_WBM:
+            s = M.error_summary(mb[mb.bin == b].b_err_mev, N_BOOT)
+            score[f"mode_b_mae_{b}"] = s["mae"][0]
+
+    # ---------- 6c. confidence and routing (calibration, cross-validated) ----------
+    if len(wb) > 200:
+        from harness import confidence as C
+        from harness import routing as R
+
+        cv = C.crossval_coverage(wb, C.ALPHA, k=5)
+        wbr = wb.assign(structure_changed=wb.structure_changed.fillna(False))
+        dec = R.crossval_routing(wbr, C.ALPHA, k=5, certified=True)
+        rs = R.routing_summary(dec)
+        rs_conf = R.routing_summary(R.crossval_routing(wbr, C.ALPHA, k=5, certified=False))
+        pol_all = R.RoutingPolicy(weak_elements=R.weak_elements_from(wbr))
+        rule_all = C.fit_decision(wbr[R.labelable(wbr, pol_all)])
+        def _thr(v):
+            return "—" if v is None else f"{v * 1000:+.0f}"
+
+        thr_text = "; ".join(f"{fam}: stable ≤ {_thr(t['stable'])}, unstable > {_thr(t['unstable'])} meV/atom (n={t['n']})"
+                             for fam, t in sorted(rule_all.thresholds.items())) or "none certified"
+        prec_conf = rs_conf["precision of 'likely stable'"]
+        thr_text += f"; weak elements: {', '.join(sorted(pol_all.weak_elements)) or 'none'}"
+        (RESULTS_DIR / f"routing_rule_{tag}.json").write_text(json.dumps(
+            {"thresholds": rule_all.thresholds, "weak_elements": sorted(pol_all.weak_elements),
+             "target_precision": rule_all.target_precision, "target_npv": rule_all.target_npv, "conf": rule_all.conf}, indent=1))
+        reasons = pd.Series([x for r in dec[dec.label == R.SEND_TO_DFT].reasons for x in r.split("; ")])
+        reason_counts = reasons.str.replace(r"\(.*", "", regex=True).str.replace(r"\d+ meV/atom", "", regex=True).str.strip().value_counts()
+        body += ["## 6c. Confidence and routing (calibration set, 5-fold cross-validated)", "",
+                 f"Mondrian split-conformal bounds for the true hull distance, each one-sided at {1 - C.ALPHA:.0%} (a 'stable' call "
+                 "uses only the upper bound, an 'unstable' call only the lower bound); groups = chemistry family × predicted hull "
+                 f"bin (fallback to family, then all, below {C.MIN_GROUP} members). Chosen over isotonic calibration because it "
+                 "guarantees coverage per group without assuming a monotone, well-behaved error — this model's error is biased "
+                 "and heavy-tailed (see `harness/confidence.py`). Coverage measured on held-out folds (targets: each bound "
+                 f"≥ {1 - C.ALPHA:.2f}, interval ≥ {1 - 2 * C.ALPHA:.2f}):", "", _md(cv, ".3f"), "",
+                 "**Why the labels do not come from these bounds.** Routing on them was tried first: the bounds hold ~90 % of the "
+                 f"time per group, yet only {prec_conf:.0%} of the candidates whose upper bound fell "
+                 "below 0 were truly stable — marginal coverage does not control the error rate among the candidates a rule "
+                 "selects. The labels therefore use per-family thresholds certified directly on that quantity (Learn-then-Test "
+                 f"style): the loosest threshold whose 'stable' calls have precision ≥ {C.TARGET_PRECISION:.0%}, and the most "
+                 f"inclusive whose 'unstable' calls have NPV ≥ {C.TARGET_NPV:.0%}, each with a one-sided Clopper–Pearson bound at "
+                 f"{C.CERT_CONF:.0%} confidence, Bonferroni-corrected over the {len(C.DEC_GRID)}-point threshold grid. Families "
+                 f"with fewer than {C.MIN_FAMILY} labelable calibration structures get no label (DFT).", "",
+                 "Each held-out structure gets one label from rules fitted on the other folds: 'send to DFT' if it contains a "
+                 "known-weak element (MAE lower bound > 60 meV/atom, or fewer than 20 calibration compounds), if its relaxation "
+                 "left the starting structure, or if its prediction lies between the certified thresholds; otherwise 'likely "
+                 "stable' / 'likely unstable'. The second engine's disagreement signal is added once a second engine has run.", "",
+                 _md(pd.DataFrame({"quantity": list(rs), "certified thresholds (used)": list(rs.values()),
+                                   "conformal bounds (rejected)": [rs_conf.get(k) for k in rs]}), ".3f"), "",
+                 f"Certified thresholds fitted on the whole calibration set (what the product would use): {thr_text}.", "",
+                 "Why candidates were sent to DFT (a candidate can have several reasons): " +
+                 ", ".join(f"{k}: {v}" for k, v in reason_counts.items()) + ".", ""]
+        rel = C.empirical_reliability(wb, 0.0, 500)
+        rel = rel.assign(**{"call right": rel["call right"].map(lambda c: _ci(c, "{:.2f}"))})
+        body += ["**How often a plain threshold-0 call is right, by chemistry family and predicted hull distance** "
+                 "(observed on the calibration set; the product shows this next to every prediction):", "", _md(rel), ""]
+        score.update({f"routing_{k}": v for k, v in rs.items() if isinstance(v, (int, float))})
 
     # ---------- 7. per element, magnetism ----------
     body += ["## 7. Errors by element and by magnetism", "",
