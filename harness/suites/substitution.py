@@ -286,7 +286,9 @@ def pair_table(tag: str | None = None, suite: str = SUITE, pairs: list[dict] | N
             recs.setdefault(pid, {})[f"{kind}_status"] = f"{f.status}: {f.error}"
     rows = []
     for pid, r in recs.items():
-        p = pairs.get(pid, {})
+        if pid not in pairs:  # results of pairs outside this pair set (e.g. the round-1 set) stay in the DB, not here
+            continue
+        p = pairs[pid]
         fl = p.get("flags", {})
         _add_best(r, SUB_STARTS, "sub_best")
         _add_best(r, RATTLED_STARTS, "rattled_best")
@@ -295,7 +297,9 @@ def pair_table(tag: str | None = None, suite: str = SUITE, pairs: list[dict] | N
                      "target_sg": p.get("target_sg"), "target_e_hull": p.get("target_e_above_hull"),
                      "space_relevant": p.get("space_relevant"), "spin_caveat": fl.get("spin_caveat"),
                      "magnetic": fl.get("magnetic"), "transition_metal": fl.get("transition_metal"),
-                     "f_electron": fl.get("f_electron"), **r})
+                     "f_electron": fl.get("f_electron"), "pbe_magmom_per_site": fl.get("pbe_abs_magmom_per_site"),
+                     "chem_class": p.get("chem_class"), "plausible": p.get("plausible"),
+                     "plausibility_scorer": (p.get("plausibility") or {}).get("scorer"), **r})
     df = pd.DataFrame(rows)
     if df.empty:
         return df

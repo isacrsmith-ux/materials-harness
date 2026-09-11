@@ -1,0 +1,6 @@
+{
+  "_comment": "Costs for the cost-based operating point (report section 'Stability decisions'). Units are arbitrary but shared: cost_false_positive = one lab test spent on a candidate the engine called stable that is not; cost_missed_stable = value lost when a truly stable material is screened out. PLACEHOLDERS — set them to your real numbers; the report also shows how the optimal threshold moves with the ratio.",
+  "cost_false_positive": 1.0,
+  "cost_missed_stable": 1.0,
+  "sensitivity_ratios": [0.25, 0.5, 1, 2, 4, 10]
+}

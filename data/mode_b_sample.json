@@ -1,0 +1,1520 @@
+{
+ "seed": 20260912,
+ "per_bin": 60,
+ "source": "WBM calibration ids (data/wbm_split.json)",
+ "method": "per hull bin, shuffled with random.Random(seed), first per_bin structures with an unused chemical system",
+ "by_bin": {
+  "<0": [
+   {
+    "wbm_id": "wbm-3-23753",
+    "chemsys": "F-Gd-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-55736",
+    "chemsys": "Si-Tb"
+   },
+   {
+    "wbm_id": "wbm-2-25234",
+    "chemsys": "Cu-Mg-Pr"
+   },
+   {
+    "wbm_id": "wbm-1-28299",
+    "chemsys": "Cs-Mg-P"
+   },
+   {
+    "wbm_id": "wbm-3-62307",
+    "chemsys": "Rh-U"
+   },
+   {
+    "wbm_id": "wbm-4-30202",
+    "chemsys": "Ba-Hg-Pd"
+   },
+   {
+    "wbm_id": "wbm-2-5594",
+    "chemsys": "B-Ir-Y"
+   },
+   {
+    "wbm_id": "wbm-5-9684",
+    "chemsys": "Ge-Rh-Th"
+   },
+   {
+    "wbm_id": "wbm-1-20911",
+    "chemsys": "Fe-H-Li-Na"
+   },
+   {
+    "wbm_id": "wbm-4-517",
+    "chemsys": "Al-Pr-Pt"
+   },
+   {
+    "wbm_id": "wbm-4-17971",
+    "chemsys": "La-Li-Mg-Sn"
+   },
+   {
+    "wbm_id": "wbm-1-44000",
+    "chemsys": "Cl-O-Tb"
+   },
+   {
+    "wbm_id": "wbm-1-55906",
+    "chemsys": "I-Si-Y"
+   },
+   {
+    "wbm_id": "wbm-1-10184",
+    "chemsys": "Ag-Cl-Rb"
+   },
+   {
+    "wbm_id": "wbm-2-40863",
+    "chemsys": "Pu-Rh-Sn"
+   },
+   {
+    "wbm_id": "wbm-2-12241",
+    "chemsys": "Co-Hf-Te"
+   },
+   {
+    "wbm_id": "wbm-3-56923",
+    "chemsys": "Ga-O-Yb"
+   },
+   {
+    "wbm_id": "wbm-5-4249",
+    "chemsys": "Cl-La-Ni"
+   },
+   {
+    "wbm_id": "wbm-1-52703",
+    "chemsys": "Hg-La-Rb-Se"
+   },
+   {
+    "wbm_id": "wbm-2-4109",
+    "chemsys": "As-Dy-I"
+   },
+   {
+    "wbm_id": "wbm-4-31703",
+    "chemsys": "In-Pu-Ru"
+   },
+   {
+    "wbm_id": "wbm-2-31612",
+    "chemsys": "Ni-Pr-Tl"
+   },
+   {
+    "wbm_id": "wbm-2-19193",
+    "chemsys": "Eu-Ga-Rh"
+   },
+   {
+    "wbm_id": "wbm-3-40092",
+    "chemsys": "Ir-Mg-Sn"
+   },
+   {
+    "wbm_id": "wbm-2-25489",
+    "chemsys": "Mg-Sn-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-11856",
+    "chemsys": "Co-Ni"
+   },
+   {
+    "wbm_id": "wbm-4-9850",
+    "chemsys": "Cu-Pt-Sm"
+   },
+   {
+    "wbm_id": "wbm-2-47344",
+    "chemsys": "Fe-Nb-Si"
+   },
+   {
+    "wbm_id": "wbm-3-57960",
+    "chemsys": "P-Rh-Th"
+   },
+   {
+    "wbm_id": "wbm-1-41233",
+    "chemsys": "O-Se-Tb"
+   },
+   {
+    "wbm_id": "wbm-1-59351",
+    "chemsys": "Ge-Sb-V"
+   },
+   {
+    "wbm_id": "wbm-2-4113",
+    "chemsys": "As-Ho-I"
+   },
+   {
+    "wbm_id": "wbm-1-30934",
+    "chemsys": "Er-Mo-N"
+   },
+   {
+    "wbm_id": "wbm-3-4946",
+    "chemsys": "Al-Pm"
+   },
+   {
+    "wbm_id": "wbm-2-5367",
+    "chemsys": "B-Ru-Sr"
+   },
+   {
+    "wbm_id": "wbm-2-10523",
+    "chemsys": "Cl-Gd-K"
+   },
+   {
+    "wbm_id": "wbm-3-57677",
+    "chemsys": "Cu-P-Pa"
+   },
+   {
+    "wbm_id": "wbm-2-14118",
+    "chemsys": "Cu-Ho-Tl"
+   },
+   {
+    "wbm_id": "wbm-2-46820",
+    "chemsys": "Au-Si-Y"
+   },
+   {
+    "wbm_id": "wbm-4-21562",
+    "chemsys": "Au-Mn-Pd"
+   },
+   {
+    "wbm_id": "wbm-3-36926",
+    "chemsys": "As-Cs-Ga-Li"
+   },
+   {
+    "wbm_id": "wbm-5-8366",
+    "chemsys": "Au-Ga-Ge-Np"
+   },
+   {
+    "wbm_id": "wbm-2-41114",
+    "chemsys": "Lu-Rh"
+   },
+   {
+    "wbm_id": "wbm-5-14063",
+    "chemsys": "Cu-Na-Sc-Te"
+   },
+   {
+    "wbm_id": "wbm-4-26136",
+    "chemsys": "Ca-Cr-O-Pu"
+   },
+   {
+    "wbm_id": "wbm-3-10473",
+    "chemsys": "Br-Sr"
+   },
+   {
+    "wbm_id": "wbm-2-45279",
+    "chemsys": "Se-Sn-Th"
+   },
+   {
+    "wbm_id": "wbm-2-31205",
+    "chemsys": "Ir-Nb-Sn"
+   },
+   {
+    "wbm_id": "wbm-3-31057",
+    "chemsys": "Ac-Ge-In"
+   },
+   {
+    "wbm_id": "wbm-1-20787",
+    "chemsys": "H-Rh-Sc"
+   },
+   {
+    "wbm_id": "wbm-5-2054",
+    "chemsys": "As-Er-Pd"
+   },
+   {
+    "wbm_id": "wbm-4-3097",
+    "chemsys": "As-Pa-Pd"
+   },
+   {
+    "wbm_id": "wbm-1-55677",
+    "chemsys": "Au-Si-Sm"
+   },
+   {
+    "wbm_id": "wbm-3-73649",
+    "chemsys": "Ba-Sr-Tl"
+   },
+   {
+    "wbm_id": "wbm-4-27384",
+    "chemsys": "Er-O-Sb-Yb"
+   },
+   {
+    "wbm_id": "wbm-3-14522",
+    "chemsys": "As-Cl-Y"
+   },
+   {
+    "wbm_id": "wbm-1-31145",
+    "chemsys": "N-Pr-W"
+   },
+   {
+    "wbm_id": "wbm-3-37074",
+    "chemsys": "Cu-Ga-Li-Mg"
+   },
+   {
+    "wbm_id": "wbm-4-6007",
+    "chemsys": "Bi-Ca-Rh"
+   },
+   {
+    "wbm_id": "wbm-1-52514",
+    "chemsys": "Se-Ta-Tl"
+   }
+  ],
+  "0\u20130.025": [
+   {
+    "wbm_id": "wbm-2-11644",
+    "chemsys": "Co-Er-Ga"
+   },
+   {
+    "wbm_id": "wbm-2-4977",
+    "chemsys": "B-Fe-N-Y"
+   },
+   {
+    "wbm_id": "wbm-4-13183",
+    "chemsys": "Au-Dy-Ga-Ge"
+   },
+   {
+    "wbm_id": "wbm-4-26703",
+    "chemsys": "Ba-Ga-Np-O"
+   },
+   {
+    "wbm_id": "wbm-2-51233",
+    "chemsys": "In-Pd-Y"
+   },
+   {
+    "wbm_id": "wbm-2-7051",
+    "chemsys": "Br-La-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-34472",
+    "chemsys": "Gd-In-Ni"
+   },
+   {
+    "wbm_id": "wbm-3-47530",
+    "chemsys": "Ba-Ga-Ni"
+   },
+   {
+    "wbm_id": "wbm-5-23007",
+    "chemsys": "Au-Pd-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-45311",
+    "chemsys": "K-P-Zn"
+   },
+   {
+    "wbm_id": "wbm-3-74471",
+    "chemsys": "Ge-Mn-Ti"
+   },
+   {
+    "wbm_id": "wbm-4-26948",
+    "chemsys": "La-Mg-O-Ti"
+   },
+   {
+    "wbm_id": "wbm-4-35005",
+    "chemsys": "Pb-Pr-Si"
+   },
+   {
+    "wbm_id": "wbm-1-57391",
+    "chemsys": "Au-Te"
+   },
+   {
+    "wbm_id": "wbm-3-19715",
+    "chemsys": "Cu-Sn-Tb"
+   },
+   {
+    "wbm_id": "wbm-5-9445",
+    "chemsys": "Br-Ce-Ge"
+   },
+   {
+    "wbm_id": "wbm-2-42389",
+    "chemsys": "Cd-Cs-S-Sm"
+   },
+   {
+    "wbm_id": "wbm-2-13888",
+    "chemsys": "Cd-Cu-Tb"
+   },
+   {
+    "wbm_id": "wbm-2-5611",
+    "chemsys": "B-Tm-Zr"
+   },
+   {
+    "wbm_id": "wbm-5-6388",
+    "chemsys": "Cr-F-Ga"
+   },
+   {
+    "wbm_id": "wbm-4-30941",
+    "chemsys": "I-Nd-Rh"
+   },
+   {
+    "wbm_id": "wbm-2-880",
+    "chemsys": "Al-Nd-Rh"
+   },
+   {
+    "wbm_id": "wbm-3-73969",
+    "chemsys": "Au-Nd-Sr-Te"
+   },
+   {
+    "wbm_id": "wbm-2-45615",
+    "chemsys": "Fe-Ho-Si"
+   },
+   {
+    "wbm_id": "wbm-1-26028",
+    "chemsys": "Er-Li-Pd"
+   },
+   {
+    "wbm_id": "wbm-2-7365",
+    "chemsys": "C-Ni-Tb"
+   },
+   {
+    "wbm_id": "wbm-4-15566",
+    "chemsys": "Co-Dy-H"
+   },
+   {
+    "wbm_id": "wbm-1-27229",
+    "chemsys": "Cd-Mg-S"
+   },
+   {
+    "wbm_id": "wbm-2-5687",
+    "chemsys": "B-Fe-Pr"
+   },
+   {
+    "wbm_id": "wbm-3-42788",
+    "chemsys": "Mn-Se-Zr"
+   },
+   {
+    "wbm_id": "wbm-3-14641",
+    "chemsys": "Cl-Yb"
+   },
+   {
+    "wbm_id": "wbm-3-23049",
+    "chemsys": "F-Mn-Nb"
+   },
+   {
+    "wbm_id": "wbm-1-58584",
+    "chemsys": "Pt-Ti"
+   },
+   {
+    "wbm_id": "wbm-2-51693",
+    "chemsys": "Pd-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-47306",
+    "chemsys": "Bi-Pt-U"
+   },
+   {
+    "wbm_id": "wbm-2-30670",
+    "chemsys": "Na-Ni-Se-Zr"
+   },
+   {
+    "wbm_id": "wbm-1-19704",
+    "chemsys": "Br-Ge-Rb"
+   },
+   {
+    "wbm_id": "wbm-2-48914",
+    "chemsys": "Ba-I-Sn"
+   },
+   {
+    "wbm_id": "wbm-4-32103",
+    "chemsys": "Er-Ru-Sb"
+   },
+   {
+    "wbm_id": "wbm-1-10951",
+    "chemsys": "Bi-Cl-Te"
+   },
+   {
+    "wbm_id": "wbm-2-2131",
+    "chemsys": "Al-La-Ni"
+   },
+   {
+    "wbm_id": "wbm-3-37327",
+    "chemsys": "Cd-Li-Pd-Tl"
+   },
+   {
+    "wbm_id": "wbm-3-5779",
+    "chemsys": "Al-Zn-Zr"
+   },
+   {
+    "wbm_id": "wbm-4-28673",
+    "chemsys": "Cu-Er-P"
+   },
+   {
+    "wbm_id": "wbm-3-63050",
+    "chemsys": "Er-In-Ru"
+   },
+   {
+    "wbm_id": "wbm-5-17520",
+    "chemsys": "Ce-In-Rh"
+   },
+   {
+    "wbm_id": "wbm-2-3105",
+    "chemsys": "Al-Pt"
+   },
+   {
+    "wbm_id": "wbm-2-10319",
+    "chemsys": "Ag-Cl-Ir"
+   },
+   {
+    "wbm_id": "wbm-3-12354",
+    "chemsys": "Ca-Cu-In"
+   },
+   {
+    "wbm_id": "wbm-3-38774",
+    "chemsys": "Cu-Mg-Nd"
+   },
+   {
+    "wbm_id": "wbm-1-40286",
+    "chemsys": "As-Ce-O"
+   },
+   {
+    "wbm_id": "wbm-2-3197",
+    "chemsys": "Al-In-S"
+   },
+   {
+    "wbm_id": "wbm-3-63131",
+    "chemsys": "Np-Ru"
+   },
+   {
+    "wbm_id": "wbm-2-51703",
+    "chemsys": "Lu-Rh-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-239",
+    "chemsys": "Ag-Ho-Pb"
+   },
+   {
+    "wbm_id": "wbm-4-38949",
+    "chemsys": "Ag-Eu-Zn"
+   },
+   {
+    "wbm_id": "wbm-3-1773",
+    "chemsys": "Al-Ge-Ir-Th"
+   },
+   {
+    "wbm_id": "wbm-1-46546",
+    "chemsys": "Hf-P-Zr"
+   },
+   {
+    "wbm_id": "wbm-3-49581",
+    "chemsys": "Ce-Ni-Ru"
+   },
+   {
+    "wbm_id": "wbm-3-11578",
+    "chemsys": "C-Er-Ge-Re"
+   }
+  ],
+  "0.025\u20130.1": [
+   {
+    "wbm_id": "wbm-3-1655",
+    "chemsys": "Al-Cu-Y"
+   },
+   {
+    "wbm_id": "wbm-1-4442",
+    "chemsys": "B-Ba-Fe-O"
+   },
+   {
+    "wbm_id": "wbm-2-31245",
+    "chemsys": "Nd-Tl"
+   },
+   {
+    "wbm_id": "wbm-2-45064",
+    "chemsys": "Se-U"
+   },
+   {
+    "wbm_id": "wbm-2-765",
+    "chemsys": "Al-Br-Ni"
+   },
+   {
+    "wbm_id": "wbm-2-36942",
+    "chemsys": "As-Cd-Ho-O"
+   },
+   {
+    "wbm_id": "wbm-4-31230",
+    "chemsys": "Bi-Cs-Rh"
+   },
+   {
+    "wbm_id": "wbm-1-16886",
+    "chemsys": "Fe-Ga"
+   },
+   {
+    "wbm_id": "wbm-1-23468",
+    "chemsys": "Au-Cu-Li"
+   },
+   {
+    "wbm_id": "wbm-1-41276",
+    "chemsys": "Gd-O-Si"
+   },
+   {
+    "wbm_id": "wbm-1-24613",
+    "chemsys": "Be-Li-Pd"
+   },
+   {
+    "wbm_id": "wbm-5-5897",
+    "chemsys": "Cu-Er-Rh"
+   },
+   {
+    "wbm_id": "wbm-2-26911",
+    "chemsys": "Mg-Sn"
+   },
+   {
+    "wbm_id": "wbm-2-30310",
+    "chemsys": "Na-Rh-Si"
+   },
+   {
+    "wbm_id": "wbm-1-21141",
+    "chemsys": "Ba-Ga-H-Pb"
+   },
+   {
+    "wbm_id": "wbm-4-36749",
+    "chemsys": "Pu-Sn-Tm"
+   },
+   {
+    "wbm_id": "wbm-5-5535",
+    "chemsys": "Cu-Rb-Sb"
+   },
+   {
+    "wbm_id": "wbm-4-39530",
+    "chemsys": "Eu-Os-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-51199",
+    "chemsys": "Fe-Sc"
+   },
+   {
+    "wbm_id": "wbm-5-10967",
+    "chemsys": "As-Au-Dy-Li"
+   },
+   {
+    "wbm_id": "wbm-1-37303",
+    "chemsys": "Ag-Na-O"
+   },
+   {
+    "wbm_id": "wbm-3-29036",
+    "chemsys": "Ga-Pr-Pt"
+   },
+   {
+    "wbm_id": "wbm-3-19802",
+    "chemsys": "Cu-Rh-Y"
+   },
+   {
+    "wbm_id": "wbm-1-53254",
+    "chemsys": "Co-La-Si"
+   },
+   {
+    "wbm_id": "wbm-2-16607",
+    "chemsys": "F-Sm-Sr"
+   },
+   {
+    "wbm_id": "wbm-3-3249",
+    "chemsys": "Al-Gd-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-32845",
+    "chemsys": "Na-S-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-22048",
+    "chemsys": "Hf-In"
+   },
+   {
+    "wbm_id": "wbm-4-9362",
+    "chemsys": "Au-Cu-Nd"
+   },
+   {
+    "wbm_id": "wbm-1-56846",
+    "chemsys": "Rh-Sn-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-56550",
+    "chemsys": "Au-In-Sr"
+   },
+   {
+    "wbm_id": "wbm-2-27055",
+    "chemsys": "Mg-Pb-Y"
+   },
+   {
+    "wbm_id": "wbm-4-12",
+    "chemsys": "Ag-Dy-Pb"
+   },
+   {
+    "wbm_id": "wbm-1-47080",
+    "chemsys": "Pd-Sb"
+   },
+   {
+    "wbm_id": "wbm-2-50905",
+    "chemsys": "Ge-Sm-V"
+   },
+   {
+    "wbm_id": "wbm-3-38312",
+    "chemsys": "Ga-Mg-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-61687",
+    "chemsys": "Pt-Zr"
+   },
+   {
+    "wbm_id": "wbm-2-50388",
+    "chemsys": "In-Ni-Ti"
+   },
+   {
+    "wbm_id": "wbm-3-40313",
+    "chemsys": "Mg-Sn-Zn"
+   },
+   {
+    "wbm_id": "wbm-3-63909",
+    "chemsys": "Ag-Cs-Ho-S"
+   },
+   {
+    "wbm_id": "wbm-4-18348",
+    "chemsys": "In-Li-Pb"
+   },
+   {
+    "wbm_id": "wbm-3-71169",
+    "chemsys": "I-Np-Si"
+   },
+   {
+    "wbm_id": "wbm-2-17190",
+    "chemsys": "Fe-Ge-Th"
+   },
+   {
+    "wbm_id": "wbm-2-2040",
+    "chemsys": "Al-Er-Ni"
+   },
+   {
+    "wbm_id": "wbm-2-40334",
+    "chemsys": "Pt-U"
+   },
+   {
+    "wbm_id": "wbm-2-42493",
+    "chemsys": "Cu-In-S-Th"
+   },
+   {
+    "wbm_id": "wbm-3-50841",
+    "chemsys": "Co-Nd-O-Rb"
+   },
+   {
+    "wbm_id": "wbm-1-24269",
+    "chemsys": "Li-P-Th"
+   },
+   {
+    "wbm_id": "wbm-1-49848",
+    "chemsys": "S-Sn-Sr"
+   },
+   {
+    "wbm_id": "wbm-4-32647",
+    "chemsys": "Au-K-S-Th"
+   },
+   {
+    "wbm_id": "wbm-1-43783",
+    "chemsys": "O-Sn-Zr"
+   },
+   {
+    "wbm_id": "wbm-3-40146",
+    "chemsys": "Mg-Pt-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-45833",
+    "chemsys": "K-P-Rb"
+   },
+   {
+    "wbm_id": "wbm-1-52718",
+    "chemsys": "Rh-Sb-Se"
+   },
+   {
+    "wbm_id": "wbm-3-19334",
+    "chemsys": "Cu-Ga-Pu"
+   },
+   {
+    "wbm_id": "wbm-3-25704",
+    "chemsys": "As-Fe-Lu"
+   },
+   {
+    "wbm_id": "wbm-4-3704",
+    "chemsys": "B-Fe-Nd"
+   },
+   {
+    "wbm_id": "wbm-4-9270",
+    "chemsys": "Cu-Sr-Tl"
+   },
+   {
+    "wbm_id": "wbm-4-21726",
+    "chemsys": "In-Mn-Se-Y"
+   },
+   {
+    "wbm_id": "wbm-4-9530",
+    "chemsys": "Cu-Ga-Pa"
+   }
+  ],
+  "0.1\u20130.3": [
+   {
+    "wbm_id": "wbm-3-63858",
+    "chemsys": "Ir-S-Tm"
+   },
+   {
+    "wbm_id": "wbm-3-16790",
+    "chemsys": "Au-Ce-Co"
+   },
+   {
+    "wbm_id": "wbm-3-42207",
+    "chemsys": "Ho-Mn-Pt"
+   },
+   {
+    "wbm_id": "wbm-3-33344",
+    "chemsys": "Eu-Fe-H-Si"
+   },
+   {
+    "wbm_id": "wbm-1-32364",
+    "chemsys": "As-N-V"
+   },
+   {
+    "wbm_id": "wbm-3-4833",
+    "chemsys": "Al-Cs-P"
+   },
+   {
+    "wbm_id": "wbm-1-4142",
+    "chemsys": "B-C-Er-Pd"
+   },
+   {
+    "wbm_id": "wbm-3-4664",
+    "chemsys": "Al-Mn-Nd"
+   },
+   {
+    "wbm_id": "wbm-3-23042",
+    "chemsys": "F-In-Mn"
+   },
+   {
+    "wbm_id": "wbm-2-44701",
+    "chemsys": "Hf-Se"
+   },
+   {
+    "wbm_id": "wbm-4-23786",
+    "chemsys": "Dy-Ni-Pu"
+   },
+   {
+    "wbm_id": "wbm-1-24294",
+    "chemsys": "Fe-Li-S"
+   },
+   {
+    "wbm_id": "wbm-4-4260",
+    "chemsys": "B-C-Ru-Tm"
+   },
+   {
+    "wbm_id": "wbm-1-17979",
+    "chemsys": "Fe-Sb-Sn"
+   },
+   {
+    "wbm_id": "wbm-3-53740",
+    "chemsys": "Dy-Ga-O-Sb"
+   },
+   {
+    "wbm_id": "wbm-4-16377",
+    "chemsys": "Al-Ge-H-Y"
+   },
+   {
+    "wbm_id": "wbm-5-7645",
+    "chemsys": "Fe-Hg-Tm"
+   },
+   {
+    "wbm_id": "wbm-5-14665",
+    "chemsys": "Ni-Sb-Tb"
+   },
+   {
+    "wbm_id": "wbm-2-46192",
+    "chemsys": "Si-Tm-W"
+   },
+   {
+    "wbm_id": "wbm-3-50856",
+    "chemsys": "Cr-O-Sr"
+   },
+   {
+    "wbm_id": "wbm-2-4720",
+    "chemsys": "B-C-Sc"
+   },
+   {
+    "wbm_id": "wbm-3-27026",
+    "chemsys": "Fe-Ir-Sn"
+   },
+   {
+    "wbm_id": "wbm-3-58559",
+    "chemsys": "Cu-P-U"
+   },
+   {
+    "wbm_id": "wbm-3-74550",
+    "chemsys": "Cr-Ge-Ti"
+   },
+   {
+    "wbm_id": "wbm-1-23326",
+    "chemsys": "La-Pt"
+   },
+   {
+    "wbm_id": "wbm-3-7433",
+    "chemsys": "Al-B-N-Sm"
+   },
+   {
+    "wbm_id": "wbm-4-2792",
+    "chemsys": "Al-Sn-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-51462",
+    "chemsys": "As-Rh-Sc"
+   },
+   {
+    "wbm_id": "wbm-5-500",
+    "chemsys": "Al-La"
+   },
+   {
+    "wbm_id": "wbm-3-63807",
+    "chemsys": "Ru-S-Tb"
+   },
+   {
+    "wbm_id": "wbm-1-43375",
+    "chemsys": "La-O-Sr"
+   },
+   {
+    "wbm_id": "wbm-2-33437",
+    "chemsys": "Co-O-Rb"
+   },
+   {
+    "wbm_id": "wbm-4-39806",
+    "chemsys": "Pd-U-Zn"
+   },
+   {
+    "wbm_id": "wbm-4-22552",
+    "chemsys": "F-N-Sn"
+   },
+   {
+    "wbm_id": "wbm-1-6746",
+    "chemsys": "C-Ce-Cu"
+   },
+   {
+    "wbm_id": "wbm-3-24217",
+    "chemsys": "Cu-Fe-Ho"
+   },
+   {
+    "wbm_id": "wbm-3-69515",
+    "chemsys": "Fe-In-Si"
+   },
+   {
+    "wbm_id": "wbm-5-17168",
+    "chemsys": "Pd-Tl-U"
+   },
+   {
+    "wbm_id": "wbm-1-11192",
+    "chemsys": "Co-Ta"
+   },
+   {
+    "wbm_id": "wbm-3-52272",
+    "chemsys": "Ni-O-Rb"
+   },
+   {
+    "wbm_id": "wbm-5-7898",
+    "chemsys": "Cu-Fe-Sm"
+   },
+   {
+    "wbm_id": "wbm-3-10611",
+    "chemsys": "Br-In-Pr"
+   },
+   {
+    "wbm_id": "wbm-3-69240",
+    "chemsys": "Pt-Si-Ti"
+   },
+   {
+    "wbm_id": "wbm-3-51223",
+    "chemsys": "Ni-O-Rb-Sm"
+   },
+   {
+    "wbm_id": "wbm-2-288",
+    "chemsys": "Ag-Ba-Sb"
+   },
+   {
+    "wbm_id": "wbm-3-6542",
+    "chemsys": "As-Pd-Sm"
+   },
+   {
+    "wbm_id": "wbm-3-17233",
+    "chemsys": "Co-Ho-Pt"
+   },
+   {
+    "wbm_id": "wbm-4-24951",
+    "chemsys": "As-I-Nd-O"
+   },
+   {
+    "wbm_id": "wbm-2-5078",
+    "chemsys": "B-Ni-Tb"
+   },
+   {
+    "wbm_id": "wbm-5-2482",
+    "chemsys": "B-Sn-V"
+   },
+   {
+    "wbm_id": "wbm-5-20071",
+    "chemsys": "Ba-Si-Tl"
+   },
+   {
+    "wbm_id": "wbm-1-28988",
+    "chemsys": "As-Mn"
+   },
+   {
+    "wbm_id": "wbm-2-21686",
+    "chemsys": "H-Mg-Sr"
+   },
+   {
+    "wbm_id": "wbm-3-4865",
+    "chemsys": "Al-In-Pd"
+   },
+   {
+    "wbm_id": "wbm-3-18366",
+    "chemsys": "Cr-Ge-Sr"
+   },
+   {
+    "wbm_id": "wbm-1-40530",
+    "chemsys": "Cr-In-O"
+   },
+   {
+    "wbm_id": "wbm-5-9233",
+    "chemsys": "Ge-Pd-Sn-U"
+   },
+   {
+    "wbm_id": "wbm-1-46557",
+    "chemsys": "P-Zr"
+   },
+   {
+    "wbm_id": "wbm-3-39045",
+    "chemsys": "Ge-I-Mg"
+   },
+   {
+    "wbm_id": "wbm-3-62701",
+    "chemsys": "Hg-Ru-Tb"
+   }
+  ],
+  ">0.3": [
+   {
+    "wbm_id": "wbm-3-54688",
+    "chemsys": "O-Sb-Tb-Tm"
+   },
+   {
+    "wbm_id": "wbm-1-37530",
+    "chemsys": "K-O-P"
+   },
+   {
+    "wbm_id": "wbm-3-9208",
+    "chemsys": "Au-B-Fe"
+   },
+   {
+    "wbm_id": "wbm-3-70540",
+    "chemsys": "Ca-Np-Si"
+   },
+   {
+    "wbm_id": "wbm-1-17322",
+    "chemsys": "Co-Fe-Y"
+   },
+   {
+    "wbm_id": "wbm-2-27141",
+    "chemsys": "Cd-Ho-Mn"
+   },
+   {
+    "wbm_id": "wbm-5-13450",
+    "chemsys": "Mn-Pu-Rh"
+   },
+   {
+    "wbm_id": "wbm-3-26731",
+    "chemsys": "Fe-Pb-Pr"
+   },
+   {
+    "wbm_id": "wbm-1-7637",
+    "chemsys": "Ba-C-O"
+   },
+   {
+    "wbm_id": "wbm-4-35576",
+    "chemsys": "Cl-Si-U"
+   },
+   {
+    "wbm_id": "wbm-3-54575",
+    "chemsys": "O-P-Pr-Sr"
+   },
+   {
+    "wbm_id": "wbm-3-52768",
+    "chemsys": "Mn-Np-O-S"
+   },
+   {
+    "wbm_id": "wbm-3-20332",
+    "chemsys": "As-Ce-Cu"
+   },
+   {
+    "wbm_id": "wbm-4-21475",
+    "chemsys": "Mn-Nb-Sb"
+   },
+   {
+    "wbm_id": "wbm-1-33758",
+    "chemsys": "Ir-Na-Ta"
+   },
+   {
+    "wbm_id": "wbm-3-24704",
+    "chemsys": "Fe-Sm-Tl"
+   },
+   {
+    "wbm_id": "wbm-1-36759",
+    "chemsys": "Br-Cu-O"
+   },
+   {
+    "wbm_id": "wbm-1-34318",
+    "chemsys": "As-Ni-Zr"
+   },
+   {
+    "wbm_id": "wbm-1-25101",
+    "chemsys": "Cd-Fe-Li"
+   },
+   {
+    "wbm_id": "wbm-5-8267",
+    "chemsys": "Fe-Y"
+   },
+   {
+    "wbm_id": "wbm-3-46208",
+    "chemsys": "Ce-Co-Na"
+   },
+   {
+    "wbm_id": "wbm-5-16596",
+    "chemsys": "P-Ru-Sc"
+   },
+   {
+    "wbm_id": "wbm-1-11266",
+    "chemsys": "Cd-Co"
+   },
+   {
+    "wbm_id": "wbm-5-16583",
+    "chemsys": "Ir-P-Sc"
+   },
+   {
+    "wbm_id": "wbm-3-65556",
+    "chemsys": "Ho-Rh-S"
+   },
+   {
+    "wbm_id": "wbm-2-5824",
+    "chemsys": "Al-B-Nb"
+   },
+   {
+    "wbm_id": "wbm-1-32748",
+    "chemsys": "Ir-Na"
+   },
+   {
+    "wbm_id": "wbm-1-17700",
+    "chemsys": "Fe-In-La"
+   },
+   {
+    "wbm_id": "wbm-3-12386",
+    "chemsys": "Au-Ca-Fe"
+   },
+   {
+    "wbm_id": "wbm-4-21381",
+    "chemsys": "Ge-Mn-Ta"
+   },
+   {
+    "wbm_id": "wbm-4-37100",
+    "chemsys": "Ru-Sr-Tl"
+   },
+   {
+    "wbm_id": "wbm-3-50195",
+    "chemsys": "Br-O-Rb-Rh"
+   },
+   {
+    "wbm_id": "wbm-3-18254",
+    "chemsys": "Cr-Pm-Sr"
+   },
+   {
+    "wbm_id": "wbm-4-32256",
+    "chemsys": "Ga-S-Sn"
+   },
+   {
+    "wbm_id": "wbm-3-59285",
+    "chemsys": "P-S-Sr"
+   },
+   {
+    "wbm_id": "wbm-4-25369",
+    "chemsys": "Fe-La-O"
+   },
+   {
+    "wbm_id": "wbm-4-12404",
+    "chemsys": "Au-Er-Fe"
+   },
+   {
+    "wbm_id": "wbm-3-47429",
+    "chemsys": "Cs-Ni-Sm"
+   },
+   {
+    "wbm_id": "wbm-4-35767",
+    "chemsys": "Ga-Ir-Si"
+   },
+   {
+    "wbm_id": "wbm-4-20769",
+    "chemsys": "Mn-Pt-Sn"
+   },
+   {
+    "wbm_id": "wbm-3-61987",
+    "chemsys": "Pb-Pu-Rh"
+   },
+   {
+    "wbm_id": "wbm-3-60488",
+    "chemsys": "Pd-Tb-Te"
+   },
+   {
+    "wbm_id": "wbm-5-16750",
+    "chemsys": "Os-P-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-22890",
+    "chemsys": "Cr-I-K"
+   },
+   {
+    "wbm_id": "wbm-5-19588",
+    "chemsys": "Sb-Se-Ta"
+   },
+   {
+    "wbm_id": "wbm-3-63211",
+    "chemsys": "Ru-Sb-Ta"
+   },
+   {
+    "wbm_id": "wbm-1-43833",
+    "chemsys": "Br-Hf-O-Tl"
+   },
+   {
+    "wbm_id": "wbm-5-16838",
+    "chemsys": "Eu-In-Pd"
+   },
+   {
+    "wbm_id": "wbm-1-61050",
+    "chemsys": "Ba-Rb-Zn"
+   },
+   {
+    "wbm_id": "wbm-1-12346",
+    "chemsys": "Cr-In-Ni"
+   },
+   {
+    "wbm_id": "wbm-2-39634",
+    "chemsys": "Pb-Pd-Ta"
+   },
+   {
+    "wbm_id": "wbm-1-36615",
+    "chemsys": "Cl-Cu-O"
+   },
+   {
+    "wbm_id": "wbm-1-33357",
+    "chemsys": "Ga-Na-Ni"
+   },
+   {
+    "wbm_id": "wbm-4-12231",
+    "chemsys": "Au-Fe-La"
+   },
+   {
+    "wbm_id": "wbm-4-11513",
+    "chemsys": "Au-Dy-Fe"
+   },
+   {
+    "wbm_id": "wbm-2-33345",
+    "chemsys": "Cl-Cu-Dy-O"
+   },
+   {
+    "wbm_id": "wbm-3-33733",
+    "chemsys": "Ac-In-Pa"
+   },
+   {
+    "wbm_id": "wbm-5-4871",
+    "chemsys": "Co-Pu-Ru"
+   },
+   {
+    "wbm_id": "wbm-3-2354",
+    "chemsys": "Al-Pd-V"
+   },
+   {
+    "wbm_id": "wbm-4-4496",
+    "chemsys": "B-Fe-N-V"
+   }
+  ]
+ },
+ "ids": [
+  "wbm-3-23753",
+  "wbm-1-55736",
+  "wbm-2-25234",
+  "wbm-1-28299",
+  "wbm-3-62307",
+  "wbm-4-30202",
+  "wbm-2-5594",
+  "wbm-5-9684",
+  "wbm-1-20911",
+  "wbm-4-517",
+  "wbm-4-17971",
+  "wbm-1-44000",
+  "wbm-1-55906",
+  "wbm-1-10184",
+  "wbm-2-40863",
+  "wbm-2-12241",
+  "wbm-3-56923",
+  "wbm-5-4249",
+  "wbm-1-52703",
+  "wbm-2-4109",
+  "wbm-4-31703",
+  "wbm-2-31612",
+  "wbm-2-19193",
+  "wbm-3-40092",
+  "wbm-2-25489",
+  "wbm-1-11856",
+  "wbm-4-9850",
+  "wbm-2-47344",
+  "wbm-3-57960",
+  "wbm-1-41233",
+  "wbm-1-59351",
+  "wbm-2-4113",
+  "wbm-1-30934",
+  "wbm-3-4946",
+  "wbm-2-5367",
+  "wbm-2-10523",
+  "wbm-3-57677",
+  "wbm-2-14118",
+  "wbm-2-46820",
+  "wbm-4-21562",
+  "wbm-3-36926",
+  "wbm-5-8366",
+  "wbm-2-41114",
+  "wbm-5-14063",
+  "wbm-4-26136",
+  "wbm-3-10473",
+  "wbm-2-45279",
+  "wbm-2-31205",
+  "wbm-3-31057",
+  "wbm-1-20787",
+  "wbm-5-2054",
+  "wbm-4-3097",
+  "wbm-1-55677",
+  "wbm-3-73649",
+  "wbm-4-27384",
+  "wbm-3-14522",
+  "wbm-1-31145",
+  "wbm-3-37074",
+  "wbm-4-6007",
+  "wbm-1-52514",
+  "wbm-2-11644",
+  "wbm-2-4977",
+  "wbm-4-13183",
+  "wbm-4-26703",
+  "wbm-2-51233",
+  "wbm-2-7051",
+  "wbm-1-34472",
+  "wbm-3-47530",
+  "wbm-5-23007",
+  "wbm-1-45311",
+  "wbm-3-74471",
+  "wbm-4-26948",
+  "wbm-4-35005",
+  "wbm-1-57391",
+  "wbm-3-19715",
+  "wbm-5-9445",
+  "wbm-2-42389",
+  "wbm-2-13888",
+  "wbm-2-5611",
+  "wbm-5-6388",
+  "wbm-4-30941",
+  "wbm-2-880",
+  "wbm-3-73969",
+  "wbm-2-45615",
+  "wbm-1-26028",
+  "wbm-2-7365",
+  "wbm-4-15566",
+  "wbm-1-27229",
+  "wbm-2-5687",
+  "wbm-3-42788",
+  "wbm-3-14641",
+  "wbm-3-23049",
+  "wbm-1-58584",
+  "wbm-2-51693",
+  "wbm-1-47306",
+  "wbm-2-30670",
+  "wbm-1-19704",
+  "wbm-2-48914",
+  "wbm-4-32103",
+  "wbm-1-10951",
+  "wbm-2-2131",
+  "wbm-3-37327",
+  "wbm-3-5779",
+  "wbm-4-28673",
+  "wbm-3-63050",
+  "wbm-5-17520",
+  "wbm-2-3105",
+  "wbm-2-10319",
+  "wbm-3-12354",
+  "wbm-3-38774",
+  "wbm-1-40286",
+  "wbm-2-3197",
+  "wbm-3-63131",
+  "wbm-2-51703",
+  "wbm-1-239",
+  "wbm-4-38949",
+  "wbm-3-1773",
+  "wbm-1-46546",
+  "wbm-3-49581",
+  "wbm-3-11578",
+  "wbm-3-1655",
+  "wbm-1-4442",
+  "wbm-2-31245",
+  "wbm-2-45064",
+  "wbm-2-765",
+  "wbm-2-36942",
+  "wbm-4-31230",
+  "wbm-1-16886",
+  "wbm-1-23468",
+  "wbm-1-41276",
+  "wbm-1-24613",
+  "wbm-5-5897",
+  "wbm-2-26911",
+  "wbm-2-30310",
+  "wbm-1-21141",
+  "wbm-4-36749",
+  "wbm-5-5535",
+  "wbm-4-39530",
+  "wbm-1-51199",
+  "wbm-5-10967",
+  "wbm-1-37303",
+  "wbm-3-29036",
+  "wbm-3-19802",
+  "wbm-1-53254",
+  "wbm-2-16607",
+  "wbm-3-3249",
+  "wbm-1-32845",
+  "wbm-1-22048",
+  "wbm-4-9362",
+  "wbm-1-56846",
+  "wbm-1-56550",
+  "wbm-2-27055",
+  "wbm-4-12",
+  "wbm-1-47080",
+  "wbm-2-50905",
+  "wbm-3-38312",
+  "wbm-1-61687",
+  "wbm-2-50388",
+  "wbm-3-40313",
+  "wbm-3-63909",
+  "wbm-4-18348",
+  "wbm-3-71169",
+  "wbm-2-17190",
+  "wbm-2-2040",
+  "wbm-2-40334",
+  "wbm-2-42493",
+  "wbm-3-50841",
+  "wbm-1-24269",
+  "wbm-1-49848",
+  "wbm-4-32647",
+  "wbm-1-43783",
+  "wbm-3-40146",
+  "wbm-1-45833",
+  "wbm-1-52718",
+  "wbm-3-19334",
+  "wbm-3-25704",
+  "wbm-4-3704",
+  "wbm-4-9270",
+  "wbm-4-21726",
+  "wbm-4-9530",
+  "wbm-3-63858",
+  "wbm-3-16790",
+  "wbm-3-42207",
+  "wbm-3-33344",
+  "wbm-1-32364",
+  "wbm-3-4833",
+  "wbm-1-4142",
+  "wbm-3-4664",
+  "wbm-3-23042",
+  "wbm-2-44701",
+  "wbm-4-23786",
+  "wbm-1-24294",
+  "wbm-4-4260",
+  "wbm-1-17979",
+  "wbm-3-53740",
+  "wbm-4-16377",
+  "wbm-5-7645",
+  "wbm-5-14665",
+  "wbm-2-46192",
+  "wbm-3-50856",
+  "wbm-2-4720",
+  "wbm-3-27026",
+  "wbm-3-58559",
+  "wbm-3-74550",
+  "wbm-1-23326",
+  "wbm-3-7433",
+  "wbm-4-2792",
+  "wbm-1-51462",
+  "wbm-5-500",
+  "wbm-3-63807",
+  "wbm-1-43375",
+  "wbm-2-33437",
+  "wbm-4-39806",
+  "wbm-4-22552",
+  "wbm-1-6746",
+  "wbm-3-24217",
+  "wbm-3-69515",
+  "wbm-5-17168",
+  "wbm-1-11192",
+  "wbm-3-52272",
+  "wbm-5-7898",
+  "wbm-3-10611",
+  "wbm-3-69240",
+  "wbm-3-51223",
+  "wbm-2-288",
+  "wbm-3-6542",
+  "wbm-3-17233",
+  "wbm-4-24951",
+  "wbm-2-5078",
+  "wbm-5-2482",
+  "wbm-5-20071",
+  "wbm-1-28988",
+  "wbm-2-21686",
+  "wbm-3-4865",
+  "wbm-3-18366",
+  "wbm-1-40530",
+  "wbm-5-9233",
+  "wbm-1-46557",
+  "wbm-3-39045",
+  "wbm-3-62701",
+  "wbm-3-54688",
+  "wbm-1-37530",
+  "wbm-3-9208",
+  "wbm-3-70540",
+  "wbm-1-17322",
+  "wbm-2-27141",
+  "wbm-5-13450",
+  "wbm-3-26731",
+  "wbm-1-7637",
+  "wbm-4-35576",
+  "wbm-3-54575",
+  "wbm-3-52768",
+  "wbm-3-20332",
+  "wbm-4-21475",
+  "wbm-1-33758",
+  "wbm-3-24704",
+  "wbm-1-36759",
+  "wbm-1-34318",
+  "wbm-1-25101",
+  "wbm-5-8267",
+  "wbm-3-46208",
+  "wbm-5-16596",
+  "wbm-1-11266",
+  "wbm-5-16583",
+  "wbm-3-65556",
+  "wbm-2-5824",
+  "wbm-1-32748",
+  "wbm-1-17700",
+  "wbm-3-12386",
+  "wbm-4-21381",
+  "wbm-4-37100",
+  "wbm-3-50195",
+  "wbm-3-18254",
+  "wbm-4-32256",
+  "wbm-3-59285",
+  "wbm-4-25369",
+  "wbm-4-12404",
+  "wbm-3-47429",
+  "wbm-4-35767",
+  "wbm-4-20769",
+  "wbm-3-61987",
+  "wbm-3-60488",
+  "wbm-5-16750",
+  "wbm-1-22890",
+  "wbm-5-19588",
+  "wbm-3-63211",
+  "wbm-1-43833",
+  "wbm-5-16838",
+  "wbm-1-61050",
+  "wbm-1-12346",
+  "wbm-2-39634",
+  "wbm-1-36615",
+  "wbm-1-33357",
+  "wbm-4-12231",
+  "wbm-4-11513",
+  "wbm-2-33345",
+  "wbm-3-33733",
+  "wbm-5-4871",
+  "wbm-3-2354",
+  "wbm-4-4496"
+ ]
+}

@@ -211,6 +211,8 @@ def audit() -> dict:
 # --- 2. ETA ------------------------------------------------------------------------------------------
 
 STATIC_S = 0.5
+# Measured mean runtimes (MACE-MP-0, CPU float64, 1 thread) for jobs without a measured counterpart.
+DEFAULT_S = {"ood": 2.5, "substitution_auto": 15.0, "substitution": 15.0, "stability": 24.0}
 
 
 def _counterpart(key: str) -> str | None:
@@ -254,9 +256,9 @@ def eta(queue_db=QUEUE_DB) -> dict:
             base = runtimes.get(_counterpart(key) or "")
             if base is None or not np.isfinite(base):
                 unknown += 1
-                base = 15.0
+                base = DEFAULT_S.get(r["suite"], 15.0)
             t, w = base, base * 2
-            kind = key.rsplit(":", 1)[-1].split("@")[0]
+            kind = key.rsplit(":", 1)[-1].split("@")[0] if ":" in key.split("@")[0] else f"{r['suite']} relax"
         typical.append(t)
         worst.append(min(w, 6000.0))
         by_kind[kind] += 1

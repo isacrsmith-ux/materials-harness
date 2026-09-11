@@ -38,40 +38,79 @@ def stress_residual(stress_voigt, constant_volume: bool = False) -> float:
     return float(np.abs(s).max())
 
 
+def _mace_calculator(device: str, dtype: str):
+    from mace.calculators import mace_mp
+
+    # The checkpoint is stored in float64, and torch.load(map_location="mps") fails on
+    # float64 tensors — so for MPS, load + downcast on CPU, then move to the GPU.
+    load_device = "cpu" if device == "mps" else device
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        with contextlib.redirect_stdout(open(os.devnull, "w")):
+            calc = mace_mp(model=str(config.model_path()), device=load_device, default_dtype=dtype)
+    if device == "mps":
+        import torch
+
+        calc.models = [m.to("mps") for m in calc.models]
+        calc.device = torch.device("mps")
+    return calc
+
+
+def _fairchem_calculator(device: str, dtype: str):
+    """eSEN (fairchem-core, run from its own venv). The calculator API differs between fairchem-core
+    releases; both are tried, and anything else is a clear error rather than a silent fallback."""
+    try:
+        from fairchem.core import OCPCalculator  # fairchem-core 1.x
+
+        return OCPCalculator(checkpoint_path=str(config.model_path()), cpu=(device == "cpu"), seed=0)
+    except ImportError:
+        pass
+    from fairchem.core.units.mlip_unit import load_predict_unit  # fairchem-core 2.x
+    from fairchem.core import FAIRChemCalculator
+
+    unit = load_predict_unit(str(config.model_path()), device="cuda" if device == "cuda" else "cpu")
+    return FAIRChemCalculator(unit, task_name="omat")
+
+
+def _sevenn_calculator(device: str, dtype: str):
+    from sevenn.calculator import SevenNetCalculator
+
+    return SevenNetCalculator(model=str(config.model_path()), modal="mpa", device=device)
+
+
+_LOADERS = {"mace": _mace_calculator, "fairchem": _fairchem_calculator, "sevenn": _sevenn_calculator}
+
+
 def get_calculator(device: str = "cpu", dtype: str = "float64"):
-    key = (device, dtype)
+    """ASE calculator of the ACTIVE model (config.MODEL, from HARNESS_MODEL) on device / dtype."""
+    key = (config.ACTIVE_MODEL, device, dtype)
     if key not in _CALCS:
         if device == "mps":
             os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
         if device == "mps" and dtype == "float64":
             raise ValueError("PyTorch MPS does not support float64.")
-        from mace.calculators import mace_mp
-
-        # The checkpoint is stored in float64, and torch.load(map_location="mps") fails on
-        # float64 tensors — so for MPS, load + downcast on CPU, then move to the GPU.
-        load_device = "cpu" if device == "mps" else device
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            with contextlib.redirect_stdout(open(os.devnull, "w")):
-                calc = mace_mp(model=str(config.model_path()), device=load_device, default_dtype=dtype)
-        if device == "mps":
-            import torch
-
-            calc.models = [m.to("mps") for m in calc.models]
-            calc.device = torch.device("mps")
-        _CALCS[key] = calc
+        _CALCS[key] = _LOADERS[config.MODEL["loader"]](device, dtype)
     return _CALCS[key]
 
 
 def engine_metadata(device: str, dtype: str, settings: RelaxSettings | None = None) -> dict:
     """Everything needed to reproduce a simulated value. Stored with every result row."""
+    def _v(pkg):
+        try:
+            return version(pkg)
+        except Exception:  # noqa: BLE001 — a package absent from this model's venv
+            return None
+
     meta = {
+        "model_key": config.ACTIVE_MODEL,
         "model_name": config.MODEL["name"],
         "model_file": config.MODEL["file"],
         "model_sha256": config.MODEL["sha256"],
-        "mace_torch_version": version("mace-torch"),
-        "torch_version": version("torch"),
-        "ase_version": version("ase"),
+        "mace_torch_version": _v("mace-torch"),
+        "fairchem_core_version": _v("fairchem-core"),
+        "sevenn_version": _v("sevenn"),
+        "torch_version": _v("torch"),
+        "ase_version": _v("ase"),
         "device": device,
         "dtype": dtype,
     }

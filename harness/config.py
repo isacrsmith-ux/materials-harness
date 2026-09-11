@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -25,29 +26,64 @@ COMPUTE_CONFIG = CONFIG_DIR / "compute.json"
 UNATTENDED_CONFIG = CONFIG_DIR / "unattended.json"
 QUEUE_DB = RESULTS_DIR / "queue.sqlite"
 
-# The engine under test. Pinned by file hash: mace-torch >= 0.3.10 silently switched its
-# default "mace_mp()" model to MACE-MPA-0, so we never rely on library defaults.
-MODEL = {
-    "name": "MACE-MP-0 medium",
-    "mace_key": "medium",
-    "file": "2023-12-03-mace-128-L1_epoch-199.model",
-    "url": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-03-mace-128-L1_epoch-199.model",
-    "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
-    "training_data": "MPtrj (Materials Project PBE/PBE+U relaxation trajectories, 2022.9)",
+# Model registry. Every engine is pinned by file hash (mace-torch >= 0.3.10 silently switched its default
+# "mace_mp()" model to MACE-MPA-0, so library defaults are never used). The active model is chosen per
+# process with the HARNESS_MODEL environment variable (default: the round-1 baseline). Its key enters the
+# settings tag, so results of different models never mix; the baseline keeps its round-1 tag.
+#   loader  how engine.get_calculator builds the ASE calculator
+#   env     separate virtualenv (models whose dependencies conflict with mace-torch); None = this venv
+#   compliant  Matbench Discovery compliance of the training data (WBM excluded): True / False / "unverified"
+BASELINE_MODEL = "mace-mp-0-medium"
+MODELS = {
+    "mace-mp-0-medium": {
+        "name": "MACE-MP-0 medium", "loader": "mace", "env": None,
+        "file": "2023-12-03-mace-128-L1_epoch-199.model",
+        "url": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-03-mace-128-L1_epoch-199.model",
+        "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+        "training_data": "MPtrj (Materials Project PBE/PBE+U relaxation trajectories, 2022.9)",
+        "license": "MIT (code and checkpoint)", "compliant": True,
+    },
+    "mace-mpa-0-medium": {
+        "name": "MACE-MPA-0 medium", "loader": "mace", "env": None,
+        "file": "mace-mpa-0-medium.model",
+        "url": "https://github.com/ACEsuit/mace-foundations/releases/download/mace_mpa_0/mace-mpa-0-medium.model",
+        "size_bytes": 79462305, "sha256": None,  # pinned when the file is first downloaded (with approval)
+        "training_data": "MPtrj + sAlex (subsampled Alexandria, WBM-overlapping structures removed)",
+        "license": "MIT (code and checkpoint)", "compliant": True,
+    },
+    "esen-30m-oam": {
+        "name": "eSEN-30M-OAM", "loader": "fairchem", "env": ".envs/fairchem",
+        "file": "esen_30m_oam.pt", "url": "https://huggingface.co/fairchem/OMAT24/resolve/main/esen_30m_oam.pt",
+        "gated": True, "sha256": None,
+        "training_data": "OMat24 + MPtrj + sAlex", "compliant": True,
+        "license": "code MIT; checkpoint OMat24 license (commercial use permitted, FAIR acceptable-use policy)",
+    },
+    "sevennet-omni": {
+        "name": "SevenNet-Omni", "loader": "sevenn", "env": ".envs/sevenn",
+        "file": "checkpoint_sevennet_omni.pth", "url": "https://figshare.com/files/60977863", "sha256": None,
+        "training_data": "15 datasets incl. MPtrj, OMat24 and a 12.1M-structure Alexandria subsample (WBM filtering not stated)",
+        "compliant": "unverified", "license": "MIT (code and checkpoint)",
+    },
 }
+ACTIVE_MODEL = os.environ.get("HARNESS_MODEL", BASELINE_MODEL)
+if ACTIVE_MODEL not in MODELS:
+    raise KeyError(f"HARNESS_MODEL={ACTIVE_MODEL!r} is not in the registry ({sorted(MODELS)})")
+MODEL = {"key": ACTIVE_MODEL, **MODELS[ACTIVE_MODEL]}
+MODEL["mace_key"] = "medium"  # legacy field (round-1 metadata)
 
 
-@lru_cache(maxsize=1)
-def model_path() -> Path:
-    path = MODELS_DIR / MODEL["file"]
+@lru_cache(maxsize=None)
+def model_path(key: str | None = None) -> Path:
+    m = MODELS[key or ACTIVE_MODEL]
+    path = MODELS_DIR / m["file"]
     if not path.is_file():
-        raise FileNotFoundError(
-            f"Model weights missing at {path}. Download with:\n"
-            f"  curl -L -o '{path}' {MODEL['url']}"
-        )
+        raise FileNotFoundError(f"Model weights missing at {path}. Source: {m['url']}"
+                                + (" (gated: accept the license on Hugging Face first)" if m.get("gated") else ""))
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    if digest != MODEL["sha256"]:
-        raise RuntimeError(f"Model hash mismatch for {path}: {digest} != {MODEL['sha256']}")
+    if m.get("sha256") is None:
+        raise RuntimeError(f"{m['name']}: no SHA-256 pinned in config.MODELS yet (file hash {digest}); pin it before use")
+    if digest != m["sha256"]:
+        raise RuntimeError(f"Model hash mismatch for {path}: {digest} != {m['sha256']}")
     return path
 
 
@@ -83,20 +119,33 @@ PERTURB_RESTART = {"rattle_angstrom": 0.02, "strain": 0.005, "supercell": (1, 1,
 LADDER_BUDGET_S = sum(s.timeout_s for _, s, _ in FALLBACK_LADDER) + 600.0  # watchdog allowance per ladder job
 
 
-def settings_tag(device: str, dtype: str, relax: RelaxSettings = DEFAULT_RELAX) -> str:
+def settings_tag(device: str, dtype: str, relax: RelaxSettings = DEFAULT_RELAX, model: str | None = None) -> str:
     """Short hash of everything that changes a simulated value. Appended to every job key
-    ("...@<tag>"), so changing the protocol can never silently reuse stale results."""
-    blob = json.dumps({"model": MODEL["sha256"], "device": device, "dtype": dtype, "relax": relax.as_dict()},
-                      sort_keys=True)
-    return hashlib.sha256(blob.encode()).hexdigest()[:8]
+    ("...@<tag>"), so changing the protocol can never silently reuse stale results.
+
+    The baseline model hashes exactly the round-1 blob (tag 207ccc81 for its CPU/float64 protocol);
+    every other model adds its registry key, so its results can never share a tag with another model's."""
+    key = model or ACTIVE_MODEL
+    m = MODELS[key]
+    blob = {"model": m.get("sha256") or key, "device": device, "dtype": dtype, "relax": relax.as_dict()}
+    if key != BASELINE_MODEL:
+        blob["model_key"] = key
+    return hashlib.sha256(json.dumps(blob, sort_keys=True).encode()).hexdigest()[:8]
 
 # Used until `python -m harness benchmark` writes config/compute.json.
 _FALLBACK_COMPUTE = {"device": "cpu", "dtype": "float64", "workers": 1, "threads_per_worker": None}
 
 
+def compute_config_path(model: str | None = None) -> Path:
+    """Benchmarked layout per model: config/compute.json for the baseline, config/compute-<key>.json otherwise."""
+    key = model or ACTIVE_MODEL
+    return COMPUTE_CONFIG if key == BASELINE_MODEL else CONFIG_DIR / f"compute-{key}.json"
+
+
 def load_compute_config() -> dict:
-    if COMPUTE_CONFIG.is_file():
-        return json.loads(COMPUTE_CONFIG.read_text())
+    path = compute_config_path()
+    if path.is_file():
+        return json.loads(path.read_text())
     from harness.platform_check import core_counts
 
     return {**_FALLBACK_COMPUTE, "threads_per_worker": core_counts()["performance"], "source": "fallback"}
@@ -104,7 +153,7 @@ def load_compute_config() -> dict:
 
 def save_compute_config(cfg: dict) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    COMPUTE_CONFIG.write_text(json.dumps(cfg, indent=2, default=str) + "\n")
+    compute_config_path().write_text(json.dumps(cfg, indent=2, default=str) + "\n")
 
 
 # Unattended-run (orchestration) settings. Nothing here changes what is computed or how it is scored;

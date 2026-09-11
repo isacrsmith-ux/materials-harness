@@ -1,8 +1,12 @@
-"""Validation report: reports/validation_report.md + reports/figures/*.png + results/*.parquet.
+"""Validation report: reports/validation_report.md + figures + scorecard.json + results/results.parquet.
 
-Everything is computed from the results store for the CURRENT settings tag (model file, device,
-dtype, relaxation settings); rows from earlier protocols stay in the database but are excluded.
-Verdicts come from the explicit thresholds in VERDICT_RULES, never from judgement at write time.
+Round-2 structure. Every metric is stratified by hull-distance bin (compare.HULL_BINS_MP / HULL_BINS_WBM),
+shown with its median next to its mean and a 95 % bootstrap interval, and every verdict comes from the
+pessimistic end of that interval (upper bound of an error, lower bound of a score). Results that relaxed
+into a different structure are reported separately from results that stayed in the target structure;
+results rejected by the convergence / sanity guard are counted, never averaged in. Stability decisions,
+threshold sweeps and cost optimisation use the WBM CALIBRATION set only; the locked test set is never read
+here (the report asserts that no test id has a result).
 """
 
 from __future__ import annotations
@@ -19,71 +23,73 @@ from pymatgen.core import Composition
 
 import harness  # noqa: F401  (cache env vars before matplotlib)
 from harness import compare, store
-from harness.config import DEFAULT_RELAX, FIG_DIR, MODEL, REPORTS_DIR, RESULTS_DIR, ROOT, load_compute_config, settings_tag
+from harness import metrics as M
+from harness.config import (CONFIG_DIR, DEFAULT_RELAX, FIG_DIR, MODEL, REPORTS_DIR, RESULTS_DIR, ROOT,
+                            load_compute_config, settings_tag)
 from harness.platform_check import machine_info
 
 log = logging.getLogger(__name__)
 
-# Chart tokens: dataviz reference palette, light mode. Three categorical slots max (the first three
-# validate all-pairs for scatter); text always in ink tokens, never series colours.
 SURFACE, INK, INK2, MUTED, GRID, AXIS = "#fcfcfb", "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7"
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a"]
-# Colour follows the entity across every figure.
-KNOWN, NEW, PBE = SERIES  # MACE on known (MP) materials / MACE on new (WBM) materials / PBE reference
+KNOWN, NEW, PBE = SERIES
 
-# Explicit verdict thresholds: (good_if_at_most, caution_if_at_most) for errors; reversed for scores.
+# (good, caution, lower_is_better). Verdicts are taken at the pessimistic end of the 95 % interval.
 VERDICT_RULES = {
-    "volume_mae_pct": (1.0, 2.0),          # MACE vs its own training functional (PBE)
-    "energy_mae_mev": (30.0, 60.0),        # meV/atom vs DFT
-    "e_hull_mae_mev": (30.0, 60.0),        # meV/atom
-    "stability_acc_0.1": (0.90, 0.75),     # accuracy at the 0.1 eV/atom threshold (higher is better)
-    "bulk_mae_pct": (10.0, 20.0),          # EOS B0 vs MP K_VRH
-    "mace_minus_pbe_pct": (0.5, 1.0),      # lattice constant, MACE vs PBE, |mean|
+    "energy_mae_mev": (30.0, 60.0, True),
+    "volume_mae_pct": (1.0, 2.0, True),
+    "e_hull_mae_mev": (30.0, 60.0, True),
+    "precision": (0.80, 0.60, False),
+    "npv": (0.95, 0.90, False),
+    "bulk_mae_pct": (10.0, 20.0, True),
+    "mace_minus_pbe_pct": (0.5, 1.0, True),
 }
-N_BOOT = 5000
+N_BOOT = M.N_BOOT
+MIN_ELEMENT_COUNT = 20
+MAGNETIC_MOMENT_MIN = 0.05  # μB/site in the PBE calculation
+SWEEP = tuple(round(x, 3) for x in np.arange(-0.20, 0.2001, 0.01))
+COSTS_FILE = CONFIG_DIR / "costs.json"
+
+# Matbench Discovery, MACE-MP-0 (checkpoint 2023-12-03-mace-128-L1_epoch-199), unique-prototype subset.
+# Source: models/mace/mace-mp-0.yml in github.com/janosh/matbench-discovery (read 2026-09-11).
+MBD_MACE_MP0 = {"F1": 0.669, "DAF": 3.777, "precision": 0.577, "recall": 0.796, "accuracy": 0.878,
+                "MAE (eV/atom)": 0.057, "RMSE (eV/atom)": 0.101, "R2": 0.697,
+                "protocol": "FIRE, fmax 0.05 eV/Å, ≤ 500 steps, FrechetCellFilter"}
+MBD_SOURCE = "Matbench Discovery, models/mace/mace-mp-0.yml (unique-prototype subset)"
+
+
+def boot_ci(x, f=M.MAE, seed: int = 0):
+    return M.boot_ci(x, f, N_BOOT, seed)
 
 
 def verdict(metric: str, value: float) -> str:
-    if value is None or not np.isfinite(value):
-        return "no data"
-    good, caution = VERDICT_RULES[metric]
-    higher_better = good > caution
-    if (value >= good) if higher_better else (value <= good):
-        return "trustworthy"
-    if (value >= caution) if higher_better else (value <= caution):
-        return "use with caution"
-    return "not trustworthy"
+    good, caution, lower = VERDICT_RULES[metric]
+    return M.verdict(value, good, caution, lower)
 
 
-def verdict_ci(metric: str, ci: tuple[float, float, float]) -> str:
-    """Verdict from the point estimate, marked borderline when the 95 % CI crosses a threshold."""
-    v = verdict(metric, ci[0])
-    if v == "no data" or not all(np.isfinite(ci)):
-        return v
-    lo_v, hi_v = verdict(metric, ci[1]), verdict(metric, ci[2])
-    if lo_v != v or hi_v != v:
-        return f"{v} (borderline: 95 % CI spans '{lo_v}' to '{hi_v}')"
+def verdict_ci(metric: str, ci) -> str:
+    """Verdict at the pessimistic end of the interval, with the bound it was judged on."""
+    good, caution, lower = VERDICT_RULES[metric]
+    v = M.verdict_ci(ci, good, caution, lower)
     return v
-
-
-def boot_ci(x, f=lambda v: float(np.mean(np.abs(v))), seed: int = 0) -> tuple[float, float, float]:
-    x = np.asarray([v for v in x if v is not None and np.isfinite(v)], float)
-    if not len(x):
-        return (float("nan"),) * 3
-    rng = np.random.default_rng(seed)
-    bs = [f(x[rng.integers(0, len(x), len(x))]) for _ in range(N_BOOT)]
-    return f(x), float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))
-
-
-def _ci_str(t, fmt="{:.1f}") -> str:
-    return f"{fmt.format(t[0])} [{fmt.format(t[1])}, {fmt.format(t[2])}]" if np.isfinite(t[0]) else "n/a"
 
 
 def _md(df: pd.DataFrame, floatfmt=".2f") -> str:
     return df.to_markdown(index=False, floatfmt=floatfmt) if len(df) else "_no data_"
 
 
-# --- figures ------------------------------------------------------------------------------------
+def _ci(t, spec="{:.1f}") -> str:
+    return M.fmt_ci(t, spec)
+
+
+def _costs() -> dict:
+    c = {"cost_false_positive": 1.0, "cost_missed_stable": 1.0, "sensitivity_ratios": [0.25, 0.5, 1, 2, 4, 10]}
+    if COSTS_FILE.is_file():
+        c.update({k: v for k, v in json.loads(COSTS_FILE.read_text()).items() if not k.startswith("_")})
+    return c
+
+
+# --- figures ---------------------------------------------------------------------------------------------
 
 def _fig(w=5.4, h=5.0, ncols=1):
     import matplotlib
@@ -99,151 +105,179 @@ def _fig(w=5.4, h=5.0, ncols=1):
         for side, sp in ax.spines.items():
             sp.set_visible(side in ("left", "bottom"))
             sp.set_color(AXIS)
-            sp.set_linewidth(1)
-        ax.grid(True, color=GRID, linewidth=0.8, linestyle="-")
+        ax.grid(True, color=GRID, linewidth=0.8)
         ax.set_axisbelow(True)
         ax.tick_params(colors=AXIS, labelcolor=INK2)
     return fig, list(axes[0]), plt
 
 
-def parity(path, panels, xlabel, ylabel, title, n_labels=3) -> str:
-    """Small multiples, one series per panel (its title names it, so no legend box), shared limits
-    and a muted y = x reference. The worst points are labelled, skipping labels that would collide."""
+def parity(path, panels, xlabel, ylabel, title) -> str:
     k = len(panels)
     fig, axes, plt = _fig(w=4.1 * k + 0.4, h=4.6, ncols=k)
     xs = np.concatenate([np.asarray(p[1], float) for p in panels])
     ys = np.concatenate([np.asarray(p[2], float) for p in panels])
-    lo, hi = float(min(xs.min(), ys.min())), float(max(xs.max(), ys.max()))
+    ok = np.isfinite(xs) & np.isfinite(ys)
+    lo, hi = float(np.percentile(np.r_[xs[ok], ys[ok]], 0.5)), float(np.percentile(np.r_[xs[ok], ys[ok]], 99.5))
     pad = (hi - lo) * 0.05 or 0.1
     lo, hi = lo - pad, hi + pad
-    span = hi - lo
-    for ax, (name, x, y, labels, color) in zip(axes, panels):
-        x, y, labels = np.asarray(x, float), np.asarray(y, float), list(labels)
+    for ax, (name, x, y, color) in zip(axes, panels):
         ax.plot([lo, hi], [lo, hi], color=MUTED, linewidth=1, zorder=1)
-        ax.scatter(x, y, s=42, color=color, edgecolors=SURFACE, linewidths=1.5, zorder=3)
-        placed = []
-        for i in np.argsort(-np.abs(y - x)):
-            if len(placed) >= n_labels:
-                break
-            if any(abs(x[i] - px) < 0.12 * span and abs(y[i] - py) < 0.06 * span for px, py in placed):
-                continue
-            ax.annotate(str(labels[i]), (x[i], y[i]), textcoords="offset points", xytext=(6, 4), fontsize=7, color=INK2)
-            placed.append((x[i], y[i]))
+        ax.scatter(x, y, s=12, color=color, alpha=0.6, edgecolors="none", zorder=3)
         ax.set_xlim(lo, hi)
         ax.set_ylim(lo, hi)
         ax.set_aspect("equal")
         ax.set_xlabel(xlabel, color=INK2)
         ax.set_title(f"{name} (n={len(x)})", color=INK, loc="left", fontsize=9)
     axes[0].set_ylabel(ylabel, color=INK2)
-    fig.suptitle(title, x=0.01, ha="left", color=INK, fontsize=10)
-    fig.tight_layout()
-    fig.savefig(path, facecolor=SURFACE, bbox_inches="tight", pad_inches=0.15)  # never clip axis labels
-    plt.close(fig)
-    return path.name
-
-
-def hbar(path, labels, values, xlabel, title, fmt="{:.1f}") -> str:
-    """Single-series horizontal bars (slot 1), value at the tip in ink; no legend (title names it)."""
-    fig, axes, plt = _fig(w=6.0, h=0.28 * len(labels) + 1.2)
-    ax = axes[0]
-    y = np.arange(len(labels))[::-1]
-    ax.barh(y, values, height=0.55, color=SERIES[0], zorder=3)
-    for yi, v in zip(y, values):
-        ax.text(v, yi, " " + fmt.format(v), va="center", fontsize=7, color=INK2)
-    ax.set_yticks(y, labels)
-    ax.grid(axis="y", visible=False)
-    ax.set_xlabel(xlabel, color=INK2)
-    ax.set_title(title, color=INK, loc="left", fontsize=10)
-    ax.set_xlim(0, max(values) * 1.18 if len(values) else 1)
+    fig.suptitle(title + " (axes clipped to the 0.5–99.5 % range)", x=0.01, ha="left", color=INK, fontsize=10)
     fig.tight_layout()
     fig.savefig(path, facecolor=SURFACE, bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)
     return path.name
 
 
-# --- data ---------------------------------------------------------------------------------------
+def pr_curve(path, sweep: pd.DataFrame, marks: dict) -> str:
+    fig, axes, plt = _fig(w=5.6, h=4.6)
+    ax = axes[0]
+    ax.plot(sweep.recall, sweep.precision, color=NEW, linewidth=1.8, zorder=2)
+    for label, thr in marks.items():
+        r = sweep.iloc[(sweep.threshold - thr).abs().argmin()]
+        ax.scatter([r.recall], [r.precision], s=40, color=INK, zorder=3)
+        ax.annotate(f"{label}: {thr * 1000:+.0f} meV/atom", (r.recall, r.precision), textcoords="offset points",
+                    xytext=(6, 4), fontsize=7, color=INK2)
+    ax.set_xlabel("recall (share of truly stable materials called stable)", color=INK2)
+    ax.set_ylabel("precision (share of stable calls that are right)", color=INK2)
+    ax.set_title("Stable-call precision vs recall, threshold swept (WBM calibration set)", color=INK, loc="left", fontsize=9)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    fig.tight_layout()
+    fig.savefig(path, facecolor=SURFACE, bbox_inches="tight", pad_inches=0.15)
+    plt.close(fig)
+    return path.name
+
+
+# --- data ------------------------------------------------------------------------------------------------
+
+def _wbm_outcomes(tag: str, df: pd.DataFrame) -> pd.Series:
+    """MACE-relaxed vs WBM DFT-relaxed structure (species-aware StructureMatcher, defaults), cached per tag."""
+    from harness.suites import ood
+
+    cache = RESULTS_DIR / f"wbm_structure_match_{tag}.json"
+    have = json.loads(cache.read_text()) if cache.is_file() else {}
+    todo = [w for w in df.wbm_id if w not in have]
+    if todo:
+        cses = ood.load_entries(sorted(set(df.wbm_id)), ood.WBM_DIR / "calibration_cse.json")
+        rel = dict(zip(df.wbm_id, df.relaxed))
+        for w in todo:
+            have[w] = bool(compare.relaxed_into_target(rel[w], cses[w].structure)) if w in cses else None
+        cache.write_text(json.dumps(have))
+    from harness.suites.substitution import outcome
+
+    return df.wbm_id.map(lambda w: outcome(have.get(w)))
+
 
 def collect(tag: str) -> dict:
+    from harness import pairgen, splits
     from harness.suites import bulk, experimental, ood, stability, substitution
 
-    def safe(fn):
+    def safe(fn, *a, **k):
         try:
-            return fn(tag)
+            return fn(*a, **k)
         except Exception as exc:  # noqa: BLE001 — a missing suite must not break the report
-            log.warning("report: %s unavailable: %s", fn.__module__, exc)
+            log.warning("report: %s unavailable: %s", getattr(fn, "__qualname__", fn), exc)
             return pd.DataFrame()
 
-    def auto_pairs(t):
-        from harness import pairgen
-
-        pairs = pairgen.load_pairs()
-        return substitution.pair_table(t, suite="substitution_auto", pairs=pairs) if pairs else pd.DataFrame()
-
+    au = safe(substitution.pair_table, tag, suite="substitution_auto", pairs=pairgen.load_pairs())
+    if len(au):
+        au["bin"] = au.target_e_hull.astype(float).map(compare.hull_bin)
+    oo = safe(ood.table, tag)
+    split = splits.load_split() if splits.SPLIT_FILE.is_file() else None
+    wb, wb_rej = pd.DataFrame(), pd.DataFrame()
+    if len(oo) and split:
+        leaked = set(oo.wbm_id) & set(split["test"]["ids"])
+        if leaked:
+            raise RuntimeError(f"{len(leaked)} locked WBM test ids have results — the test set must not be run before the final evaluation")
+        cal = oo[oo.wbm_id.isin(set(split["calibration"]["ids"]))]
+        wb_rej = cal[cal.rejection.notna()]
+        wb = cal[cal.rejection.isna()].copy()
+        wb["bin"] = wb.each_true.map(lambda e: compare.hull_bin(e, below_zero_bin=True))
+        wb["pred_bin"] = wb.each_pred.map(lambda e: compare.hull_bin(e, below_zero_bin=True))
+        wb["outcome"] = _wbm_outcomes(tag, wb)
     jobs = store.load_table("jobs")
     jobs = jobs[jobs.job_key.str.endswith(f"@{tag}")] if len(jobs) else jobs
-    results = store.load_table("results")
-    return {"sub": safe(substitution.pair_table), "auto": safe(auto_pairs), "st": safe(stability.target_table),
-            "ex": safe(experimental.table),
-            "ood": safe(ood.table), "bulk": safe(bulk.table), "jobs": jobs,
-            "results": results[results.job_key.str.endswith(f"@{tag}")] if len(results) else results}
+    return {"au": au, "cu": safe(substitution.pair_table, tag), "wb": wb, "wb_rej": wb_rej, "split": split,
+            "st": safe(stability.target_table, tag), "ex": safe(experimental.table, tag), "bk": safe(bulk.table, tag),
+            "jobs": jobs, "pair_meta": pairgen.load_meta()}
 
 
-def per_element(df: pd.DataFrame, formula_col: str, err_col: str) -> pd.DataFrame:
+# --- tables -----------------------------------------------------------------------------------------------
+
+def stratified_table(df: pd.DataFrame, bins, e_col: str, v_col: str | None = None, split: str | None = None,
+                     rej_col: str | None = None, bin_col: str = "bin") -> pd.DataFrame:
+    """Per bin (and per value of `split`): n, rejected, energy MAE / median / mean signed with CIs, volume
+    MAE / median with CIs, and the energy verdict from the pessimistic bound."""
     rows = []
-    for _, r in df[[formula_col, err_col]].dropna().iterrows():
-        for el in Composition(r[formula_col]).elements:
-            rows.append({"element": el.symbol, "err": float(r[err_col])})
-    if not rows:
-        return pd.DataFrame(columns=["element", "n", "mae", "mean"])
-    d = pd.DataFrame(rows)
-    g = d.groupby("element")["err"]
-    return pd.DataFrame({"n": g.size(), "mae": g.apply(lambda v: v.abs().mean()), "mean": g.mean()}).reset_index() \
-        .sort_values("mae", ascending=False)
+    for b in bins:
+        g = df[df[bin_col] == b]
+        parts = [(None, g)] if not split else [(o, g[g[split] == o]) for o in sorted(g[split].dropna().unique())]
+        for o, sub in parts:
+            s = M.error_summary(sub[e_col], N_BOOT)
+            row = {"bin": b}
+            if split:
+                row[split.replace("_", " ")] = o
+            row.update({"n": s["n"]})
+            if rej_col and rej_col in sub:
+                row["rejected (guard)"] = int(sub[rej_col].map(lambda x: isinstance(x, str)).sum())
+            row.update({"energy MAE": _ci(s["mae"]), "energy median |err|": _ci(s["median_abs"]),
+                        "mean signed": _ci(s["mean_signed"], "{:+.1f}")})
+            if v_col:
+                v = M.error_summary(sub[v_col], N_BOOT)
+                row.update({"volume MAE %": _ci(v["mae"], "{:.2f}"), "volume median %": _ci(v["median_abs"], "{:.2f}")})
+            row["energy verdict (pessimistic)"] = verdict_ci("energy_mae_mev", s["mae"]) if s["n"] else "no data"
+            rows.append(row)
+    return pd.DataFrame(rows)
 
 
-def likely_cause(formula: str, source: str, magnetic: bool | None = None) -> str:
+def rejected_counts(df: pd.DataFrame, bins, cols: dict) -> pd.DataFrame:
+    rows = []
+    for b in bins:
+        g = df[df.bin == b]
+        rows.append({"bin": b, "pairs": len(g), **{label: int(g[c].map(lambda x: isinstance(x, str)).sum()) if c in g else 0
+                                                   for label, c in cols.items()}})
+    return pd.DataFrame(rows)
+
+
+# likely-cause rules: checked in this order, the first two before anything about the chemistry
+def likely_cause(formula: str, true_e_hull: float | None, outcome: str | None, magnetic_pbe: bool | None, source: str) -> str:
+    from harness.suites.substitution import DIFFERENT
+
     els = {e.symbol for e in Composition(formula).elements}
     causes = []
+    if true_e_hull is not None and np.isfinite(true_e_hull) and true_e_hull > 0.3:
+        causes.append("far above the hull (> 0.3 eV/atom): a hypothetical structure that need not be a minimum for the model")
+    if outcome == DIFFERENT:
+        causes.append("relaxed into a different structure")
     if els & compare.F_ELECTRON:
-        causes.append(f"f-electron chemistry ({', '.join(sorted(els & compare.F_ELECTRON))}): no explicit spin or strong correlation in MACE")
-    if magnetic:
-        causes.append("magnetic in DFT (MACE has no spin degrees of freedom)")
+        causes.append(f"f-electron chemistry ({', '.join(sorted(els & compare.F_ELECTRON))})")
+    if magnetic_pbe:
+        causes.append("magnetic in the PBE calculation (MACE has no spin)")
     elif els & compare.MAGNETIC_PRONE and els & {"O", "F"}:
-        # MP runs these oxides/fluorides spin-polarised with +U; metallic W or Mo is not magnetic.
-        causes.append(f"+U / spin-prone transition-metal oxide or fluoride ({', '.join(sorted(els & compare.MAGNETIC_PRONE))})")
-    offset_prone = compare.TRANSITION_METALS | {"Ge", "Sn"}
-    if len(els) == 1 and els <= offset_prone:
-        causes.append("systematic elemental energy offset (see per-element table)")
-    if source == "OOD":
-        causes.append("out-of-distribution composition/prototype (not in MPtrj)")
+        causes.append(f"+U transition-metal oxide/fluoride ({', '.join(sorted(els & compare.MAGNETIC_PRONE))})")
+    if source == "WBM":
+        causes.append("new composition/prototype (not in MPtrj)")
     return "; ".join(causes) or "no flag — generic model error"
 
 
-# --- report -------------------------------------------------------------------------------------
+# --- report ---------------------------------------------------------------------------------------------
 
-SCORECARD_METRICS = [  # key, label, format, lower_is_better (None = informational)
-    ("curated_volume_mae_pct", "Volume error, curated pairs (%)", "{:.2f}", True),
-    ("auto_volume_mae_pct", "Volume error, auto-generated pairs (%)", "{:.2f}", True),
-    ("curated_energy_mae_mev", "Energy MAE, curated known materials (meV/atom)", "{:.1f}", True),
-    ("auto_energy_mae_mev", "Energy MAE, auto-generated pairs (meV/atom)", "{:.1f}", True),
-    ("ood_energy_mae_mev", "Energy MAE, new WBM materials (meV/atom)", "{:.1f}", True),
-    ("ood_precision_at_0", "Stable-call precision @ 0 eV/atom, WBM", "{:.2f}", False),
-    ("ood_f1_at_0", "F1 @ 0 eV/atom, WBM", "{:.2f}", False),
-    ("stability_b_mae_mev", "Energy above hull MAE, mode (b) (meV/atom)", "{:.1f}", True),
-    ("stability_a_mae_mev", "Energy above hull MAE, mode (a) (meV/atom)", "{:.1f}", True),
-    ("experimental_mace_mean_pct", "Lattice constant vs experiment, mean (%)", "{:+.2f}", None),
-    ("bulk_mae_pct", "Bulk modulus MAE (%)", "{:.1f}", True),
-    ("n_auto_pairs", "Auto-generated pairs scored", "{:.0f}", None),
-    ("n_ood", "WBM structures scored", "{:.0f}", None),
-]
-
-
-def _num(x) -> bool:
-    return isinstance(x, (int, float)) and not isinstance(x, bool) and np.isfinite(x)
+def _git_commit() -> str:
+    try:
+        return subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+    except OSError:
+        return "unknown"
 
 
 def previous_scorecard(out_dir: Path) -> Path | None:
-    """Most recent earlier run's scorecard (reports/<timestamp>/scorecard.json), else reports/scorecard.json."""
     out_dir = Path(out_dir).resolve()
     is_run = out_dir.parent == REPORTS_DIR.resolve()
     runs = sorted(p for p in REPORTS_DIR.glob("*/scorecard.json")
@@ -255,567 +289,343 @@ def previous_scorecard(out_dir: Path) -> Path | None:
 
 
 def comparison_lines(out_dir: Path, cur: dict) -> list[str]:
-    lines = ["### Compared with the previous run", ""]
     prev_path = previous_scorecard(out_dir)
     if prev_path is None:
-        return lines + ["_No earlier run with a scorecard to compare against._", ""]
+        return []
     prev = json.loads(prev_path.read_text())
-    rows = []
-    for key, label, fmt, lower in SCORECARD_METRICS:
-        a, b = prev.get(key), cur.get(key)
-        if a is None and b is None:
-            continue
-        change = "—"
-        if _num(a) and _num(b):
-            d = b - a
-            spec = fmt[2:-1].lstrip("+")
-            change = "no change" if abs(d) < 1e-9 else format(d, "+" + spec) + (
-                "" if lower is None else (" (better)" if (d < 0) == lower else " (worse)"))
-        rows.append({"metric": label, "previous": fmt.format(a) if _num(a) else "—",
-                     "this run": fmt.format(b) if _num(b) else "—", "change": change})
-    rel = prev_path.parent.relative_to(ROOT) if str(ROOT) in str(prev_path) else prev_path.parent
-    lines += [f"Previous: `{rel}` (generated {prev.get('generated_at', '?')}, settings `{prev.get('settings_tag')}`)."
-              + (" **Settings differ — numbers are not directly comparable.**"
-                 if prev.get("settings_tag") != cur.get("settings_tag") else ""), "", _md(pd.DataFrame(rows)), "",
-              "Sample sizes grow as the queue drains, so early partial runs have wide uncertainty.", ""]
-    return lines
+    rows = [{"metric": k, "previous": prev[k], "this run": cur[k]} for k in cur
+            if k in prev and isinstance(cur[k], (int, float)) and isinstance(prev[k], (int, float)) and k != "generated_at"]
+    if not rows:
+        return []
+    return ["### Compared with the previous scorecard", "", f"Previous: `{prev_path.parent.name}` (settings `{prev.get('settings_tag')}`)."
+            + (" **Settings differ.**" if prev.get("settings_tag") != cur.get("settings_tag") else ""), "",
+            _md(pd.DataFrame(rows), ".3f"), ""]
 
 
 def write_report(out_dir: Path | None = None, compare_previous: bool = False) -> str:
-    """Write validation_report.md, figures/ and scorecard.json into out_dir (default reports/).
-    compare_previous adds a comparison with the most recent earlier run's scorecard."""
     compute = load_compute_config()
     tag = settings_tag(compute["device"], compute["dtype"])
     out_dir = Path(out_dir) if out_dir else REPORTS_DIR
     fig_dir = FIG_DIR if out_dir.resolve() == REPORTS_DIR.resolve() else out_dir / "figures"
     fig_dir.mkdir(parents=True, exist_ok=True)
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     d = collect(tag)
-    sub, st, ex, oo, bk, jobs = d["sub"], d["st"], d["ex"], d["ood"], d["bulk"], d["jobs"]
-    figs = {}
-    L: list[str] = []
-    try:
-        commit = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"], capture_output=True,
-                                text=True).stdout.strip()
-    except OSError:
-        commit = "unknown"
+    au, cu, wb, st, ex, bk, jobs = d["au"], d["cu"], d["wb"], d["st"], d["ex"], d["bk"], d["jobs"]
+    costs = _costs()
+    score: dict = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "settings_tag": tag,
+                   "commit": _git_commit(), "model": MODEL["name"]}
+    body: list[str] = []
+    verdict_lines: list[str] = []
 
-    # ---------- headline numbers ----------
-    ood_ok = oo[oo.rejection.isna()] if len(oo) else oo
-    vol = boot_ci(sub.get("ctrl_vol_pct", []))
-    e_id = boot_ci(sub.get("ctrl_dE_mev", []))
-    e_ood = boot_ci(ood_ok.get("de_mev", []))
-    e_id_mean = boot_ci(sub.get("ctrl_dE_mev", []), np.mean)
-    e_ood_mean = boot_ci(ood_ok.get("de_mev", []), np.mean)
-    ex_rt = ex[ex.status == "rt"] if len(ex) else ex
-    mace_minus_pbe = float(ex_rt["a_mace_vs_pbe_pct"].mean()) if len(ex_rt) else float("nan")
+    # ---------- 1. what was scored ----------
+    body += ["## 1. What was scored, and what was not", ""]
+    split = d["split"]
+    if split:
+        body += [f"* **WBM split** (`data/wbm_split.json`, seed {split['seed']}, made {split['created_at'][:10]} before any tuning): "
+                 f"calibration {split['calibration']['n']:,} ids, locked test {split['test']['n']:,} ids (sha256 "
+                 f"`{split['test']['sha256'][:12]}…`), both in the pool's hull-bin proportions. **Every stability decision, "
+                 "threshold and cost optimum below uses the calibration set only. The test set has not been run; it is "
+                 "evaluated once, at the very end.**",
+                 f"* WBM calibration: {len(wb):,} usable relaxations, {len(d['wb_rej'])} rejected by the convergence / sanity "
+                 f"guard (counted, not scored), {split['calibration']['n'] - len(wb) - len(d['wb_rej'])} without a result yet."]
+    pm = d["pair_meta"]
+    if pm:
+        short = {b: s["shortfall"] for b, s in pm.get("per_bin", {}).items() if s.get("shortfall")}
+        body += [f"* **MP substitution pairs:** {pm.get('accepted', 0):,} pairs sampled per target hull bin "
+                 f"(design: {json.dumps({k: pm['config'][k] for k in ('per_bin', 'implausible_frac', 'metallic_frac', 'max_per_prototype')})}); "
+                 f"sampling shortfalls (cell ran out of candidates under the prototype cap): {short or 'none'}."]
+    if len(au):
+        body += ["", "Results rejected by the guard (not converged or unphysical), per bin — excluded from every statistic:", "",
+                 _md(rejected_counts(au, compare.HULL_BINS_MP, {"ctrl rejected": "ctrl_rejection",
+                                                                 "no usable substitution start": "sub_best_rejection"})), ""]
+    if len(jobs):
+        bad = jobs[jobs.status.isin(["failed", "timeout"])]
+        body += [f"Failed or timed-out jobs at this settings tag: {len(bad)}"
+                 + (f" ({bad.groupby('suite').size().to_dict()})" if len(bad) else "") + ".", ""]
 
-    def stab(mode):
-        from harness.suites import stability
+    # ---------- 2. known materials by bin ----------
+    body += ["## 2. Known materials (Materials Project substitution pairs), by target hull distance", "",
+             "Energies in meV/atom against MP's uncorrected PBE/PBE+U energy; volume in % against the PBE cell. "
+             "*Same structure* = the relaxed result still matches the MP target (StructureMatcher, default tolerances); "
+             "*relaxed into a different structure* is a different failure and is never mixed into the first.", ""]
+    if len(au):
+        for title, e, v, split_col in (("MP target relaxed with MACE (control)", "ctrl_dE_mev", "ctrl_vol_pct", "ctrl_outcome"),
+                                        ("Substituted parent relaxed — best of two starts (the product's use case)",
+                                         "sub_best_dE_mev", "sub_best_vol_pct", "sub_best_outcome")):
+            body += [f"**{title}:**", "", _md(stratified_table(au, compare.HULL_BINS_MP, e, v, split_col)), ""]
+        body += ["**Single point at the PBE structure** (model energy error with no relaxation in the way):", "",
+                 _md(stratified_table(au, compare.HULL_BINS_MP, "static_dE_mev")), ""]
+        rows = []
+        for b in compare.HULL_BINS_MP:
+            g = au[au.bin == b]
+            for label, sub in (("metallic", g[g.chem_class == "metallic"]), ("compound", g[g.chem_class == "compound"]),
+                               ("plausible swap", g[g.plausible == True]), ("implausible swap", g[g.plausible == False])):  # noqa: E712
+                s = M.error_summary(sub.sub_best_dE_mev, N_BOOT)
+                same = (sub.sub_best_outcome == "same structure").mean() if len(sub) else np.nan
+                rows.append({"bin": b, "stratum": label, "n": s["n"], "energy MAE": _ci(s["mae"]),
+                             "energy median |err|": _ci(s["median_abs"]), "stays in target structure": f"{same:.0%}" if np.isfinite(same) else "n/a"})
+        body += ["**By chemistry class and swap plausibility** (substituted parent, best start):", "", _md(pd.DataFrame(rows)), ""]
+        same = au[au.ctrl_outcome == "same structure"]
+        for b in compare.HULL_BINS_MP:
+            s = M.error_summary(same[same.bin == b].ctrl_dE_mev, N_BOOT)
+            score[f"mp_same_structure_energy_mae_{b}"] = s["mae"][0]
+            score[f"mp_same_structure_energy_mae_upper_{b}"] = s["mae"][2]
 
-        return stability.metrics(st, mode) if len(st) else None
+    # ---------- 3. new materials by bin ----------
+    body += ["## 3. New materials (WBM calibration set), by hull distance against the MP hull", ""]
+    if len(wb):
+        body += ["Energy error MACE − DFT (meV/atom, uncorrected), relaxed from WBM's unrelaxed structure:", "",
+                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_mev", None, "outcome")), "",
+                 "Single point at WBM's DFT-relaxed structure:", "",
+                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_static_mev")), ""]
+        for b in compare.HULL_BINS_WBM:
+            s = M.error_summary(wb[wb.bin == b].de_mev, N_BOOT)
+            score[f"wbm_energy_mae_{b}"] = s["mae"][0]
+            score[f"wbm_energy_mae_upper_{b}"] = s["mae"][2]
+        diff_share = wb.groupby("bin").outcome.apply(lambda o: (o == "relaxed into a different structure").mean())
 
-    sa, sb = stab("a"), stab("b")
-    from harness.suites import ood as ood_mod
+    # ---------- 4. stability decisions ----------
+    body += ["## 4. Stability decisions on new materials (WBM calibration set only)", "",
+             "Positive class = stable (reference energy above the MP hull ≤ 0). A material is called stable when its predicted "
+             "hull distance (DFT hull distance + MACE − DFT energy, the Matbench Discovery construction) is ≤ the decision "
+             "threshold. NPV = how often an 'unstable' call is right; DAF = precision ÷ share of stable materials. "
+             "Intervals: 95 % bootstrap; **the verdict column uses the lower bound.**", ""]
+    opt = dm0 = dmo = None
+    if len(wb):
+        pe, te = wb.each_pred.values, wb.each_true.values
+        sweep = M.threshold_sweep(pe, te, SWEEP)
+        opt = M.cost_optimal_threshold(sweep, costs["cost_false_positive"], costs["cost_missed_stable"])
+        dm0 = M.decision_metrics(pe, te, 0.0, N_BOOT)
+        dmo = M.decision_metrics(pe, te, opt["threshold"], N_BOOT)
+        dm_explore = M.decision_metrics(pe, te, -0.05, N_BOOT)
+        rows = []
+        for label, dm in ((f"{0:+.0f} meV/atom (on-hull)", dm0), (f"{opt['threshold'] * 1000:+.0f} meV/atom (cost-optimal)", dmo),
+                          ("−50 meV/atom (round-1 exploration)", dm_explore)):
+            rows.append({"threshold": label, "called stable": dm["called_stable"], "precision": _ci(dm["precision_ci"], "{:.2f}"),
+                         "recall": _ci(dm["recall_ci"], "{:.2f}"), "F1": _ci(dm["f1_ci"], "{:.2f}"), "NPV": _ci(dm["npv_ci"], "{:.3f}"),
+                         "DAF": _ci(dm["daf_ci"], "{:.2f}"), "precision verdict (lower bound)": verdict_ci("precision", dm["precision_ci"])})
+        body += [f"Share of stable materials in the calibration set: {dm0['prevalence']:.3f} (n={dm0['n']:,}).", "",
+                 _md(pd.DataFrame(rows)), ""]
+        sens = []
+        for ratio in costs["sensitivity_ratios"]:
+            o = M.cost_optimal_threshold(sweep, 1.0, float(ratio))
+            sens.append({"missed stable ÷ wasted lab test": ratio, "optimal threshold (meV/atom)": o["threshold"] * 1000,
+                         "precision": o["precision"], "recall": o["recall"], "expected cost per candidate": o["expected_cost"]})
+        body += [f"**Cost-based operating point.** Costs from `config/costs.json`: wasted lab test = {costs['cost_false_positive']}, "
+                 f"missed stable material = {costs['cost_missed_stable']} (**placeholders — set real numbers**). Expected cost per "
+                 "screened candidate = (false positives × wasted-test cost + false negatives × missed-material cost) ÷ N, minimised "
+                 "over the threshold sweep. How the optimum moves with the cost ratio:", "", _md(pd.DataFrame(sens), ".3f"), ""]
+        figs_pr = pr_curve(fig_dir / "precision_recall.png", sweep, {"0": 0.0, "cost-optimal": opt["threshold"], "−50": -0.05})
+        body += [f"![Precision–recall, calibration set](figures/{figs_pr})", ""]
+        pick = sweep[sweep.threshold.isin([round(x, 3) for x in np.arange(-0.15, 0.1501, 0.025)])].copy()
+        for col in ("called_stable", "tp", "fp", "fn"):
+            pick[col] = pick[col].astype(int).astype(str)  # counts print as integers
+        body += ["Threshold sweep (calibration set):", "",
+                 _md(pick[["threshold", "called_stable", "tp", "fp", "fn", "precision", "recall", "f1", "npv", "daf"]], ".3f"), ""]
+        thr = opt["threshold"]
+        rows = []
+        for b in compare.HULL_BINS_WBM:
+            g = wb[wb.bin == b]
+            called = (g.each_pred <= thr + M.ON_HULL_TOL).astype(float)
+            rows.append({"true bin": b, "n": len(g), "called stable": _ci(M.boot_ci(called, M.MEAN, N_BOOT), "{:.2f}"),
+                         "reads as": "recall" if b == "<0" else "false-positive rate"})
+        body += [f"**Where the calls go wrong, by TRUE hull distance** (share called stable at {thr * 1000:+.0f} meV/atom). Precision "
+                 "cannot be computed per true bin (all members share one label); this shows which unstable bins leak into "
+                 "'stable' calls:", "", _md(pd.DataFrame(rows)), ""]
+        rows = []
+        for b in compare.HULL_BINS_WBM:
+            g = wb[wb.pred_bin == b]
+            truly = (g.each_true <= M.ON_HULL_TOL).astype(float)
+            rows.append({"PREDICTED bin": b, "n": len(g), "truly stable": _ci(M.boot_ci(truly, M.MEAN, N_BOOT), "{:.2f}")})
+        body += ["**How often a prediction is right, by PREDICTED hull distance** (the view a user has of a new candidate):", "",
+                 _md(pd.DataFrame(rows)), ""]
+        score.update({"wbm_precision_opt": dmo["precision"], "wbm_precision_opt_lower": dmo["precision_ci"][1],
+                      "wbm_recall_opt": dmo["recall"], "wbm_f1_opt": dmo["f1"], "wbm_npv_opt": dmo["npv"],
+                      "wbm_threshold_opt_mev": thr * 1000, "wbm_f1_0": dm0["f1"], "wbm_precision_0": dm0["precision"],
+                      "wbm_daf_0": dm0["daf"]})
 
-    so = ood_mod.score(oo) if len(oo) else None
-    bk_ok = bk[bk.fit.map(lambda f: f["rms_mev"] <= 1.0 and f["v0_in_range"])] if len(bk) else bk
-    bulk_mae = float(bk_ok.err_pct_vrh.abs().mean()) if len(bk_ok) else float("nan")
-    bulk_ci = boot_ci(bk_ok.err_pct_vrh) if len(bk_ok) else (float("nan"),) * 3
-    au = d["auto"]
-    au_done = au[au["ctrl_dE_mev"].notna()] if len(au) and "ctrl_dE_mev" in au.columns else pd.DataFrame()
-    au_vol = boot_ci(au_done.get("ctrl_vol_pct", []))
-    au_e = boot_ci(au_done.get("ctrl_dE_mev", []))
+        # ---------- 5. Matbench Discovery ----------
+        e_err = wb.each_pred - wb.each_true
+        r2 = 1 - np.sum(e_err ** 2) / np.sum((wb.each_true - wb.each_true.mean()) ** 2)
+        ours = {"F1": dm0["f1"], "DAF": dm0["daf"], "precision": dm0["precision"], "recall": dm0["recall"],
+                "accuracy": dm0["accuracy"], "MAE (eV/atom)": float(e_err.abs().mean()),
+                "RMSE (eV/atom)": float(np.sqrt((e_err ** 2).mean())), "R2": float(r2)}
+        cis = {"F1": dm0["f1_ci"], "DAF": dm0["daf_ci"], "precision": dm0["precision_ci"], "recall": dm0["recall_ci"],
+               "accuracy": dm0["accuracy_ci"], "MAE (eV/atom)": M.boot_ci(e_err, M.MAE, N_BOOT)}
+        rows = [{"metric": k, "Matbench Discovery (published)": MBD_MACE_MP0[k], "this harness (calibration set)": ours[k],
+                 "95 % CI": _ci(cis[k], "{:.3f}") if k in cis else "", "published value inside CI": (
+                     "yes" if k in cis and cis[k][1] <= MBD_MACE_MP0[k] <= cis[k][2] else "no" if k in cis else "")}
+                for k in ours]
+        body += ["## 5. Cross-check against the published Matbench Discovery numbers", "",
+                 f"Same model checkpoint, same hull-distance construction, threshold 0. Published: {MBD_SOURCE}; their relaxation: "
+                 f"{MBD_MACE_MP0['protocol']}. Ours: {DEFAULT_RELAX.optimizer} + {DEFAULT_RELAX.cell_filter}, fmax "
+                 f"{DEFAULT_RELAX.fmax} eV/Å **and** |stress| ≤ {DEFAULT_RELAX.max_stress_gpa} GPa, fallback ladder on failure.", "",
+                 _md(pd.DataFrame(rows), ".3f"), "",
+                 "Where a published value lies outside our interval, the likely reasons are, in order: (1) our tighter relaxation "
+                 "(5× smaller force tolerance plus an explicit stress criterion) lets structures relax further, which lowers "
+                 "energies of high-energy structures and moves borderline calls; (2) sampling — ours is a 4,000-structure "
+                 "calibration set, theirs the full 215,488; (3) guard-rejected structures are excluded here and counted above.", ""]
 
-    # ---------- header ----------
-    mi = machine_info()
-    L += [
-        "# Validation report — MACE-MP-0 medium",
-        "",
-        f"Generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} · commit `{commit}` · settings tag `{tag}` · "
-        f"model `{MODEL['file']}` (sha256 `{MODEL['sha256'][:12]}…`) · {compute['device']}/{compute['dtype']} · "
-        f"{mi['chip']} ({mi['performance_cores']} performance + {mi['efficiency_cores']} efficiency cores, {mi['memory_gb']} GB) · "
-        f"macOS {mi['macos']}",
-        "",
-        f"Relaxation: {DEFAULT_RELAX.cell_filter} + {DEFAULT_RELAX.optimizer}, fmax {DEFAULT_RELAX.fmax} eV/Å, "
-        f"max |stress| {DEFAULT_RELAX.max_stress_gpa} GPa, ≤ {DEFAULT_RELAX.max_steps} steps, {DEFAULT_RELAX.timeout_s:.0f} s timeout. "
-        "Every number below comes from this settings tag only; references are Materials Project PBE/PBE+U "
-        "(`GGA_GGA+U`), WBM DFT, or cited experiment. Brackets are bootstrap 95 % confidence intervals.",
-        "",
-    ]
-
-    # ---------- scorecard ----------
-    L += ["## Scorecard — is this engine trustworthy?", ""]
-    card = [
-        ("Structure / geometry vs its training functional (PBE)", f"volume error {_ci_str(vol, '{:.2f}')} % (n={len(sub)})",
-         verdict_ci("volume_mae_pct", vol)),
-        ("Lattice constants vs experiment (room temperature)",
-         f"MACE {ex_rt.a_err_pct.mean():+.2f} % vs PBE {ex_rt.a_pbe_err_pct.mean():+.2f} % (n={len(ex_rt)}); MACE − PBE {mace_minus_pbe:+.2f} %"
-         if len(ex_rt) else "n/a",
-         "reproduces PBE (" + verdict("mace_minus_pbe_pct", abs(mace_minus_pbe)) + "); inherits PBE's ~+1 % overestimate"),
-        ("Energies — known (Materials Project) materials", f"MAE {_ci_str(e_id)} meV/atom (n={len(sub)})", verdict_ci("energy_mae_mev", e_id)),
-        ("Energies — genuinely new (WBM) materials", f"MAE {_ci_str(e_ood)} meV/atom (n={len(ood_ok)})", verdict_ci("energy_mae_mev", e_ood)),
-        ("Stability, all phases computed with MACE (mode b)",
-         f"e_hull MAE {sb['mae_ev'] * 1000:.1f} meV/atom; accuracy@0.1 {sb['thr0.1']['accuracy']:.2f} (n={sb['n']})" if sb else "n/a",
-         verdict("stability_acc_0.1", sb["thr0.1"]["accuracy"]) if sb else "no data"),
-        ("Stability, MACE target among DFT competitors (mode a)",
-         f"e_hull MAE {sa['mae_ev'] * 1000:.1f} meV/atom; accuracy@0.1 {sa['thr0.1']['accuracy']:.2f}" if sa else "n/a",
-         verdict("stability_acc_0.1", sa["thr0.1"]["accuracy"]) if sa else "no data"),
-        ("Stability on new materials (WBM, mode a construction)",
-         f"e_hull MAE {so['e_hull_mae_mev']:.1f} meV/atom; accuracy@0.1 {so['thr0.1']['accuracy']:.2f}; precision@0 {so['thr0.0']['precision']:.2f}"
-         if so and so.get("n") else "n/a",
-         verdict("stability_acc_0.1", so["thr0.1"]["accuracy"]) if so and so.get("n") else "no data"),
-        ("Bulk modulus vs MP elastic K_VRH", f"MAE {_ci_str(bulk_ci)} % (n={len(bk_ok)})" if len(bk_ok) else "not run",
-         verdict_ci("bulk_mae_pct", bulk_ci)),
-    ]
-    if len(au_done):
-        card[3:3] = [
-            ("Geometry — auto-generated pairs (MP targets relaxed)",
-             f"volume error {_ci_str(au_vol, '{:.2f}')} % (n={len(au_done)})", verdict_ci("volume_mae_pct", au_vol)),
-            ("Energies — auto-generated pairs (known MP materials)", f"MAE {_ci_str(au_e)} meV/atom (n={len(au_done)})",
-             verdict_ci("energy_mae_mev", au_e)),
-        ]
-    L += [_md(pd.DataFrame(card, columns=["Question", "Result", "Verdict"])), ""]
-
-    def _f(x):
-        try:
-            x = float(x)
-        except (TypeError, ValueError):
-            return None
-        return x if np.isfinite(x) else None
-
-    scorecard = {
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "settings_tag": tag, "commit": commit,
-        "n_curated": len(sub), "curated_volume_mae_pct": _f(vol[0]), "curated_energy_mae_mev": _f(e_id[0]),
-        "n_auto_pairs": len(au_done), "auto_volume_mae_pct": _f(au_vol[0]), "auto_energy_mae_mev": _f(au_e[0]),
-        "n_ood": len(ood_ok), "ood_energy_mae_mev": _f(e_ood[0]), "ood_mean_signed_mev": _f(e_ood_mean[0]),
-        "ood_precision_at_0": _f(so["thr0.0"]["precision"]) if so and so.get("n") else None,
-        "ood_f1_at_0": _f(so["thr0.0"]["f1"]) if so and so.get("n") else None,
-        "stability_a_mae_mev": _f(sa["mae_ev"] * 1000) if sa else None,
-        "stability_b_mae_mev": _f(sb["mae_ev"] * 1000) if sb else None,
-        "stability_b_acc_0.1": _f(sb["thr0.1"]["accuracy"]) if sb else None,
-        "experimental_mace_mean_pct": _f(ex_rt.a_err_pct.mean()) if len(ex_rt) else None,
-        "bulk_mae_pct": _f(bulk_ci[0]),
-    }
-    if compare_previous:
-        L += comparison_lines(out_dir, scorecard)
-    L += ["**In plain language.**", ""]
-    plain = []
-    if np.isfinite(vol[0]):
-        plain.append(f"* **Geometry is the engine's strongest point.** Relaxed volumes land within {vol[0]:.2f} % of the DFT "
-                     "it was trained on, across all 11 structure families, and symmetric substitutions always relax into the "
-                     "intended structure.")
-    if len(ex_rt):
-        plain.append(f"* **Against real measurements it is ~{ex_rt.a_err_pct.mean():.1f} % too large — exactly as wrong as PBE "
-                     f"itself ({ex_rt.a_pbe_err_pct.mean():+.2f} %).** The model adds essentially no error of its own; the "
-                     "remaining gap is the DFT functional. Correct lattice constants by ~1 % before comparing to lab data.")
-    if np.isfinite(e_id[0]) and np.isfinite(e_ood[0]):
-        plain.append(f"* **Energies are about {e_ood[0] / e_id[0]:.1f}× worse on genuinely new materials** "
-                     f"({e_ood[0]:.0f} vs {e_id[0]:.0f} meV/atom), and the bias flips sign: on known materials MACE sits "
-                     f"{e_id_mean[0]:+.0f} meV/atom high, on new ones {e_ood_mean[0]:+.0f} meV/atom low — it *over-stabilises* "
-                     "new candidates. Treat every 'stable' call on a new material as a hypothesis, not a result.")
-    if sb and sa:
-        plain.append(f"* **Stability screening works best when every competing phase is also computed with MACE** "
-                     f"(mode b: {sb['mae_ev'] * 1000:.1f} vs {sa['mae_ev'] * 1000:.1f} meV/atom), because the model's "
-                     "per-element offsets cancel. Use a 0.1 eV/atom tolerance, not 0: a strict on-hull test flips on "
-                     "errors of a few tens of meV/atom.")
-    if so and so.get("n"):
-        plain.append(f"* **On new materials, about {1 - so['thr0.0']['precision']:.0%} of 'stable' calls are wrong** "
-                     f"(precision {so['thr0.0']['precision']:.2f} at 0 eV/atom). That is the number to weigh against the "
-                     "cost of a lab test.")
-    weak = []
-    if len(ood_ok):
-        top_ood = ood_ok.reindex(ood_ok.de_mev.abs().sort_values(ascending=False).index).head(20)
-        f_els = sorted({e.symbol for f in top_ood.formula for e in Composition(f).elements} & compare.F_ELECTRON)
-        if f_els:
-            weak.append(f"f-electron compounds ({', '.join(f_els)} among the 20 worst new materials)")
-    if len(sub):
-        mag = sub[(sub.magnetic == True) & (sub.ctrl_dE_mev.abs() > VERDICT_RULES["energy_mae_mev"][0])]  # noqa: E712
-        if len(mag):
-            weak.append("magnetic systems (" + ", ".join(f"{p.split('->')[1]} {v:+.0f}" for p, v in zip(mag.pair_id, mag.ctrl_dE_mev))
-                        + " meV/atom)")
-        el = sub[sub.family.str.startswith("elemental") & (sub.ctrl_dE_mev.abs() > VERDICT_RULES["energy_mae_mev"][1])]
-        if len(el):
-            weak.append(f"elemental {', '.join(p.split('->')[1] for p in el.pair_id)} energies "
-                        f"({el.ctrl_dE_mev.abs().min():.0f}–{el.ctrl_dE_mev.abs().max():.0f} meV/atom off)")
-    if weak:
-        plain.append("* **Least trustworthy:** " + "; ".join(weak) + ". MACE has no spin; these are reported separately below.")
-    plain.append("* **Not yet validated against experiment:** metals and oxides (the experimental set is semiconductors and "
-                 "insulators), temperature, and anything space-environment-specific (radiation, thermal cycling).")
-    L += plain + [""]
-
-    # family scorecard
-    if len(sub):
-        fam_rows = []
-        for fam, g in sub.groupby("family"):
-            row = {"family": fam, "n": len(g), "volume MAE %": g.ctrl_vol_pct.abs().mean(),
-                   "energy MAE meV/atom": g.ctrl_dE_mev.abs().mean(),
-                   "rattled keeps structure": f"{g.rattled_keeps_sg.mean():.0%}" if "rattled_keeps_sg" in g else "n/a"}
-            if len(st):
-                sg_ = st[st.family == fam]
-                row["stability acc@0.1 (b)"] = ((sg_.b_e_hull <= 0.1 + 1e-6) == (sg_.ref_e_hull <= 0.1 + 1e-6)).mean() if len(sg_) else np.nan
-            if len(bk_ok):
-                bg = bk_ok[bk_ok.family == fam]
-                row["bulk MAE %"] = bg.err_pct_vrh.abs().mean() if len(bg) else np.nan
-            row["verdict"] = (f"geometry {verdict('volume_mae_pct', row['volume MAE %'])}; "
-                              f"energy {verdict('energy_mae_mev', row['energy MAE meV/atom'])}")
-            fam_rows.append(row)
-        L += ["### By material family (in-distribution)", "", _md(pd.DataFrame(fam_rows)), "",
-              f"Verdict thresholds: volume ≤ {VERDICT_RULES['volume_mae_pct'][0]} % trustworthy, ≤ {VERDICT_RULES['volume_mae_pct'][1]} % caution; "
-              f"energy ≤ {VERDICT_RULES['energy_mae_mev'][0]:.0f} meV/atom trustworthy, ≤ {VERDICT_RULES['energy_mae_mev'][1]:.0f} caution; "
-              f"stability accuracy ≥ {VERDICT_RULES['stability_acc_0.1'][0]} trustworthy; bulk ≤ {VERDICT_RULES['bulk_mae_pct'][0]:.0f} % trustworthy.", ""]
-
-    # ---------- parity plots ----------
-    L += ["## Parity plots", ""]
-    from harness.suites import substitution as sub_mod
-
-    vol_rows = []
-    for pl in store.load_payloads(sub_mod.SUITE, tag=tag).values():
-        if pl["kind"] in ("sub", "ctrl"):
-            lat = pl["lattice"]
-            vol_rows.append({"kind": pl["kind"], "pair": pl["pair_id"].split("->")[1], "ref": lat["vol_per_atom_ref"],
-                             "sim": lat["vol_per_atom_sim"]})
-    vr = pd.DataFrame(vol_rows)
-    if len(vr):
-        figs["vol"] = parity(fig_dir / "parity_volume.png",
-                             [("substituted parent, relaxed", vr[vr.kind == "sub"].ref, vr[vr.kind == "sub"].sim, vr[vr.kind == "sub"].pair.tolist(), KNOWN),
-                              ("MP target, relaxed (control)", vr[vr.kind == "ctrl"].ref, vr[vr.kind == "ctrl"].sim, vr[vr.kind == "ctrl"].pair.tolist(), KNOWN)],
-                             "MP PBE volume (Å³/atom)", "MACE volume (Å³/atom)", "Volume per atom: MACE vs MP")
-    if len(ex):
-        figs["exp"] = parity(fig_dir / "parity_lattice_experiment.png",
-                             [("MACE", ex.a_exp, ex.a_mace, ex.material.tolist(), KNOWN),
-                              ("MP PBE (reference functional)", ex.dropna(subset=["a_pbe"]).a_exp, ex.dropna(subset=["a_pbe"]).a_pbe,
-                               ex.dropna(subset=["a_pbe"]).material.tolist(), PBE)],
-                             "experimental a (Å)", "computed a (Å)", "Lattice constant vs experiment")
-    if len(sub) or len(ood_ok):
-        ser = []
-        e_id_df = pd.DataFrame([{"ref": pl["energy_per_atom"] - pl["energy_mev_vs_mp"] / 1000, "sim": pl["energy_per_atom"],
-                                 "label": pl["pair_id"].split("->")[1]} for pl in store.load_payloads(sub_mod.SUITE, tag=tag).values()
-                                if pl["kind"] == "ctrl"])
-        if len(e_id_df):
-            ser.append(("known materials (MP)", e_id_df.ref, e_id_df.sim, e_id_df.label.tolist(), KNOWN))
-        if len(ood_ok):
-            ser.append(("new materials (WBM)", ood_ok.e_dft, ood_ok.e_mace, ood_ok.formula.tolist(), NEW))
-        figs["energy"] = parity(fig_dir / "parity_energy.png", ser, "DFT energy (eV/atom)", "MACE energy (eV/atom)",
-                                "Energy per atom: MACE vs DFT")
-    if len(st) or len(ood_ok):
-        ser = []
-        if len(st):
-            ser.append(("known, mode (b): all phases MACE", st.ref_e_hull, st.b_e_hull, st.pair_id.map(lambda p: p.split("->")[1]).tolist(), KNOWN))
-            ser.append(("known, mode (a): MACE target", st.ref_e_hull, st.a_e_hull, st.pair_id.map(lambda p: p.split("->")[1]).tolist(), KNOWN))
-        if len(ood_ok):
-            ser.append(("new materials (WBM)", ood_ok.each_true, ood_ok.each_pred, ood_ok.formula.tolist(), NEW))
-        figs["ehull"] = parity(fig_dir / "parity_e_above_hull.png", ser, "DFT energy above hull (eV/atom)",
-                               "MACE energy above hull (eV/atom)", "Energy above hull: MACE vs DFT")
-    if len(bk_ok):
-        figs["bulk"] = parity(fig_dir / "parity_bulk_modulus.png",
-                              [("EOS B0 vs K_VRH", bk_ok.k_vrh, bk_ok.b0_gpa, bk_ok.label.tolist(), KNOWN)],
-                              "MP K_VRH (GPa)", "MACE Birch–Murnaghan B0 (GPa)", "Bulk modulus: MACE vs MP")
-    for key, cap in [("vol", "Volume per atom (substitution suite). Grey line: perfect agreement."),
-                     ("exp", "Room-temperature and 0 K-extrapolated lattice constants (Lucero et al. 2012). MACE and PBE sit together above the line: the offset is the functional."),
-                     ("energy", f"Raw MACE vs uncorrected DFT energies. Known materials: MP control relaxations; new materials: {len(ood_ok)} random WBM unique prototypes."),
-                     ("ehull", "Energy above the convex hull. Mode (b) = all competing phases also computed with MACE."),
-                     ("bulk", "Equation-of-state bulk modulus vs MP elastic K_VRH (fits with rms ≤ 1 meV/atom).")]:
-        if key in figs and figs[key]:
-            L += [f"![{cap}](figures/{figs[key]})", "", f"*{cap}*", ""]
-
-    # ---------- errors by element and family ----------
-    L += ["## Errors by element and by structure family", ""]
-    if len(sub):
-        from harness.curation import resolve_pairs
-
-        fmap = {p["pair_id"]: p["target_formula"] for p in resolve_pairs()}
-        sub_f = sub.assign(formula=sub.pair_id.map(fmap))
-        el_id = per_element(sub_f, "formula", "ctrl_dE_mev")
-        L += ["**Known materials (MP control relaxations), energy error attributed to every element in the compound:**", "",
-              _md(el_id.head(20).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
-        top = el_id.head(15)
-        if len(top):
-            figs["el_id"] = hbar(fig_dir / "element_energy_mae_known.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
-                                 "mean |energy error| of compounds containing the element (meV/atom)",
-                                 "Energy error by element — known materials")
-            L += [f"![Energy error by element, known materials](figures/{figs['el_id']})", ""]
-    if len(ood_ok):
-        el_ood = per_element(ood_ok, "formula", "de_mev")
-        el_ood = el_ood[el_ood.n >= 5]
-        L += ["**New materials (WBM), elements appearing in ≥ 5 sampled compounds:**", "",
-              _md(el_ood.head(20).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
-        top = el_ood.head(15)
-        if len(top):
-            figs["el_ood"] = hbar(fig_dir / "element_energy_mae_new.png", [f"{e} (n={n})" for e, n in zip(top.element, top.n)], top.mae.tolist(),
-                                  "mean |energy error| of compounds containing the element (meV/atom)",
-                                  "Energy error by element — new (WBM) materials")
-            L += [f"![Energy error by element, new materials](figures/{figs['el_ood']})", ""]
-    if len(sub):
-        fam = sub.groupby("family").agg(n=("pair_id", "size"), vol_mae=("ctrl_vol_pct", lambda v: v.abs().mean()),
-                                        lat_mae=("ctrl_max_lat_pct", lambda v: v.abs().mean()),
-                                        e_mae=("ctrl_dE_mev", lambda v: v.abs().mean())).reset_index().sort_values("vol_mae", ascending=False)
-        figs["fam"] = hbar(fig_dir / "family_volume_mae.png", fam.family.tolist(), fam.vol_mae.tolist(),
-                           "mean |volume error| vs MP PBE (%)", "Volume error by structure family", fmt="{:.2f}")
-        L += ["**By structure family (MP control relaxations):**", "",
-              _md(fam.rename(columns={"vol_mae": "volume MAE %", "lat_mae": "lattice MAE %", "e_mae": "energy MAE meV/atom"})),
-              "", f"![Volume error by family](figures/{figs['fam']})", ""]
-
-    # ---------- worst 10 ----------
-    L += ["## The 10 worst cases", "",
-          "Ranked by absolute energy error against DFT (energy is what drives every stability call), across known and new "
-          "materials. Likely causes are assigned by fixed rules from the composition and flags, not by hand.", ""]
-    worst = []
-    for _, r in sub.iterrows() if len(sub) else []:
-        worst.append({"case": r.pair_id.split("->")[1] + f" ({r.target_id})", "set": "known (MP)", "energy error meV/atom": r.ctrl_dE_mev,
-                      "likely cause": likely_cause(r.pair_id.split("->")[1], "ID", bool(r.magnetic))})
-    for _, r in ood_ok.iterrows() if len(ood_ok) else []:
-        worst.append({"case": f"{r.formula} ({r.wbm_id})", "set": "new (WBM)", "energy error meV/atom": r.de_mev,
-                      "likely cause": likely_cause(r.formula, "OOD")})
-    w = pd.DataFrame(worst)
-    if len(w):
-        known = w[w.set == "known (MP)"]
-        w = w.reindex(w["energy error meV/atom"].abs().sort_values(ascending=False).index).head(10)
-        L += [_md(w, ".1f"), ""]
-        if len(known):
-            known = known.reindex(known["energy error meV/atom"].abs().sort_values(ascending=False).index).head(5)
-            L += ["The overall ten are all new materials; the five worst **known** materials, so their failures stay visible:", "",
-                  _md(known, ".1f"), ""]
-    notable = []
-    if len(sub) and "rattled_diagnosis" in sub:
-        for _, r in sub[sub.rattled_diagnosis != "returns to target structure"].iterrows():
-            notable.append(f"* **{r.pair_id} (symmetry-broken start):** {r.rattled_diagnosis}, "
-                           f"{r.rattled_minus_ctrl_mev:+.1f} meV/atom vs the relaxed MP structure. "
-                           + ("A lower-energy distortion of an unstable high-symmetry target — physically right."
-                              if r.rattled_minus_ctrl_mev < -1 else
-                              "Trapped above the target: a genuine failure mode for large size mismatches." if r.rattled_minus_ctrl_mev > 1
-                              else "Symmetry lowered with no energy change (numerically flat)."))
-    if len(st) and "rejected" in st:
-        rej = {}
-        for v in st.rejected:
-            rej.update(v or {})
-        if rej:
-            notable.append(f"* **{len(rej)} competing-phase relaxations were rejected** by the convergence / physical-sanity "
-                           f"guard and left out of the mode (b) hulls: " + ", ".join(f"{k} ({v})" for k, v in sorted(rej.items())) +
-                           ". One of these (solid O₂) had collapsed to 0.07 Å at −1.2×10¹¹ eV/atom before the guard existed.")
-    if len(oo):
-        r = oo[oo.rejection.notna()]
-        if len(r):
-            notable.append("* **Rejected new-material relaxations:** " + ", ".join(f"{a.formula} ({a.wbm_id}: {a.rejection})" for a in r.itertuples()))
-    if notable:
-        L += ["**Other notable failures:**", ""] + notable + [""]
-
-    # ---------- magnetic / spin caveat ----------
-    L += ["## Magnetic, transition-metal and f-electron systems (reported separately)", "",
-          "MACE-MP-0 has no spin degrees of freedom. These systems are excluded from nothing, but their numbers are split out.", ""]
-    if len(sub):
-        spin = sub[sub.spin_caveat == True]  # noqa: E712
-        nospin = sub[sub.spin_caveat == False]  # noqa: E712
-        L += [_md(pd.DataFrame([
-            {"group": "no spin caveat", "n": len(nospin), "volume MAE %": nospin.ctrl_vol_pct.abs().mean(),
-             "energy MAE meV/atom": nospin.ctrl_dE_mev.abs().mean()},
-            {"group": "spin caveat", "n": len(spin), "volume MAE %": spin.ctrl_vol_pct.abs().mean(),
-             "energy MAE meV/atom": spin.ctrl_dE_mev.abs().mean()}])), ""]
-        L += [_md(spin[["pair_id", "family", "magnetic", "transition_metal", "f_electron", "ctrl_vol_pct", "ctrl_dE_mev"]]
-                  .rename(columns={"ctrl_vol_pct": "volume err %", "ctrl_dE_mev": "energy err meV/atom"})), ""]
+    # ---------- 6. mode (a) vs mode (b), curated ----------
     if len(st):
         from harness.suites import stability as st_mod
 
         rows = []
-        for label, g in [("no spin caveat", st[~st.spin_caveat & ~st.spin_in_hull]), ("spin caveat (target or hull)", st[st.spin_caveat | st.spin_in_hull])]:
-            for mode in ("a", "b"):
-                m = st_mod.metrics(g, mode)
-                rows.append({"group": label, "mode": mode, "n": m["n"], "e_hull MAE meV/atom": m["mae_ev"] * 1000,
-                             "accuracy@0": m["thr0.0"]["accuracy"], "accuracy@0.1": m["thr0.1"]["accuracy"]})
-        L += ["**Stability gate, split by spin caveat:**", "", _md(pd.DataFrame(rows)), ""]
-    if len(oo):
-        rows = []
-        for label, g in [("no spin caveat", oo[~oo.spin_caveat]), ("spin caveat", oo[oo.spin_caveat])]:
-            s = ood_mod.score(g)
-            if s.get("n"):
-                rows.append({"group": label, "n": s["n"], "energy MAE meV/atom": s["energy_mae_mev"],
-                             "precision@0": s["thr0.0"]["precision"], "recall@0": s["thr0.0"]["recall"], "F1@0": s["thr0.0"]["f1"]})
-        L += ["**New materials (WBM), split by spin caveat:**", "", _md(pd.DataFrame(rows)), ""]
+        for mode, col in (("a (MACE target, DFT competitors)", "a"), ("b (every phase MACE, strict)", "b")):
+            m = st_mod.metrics(st, col)
+            rows.append({"mode": mode, "scored": m["n"], "unscored": m["n_unscored"], "e_hull MAE meV/atom": m["mae_ev"] * 1000,
+                         "accuracy@0": m["thr0.0"]["accuracy"], "accuracy@0.1": m["thr0.1"]["accuracy"]})
+        if "b_sub_e_hull" in st:
+            alt = st.assign(bsub_e_hull=st.b_e_hull.where(np.isfinite(st.b_e_hull.astype(float)), st.b_sub_e_hull))
+            m = st_mod.metrics(alt, "bsub")
+            rows.append({"mode": "b + stand-in polymorph (flagged, not mode b)", "scored": m["n"], "unscored": m["n_unscored"],
+                         "e_hull MAE meV/atom": m["mae_ev"] * 1000, "accuracy@0": m["thr0.0"]["accuracy"],
+                         "accuracy@0.1": m["thr0.1"]["accuracy"]})
+        body += ["## 6. Curated stability gate: mode (a) vs mode (b)", "",
+                 "50 curated known materials (all within 0.3 eV/atom of the hull). Mode (b) is not scored when one of the MP reference "
+                 "hull's own phases has no usable MACE relaxation (MACE-MP-0 collapses solid O₂, the oxygen corner of every oxide "
+                 "hull here). Mode (b) on new materials is Phase 4.", "", _md(pd.DataFrame(rows), ".3f"), ""]
 
-    # ---------- auto-generated pairs ----------
+    # ---------- 7. per element, magnetism ----------
+    body += ["## 7. Errors by element and by magnetism", "",
+             f"Error attributed to every element of a compound; elements in fewer than {MIN_ELEMENT_COUNT} compounds are counted, "
+             "not shown. Sorted by the upper bound of the MAE.", ""]
+    el_tables = {}
+    if len(wb):
+        t, below = M.per_element(wb, "formula", "de_mev", MIN_ELEMENT_COUNT, N_BOOT)
+        el_tables["wbm"] = t
+        body += [f"**New materials (WBM calibration, relaxed energy):** {len(t)} elements shown, {below} below the minimum count.", "",
+                 _md(_el_md(t)), ""]
     if len(au):
-        from harness import pairgen
+        same = au[au.ctrl_outcome == "same structure"].assign(formula=lambda x: x.target_formula)
+        t, below = M.per_element(same, "formula", "ctrl_dE_mev", MIN_ELEMENT_COUNT, N_BOOT)
+        el_tables["mp"] = t
+        body += [f"**Known materials (MP pairs, control, same structure):** {len(t)} elements shown, {below} below the minimum count.", "",
+                 _md(_el_md(t)), ""]
+        mag = au.assign(mag=au.pbe_magmom_per_site.map(
+            lambda m: "unknown" if m is None or not np.isfinite(m) else "magnetic in PBE" if m > MAGNETIC_MOMENT_MIN else "non-magnetic in PBE"))
+        body += [f"**Magnetic vs non-magnetic (MP pairs; moment > {MAGNETIC_MOMENT_MIN} μB/site in the PBE calculation), control "
+                 "energy, same structure only:**", "",
+                 _md(stratified_table(mag[mag.ctrl_outcome == "same structure"], compare.HULL_BINS_MP, "ctrl_dE_mev", None, "mag")), "",
+                 "WBM entries carry no magnetic moments, so new materials cannot be split this way.", ""]
 
-        meta = pairgen.load_meta()
-        apairs = pairgen.load_pairs()
-        fmap = {p["pair_id"]: p["target_formula"] for p in apairs}
-        n_mat = meta.get("n_materials")
-        L += ["## Automatically generated substitution pairs", "",
-              f"{len(apairs)} pairs generated from {n_mat:,} Materials Project materials with ≤ "
-              f"{meta.get('config', {}).get('max_atoms')} atoms per cell ({meta.get('accepted_prototypes')} prototypes, "
-              f"{meta.get('accepted_space_relevant')} space-relevant targets). A pair shares a prototype (anonymized "
-              "StructureMatcher on the PBE structures) and differs by exactly one element; space-relevant targets were "
-              "queued first, round-robin across prototypes. Each pair is scored by the curated suite's own code: the "
-              "substituted parent relaxed (sub) and the MP target relaxed (ctrl). "
-              f"**{len(au_done)} pairs have results so far.**" if n_mat else
-              f"{len(apairs)} auto-generated pairs; {len(au_done)} have results so far.", ""]
-        grp = []
-        for label, g in [("all", au_done), ("no spin caveat", au_done[au_done.spin_caveat == False]),  # noqa: E712
-                         ("spin caveat (magnetic / TM / f)", au_done[au_done.spin_caveat == True]),  # noqa: E712
-                         ("space-relevant targets", au_done[au_done.space_relevant == True]),  # noqa: E712
-                         ("other targets", au_done[au_done.space_relevant == False])]:  # noqa: E712
-            if len(g):
-                s = sub_mod.group_stats(g)
-                grp.append({"group": label, "n": s["n"], "sub volume MAE %": s["sub_vol_mae_pct"],
-                            "ctrl volume MAE %": s["ctrl_vol_mae_pct"], "sub match": s["sub_match_rate"],
-                            "ctrl match": s["ctrl_match_rate"], "ctrl energy MAE meV/atom": s["ctrl_E_mae_mev"]})
-        L += [_md(pd.DataFrame(grp)), ""]
-        if "diagnosis" in au_done:
-            L += ["Diagnosis: " + ", ".join(f"{k}: {v}" for k, v in au_done.diagnosis.value_counts().items()), ""]
-        if len(au_done):
-            fam = au_done.groupby("family").agg(n=("pair_id", "size"), vol_mae=("ctrl_vol_pct", lambda v: v.abs().mean()),
-                                                e_mae=("ctrl_dE_mev", lambda v: v.abs().mean()),
-                                                match=("sub_match", "mean")).reset_index().sort_values("n", ascending=False)
-            L += [f"**Most common prototypes** (of {au_done.family.nunique()}):", "",
-                  _md(fam.head(15).rename(columns={"family": "prototype", "vol_mae": "volume MAE %",
-                                                   "e_mae": "energy MAE meV/atom", "match": "sub match rate"})), ""]
-            el = per_element(au_done.assign(formula=au_done.pair_id.map(fmap)), "formula", "ctrl_dE_mev")
-            el = el[el.n >= 5]
-            if len(el):
-                L += ["**Energy error by element** (elements in ≥ 5 scored targets):", "",
-                      _md(el.head(15).rename(columns={"mae": "MAE meV/atom", "mean": "mean meV/atom"}), ".1f"), ""]
-            w = au_done.reindex(au_done.ctrl_dE_mev.abs().sort_values(ascending=False).index).head(10)
-            L += ["**10 worst auto-generated pairs by energy error:**", "",
-                  _md(pd.DataFrame([{"pair": r.pair_id, "prototype": r.family, "energy error meV/atom": r.ctrl_dE_mev,
-                                     "volume error %": r.ctrl_vol_pct,
-                                     "likely cause": likely_cause(fmap.get(r.pair_id, r.pair_id.split("->")[1].split()[0]),
-                                                                  "ID", bool(r.magnetic))} for r in w.itertuples()]), ".1f"), ""]
-            ap = [pl for pl in store.load_payloads("substitution_auto", tag=tag).values() if pl["kind"] == "ctrl"]
-            if ap:
-                figs["auto"] = parity(fig_dir / "parity_auto_pairs.png",
-                                      [("volume per atom (Å³/atom)", [p["lattice"]["vol_per_atom_ref"] for p in ap],
-                                        [p["lattice"]["vol_per_atom_sim"] for p in ap],
-                                        [fmap.get(p["pair_id"], "") for p in ap], KNOWN)],
-                                      "MP PBE", "MACE", "Auto-generated pairs: MP target relaxed with MACE")
-                figs["auto_e"] = parity(fig_dir / "parity_auto_pairs_energy.png",
-                                        [("energy per atom (eV/atom)", [p["energy_per_atom"] - p["energy_mev_vs_mp"] / 1000 for p in ap],
-                                          [p["energy_per_atom"] for p in ap], [fmap.get(p["pair_id"], "") for p in ap], KNOWN)],
-                                        "MP PBE (uncorrected)", "MACE", "Auto-generated pairs: energy")
-                L += [f"![Auto-generated pairs, volume](figures/{figs['auto']})", "",
-                      f"![Auto-generated pairs, energy](figures/{figs['auto_e']})", ""]
+    # ---------- 8. worst cases ----------
+    worst = []
+    if len(wb):
+        for r in wb.reindex(wb.de_mev.abs().sort_values(ascending=False).index).head(10).itertuples():
+            worst.append({"case": f"{r.formula} ({r.wbm_id})", "set": "new (WBM)", "true e_hull": r.each_true, "energy error": r.de_mev,
+                          "likely cause": likely_cause(r.formula, r.each_true, r.outcome, None, "WBM")})
+    if len(au):
+        for r in au.reindex(au.ctrl_dE_mev.astype(float).abs().sort_values(ascending=False).index).head(10).itertuples():
+            mag_ = r.pbe_magmom_per_site is not None and np.isfinite(r.pbe_magmom_per_site) and r.pbe_magmom_per_site > MAGNETIC_MOMENT_MIN
+            worst.append({"case": f"{r.target_formula} ({r.target_id})", "set": "known (MP)", "true e_hull": r.target_e_hull,
+                          "energy error": r.ctrl_dE_mev, "likely cause": likely_cause(r.target_formula, r.target_e_hull, r.ctrl_outcome, mag_, "MP")})
+    if worst:
+        body += ["## 8. Worst cases", "", "Likely causes by fixed rules, checked in this order: far above the hull, relaxed into a "
+                 "different structure, then chemistry.", "", _md(pd.DataFrame(worst), ".3f"), ""]
 
-    # ---------- OOD vs ID ----------
-    L += ["## Out-of-distribution score next to the in-distribution score", "",
-          "MACE-MP-0 was trained on Materials Project data, so MP-based scores overstate accuracy on new materials. "
-          f"The WBM sample ({len(oo)} structures drawn at random from the 215,488 unique-prototype set, seed 20260910; ids "
-          "in `data/ood_wbm_sample*.json`) was never in its training data. **These two columns are never averaged together.**", ""]
-    if len(sub) and len(ood_ok):
-        f1_ood = so["thr0.0"]["f1"] if so else float("nan")
-        L += [_md(pd.DataFrame([
-            {"metric": "energy MAE (meV/atom)", "known materials (MP)": _ci_str(e_id), "new materials (WBM)": _ci_str(e_ood)},
-            {"metric": "mean signed energy error (meV/atom)", "known materials (MP)": _ci_str(e_id_mean, "{:+.1f}"),
-             "new materials (WBM)": _ci_str(e_ood_mean, "{:+.1f}")},
-            {"metric": "energy above hull MAE (meV/atom), MACE target vs DFT competitors",
-             "known materials (MP)": f"{sa['mae_ev'] * 1000:.1f}" if sa else "n/a",
-             "new materials (WBM)": f"{so['e_hull_mae_mev']:.1f}" if so else "n/a"},
-            {"metric": "stable-call precision / recall @ 0 eV/atom",
-             "known materials (MP)": f"{sa['thr0.0']['precision']:.2f} / {sa['thr0.0']['recall']:.2f}" if sa else "n/a",
-             "new materials (WBM)": f"{so['thr0.0']['precision']:.2f} / {so['thr0.0']['recall']:.2f}" if so else "n/a"},
-            {"metric": "F1 @ 0 eV/atom", "known materials (MP)": "—", "new materials (WBM)": f"{f1_ood:.2f}"},
-            {"metric": "n", "known materials (MP)": str(len(sub)), "new materials (WBM)": str(len(ood_ok))},
-        ])), "",
-            "For WBM the hull distance is DFT hull distance + (MACE − DFT energy), the Matbench Discovery construction, so its "
-            "error equals the energy error by design. Cross-check: Matbench Discovery reports F1 = 0.669 for MACE-MP-0 on the "
-            "full unique-prototype set (FIRE, fmax 0.05); this sample's F1 is consistent with it.", ""]
-
-    # ---------- experimental ----------
+    # ---------- 9. experiment ----------
     if len(ex):
-        L += ["## Experimental check", "",
-              "Reference: Lucero, Henderson & Scuseria, *J. Phys.: Condens. Matter* **24**, 145504 (2012), Table I "
-              "(doi:10.1088/0953-8984/24/14/145504). 33 room-temperature values score the headline; 6 values the source gives "
-              "as uncorrected 0 K extrapolations are shown separately; β-GaN was not run (ambiguous structure in the source). "
-              "**Coverage gap: no metals and one oxide.**", ""]
         rows = []
-        for label, g in [("room temperature", ex[ex.status == "rt"]), ("0 K extrapolated", ex[ex.status == "zero_k"])]:
-            rows.append({"set": label, "n": len(g), "MACE vs exp mean %": g.a_err_pct.mean(), "MACE vs exp MAE %": g.a_err_pct.abs().mean(),
-                         "PBE vs exp mean %": g.a_pbe_err_pct.mean(), "MACE − PBE mean %": g.a_mace_vs_pbe_pct.mean()})
-        L += [_md(pd.DataFrame(rows)), "",
-              _md(ex.sort_values("a_err_pct", key=abs, ascending=False)[["material", "structure", "status", "a_exp", "a_mace", "a_pbe",
-                                                                          "a_err_pct", "a_pbe_err_pct", "a_mace_vs_pbe_pct"]], ".3f"), ""]
+        for status, label in (("rt", "room temperature (Lucero 2012)"), ("zero_k", "0 K extrapolated (Lucero 2012)"),
+                              ("zpae_removed", "0 K, zero-point expansion removed (Csonka 2009)")):
+            for metal in (True, False):
+                g = ex[(ex.status == status) & (ex.get("metal", False) == metal)]
+                if len(g):
+                    rows.append({"set": label, "class": "metals" if metal else "non-metals", "n": len(g),
+                                 "MACE vs exp mean %": g.a_err_pct.mean(), "MACE vs exp MAE %": g.a_err_pct.abs().mean(),
+                                 "PBE vs exp mean %": g.a_pbe_err_pct.mean(), "MACE − PBE mean %": g.a_mace_vs_pbe_pct.mean()})
+        body += ["## 9. Lattice constants against experiment", "",
+                 "Room-temperature and 0 K values include thermal and zero-point expansion; the Csonka set removes the zero-point "
+                 "anharmonic expansion, so it is the fair target for a static 0 K calculation. PBE overestimates by ~1 %, and MACE "
+                 "inherits that. **Coverage gap:** oxides are represented by MgO only, and no bcc transition metals (V, Nb, Ta, Mo, W, "
+                 "Fe) have a verified source in the harness yet.", "", _md(pd.DataFrame(rows)), ""]
+        if "metal" in ex:
+            body += [_md(ex.sort_values("a_err_pct", key=abs, ascending=False)[
+                ["material", "structure", "status", "a_exp", "a_mace", "a_pbe", "a_err_pct", "a_pbe_err_pct", "a_mace_vs_pbe_pct"]].head(20), ".3f"), ""]
 
-    # ---------- bulk ----------
-    L += ["## Bulk modulus", ""]
+    # ---------- 10. bulk modulus ----------
     if len(bk):
-        n_flag = len(bk) - len(bk_ok)
-        skipped = jobs[(jobs.suite == "bulk") & (jobs.status == "skipped")] if len(jobs) else jobs
-        failed = jobs[(jobs.suite == "bulk") & jobs.status.isin(["failed", "timeout"])] if len(jobs) else jobs
-        L += [f"Birch–Murnaghan fits over 9 volumes (±4 %), cell shape relaxed at each volume, vs MP elastic K_VRH "
-              f"(the elasticity documents do not state the functional). {len(bk_ok)} fitted, {n_flag} flagged fits excluded "
-              f"from the MAE, {len(skipped)} materials without an MP elasticity reference, {len(failed)} failed.", ""]
-        rows = []
-        for label, g in [("all", bk_ok), ("no spin caveat", bk_ok[bk_ok.spin_caveat == False]),  # noqa: E712
-                         ("spin caveat", bk_ok[bk_ok.spin_caveat == True])]:  # noqa: E712
-            if len(g):
-                rows.append({"group": label, "n": len(g), "mean vs K_VRH %": g.err_pct_vrh.mean(),
-                             "MAE vs K_VRH %": g.err_pct_vrh.abs().mean(), "MAE vs K_Reuss %": g.err_pct_reuss.dropna().abs().mean()})
-        L += [_md(pd.DataFrame(rows)), "",
-              _md(bk.sort_values("err_pct_vrh", key=abs, ascending=False)[["label", "mp_id", "family", "b0_gpa", "k_vrh", "k_reuss",
-                                                                           "err_pct_vrh", "bp", "anisotropic", "spin_caveat"]].head(15)), ""]
-    else:
-        L += ["_Not run._", ""]
+        ok = bk[bk.fit.map(lambda f: f["rms_mev"] <= 1.0 and f["v0_in_range"])]
+        ci = M.boot_ci(ok.err_pct_vrh, M.MAE, N_BOOT)
+        body += ["## 10. Bulk modulus (curated known materials)", "",
+                 f"Birch–Murnaghan fits vs MP elastic K_VRH: MAE {_ci(ci, '{:.1f}')} % (n={len(ok)}), verdict "
+                 f"{verdict_ci('bulk_mae_pct', ci)} (pessimistic bound). Not stratified by hull distance: every material is on or "
+                 "near the hull.", ""]
 
-    # ---------- runtime ----------
-    L += ["## Runtime on this Mac", ""]
+    # ---------- 11. runtime ----------
     if len(jobs):
         ok = jobs[jobs.status == "ok"].dropna(subset=["runtime_s"])
-        rt_rows = []
-        for suite, g in ok.groupby("suite"):
-            rt_rows.append({"suite": suite, "structures": len(g), "median s/structure": g.runtime_s.median(),
-                            "p90 s": g.runtime_s.quantile(0.9), "max s": g.runtime_s.max(),
-                            "sum of per-structure s": g.runtime_s.sum()})
-        L += [_md(pd.DataFrame(rt_rows), ".1f"), "",
-              f"Per-structure times are single-worker wall times: {compute['workers']} workers × {compute['threads_per_worker']} "
-              "thread run concurrently (cells > 100 atoms on 2 × 5), so a suite's elapsed time is roughly the sum divided by "
-              "the number of workers. Stability counts the 1,190 competing-phase relaxations (the 50 target evaluations reuse "
-              "substitution energies). Bulk-modulus times cover all 9 equation-of-state points. "
-              f"MPS could not run this model (see `config/compute.json`: {compute.get('device_reason', '')})", ""]
-        status = jobs.groupby(["suite", "status"]).size().unstack(fill_value=0)
-        L += ["**Job outcomes (current settings):**", "", status.reset_index().to_markdown(index=False), ""]
+        rt = ok.groupby("suite").runtime_s.agg(structures="size", median="median", p90=lambda v: v.quantile(0.9), total_h=lambda v: v.sum() / 3600)
+        body += ["## 11. Runtime and job outcomes", "", _md(rt.reset_index(), ".1f"), "",
+                 _md(jobs.groupby(["suite", "status"]).size().unstack(fill_value=0).reset_index(), ".0f"), ""]
 
-    # ---------- unattended queue ----------
-    from harness.config import QUEUE_DB
-
-    if QUEUE_DB.exists():
-        from harness import jobqueue
-
-        qc = jobqueue.counts(QUEUE_DB)
-        if qc:
-            L += ["## Unattended job queue", "",
-                  _md(pd.DataFrame([{"suite": s, **{k: v.get(k, 0) for k in jobqueue.STATUSES}} for s, v in sorted(qc.items())]),
-                      ".0f"), ""]
-            fails = jobqueue.failures_by_type(QUEUE_DB)
-            if fails:
-                L += ["**Queue failures by type** (after one retry):", "",
-                      _md(pd.DataFrame(fails)[["error_type", "n", "suites", "example"]]), ""]
-
-    # ---------- method notes ----------
-    L += ["## Method notes and fixes made along the way", "",
-          "* MP's summary endpoint now serves **r2SCAN** structures and energies for many materials (Ge: 5.675 Å, −13.87 eV/atom); "
-          "every reference here comes from MP's PBE `GGA_GGA+U` thermo data (Ge: 5.763 Å, −4.62 eV/atom). MP ids are the new "
-          "format (`mp-32` → `mp-aaaaaabg`).",
-          "* MP entries carry Element-keyed `oxidation_states`, which pymatgen's MP2020 correction looks up by symbol string; keys "
-          "are normalised. The recomputed MP hull reproduces MP's stored energy above hull exactly for all 50 targets.",
-          "* FrechetCellFilter's fmax criterion let small cells stop with up to 0.19 GPa residual stress; an explicit "
-          "max |stress| ≤ 0.01 GPa criterion was added (stricter, not looser).",
-          "* A physical-sanity guard rejects relaxations with atoms closer than 0.5 × the covalent-radius sum or that did "
-          "not converge; rejections are counted, never silently dropped.",
-          "* mace-torch ≥ 0.3.10 defaults `mace_mp()` to MACE-MPA-0; the MACE-MP-0 medium checkpoint is loaded explicitly "
-          "and pinned by SHA-256.",
-          "* No tolerance was loosened and no hard case was removed to improve a number.", ""]
-    L += ["## Files", "",
-          "* `results/results.sqlite` — every job and every structure × test row with provenance and settings",
-          "* `results/results.parquet` — the same results table (all settings tags; filter on `settings_tag`)",
-          "* `figures/` (next to this report) — the plots above",
-          "* `scorecard.json` (next to this report) — the headline numbers, used to compare runs", ""]
+    # ---------- plain-language verdict ----------
+    verdict_lines += ["## Verdict in plain language", ""]
+    verdict_lines.append(f"* **Engine evaluated:** {MODEL['name']} (the only engine run so far; Phase 3 compares others). "
+                         "All statements below use the pessimistic end of the 95 % interval.")
+    if opt and dmo:
+        verdict_lines.append(
+            f"* **Threshold:** call a new material stable when its predicted energy above hull is ≤ {opt['threshold'] * 1000:+.0f} meV/atom "
+            f"(cost-optimal on the calibration set at the placeholder costs). At that threshold **at least "
+            f"{dmo['precision_ci'][1]:.0%} of 'stable' calls are right** (point {dmo['precision']:.0%}) and at least "
+            f"{dmo['recall_ci'][1]:.0%} of truly stable materials are found (point {dmo['recall']:.0%}); 'unstable' calls are "
+            f"right at least {dmo['npv_ci'][1]:.1%} of the time. Precision verdict: {verdict_ci('precision', dmo['precision_ci'])}.")
+    if len(wb):
+        parts = []
+        for b in compare.HULL_BINS_WBM:
+            s = M.error_summary(wb[wb.bin == b].de_mev, N_BOOT)
+            parts.append(f"{b}: ≤ {s['mae'][2]:.0f} meV/atom ({verdict_ci('energy_mae_mev', s['mae'])})")
+        verdict_lines.append("* **Energy error on new materials, upper bound by true hull distance:** " + "; ".join(parts) + ".")
+        if "diff_share" in locals():
+            verdict_lines.append("* **Relaxation changes the structure** for " + ", ".join(
+                f"{diff_share.get(b, np.nan):.0%} ({b})" for b in compare.HULL_BINS_WBM)
+                + " of new materials; those results carry roughly twice the error and should go to DFT, not to the lab.")
+    if len(au):
+        parts = []
+        same = au[au.ctrl_outcome == "same structure"]
+        for b in compare.HULL_BINS_MP:
+            s = M.error_summary(same[same.bin == b].ctrl_dE_mev, N_BOOT)
+            parts.append(f"{b}: ≤ {s['mae'][2]:.0f} ({verdict_ci('energy_mae_mev', s['mae'])})")
+        verdict_lines.append("* **Known materials that keep their structure, energy error upper bound (meV/atom):** " + "; ".join(parts) + ".")
+    if "wbm" in el_tables and len(el_tables["wbm"]):
+        t = el_tables["wbm"]
+        good = [r.element for r in t.itertuples() if r.MAE[2] <= VERDICT_RULES["energy_mae_mev"][0]]
+        bad = [r.element for r in t.itertuples() if r.MAE[1] > VERDICT_RULES["energy_mae_mev"][1]]
+        verdict_lines.append(f"* **Chemistries (new materials, ≥ {MIN_ELEMENT_COUNT} compounds):** error upper bound ≤ 30 meV/atom for "
+                             f"{', '.join(good) or 'no element'}; error lower bound > 60 meV/atom (not trustworthy) for "
+                             f"{', '.join(bad) or 'no element'}.")
+    verdict_lines.append("* **Not yet shown:** the locked WBM test set (final evaluation), mode (b) on new materials (Phase 4), other engines (Phase 3).")
+    verdict_lines.append("")
 
     # ---------- write ----------
+    mi = machine_info()
+    head = [f"# Validation report — {MODEL['name']}", "",
+            f"Generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} · commit `{score['commit']}` · settings tag `{tag}` · "
+            f"model `{MODEL['file']}` · {compute['device']}/{compute['dtype']} · {mi['chip']} · macOS {mi['macos']}", "",
+            f"Relaxation: {DEFAULT_RELAX.cell_filter} + {DEFAULT_RELAX.optimizer}, fmax {DEFAULT_RELAX.fmax} eV/Å, |stress| ≤ "
+            f"{DEFAULT_RELAX.max_stress_gpa} GPa, ≤ {DEFAULT_RELAX.max_steps} steps, fallback ladder on failure. Bins: energy above hull "
+            "(eV/atom) — MP targets on the GGA/GGA+U hull, WBM against the MP hull (with a '<0' bin). Brackets: 95 % bootstrap "
+            "intervals; verdicts from the pessimistic end.", ""]
+    L = head + verdict_lines + (comparison_lines(out_dir, score) if compare_previous else []) + body
+    L += ["## Files", "", "* `results/results.sqlite` — every job and result with provenance and settings",
+          "* `results/results.parquet` — the results table", "* `data/wbm_split.json` — the calibration / locked-test split",
+          "* `figures/` and `scorecard.json` next to this report", ""]
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / "validation_report.md"
     out.write_text("\n".join(L) + "\n")
-    (out_dir / "scorecard.json").write_text(json.dumps(scorecard, indent=1) + "\n")
+    (out_dir / "scorecard.json").write_text(json.dumps({k: (float(v) if isinstance(v, (np.floating, float)) else v)
+                                                         for k, v in score.items()}, indent=1, default=str) + "\n")
     res = store.load_table("results")
     if len(res):
         res["settings_tag"] = res.job_key.map(lambda k: k.rsplit("@", 1)[1] if "@" in k else "pre-tag")
         res.to_parquet(RESULTS_DIR / "results.parquet", index=False)
-    log.info("report written: %s (%d figures)", out, sum(1 for v in figs.values() if v))
+    log.info("report written: %s", out)
     return str(out.relative_to(ROOT)) if out.resolve().is_relative_to(ROOT) else str(out)
+
+
+def _el_md(t: pd.DataFrame) -> pd.DataFrame:
+    if not len(t):
+        return t
+    return pd.DataFrame({"element": t.element, "n": t.n, "MAE meV/atom": t.MAE.map(_ci),
+                         "mean signed": t["mean signed"].map(lambda c: _ci(c, "{:+.1f}")),
+                         "verdict (upper bound)": t.MAE.map(lambda c: verdict_ci("energy_mae_mev", c))})

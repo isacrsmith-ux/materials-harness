@@ -279,15 +279,17 @@ def cell_quotas(per_bin: int, implausible_frac: float, metallic_frac: float) -> 
     return q
 
 
-def fill_stratified(streams: dict, quotas: dict, classify, accept, max_per_prototype: int) -> tuple[dict, dict]:
+def fill_stratified(streams: dict, quotas: dict, classify, accept, max_per_prototype: int,
+                    proto_count: dict | None = None) -> tuple[dict, dict]:
     """Fill each (class, plausible) cell of one bin from shuffled candidate streams (one per class).
 
     classify(c) -> (class, plausible); accept(c) -> (reason, pair) as in _check. Cells that run out of
-    candidates are recorded as shortfalls, never silently padded from another cell.
+    candidates are recorded as shortfalls, never silently padded from another cell. Pass the same
+    proto_count to every bin so the per-prototype cap holds across the whole pair set.
     """
     picked = {cell: [] for cell in quotas}
     stats = defaultdict(int)
-    proto_count = defaultdict(int)
+    proto_count = proto_count if proto_count is not None else defaultdict(int)
     for cls, stream in streams.items():
         for c in stream:
             if all(len(picked[(cls, pl)]) >= quotas[(cls, pl)] for pl in (True, False)):
@@ -365,9 +367,10 @@ def generate_stratified(max_atoms: int, params: dict | None = None, force: bool 
         return reason, pair
 
     pairs, per_bin_stats = [], {}
+    proto_count: dict = defaultdict(int)  # shared: the cap is per prototype over the whole set
     for b in compare.HULL_BINS_MP:
         picked, st = fill_stratified({cls: streams[b].get(cls, []) for cls in ("metallic", "compound")}, quotas,
-                                     classify, accept, p["max_per_prototype"])
+                                     classify, accept, p["max_per_prototype"], proto_count)
         per_bin_stats[b] = {**st, "candidates": {cls: len(v) for cls, v in streams[b].items()},
                             "accepted": {f"{cls}/{'plausible' if pl else 'implausible'}": len(v) for (cls, pl), v in picked.items()}}
         for v in picked.values():

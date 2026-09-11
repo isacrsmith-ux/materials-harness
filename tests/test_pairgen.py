@@ -82,6 +82,11 @@ def test_fill_stratified_caps_prototypes_and_reports_shortfall():
     assert len(picked[("metallic", False)]) == 1 and len(picked[("compound", True)]) == 3
     assert st["shortfall"] == {"metallic/plausible": 1, "metallic/implausible": 1, "compound/implausible": 1}
     assert st["counts"]["rejected: different prototype"] == 1 and st["counts"]["skipped: prototype cap"] >= 1
+    # a shared counter carries the cap across bins: prototype P is already full
+    shared = {"P": 3}
+    picked2, _ = pairgen.fill_stratified({"metallic": [c(i, "P", True) for i in range(5)]},
+                                         {("metallic", True): 2, ("metallic", False): 0}, classify, accept, 3, shared)
+    assert picked2[("metallic", True)] == []
 
 
 def test_prioritize_space_first_and_round_robin_across_prototypes():

@@ -1,47 +1,97 @@
 {
  "config": {
-  "max_pairs": 2000,
-  "max_atoms": 40
+  "design": "stratified",
+  "max_atoms": 40,
+  "per_bin": 500,
+  "implausible_frac": 0.1,
+  "metallic_frac": 0.3,
+  "max_per_prototype": 5,
+  "seed": 20260911,
+  "pettifor_plausible_max": 15,
+  "pair_corr_plausible_min": 1.0
  },
- "generated_at": "2026-09-10T23:15:11+00:00",
- "n_materials": 119544,
- "n_supported_elements": 89,
- "n_prototype_groups": 14744,
- "n_candidates": 667535,
- "n_candidates_space_relevant": 275619,
- "accepted": 2000,
- "accepted_space_relevant": 2000,
- "accepted_prototypes": 2000,
- "flagged": {
-  "magnetic": 842,
-  "f_electron": 403,
-  "transition_metal": 1327,
-  "spin_caveat": 1230
+ "generated_at": "2026-09-11T05:36:03+00:00",
+ "n_materials_with_gga_hull": 117692,
+ "n_candidates": 647315,
+ "quotas": {
+  "metallic/implausible": 15,
+  "metallic/plausible": 135,
+  "compound/implausible": 35,
+  "compound/plausible": 315
  },
- "excluded_curated_pairs": 50,
- "candidates_examined": 2700,
- "rejected": {
-  "StructureMatcher (anonymized): different prototype": 436,
-  "no PBE (GGA/GGA+U) reference": 30,
-  "PBE cell has more than 40 atoms": 1
+ "per_bin": {
+  "\u22640.025": {
+   "counts": {
+    "rejected: StructureMatcher (anonymized): different prototype": 31,
+    "skipped: prototype cap": 415
+   },
+   "shortfall": {},
+   "candidates": {
+    "metallic": 78941,
+    "compound": 85429
+   },
+   "accepted": {
+    "metallic/implausible": 15,
+    "metallic/plausible": 135,
+    "compound/implausible": 35,
+    "compound/plausible": 315
+   }
+  },
+  "0.025\u20130.1": {
+   "counts": {
+    "skipped: prototype cap": 1119,
+    "rejected: StructureMatcher (anonymized): different prototype": 205
+   },
+   "shortfall": {},
+   "candidates": {
+    "metallic": 41873,
+    "compound": 92818
+   },
+   "accepted": {
+    "metallic/implausible": 15,
+    "metallic/plausible": 135,
+    "compound/implausible": 35,
+    "compound/plausible": 315
+   }
+  },
+  "0.1\u20130.3": {
+   "counts": {
+    "skipped: prototype cap": 9285,
+    "rejected: StructureMatcher (anonymized): different prototype": 449
+   },
+   "shortfall": {},
+   "candidates": {
+    "metallic": 75338,
+    "compound": 126247
+   },
+   "accepted": {
+    "metallic/implausible": 15,
+    "metallic/plausible": 135,
+    "compound/implausible": 35,
+    "compound/plausible": 315
+   }
+  },
+  ">0.3": {
+   "counts": {
+    "skipped: prototype cap": 51222,
+    "rejected: StructureMatcher (anonymized): different prototype": 846
+   },
+   "shortfall": {
+    "metallic/plausible": 48
+   },
+   "candidates": {
+    "compound": 100233,
+    "metallic": 46436
+   },
+   "accepted": {
+    "metallic/implausible": 15,
+    "metallic/plausible": 87,
+    "compound/implausible": 35,
+    "compound/plausible": 315
+   }
+  }
  },
- "rejected_examples": {
-  "StructureMatcher (anonymized): different prototype": [
-   "mp-aaaaaaya->mp-aaaaabzu",
-   "mp-aaaaabiz->mp-aaaaaciw",
-   "mp-aaaaacdn->mp-aaaaaztn",
-   "mp-aaaaaemp->mp-aaabftrr",
-   "mp-aaaaaetb->mp-aaaaanpa"
-  ],
-  "no PBE (GGA/GGA+U) reference": [
-   "mp-aaaaabqi->mp-aaaaacyt",
-   "mp-aaaaagjk->mp-aaaaaihe",
-   "mp-aaaaamft->mp-aaaaavew",
-   "mp-aaaabbtg->mp-aaaabbtr",
-   "mp-aaabkpun->mp-aaablemj"
-  ],
-  "PBE cell has more than 40 atoms": [
-   "mp-aaaaabcu->mp-aaabewha"
-  ]
- }
+ "accepted": 1952,
+ "bin_moved_between_summary_and_pbe_reference": 0,
+ "excluded_curated_pairs": 50
 }

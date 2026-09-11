@@ -219,9 +219,26 @@ def build_wbm_calibration_jobs(compute: dict) -> list[dict]:
     return jobs
 
 
+def build_mode_b_jobs(compute: dict) -> tuple[list[dict], dict]:
+    """Competitor relaxations for the mode (b) sample of WBM calibration systems (stability suite keys, so
+    phases shared with other systems or with the curated gate are relaxed once)."""
+    import numpy as np
+
+    from harness.suites import mode_b
+
+    tag, settings = _settings(compute)
+    sample = mode_b.make_sample()
+    done = store.completed_keys("stability", retry_failed=True)
+    jobs, by_cs = mode_b.competitor_jobs(sample, compute, tag, done)
+    rows = _queue_rows(jobs, "stability", settings)
+    n = [r["n_atoms"] for r in rows]
+    return rows, {"systems": len(by_cs), "unique_phases": len({m for v in by_cs.values() for m in v}),
+                  "to_relax": len(rows), "n_atoms_median": float(np.median(n)) if n else 0, "n_atoms_max": max(n, default=0)}
+
+
 def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, do_ood: bool = True,
             force_pairs: bool = False, curated_kinds: list[str] | None = None, competitor_retries: bool = False,
-            retries: bool = False) -> dict:
+            retries: bool = False, wbm_calibration: bool = False, mode_b: bool = False) -> dict:
     """Bulk-download and cache MP/WBM inputs, generate pairs, and enqueue every job (idempotent).
 
     curated_kinds queues curated-pair substitution kinds; competitor_retries queues the fallback ladder
@@ -238,6 +255,11 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
             j["priority"] = -2000
         first += retry
         info["competitor_retries"] = len(retry)
+    if mode_b:
+        mb, info["mode_b"] = build_mode_b_jobs(compute)
+        for j in mb:
+            j["priority"] = 10_000_000 - j["n_atoms"]  # after everything else already queued, big cells first
+        first += mb
     if curated_kinds:
         cur = build_curated_substitution_jobs(curated_kinds, compute)
         for j in cur:
@@ -245,9 +267,14 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
         first += cur
         info["curated_kinds"] = {"kinds": curated_kinds, "jobs": len(cur)}
     if do_pairs:
-        info["pairs"] = pairgen.generate(cfg["max_pairs"], cfg["max_atoms"], force=force_pairs)
+        if cfg.get("pair_design") == "stratified":
+            info["pairs"] = pairgen.generate_stratified(cfg["max_atoms"], cfg.get("stratified"), force=force_pairs)
+        else:
+            info["pairs"] = pairgen.generate(cfg["max_pairs"], cfg["max_atoms"], force=force_pairs)
         sub_jobs = build_auto_substitution_jobs(pairgen.load_pairs(), cfg["auto_pair_kinds"], compute)
-    if do_ood:
+    if wbm_calibration:
+        ood_jobs = build_wbm_calibration_jobs(compute)
+    elif do_ood:
         ood_jobs = build_ood_jobs(cfg["ood_sample"], compute)
     # Space-relevant pairs keep their order; WBM jobs are interleaved proportionally so every
     # partial report has both in- and out-of-distribution results.

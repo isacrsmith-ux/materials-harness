@@ -3,14 +3,31 @@
   "max_pairs": 2000,
   "max_atoms": 40,
   "ood_sample": 2000,
-  "auto_pair_kinds": ["sub", "sub_rescaled", "ctrl", "static"],
+  "auto_pair_kinds": [
+    "sub",
+    "sub_rescaled",
+    "ctrl",
+    "static"
+  ],
   "max_attempts": 2,
   "hard_timeout_s": 1800,
   "report_every": 100,
   "power_poll_s": 300,
   "polite_reserved_cores": 2,
   "polite_nice": 10,
-  "failure_alert_fraction": 0.10,
+  "failure_alert_fraction": 0.1,
   "failure_alert_min_jobs": 20,
-  "schedule": {"start": "23:00", "stop": "07:00", "mode": "full"}
+  "schedule": {
+    "start": "23:00",
+    "stop": "07:00",
+    "mode": "full"
+  },
+  "pair_design": "stratified",
+  "stratified": {
+    "per_bin": 500,
+    "implausible_frac": 0.1,
+    "metallic_frac": 0.3,
+    "max_per_prototype": 5,
+    "seed": 20260911
+  }
 }

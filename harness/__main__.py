@@ -64,6 +64,10 @@ def main(argv: list[str] | None = None) -> int:
                                               "(e.g. sub_rescaled,sub_rattled_rescaled,static)")
     prep.add_argument("--competitor-retries", action="store_true",
                       help="queue the fallback ladder for rejected stability competitor relaxations")
+    prep.add_argument("--wbm-calibration", action="store_true",
+                      help="queue relaxation + DFT-geometry single point for every WBM calibration id (never the test set)")
+    prep.add_argument("--mode-b", action="store_true",
+                      help="queue competitor relaxations for the mode (b) sample of WBM calibration systems")
     prep.add_argument("--retries", action="store_true",
                       help="queue the fallback ladder for every guard-rejected relaxation in every suite")
     prep.add_argument("--queue-db", default=str(QUEUE_DB))
@@ -119,7 +123,8 @@ def main(argv: list[str] | None = None) -> int:
         info = prepare(cfg, queue_db=args.queue_db, do_pairs=not args.skip_pairs, do_ood=not args.skip_ood,
                        force_pairs=args.force_pairs,
                        curated_kinds=[k for k in (args.curated_kinds or "").split(",") if k] or None,
-                       competitor_retries=args.competitor_retries, retries=args.retries)
+                       competitor_retries=args.competitor_retries, retries=args.retries,
+                       wbm_calibration=args.wbm_calibration, mode_b=args.mode_b)
         print(json.dumps(info, indent=1, default=str))
         return 0
     if args.cmd == "unattended":
