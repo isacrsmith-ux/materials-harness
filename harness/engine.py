@@ -61,10 +61,10 @@ def _fairchem_calculator(device: str, dtype: str):
     releases; both are tried, and anything else is a clear error rather than a silent fallback."""
     try:
         from fairchem.core import OCPCalculator  # fairchem-core 1.x
-
-        return OCPCalculator(checkpoint_path=str(config.model_path()), cpu=(device == "cpu"), seed=0)
     except ImportError:
-        pass
+        OCPCalculator = None
+    if OCPCalculator is not None:  # errors while building it surface as they are, never as "wrong version"
+        return OCPCalculator(checkpoint_path=str(config.model_path()), cpu=(device == "cpu"), seed=0)
     from fairchem.core.units.mlip_unit import load_predict_unit  # fairchem-core 2.x
     from fairchem.core import FAIRChemCalculator
 

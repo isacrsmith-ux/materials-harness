@@ -55,7 +55,8 @@ MODELS = {
     "esen-30m-oam": {
         "name": "eSEN-30M-OAM", "loader": "fairchem", "env": ".envs/fairchem",
         "file": "esen_30m_oam.pt", "url": "https://huggingface.co/fairchem/OMAT24/resolve/main/esen_30m_oam.pt",
-        "gated": True, "sha256": None, "dtypes": ["float32"],
+        "gated": True, "dtypes": ["float32"], "size_bytes": 362285045,
+        "sha256": "adf7d38e5bccb8e0334434c0bd65ac75661fb646891df17ecc89c19d111efde1",  # downloaded 2026-09-11
         "training_data": "OMat24 + MPtrj + sAlex", "compliant": True,
         "license": "code MIT; checkpoint OMat24 license (commercial use permitted, FAIR acceptable-use policy)",
     },
