@@ -131,7 +131,7 @@ def write_report(models: list[tuple[str, str, str]] | None = None) -> str:
     df = compare_models(models or benchmarked_models(), costs)
     fmt = lambda c, s="{:.1f}": M.fmt_ci(c, s) if isinstance(c, tuple) else "n/a"  # noqa: E731
     show = pd.DataFrame({
-        "model": df.model, "setting": df.setting, "compliant": df.compliant,
+        "model": df.model, "status": df.status, "setting": df.setting, "compliant": df.compliant,
         "WBM done / rejected": [f"{a} / {b}" for a, b in zip(df.get("wbm_done", 0), df.get("wbm_rejected", 0))],
         "cost-optimal threshold (meV/atom)": df.get("threshold_mev"),
         "expected cost per candidate": df.get("expected_cost", pd.Series(dtype=object)).map(lambda c: fmt(c, "{:.3f}")),
@@ -162,8 +162,14 @@ def compare_models(models: list[tuple[str, str, str]], costs: dict | None = None
     subset = make_subset()
     rows = [model_summary(k, d, t, subset, costs) for k, d, t in models]
     df = pd.DataFrame(rows)
+    # Only a model with the whole subset is ranked: a partial run would be compared on different structures.
+    n_wbm, n_pairs = len(subset["wbm_ids"]), len(subset["pair_ids"])
+    df["complete"] = (df.get("wbm_done", 0).fillna(0) >= n_wbm) & (df.get("pairs_done", 0).fillna(0) >= n_pairs)
+    df["status"] = [("complete" if c else f"incomplete ({int(w or 0)}/{n_wbm} WBM, {int(p or 0)}/{n_pairs} pairs) — not ranked")
+                    for c, w, p in zip(df.complete, df.get("wbm_done", 0), df.get("pairs_done", 0))]
     if "expected_cost" in df:
-        df["_cost_upper"] = df.expected_cost.map(lambda c: c[2] if isinstance(c, tuple) else np.inf)
-        df["_prec_lower"] = df.precision.map(lambda c: c[1] if isinstance(c, tuple) else -np.inf)
-        df = df.sort_values(["_cost_upper", "_prec_lower"], ascending=[True, False]).drop(columns=["_cost_upper", "_prec_lower"])
+        df["_cost_upper"] = [c[2] if ok and isinstance(c, tuple) else np.inf for c, ok in zip(df.expected_cost, df.complete)]
+        df["_prec_lower"] = [c[1] if ok and isinstance(c, tuple) else -np.inf for c, ok in zip(df.precision, df.complete)]
+        df = df.sort_values(["complete", "_cost_upper", "_prec_lower"], ascending=[False, True, False]).drop(
+            columns=["_cost_upper", "_prec_lower"])
     return df
