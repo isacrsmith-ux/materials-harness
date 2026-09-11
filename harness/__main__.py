@@ -22,7 +22,7 @@ import harness  # noqa: F401  (sets cache env vars first)
 from harness.config import LOG_DIR, QUEUE_DB, load_compute_config, load_unattended_config
 from harness.platform_check import PlatformError, assert_native_arm64, machine_info
 
-SUITES = ["smoke", "substitution", "stability", "ood", "experimental", "bulk"]
+SUITES = ["smoke", "substitution", "stability", "ood", "experimental", "bulk", "mode_b"]
 
 
 def _setup_logging(verbose: bool) -> None:
