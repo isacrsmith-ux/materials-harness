@@ -93,3 +93,47 @@ def test_verdict_rules_exist_for_every_headline_quantity():
 
     for metric in ("ground_state_hit_rate", "spearman", "gap_mae_mev"):
         assert metric in VERDICT_RULES
+
+
+def test_report_writes_a_complete_page_from_a_small_result_set(tmp_path, monkeypatch):
+    """End-to-end smoke test of the report path against a throwaway results database.
+
+    Catches the class of bug that only shows up after a long run: a missing column, an empty group, a
+    verdict rule that is not registered.
+    """
+    import json
+
+    from harness import store
+    from harness.config import settings_tag
+
+    sets = {"created_at": "2026-09-12T00:00:00+00:00", "seed": 1,
+            "design": {"window_ev": 0.2, "min_forms": 3, "max_forms": 8, "max_atoms": 40,
+                       "n_requested": 2, "sampling": "fixed-seed random draw"},
+            "eligible_compositions": 10, "n": 2, "n_relaxations": 6,
+            "dropped": {"duplicate structure in MP": 1},
+            "sets": [{"formula": "SiO2", "n_forms": 3, "composition_e_hull": 0.0, "hull_bin": "≤0.025",
+                      "chem_class": "compound", "dft_gap_mev": 20.0, "dft_spread_mev": 100.0,
+                      "forms": [{"material_id": f"mp-{i}"} for i in range(3)]},
+                     {"formula": "TiO2", "n_forms": 3, "composition_e_hull": 0.05, "hull_bin": "0.025–0.1",
+                      "chem_class": "compound", "dft_gap_mev": 120.0, "dft_spread_mev": 150.0,
+                      "forms": [{"material_id": f"mp-{i}"} for i in range(3, 6)]}]}
+    sets_file = tmp_path / "polymorph_sets.json"
+    sets_file.write_text(json.dumps(sets))
+    monkeypatch.setattr(P, "SETS_FILE", sets_file)
+
+    tag = settings_tag("cpu", "float32")
+    with store.using(tmp_path / "results.sqlite"):
+        for formula, base, es in (("SiO2", 0, [(-5.00, -6.00), (-4.98, -5.97), (-4.95, -5.90)]),
+                                  ("TiO2", 3, [(-7.00, -8.00), (-6.88, -7.80), (-6.85, -7.84)])):
+            for i, (e_dft, e_model) in enumerate(es):
+                store.record_job(P.SUITE, f"{formula}:mp-{base + i}@{tag}", "ok", payload={
+                    "formula": formula, "material_id": f"mp-{base + i}", "relaxed": cell(4.0 + 0.5 * i),
+                    "energy_per_atom": e_model, "e_dft_per_atom": e_dft, "rejection": None,
+                    "kept_structure": True, "sg_number": 1, "n_atoms": 2}, settings={"settings_tag": tag})
+        out = tmp_path / "polymorph.md"
+        assert P.report(tag=tag, out=out)
+    text = out.read_text()
+    for heading in ("# Polymorph ranking", "## Headline", "ground state ranked first",
+                    "Spearman", "## Caveats", "not scored" if False else "## The set"):
+        assert heading in text
+    assert "nan" not in text.lower().replace("nan-", "")  # no NaN leaks into a published table

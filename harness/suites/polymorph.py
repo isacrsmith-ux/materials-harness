@@ -304,12 +304,12 @@ def _rate_row(g: pd.DataFrame, label_col: str, label, boot) -> dict:
 
 def report(tag: str | None = None, out=None) -> str:
     from harness import metrics as M
-    from harness.config import ACTIVE_MODEL, MODELS, REPORTS_DIR, ROOT
+    from harness.config import ACTIVE_MODEL, MODELS, REPORTS_DIR, ROOT, load_compute_config
     from harness.report import VERDICT_RULES, verdict_ci
 
     doc = load()
-    tag = tag or settings_tag(*[json.loads((ROOT / "config" / f"compute-{ACTIVE_MODEL}.json").read_text())[k]
-                                for k in ("device", "dtype")])
+    compute = load_compute_config()
+    tag = tag or settings_tag(compute["device"], compute["dtype"])
     df = table(tag)
     r = rank(df, doc)
     scored = r[r.status == "scored"]
@@ -399,4 +399,4 @@ def report(tag: str | None = None, out=None) -> str:
           f"* `config/costs.json` still holds 1:1 placeholder costs; nothing here is optimised against them.", ""]
     out = out or REPORTS_DIR / "polymorph.md"
     out.write_text("\n".join(L) + "\n")
-    return str(out.relative_to(ROOT))
+    return str(out.relative_to(ROOT)) if out.is_relative_to(ROOT) else str(out)
