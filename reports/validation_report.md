@@ -1,19 +1,69 @@
 # Validation report — MACE-MP-0 medium
 
-Generated 2026-09-11 12:05 UTC · commit `58f7516` · settings tag `207ccc81` · model `2023-12-03-mace-128-L1_epoch-199.model` · cpu/float64 · Apple M4 Max · macOS 26.6.2
+Generated 2026-09-12 04:36 UTC · commit `77af7bd` · settings tag `207ccc81` · model `2023-12-03-mace-128-L1_epoch-199.model` · cpu/float64 · Apple M4 Max · macOS 26.6.2
 
 Relaxation: FrechetCellFilter + BFGS, fmax 0.01 eV/Å, |stress| ≤ 0.01 GPa, ≤ 500 steps, fallback ladder on failure. Bins: energy above hull (eV/atom) — MP targets on the GGA/GGA+U hull, WBM against the MP hull (with a '<0' bin). Brackets: 95 % bootstrap intervals; verdicts from the pessimistic end.
 
 ## Verdict in plain language
 
-* **Engine evaluated:** MACE-MP-0 medium (the only engine run so far; Phase 3 compares others). All statements below use the pessimistic end of the 95 % interval.
+* **Engine evaluated:** MACE-MP-0 medium (`mace-mp-0-medium`, cpu/float64). Engines are compared on identical structures in `reports/phase3/screening.md`; candidates, licences and measured speed in `reports/phase3/candidates.md`. All statements below use the pessimistic end of the 95 % interval.
 * **Threshold:** call a new material stable when its predicted energy above hull is ≤ -30 meV/atom (cost-optimal on the calibration set at the placeholder costs). At that threshold **at least 64% of 'stable' calls are right** (point 68%) and at least 49% of truly stable materials are found (point 53%); 'unstable' calls are right at least 91.0% of the time. Precision verdict: use with caution.
 * **Energy error on new materials, upper bound by true hull distance:** <0: ≤ 46 meV/atom (use with caution); 0–0.025: ≤ 30 meV/atom (use with caution); 0.025–0.1: ≤ 45 meV/atom (use with caution); 0.1–0.3: ≤ 103 meV/atom (not trustworthy); >0.3: ≤ 136 meV/atom (not trustworthy).
 * **Relaxation changes the structure** for 7% (<0), 5% (0–0.025), 7% (0.025–0.1), 12% (0.1–0.3), 18% (>0.3) of new materials; those results carry 3.0× the energy error of the rest (158 vs 52 meV/atom MAE) and should go to DFT, not to the lab.
 * **Known materials that keep their structure, energy error upper bound (meV/atom):** ≤0.025: ≤ 15 (trustworthy); 0.025–0.1: ≤ 17 (trustworthy); 0.1–0.3: ≤ 27 (trustworthy); >0.3: ≤ 143 (not trustworthy).
 * **Chemistries (new materials, ≥ 20 compounds):** error upper bound ≤ 30 meV/atom for no element; error lower bound > 60 meV/atom (not trustworthy) for Pu, Np, Ta, H, U.
 * **Hull construction for new materials:** relaxing every competing phase with the engine makes the hull-distance error **larger** by +5.1 [+1.7, +8.8] meV/atom per system than placing the engine's energy on the MP DFT hull (mode a). On new materials the error belongs to the new structure and does not cancel against the competitors; mode (a) is the better construction for the product, and it needs no competitor relaxations.
-* **Not yet shown:** the locked WBM test set (final evaluation) and other engines (Phase 3: downloads awaiting approval).
+* **The locked WBM test set is reported separately in `reports/final_test.md`** (opened once, every threshold fitted on this calibration set).
+
+### Compared with the previous scorecard
+
+Previous: `mace-mpa-0-medium` (settings `c2480e74`). **Settings differ.**
+
+| metric                                                |   previous |   this run |
+|:------------------------------------------------------|-----------:|-----------:|
+| mp_same_structure_energy_mae_≤0.025                   |      6.498 |     12.701 |
+| mp_same_structure_energy_mae_upper_≤0.025             |      7.355 |     15.240 |
+| mp_same_structure_energy_mae_0.025–0.1                |      9.370 |     15.218 |
+| mp_same_structure_energy_mae_upper_0.025–0.1          |     10.382 |     16.737 |
+| mp_same_structure_energy_mae_0.1–0.3                  |     19.532 |     23.881 |
+| mp_same_structure_energy_mae_upper_0.1–0.3            |     22.606 |     26.829 |
+| mp_same_structure_energy_mae_>0.3                     |    109.773 |    119.598 |
+| mp_same_structure_energy_mae_upper_>0.3               |    134.836 |    142.631 |
+| wbm_energy_mae_<0                                     |     14.754 |     40.212 |
+| wbm_energy_mae_upper_<0                               |     17.221 |     46.366 |
+| wbm_energy_mae_0–0.025                                |     11.012 |     25.960 |
+| wbm_energy_mae_upper_0–0.025                          |     12.346 |     30.458 |
+| wbm_energy_mae_0.025–0.1                              |     16.491 |     41.863 |
+| wbm_energy_mae_upper_0.025–0.1                        |     18.657 |     45.303 |
+| wbm_energy_mae_0.1–0.3                                |     28.026 |     77.556 |
+| wbm_energy_mae_upper_0.1–0.3                          |     30.150 |    103.457 |
+| wbm_energy_mae_>0.3                                   |     84.332 |    124.278 |
+| wbm_energy_mae_upper_>0.3                             |     96.679 |    135.925 |
+| wbm_precision_opt                                     |      0.826 |      0.684 |
+| wbm_precision_opt_lower                               |      0.795 |      0.642 |
+| wbm_recall_opt                                        |      0.838 |      0.534 |
+| wbm_f1_opt                                            |      0.832 |      0.600 |
+| wbm_npv_opt                                           |      0.971 |      0.919 |
+| wbm_threshold_opt_mev                                 |      0.000 |    -30.000 |
+| wbm_f1_0                                              |      0.832 |      0.646 |
+| wbm_precision_0                                       |      0.826 |      0.549 |
+| wbm_daf_0                                             |      5.411 |      3.603 |
+| mode_b_minus_a_abs_mev                                |      1.927 |      5.081 |
+| mode_b_mae_<0                                         |     16.232 |     39.552 |
+| mode_b_mae_0–0.025                                    |     10.594 |     29.514 |
+| mode_b_mae_0.025–0.1                                  |     13.120 |     44.036 |
+| mode_b_mae_0.1–0.3                                    |     40.393 |     76.714 |
+| mode_b_mae_>0.3                                       |     99.032 |    124.636 |
+| routing_n                                             |   3998.000 |   3994.000 |
+| routing_likely stable                                 |    103.000 |      0.000 |
+| routing_likely unstable                               |   2162.000 |   1486.000 |
+| routing_send to DFT                                   |   1733.000 |   2508.000 |
+| routing_precision of 'likely stable'                  |      0.971 |    nan     |
+| routing_NPV of 'likely unstable'                      |      0.985 |      0.978 |
+| routing_share sent to DFT                             |      0.433 |      0.628 |
+| routing_truly stable found as 'likely stable'         |      0.164 |      0.000 |
+| routing_truly stable sent to DFT                      |      0.784 |      0.947 |
+| routing_truly stable wrongly called 'likely unstable' |      0.052 |      0.053 |
 
 ## 1. What was scored, and what was not
 
@@ -558,7 +608,7 @@ Birch–Murnaghan fits vs MP elastic K_VRH: MAE 6.4 [5.2, 7.8] % (n=70), verdict
 |:------------------|-------------:|---------:|------:|----------:|
 | bulk              |           70 |      0.5 |   2.8 |       0.0 |
 | experimental      |           63 |      0.4 |   0.5 |       0.0 |
-| ood               |         8009 |      0.2 |   3.6 |       4.8 |
+| ood               |        12009 |      0.6 |   3.3 |       6.4 |
 | smoke             |            1 |      0.3 |   0.3 |       0.0 |
 | stability         |         5927 |      3.6 |  38.8 |      32.3 |
 | substitution      |          300 |      0.6 |  60.7 |       2.0 |
@@ -569,7 +619,7 @@ Birch–Murnaghan fits vs MP elastic K_VRH: MAE 6.4 [5.2, 7.8] % (n=70), verdict
 | bulk              |        0 |    70 |        11 |         0 |
 | experimental      |        0 |    63 |         1 |         0 |
 | mode_b            |        3 |   297 |         0 |         0 |
-| ood               |        0 |  8009 |         0 |         0 |
+| ood               |        0 | 12009 |         0 |         0 |
 | smoke             |        0 |     1 |         0 |         0 |
 | stability         |        0 |  5977 |         0 |         3 |
 | substitution      |        0 |   300 |         0 |         0 |
