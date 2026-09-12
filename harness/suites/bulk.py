@@ -58,6 +58,24 @@ def fit_birch_murnaghan(volumes, energies) -> dict:
             "v0_in_range": bool(v.min() <= v0 <= v.max())}
 
 
+def eos_bulk_modulus(points: list[dict]) -> dict:
+    """Bulk modulus from raw EOS points: guard every point, then fit, or say why there is no fit.
+
+    The product (harness/predict.py) calls this on the very same `jobs.eos_job` output the suite
+    records, so a bulk modulus shown to a user is produced by the code the report measured.
+    """
+    for p in points:
+        if "error" not in p:
+            p["rejection"] = compare.rejection_reason(p)
+    good = [p for p in points if "error" not in p and not p["rejection"]]
+    if len(good) < MIN_POINTS:
+        return {"fit": None, "n_points": len(good), "n_requested": len(points),
+                "error": f"only {len(good)}/{len(points)} usable EOS points (need {MIN_POINTS})"}
+    fit = fit_birch_murnaghan([p["volume_per_atom"] for p in good], [p["energy_per_atom"] for p in good])
+    return {"fit": fit, "n_points": len(good), "n_requested": len(points),
+            "fit_ok": bool(fit["rms_mev"] <= MAX_FIT_RMS_MEV and fit["v0_in_range"]), "error": None}
+
+
 def materials(tag: str) -> list[dict]:
     from harness.curation import resolve_pairs
 
@@ -91,22 +109,19 @@ def _record(job: dict, res: dict) -> None:
     pts = res["points"]
     # Same rejection rule as every other suite (no DFT reference per EOS point, so the absolute
     # energy window applies and the energy-vs-reference half does not).
-    for p in pts:
-        if "error" not in p:
-            p["rejection"] = compare.rejection_reason(p)
-    good = [p for p in pts if "error" not in p and not p["rejection"]]
-    runtime = sum(p.get("wall_time_s", 0.0) for p in pts)
-    if len(good) < MIN_POINTS:
-        err = f"only {len(good)}/{len(pts)} usable EOS points (need {MIN_POINTS})"
-        store.record_job(SUITE, key, "failed", payload={"mp_id": m["mp_id"], "points": pts}, error=err, runtime_s=runtime)
-        log.warning("%s: %s", m["label"], err)
+    eos = eos_bulk_modulus(pts)
+    good_n, runtime = eos["n_points"], sum(p.get("wall_time_s", 0.0) for p in pts)
+    if eos["fit"] is None:
+        store.record_job(SUITE, key, "failed", payload={"mp_id": m["mp_id"], "points": pts}, error=eos["error"],
+                         runtime_s=runtime)
+        log.warning("%s: %s", m["label"], eos["error"])
         return
-    fit = fit_birch_murnaghan([p["volume_per_atom"] for p in good], [p["energy_per_atom"] for p in good])
+    fit = eos["fit"]
     k = el["bulk_modulus"]
     k_vrh, k_reuss, k_voigt = k.get("vrh"), k.get("reuss"), k.get("voigt")
     anisotropic = bool(k_voigt and k_reuss and abs(k_voigt - k_reuss) / k_reuss > 0.01)
-    flags = {**m["flags"], "n_points": len(good), "fit_rms_mev": fit["rms_mev"], "bp": fit["bp"],
-             "v0_in_range": fit["v0_in_range"], "fit_ok": fit["rms_mev"] <= MAX_FIT_RMS_MEV and fit["v0_in_range"],
+    flags = {**m["flags"], "n_points": good_n, "fit_rms_mev": fit["rms_mev"], "bp": fit["bp"],
+             "v0_in_range": fit["v0_in_range"], "fit_ok": eos["fit_ok"],
              "anisotropic": anisotropic, "mp_warnings": el.get("warnings")}
     src = (f"{m['mp_id']} MP elasticity ({el.get('fitting_method')}, order {el.get('order')}, "
            f"db {el.get('database_version')}; functional not stated in the doc)")
@@ -126,11 +141,11 @@ def _record(job: dict, res: dict) -> None:
                "b0_gpa": fit["b0_gpa"], "bp": fit["bp"], "k_vrh": k_vrh, "k_reuss": k_reuss, "k_voigt": k_voigt,
                "err_pct_vrh": compare.pct_error(fit["b0_gpa"], k_vrh),
                "err_pct_reuss": compare.pct_error(fit["b0_gpa"], k_reuss) if k_reuss else None,
-               "anisotropic": anisotropic, "fit": fit, "n_points": len(good), "points": pts, "wall_time_s": runtime}
+               "anisotropic": anisotropic, "fit": fit, "n_points": good_n, "points": pts, "wall_time_s": runtime}
     store.record_job(SUITE, key, "ok", payload=payload, settings=res["metadata"], runtime_s=runtime)
     log.info("%-10s %-12s B0 %6.1f GPa  K_VRH %6.1f  err %+6.1f%%  B' %.2f  rms %.2f meV  %d pts  %.0fs",
              m["label"], m["mp_id"], fit["b0_gpa"], k_vrh, payload["err_pct_vrh"], fit["bp"], fit["rms_mev"],
-             len(good), runtime)
+             good_n, runtime)
 
 
 def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> None:

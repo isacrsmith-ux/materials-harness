@@ -15,17 +15,14 @@ Energies are signed relative to the competitor hull; e_above_hull = max(signed, 
 
 from __future__ import annotations
 
-import copy
 import logging
 
 import numpy as np
 import pandas as pd
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.core import Composition
-from pymatgen.analysis.compatibility import MaterialsProject2020Compatibility
-from pymatgen.entries.computed_entries import ComputedStructureEntry
 
-from harness import compare, mp_data, store
+from harness import compare, hull, mp_data, store
 from harness.config import LADDER_BUDGET_S, settings_tag
 from harness.curation import resolve_pairs
 from harness.jobs import run_job
@@ -35,67 +32,21 @@ from harness.runner import run_pool
 log = logging.getLogger(__name__)
 
 SUITE = "stability"
-COMPETITOR_WINDOW = 0.1  # eV/atom
 LARGE_CELL_ATOMS = 100  # competitor cells above this run in a threads-heavy pool
 THRESHOLDS = (0.0, 0.1)  # eV/atom; "stable" means e_above_hull <= threshold
 ON_HULL_TOL = 1e-6
-# MP's API potcar_spec lacks summary stats, which pymatgen's POTCAR check needs; the prefetch
-# diagnostic (logs/stability_prefetch.log) records how many entries each setting keeps.
-CHECK_POTCAR = False
 
-
-def material_id(entry) -> str:
-    """Canonical (new-format) MP id of an entry.
-
-    MP entries carry entry_id = EntryID(identifier='mp-aaaaaprp', suffix='GGA') — a dict after the
-    JSON cache round-trip — while entry.data['material_id'] still holds the LEGACY id (e.g.
-    'mp-10597'). Pair/target ids are new-format, so the entry_id identifier must win.
-    """
-    eid = entry.entry_id
-    if isinstance(eid, dict) and eid.get("identifier"):
-        return str(eid["identifier"])
-    if getattr(eid, "identifier", None):
-        return str(eid.identifier)
-    eid = str(eid) if eid is not None else ""
-    if eid.startswith("mace:"):
-        return str(entry.data.get("material_id") or eid)
-    for suffix in ("-GGA+U", "-GGA", "-R2SCAN", "-r2SCAN"):
-        if eid.endswith(suffix):
-            return eid[: -len(suffix)]
-    return eid or str(entry.data.get("material_id"))
-
-
-def chemsys_of(formula: str) -> str:
-    return "-".join(sorted(e.symbol for e in Composition(formula).elements))
-
-
-def _compat() -> MaterialsProject2020Compatibility:
-    return MaterialsProject2020Compatibility(check_potcar=CHECK_POTCAR)
-
-
-def process(entries: list) -> list:
-    """Strip existing corrections and re-apply MP2020 to every entry, identically."""
-    return _compat().process_entries(copy.deepcopy(entries), clean=True, inplace=True)
-
-
-def mace_entry(mp_entry, structure, energy_per_atom: float, label: str) -> ComputedStructureEntry:
-    """A MACE-energy entry that inherits the MP entry's calculation parameters for corrections."""
-    keep = {k: v for k, v in mp_entry.data.items() if k in ("oxide_type", "oxidation_states", "run_type")}
-    return ComputedStructureEntry(
-        structure, energy_per_atom * len(structure), parameters=copy.deepcopy(mp_entry.parameters),
-        data={**keep, "material_id": material_id(mp_entry), "source": "mace"}, entry_id=f"mace:{label}")
-
-
-def signed_hull_energy(competitors: list, target) -> float:
-    """Target energy relative to the hull of `competitors` (negative = below it)."""
-    pd_ = PhaseDiagram(competitors)
-    _, e = pd_.get_decomp_and_e_above_hull(target, allow_negative=True)
-    return float(e)
-
-
-def window_phases(processed: list, window: float = COMPETITOR_WINDOW) -> list:
-    pd_ = PhaseDiagram(processed)
-    return [e for e in processed if pd_.get_e_above_hull(e) <= window + 1e-9]
+# The hull arithmetic (MP2020 processing, entry construction, hull placement) lives in harness/hull.py
+# so the validation suites and the product (harness/predict.py) share one implementation. These names
+# are re-exported unchanged; the suites and the tests have always imported them from this module.
+COMPETITOR_WINDOW = hull.COMPETITOR_WINDOW
+CHECK_POTCAR = hull.CHECK_POTCAR
+material_id = hull.material_id
+chemsys_of = hull.chemsys_of
+process = hull.process
+mace_entry = hull.mace_entry
+signed_hull_energy = hull.signed_hull_energy
+window_phases = hull.window_phases
 
 
 def _sub_energies(tag: str) -> dict[str, dict]:

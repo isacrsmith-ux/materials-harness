@@ -39,7 +39,7 @@ from harness.config import (DEFAULT_RELAX, LOG_DIR, MODEL, QUEUE_DB, REPORTS_DIR
                             load_unattended_config, settings_tag)
 from harness.jobs import run_job
 from harness.platform_check import core_counts
-from harness.runner import _init_worker, _safe_call
+from harness.runner import _init_worker, safe_call
 
 log = logging.getLogger(__name__)
 
@@ -498,11 +498,11 @@ class Runner:
                        layout={"tier": "unattended", "mode": self.mode, "workers": self.workers,
                                "threads_per_worker": self.threads})
             try:
-                fut = self.pool.submit(_safe_call, run_job, job)
+                fut = self.pool.submit(safe_call, run_job, job)
             except (BrokenProcessPool, RuntimeError):
                 log.warning("process pool unusable; restarting it")
                 self._restart_pool()
-                fut = self.pool.submit(_safe_call, run_job, job)
+                fut = self.pool.submit(safe_call, run_job, job)
             self.inflight[fut] = {"row": row, "job": job, "mono0": time.monotonic(), "wall0": time.time()}
             self.dispatched += 1
         if rows:

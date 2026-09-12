@@ -1,0 +1,36 @@
+{
+ "_comment": "Golden end-to-end fixture for harness/predict.py. Each id is a WBM CALIBRATION structure; e_above_hull_mev and e_mace are what the calibration run recorded for it at settings tag c2480e74 (MACE-MPA-0 medium, cpu/float32), and label is the label the frozen calibration bundle gives that recorded prediction. predict_structure() on the same WBM initial structure must reproduce both. Regenerate only when the calibration run itself is redone.",
+ "engine": "mace-mpa-0-medium",
+ "device": "cpu",
+ "dtype": "float32",
+ "settings_tag": "c2480e74",
+ "cases": {
+  "wbm-1-46905": {
+   "formula": "ThBiPd",
+   "n_atoms": 3,
+   "label": "likely stable",
+   "e_above_hull_mev": -33.72203059895912,
+   "e_mace": -6.279856363932292,
+   "structure_changed": false,
+   "each_true_mev": 44.163000000000004
+  },
+  "wbm-3-79199": {
+   "formula": "ZrTl",
+   "n_atoms": 2,
+   "label": "likely unstable",
+   "e_above_hull_mev": 6.314562866210544,
+   "e_mace": -5.528482437133789,
+   "structure_changed": false,
+   "each_true_mev": 2.387
+  },
+  "wbm-1-17672": {
+   "formula": "FeHg",
+   "n_atoms": 2,
+   "label": "needs DFT",
+   "e_above_hull_mev": 530.0323008422853,
+   "e_mace": -3.856818199157715,
+   "structure_changed": false,
+   "each_true_mev": 533.254
+  }
+ }
+}

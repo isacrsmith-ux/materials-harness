@@ -1,5 +1,7 @@
 """CLI:  python -m harness run --suite smoke|substitution|stability|ood|experimental|bulk|all
        python -m harness report [--out DIR] [--compare-previous]
+       python -m harness predict --parent <mp-id|CIF|file> --substitute Sr:Ba [--json]
+       python -m harness calibrate    freeze the product's calibration bundle (fitted once)
        python -m harness benchmark
        python -m harness info
        python -m harness prepare      bulk-download inputs, generate pairs, fill the job queue
@@ -53,6 +55,18 @@ def main(argv: list[str] | None = None) -> int:
     bench.add_argument("--no-save-compute", action="store_true",
                        help="do not rewrite the model's compute config (always implied for the baseline model)")
     sub.add_parser("info", help="print machine + compute config")
+
+    pr = sub.add_parser("predict", help="one candidate -> one decision (the product)")
+    pr.add_argument("--parent", required=True, help="mp-id, CIF string, or path to a structure file")
+    pr.add_argument("--substitute", help="element swap, e.g. Sr:Ba (omit to score --parent as it stands)")
+    pr.add_argument("--json", action="store_true", help="machine-readable output")
+    pr.add_argument("--engine", help="registry key of the engine (default: the production engine)")
+    pr.add_argument("--no-second-engine", action="store_true",
+                    help="skip the disagreement check; uses the rule certified for that configuration")
+    pr.add_argument("--bulk-modulus", action="store_true", help="also fit an EOS (nine more relaxations)")
+    pr.add_argument("--no-ladder", action="store_true", help="do not run the fallback ladder on a rejected relaxation")
+    cal = sub.add_parser("calibrate", help="freeze the product's calibration bundle from the calibration set")
+    cal.add_argument("--force", action="store_true", help="refit and overwrite an existing bundle")
 
     cfg = load_unattended_config()
     prep = sub.add_parser("prepare", help="bulk-download MP/WBM inputs, generate substitution pairs, fill the queue")
@@ -118,6 +132,37 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "info":
         print(json.dumps({"machine": machine_info(), "compute": {k: v for k, v in load_compute_config().items()
                                                                 if not k.endswith("benchmark")}}, indent=2))
+        return 0
+    if args.cmd == "predict":
+        from harness import predict as P
+        from harness.screening import benchmarked_models
+
+        engine = None
+        if args.engine:
+            setting = {k: (k, d, t) for k, d, t in benchmarked_models()}
+            if args.engine not in setting:
+                print(f"STOP: {args.engine} has no benchmarked compute config", file=sys.stderr)
+                return 2
+            engine = setting[args.engine]
+        try:
+            p = P.predict(args.parent, args.substitute, engine=engine,
+                          second_engine=None if args.no_second_engine else P.SECOND_ENGINE,
+                          use_ladder=not args.no_ladder, with_bulk_modulus=args.bulk_modulus)
+        except (ValueError, KeyError, FileNotFoundError) as exc:
+            print(f"STOP: {type(exc).__name__}: {exc}", file=sys.stderr)
+            return 2
+        print(p.to_json() if args.json else P.render(p))
+        return 0
+    if args.cmd == "calibrate":
+        from harness import calibration
+
+        try:
+            b = calibration.build(force=args.force)
+        except FileExistsError as exc:
+            print(f"STOP: {exc}", file=sys.stderr)
+            return 2
+        print(f"Wrote {calibration.BUNDLE_FILE.relative_to(harness.ROOT)} "
+              f"({b['calibration_set']['n_usable']} calibration structures, engine {b['engine']['name']})")
         return 0
     if args.cmd == "benchmark":
         from harness.benchmark import run_benchmark

@@ -32,6 +32,24 @@ The top level is the production engine only. `python -m harness report` writes t
 engine `HARNESS_MODEL` selects, so the baseline is regenerated with
 `python -m harness report --out reports/mace-mp-0-medium`.
 
+## The prediction layer — the product
+
+The suites above are benchmarks. The **product** is one call: one candidate from a scientist, one
+decision back.
+
+```bash
+python -m harness predict --parent mp-aaacfzaj --substitute La:Dy [--json]
+```
+
+`harness/predict.py` builds the candidate, relaxes it through the same fallback ladder the calibration
+results went through, places its energy on the Materials Project hull (mode (a)), and returns a label —
+`likely stable` / `likely unstable` / **`needs DFT`** — with the observed hit rate for that chemistry
+family and predicted hull bin, the reasons it routed that way, the relaxed structure, its properties and
+full provenance. Every threshold comes from `data/calibration_bundle.json`, frozen once from the WBM
+calibration set (`python -m harness calibrate`); nothing is fitted per call.
+
+**The contract, the refusal rules and a worked example are in [`docs/predict.md`](docs/predict.md).**
+
 ## Setup (macOS, Apple Silicon)
 
 Everything lives inside this folder: uv, the Python interpreter, the virtualenv, caches and model weights.
@@ -65,6 +83,7 @@ Matbench Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the
 ./uvw run python -m harness benchmark            # CPU/float64 vs MPS/float32 + worker layouts -> config/compute.json
 ./uvw run python -m harness run --suite smoke    # or substitution | stability | ood | experimental | bulk | all
 ./uvw run python -m harness report               # writes reports/validation_report.md for HARNESS_MODEL (+ figures, parquet)
+./uvw run python -m harness predict --parent mp-2657 --substitute Ti:Zr    # the product: one candidate -> one decision
 ./uvw run pytest -m "not slow"                   # fast unit tests (no MACE, no network)
 ./uvw run pytest                                 # also the smoke test
 ```
@@ -200,11 +219,16 @@ temperature label), or `wbm_computed` (WBM DFT). Every simulated value is `simul
 ## Layout
 
 ```
-harness/            engine.py (MACE + relaxation), mp_data.py (cached MP access), compare.py (math),
+harness/            predict.py (THE PRODUCT), calibration.py (the frozen calibration bundle),
+                    hull.py (MP hull placement, shared by the suites and the product),
+                    routing.py + confidence.py (labels, thresholds, conformal bounds),
+                    engine.py (MACE + relaxation), mp_data.py (cached MP access), compare.py (math),
                     store.py (SQLite), runner.py (process pool), curation.py, report.py, suites/*.py,
                     pairgen.py (auto pairs), jobqueue.py + orchestrator.py (unattended runs),
                     power.py, notify.py, schedule.py (launchd)
-data/               curated inputs: substitution pairs, experimental table, WBM sample ids, auto_pairs.json
+docs/               predict.md — the product's contract, refusal rules and a worked example
+data/               curated inputs: substitution pairs, experimental table, WBM sample ids, auto_pairs.json,
+                    calibration_bundle.json (the product's frozen thresholds)
 config/             compute.json (benchmark layout), unattended.json (queue/scale/schedule settings)
 run_unattended.sh   background launcher (nohup + caffeinate); scripts/ install/uninstall the nightly agent
 reports/            validation_report.md (production engine) + figures/; mace-mp-0-medium/ (baseline);

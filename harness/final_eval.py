@@ -17,10 +17,10 @@ import pandas as pd
 
 from harness import compare, splits
 from harness import metrics as M
-from harness.config import DATA_DIR, MODELS, REPORTS_DIR, ROOT, settings_tag
+from harness.calibration import DISAGREEMENT_QUANTILE  # noqa: F401 — one definition, shared with the product
+from harness.config import DATA_DIR, MODELS, REPORTS_DIR, ROOT
 
 FINAL_LOG = DATA_DIR / "final_test_log.json"
-DISAGREEMENT_QUANTILE = 0.95
 
 
 def started() -> bool:
@@ -61,19 +61,14 @@ def build_test_jobs(compute: dict) -> list[dict]:
 
 
 def _table(key: str, device: str, dtype: str, ids: set, init_cache: str) -> pd.DataFrame:
-    from harness.report import _start_changed
-    from harness.suites import ood
+    """The same usable-rows-plus-structure-changed table the product's calibration bundle is built from."""
+    from harness import calibration
 
-    df = ood.table(settings_tag(device, dtype, model=key))
-    df = df[df.wbm_id.isin(ids)]
-    n_all = len(df)
-    df = df[df.rejection.isna()].copy()
-    df["structure_changed"] = _start_changed(settings_tag(device, dtype, model=key) + "_" + init_cache, df, init_cache)
-    df.attrs["n_rejected"] = n_all - len(df)
-    return df
+    return calibration.calibration_table((key, device, dtype), ids, init_cache)
 
 
 def evaluate(primary: tuple[str, str, str], second: tuple[str, str, str] | None) -> str:
+    from harness import calibration
     from harness import confidence as C
     from harness import routing as R
     from harness.report import _costs
@@ -82,16 +77,14 @@ def evaluate(primary: tuple[str, str, str], second: tuple[str, str, str] | None)
     cal_ids, test_ids = set(split["calibration"]["ids"]), set(splits.test_ids(unlock=True))
     cal = _table(*primary, cal_ids, "calibration_init_structs.json")
     test = _table(*primary, test_ids, "test_init_structs.json")
-    tol = None
     if second:
         for name, df, ids, cache in (("cal", cal, cal_ids, "calibration_init_structs.json"), ("test", test, test_ids, "test_init_structs.json")):
             s = _table(*second, ids, cache).set_index("wbm_id").each_pred
             df["pred_2"] = df.wbm_id.map(s)
-        both = cal.dropna(subset=["pred_2"])
-        tol = float(np.quantile((both.each_pred - both.pred_2).abs(), DISAGREEMENT_QUANTILE))
-    pol = R.RoutingPolicy(threshold=0.0, disagreement_tol=tol, weak_elements=R.weak_elements_from(cal))
-    model = C.fit(cal, C.ALPHA)
-    rule = C.fit_decision(cal[R.labelable(cal, pol)])
+    # One fitting function, shared with the product's frozen calibration bundle (harness/calibration.py),
+    # so the system evaluated here and the system that ships cannot drift apart.
+    fitted = calibration.fit(cal, threshold=0.0, use_disagreement=second is not None)
+    tol, pol, model, rule = fitted.disagreement_tol, fitted.policy, fitted.conformal, fitted.rule
     rows = []
     for r in test.itertuples():
         cand = R.Candidate(r.wbm_id, r.formula, r.each_pred, getattr(r, "pred_2", None), bool(r.structure_changed))

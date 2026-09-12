@@ -99,7 +99,7 @@ def static_job(job: dict) -> dict:
             "metadata": engine.engine_metadata(job["device"], job["dtype"]) | {"calculation": "single_point"}}
 
 
-JOB_FUNCTIONS = {"relax": relax_job, "static": static_job, "ladder": ladder_job}
+JOB_FUNCTIONS = {"relax": relax_job, "static": static_job, "ladder": ladder_job, "eos": eos_job}
 
 
 def run_job(job: dict) -> dict:

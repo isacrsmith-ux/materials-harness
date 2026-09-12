@@ -6,6 +6,9 @@ A candidate is sent to DFT when ANY of these holds (every reason is returned, no
   known-weak chemistry  it contains an element whose calibration error is not shown to be acceptable
                         (per-element table: MAE upper bound above the caution line, or too few compounds)
   structure changed     the relaxation left the candidate's starting structure (StructureMatcher)
+  above the trusted range  its predicted hull distance is above policy.max_trustworthy_hull, where no
+                        engine's energy is trustworthy (off by default: the validation suites report
+                        that range, the product refuses it — see harness/predict.py)
 Otherwise it is 'likely stable' when the whole interval is at or below the threshold, 'likely unstable'
 when the whole interval is above it.
 
@@ -45,6 +48,9 @@ class RoutingPolicy:
     disagreement_tol: float | None = None    # eV/atom; None = no second engine yet
     weak_elements: frozenset = frozenset()   # from the per-element calibration table
     route_structure_change: bool = True
+    # eV/atom above which no label is given at all, whatever the thresholds say. None (the default)
+    # keeps every suite's numbers as they were certified; the product sets it (predict.MAX_TRUSTWORTHY_HULL_EV).
+    max_trustworthy_hull: float | None = None
 
 
 @dataclass
@@ -64,6 +70,9 @@ def route(c: Candidate, model: ConformalModel, policy: RoutingPolicy, rule=None)
     weak = sorted({e.symbol for e in Composition(c.formula).elements} & set(policy.weak_elements))
     if weak:
         reasons.append(f"known-weak chemistry ({', '.join(weak)})")
+    if policy.max_trustworthy_hull is not None and c.pred_e_hull > policy.max_trustworthy_hull:
+        reasons.append(f"predicted hull distance {c.pred_e_hull * 1000:+.0f} meV/atom is above the trusted range "
+                       f"(> {policy.max_trustworthy_hull * 1000:.0f} meV/atom)")
     if policy.route_structure_change and c.structure_changed:
         reasons.append("relaxation changed the structure")
     if policy.disagreement_tol is not None and c.pred_e_hull_2 is not None \
@@ -110,6 +119,8 @@ def labelable(df: "pd.DataFrame", policy: RoutingPolicy) -> "pd.Series":
     from pymatgen.core import Composition as _C
 
     ok = ~df.formula.map(lambda f: bool({e.symbol for e in _C(f).elements} & set(policy.weak_elements)))
+    if policy.max_trustworthy_hull is not None:
+        ok &= df.each_pred <= policy.max_trustworthy_hull
     if policy.route_structure_change and "structure_changed" in df:
         ok &= ~df.structure_changed.fillna(False).astype(bool)
     if policy.disagreement_tol is not None and "pred_2" in df:

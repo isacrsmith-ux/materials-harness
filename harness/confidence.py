@@ -199,7 +199,7 @@ class DecisionRule:
             return "stable", f"prediction ≤ certified stable threshold {th['stable'] * 1000:+.0f} meV/atom ({fam})"
         if th["unstable"] is not None and pred > th["unstable"] + M.ON_HULL_TOL:
             return "unstable", f"prediction > certified unstable threshold {th['unstable'] * 1000:+.0f} meV/atom ({fam})"
-        return None, "between the certified thresholds (low confidence)"
+        return None, "between the certified thresholds"
 
 
 def fit_decision(df: pd.DataFrame, target_precision: float = TARGET_PRECISION, target_npv: float = TARGET_NPV,

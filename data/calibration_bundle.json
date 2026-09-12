@@ -1,0 +1,670 @@
+{
+ "created_at": "2026-09-12T20:21:45+00:00",
+ "harness_commit": "8177894",
+ "engine": {
+  "key": "mace-mpa-0-medium",
+  "name": "MACE-MPA-0 medium",
+  "checkpoint": "mace-mpa-0-medium.model",
+  "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+  "device": "cpu",
+  "dtype": "float32",
+  "settings_tag": "c2480e74"
+ },
+ "second_engine": {
+  "key": "mace-mp-0-medium",
+  "name": "MACE-MP-0 medium",
+  "checkpoint": "2023-12-03-mace-128-L1_epoch-199.model",
+  "checkpoint_sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "device": "cpu",
+  "dtype": "float64",
+  "settings_tag": "207ccc81"
+ },
+ "calibration_set": {
+  "source": "WBM calibration split (data/wbm_split.json)",
+  "split_created_at": "2026-09-11T05:30:05+00:00",
+  "n_ids": 4000,
+  "n_usable": 3998,
+  "n_rejected_by_guard": 2,
+  "n_with_second_engine": 3991,
+  "ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3"
+ },
+ "conformal": {
+  "alpha": 0.1,
+  "min_group": 40,
+  "table": {
+   "*|*": [
+    -0.04250840983072912,
+    0.023751836761474632,
+    3998
+   ],
+   "chalcogenide|*": [
+    -0.041325015950520516,
+    0.0299726422576905,
+    260
+   ],
+   "chalcogenide|0.025\u20130.1": [
+    -0.03618071598307271,
+    0.025642195068359186,
+    77
+   ],
+   "chalcogenide|0.1\u20130.3": [
+    -0.049729700463867044,
+    0.03291744000244101,
+    81
+   ],
+   "chalcogenide|<0": [
+    -0.016740700927734053,
+    0.01890287900390586,
+    41
+   ],
+   "f-electron|*": [
+    -0.03740269665527318,
+    0.02300656754557373,
+    2036
+   ],
+   "f-electron|0.025\u20130.1": [
+    -0.02802730967712419,
+    0.017101550201416238,
+    601
+   ],
+   "f-electron|0.1\u20130.3": [
+    -0.05022494775390651,
+    0.03201846756998705,
+    646
+   ],
+   "f-electron|0\u20130.025": [
+    -0.02003672943115209,
+    0.013882375915527767,
+    240
+   ],
+   "f-electron|<0": [
+    -0.033070904296874204,
+    0.014675962890624561,
+    376
+   ],
+   "f-electron|>0.3": [
+    -0.08789649865722637,
+    0.09034309973144516,
+    173
+   ],
+   "halide|*": [
+    -0.06399240579223608,
+    0.020551042907714923,
+    195
+   ],
+   "halide|0.025\u20130.1": [
+    -0.0732018796142575,
+    0.021272726959228553,
+    55
+   ],
+   "halide|<0": [
+    -0.11185299328613318,
+    0.016966474273681698,
+    65
+   ],
+   "intermetallic|*": [
+    -0.03895618896484354,
+    0.01994421123046841,
+    733
+   ],
+   "intermetallic|0.025\u20130.1": [
+    -0.02399030731879348,
+    0.0175662199707034,
+    219
+   ],
+   "intermetallic|0.1\u20130.3": [
+    -0.046313642883300865,
+    0.02264658367919914,
+    264
+   ],
+   "intermetallic|0\u20130.025": [
+    -0.020016057942708443,
+    0.01415751068115245,
+    75
+   ],
+   "intermetallic|<0": [
+    -0.020731311798095398,
+    0.015894731124877826,
+    53
+   ],
+   "intermetallic|>0.3": [
+    -0.11418114126586953,
+    0.032478190043130795,
+    122
+   ],
+   "other|*": [
+    -0.04586940462239575,
+    0.0298788068359368,
+    301
+   ],
+   "other|0.025\u20130.1": [
+    -0.041697854248047506,
+    0.025172839831542948,
+    65
+   ],
+   "other|0.1\u20130.3": [
+    -0.049256030029297904,
+    0.029812375244140363,
+    137
+   ],
+   "other|>0.3": [
+    -0.07746858068847651,
+    0.11229233227538948,
+    49
+   ],
+   "oxide|*": [
+    -0.07815553847656265,
+    0.027343842919921535,
+    234
+   ],
+   "oxide|0.025\u20130.1": [
+    -0.06532170039876384,
+    0.023605169604492104,
+    69
+   ],
+   "oxide|0.1\u20130.3": [
+    -0.0770599444173179,
+    0.03635440353732644,
+    86
+   ],
+   "pnictide|*": [
+    -0.04704214768066439,
+    0.035605114786783965,
+    239
+   ],
+   "pnictide|0.025\u20130.1": [
+    -0.037972062133788675,
+    0.025432785253906687,
+    68
+   ],
+   "pnictide|0.1\u20130.3": [
+    -0.05428036582031304,
+    0.04805879877929797,
+    94
+   ]
+  }
+ },
+ "weak_elements": [
+  "Be",
+  "Pm",
+  "Pu",
+  "Tc"
+ ],
+ "disagreement_tol_ev": 0.1652551092207819,
+ "rules": {
+  "with_second_engine": {
+   "target_precision": 0.9,
+   "target_npv": 0.95,
+   "certification_confidence": 0.95,
+   "n_labelable": 3399,
+   "thresholds": {
+    "chalcogenide": {
+     "stable": null,
+     "unstable": null,
+     "n": 214
+    },
+    "f-electron": {
+     "stable": -0.02,
+     "unstable": 0.01,
+     "n": 1747
+    },
+    "halide": {
+     "stable": null,
+     "unstable": null,
+     "n": 143
+    },
+    "intermetallic": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 645
+    },
+    "other": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 263
+    },
+    "oxide": {
+     "stable": null,
+     "unstable": null,
+     "n": 185
+    },
+    "pnictide": {
+     "stable": null,
+     "unstable": null,
+     "n": 202
+    }
+   }
+  },
+  "without_second_engine": {
+   "target_precision": 0.9,
+   "target_npv": 0.95,
+   "certification_confidence": 0.95,
+   "n_labelable": 3516,
+   "thresholds": {
+    "chalcogenide": {
+     "stable": null,
+     "unstable": null,
+     "n": 224
+    },
+    "f-electron": {
+     "stable": -0.02,
+     "unstable": 0.01,
+     "n": 1801
+    },
+    "halide": {
+     "stable": null,
+     "unstable": null,
+     "n": 153
+    },
+    "intermetallic": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 665
+    },
+    "other": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 274
+    },
+    "oxide": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 189
+    },
+    "pnictide": {
+     "stable": null,
+     "unstable": 0.05,
+     "n": 210
+    }
+   }
+  }
+ },
+ "reliability": [
+  {
+   "family": "chalcogenide",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 77,
+   "call": "unstable",
+   "hit_rate": 0.987012987012987,
+   "ci95": [
+    0.961038961038961,
+    1.0
+   ]
+  },
+  {
+   "family": "chalcogenide",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 81,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "chalcogenide",
+   "predicted_bin": "0\u20130.025",
+   "n": 27,
+   "call": "unstable",
+   "hit_rate": 0.8518518518518519,
+   "ci95": [
+    0.7037037037037037,
+    0.9629629629629629
+   ]
+  },
+  {
+   "family": "chalcogenide",
+   "predicted_bin": "<0",
+   "n": 41,
+   "call": "stable",
+   "hit_rate": 0.8536585365853658,
+   "ci95": [
+    0.7317073170731707,
+    0.9512195121951219
+   ]
+  },
+  {
+   "family": "chalcogenide",
+   "predicted_bin": ">0.3",
+   "n": 34,
+   "call": "unstable",
+   "hit_rate": 0.9705882352941176,
+   "ci95": [
+    0.9117647058823529,
+    1.0
+   ]
+  },
+  {
+   "family": "f-electron",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 601,
+   "call": "unstable",
+   "hit_rate": 0.9850249584026622,
+   "ci95": [
+    0.9750415973377704,
+    0.9933444259567388
+   ]
+  },
+  {
+   "family": "f-electron",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 646,
+   "call": "unstable",
+   "hit_rate": 0.9969040247678018,
+   "ci95": [
+    0.9922600619195047,
+    1.0
+   ]
+  },
+  {
+   "family": "f-electron",
+   "predicted_bin": "0\u20130.025",
+   "n": 240,
+   "call": "unstable",
+   "hit_rate": 0.8125,
+   "ci95": [
+    0.7625,
+    0.8625
+   ]
+  },
+  {
+   "family": "f-electron",
+   "predicted_bin": "<0",
+   "n": 376,
+   "call": "stable",
+   "hit_rate": 0.8457446808510638,
+   "ci95": [
+    0.8111702127659575,
+    0.8803191489361702
+   ]
+  },
+  {
+   "family": "f-electron",
+   "predicted_bin": ">0.3",
+   "n": 173,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "halide",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 55,
+   "call": "unstable",
+   "hit_rate": 0.9818181818181818,
+   "ci95": [
+    0.9454545454545454,
+    1.0
+   ]
+  },
+  {
+   "family": "halide",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 30,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "halide",
+   "predicted_bin": "0\u20130.025",
+   "n": 35,
+   "call": "unstable",
+   "hit_rate": 0.8857142857142857,
+   "ci95": [
+    0.785,
+    0.9714285714285714
+   ]
+  },
+  {
+   "family": "halide",
+   "predicted_bin": "<0",
+   "n": 65,
+   "call": "stable",
+   "hit_rate": 0.7230769230769231,
+   "ci95": [
+    0.6153846153846154,
+    0.8307692307692308
+   ]
+  },
+  {
+   "family": "halide",
+   "predicted_bin": ">0.3",
+   "n": 10,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "intermetallic",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 219,
+   "call": "unstable",
+   "hit_rate": 0.9954337899543378,
+   "ci95": [
+    0.9863013698630136,
+    1.0
+   ]
+  },
+  {
+   "family": "intermetallic",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 264,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "intermetallic",
+   "predicted_bin": "0\u20130.025",
+   "n": 75,
+   "call": "unstable",
+   "hit_rate": 0.8533333333333334,
+   "ci95": [
+    0.7733333333333333,
+    0.9333333333333333
+   ]
+  },
+  {
+   "family": "intermetallic",
+   "predicted_bin": "<0",
+   "n": 53,
+   "call": "stable",
+   "hit_rate": 0.8301886792452831,
+   "ci95": [
+    0.7169811320754716,
+    0.9245283018867925
+   ]
+  },
+  {
+   "family": "intermetallic",
+   "predicted_bin": ">0.3",
+   "n": 122,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "other",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 65,
+   "call": "unstable",
+   "hit_rate": 0.9692307692307692,
+   "ci95": [
+    0.9230769230769231,
+    1.0
+   ]
+  },
+  {
+   "family": "other",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 137,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "other",
+   "predicted_bin": "0\u20130.025",
+   "n": 17,
+   "call": "unstable",
+   "hit_rate": 0.5882352941176471,
+   "ci95": [
+    0.35294117647058826,
+    0.8235294117647058
+   ]
+  },
+  {
+   "family": "other",
+   "predicted_bin": "<0",
+   "n": 33,
+   "call": "stable",
+   "hit_rate": 0.7575757575757576,
+   "ci95": [
+    0.6060606060606061,
+    0.9090909090909091
+   ]
+  },
+  {
+   "family": "other",
+   "predicted_bin": ">0.3",
+   "n": 49,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "oxide",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 69,
+   "call": "unstable",
+   "hit_rate": 0.9855072463768116,
+   "ci95": [
+    0.9565217391304348,
+    1.0
+   ]
+  },
+  {
+   "family": "oxide",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 86,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "oxide",
+   "predicted_bin": "0\u20130.025",
+   "n": 27,
+   "call": "unstable",
+   "hit_rate": 0.7407407407407407,
+   "ci95": [
+    0.5555555555555556,
+    0.8888888888888888
+   ]
+  },
+  {
+   "family": "oxide",
+   "predicted_bin": "<0",
+   "n": 23,
+   "call": "stable",
+   "hit_rate": 0.782608695652174,
+   "ci95": [
+    0.6086956521739131,
+    0.9358695652173903
+   ]
+  },
+  {
+   "family": "oxide",
+   "predicted_bin": ">0.3",
+   "n": 29,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "pnictide",
+   "predicted_bin": "0.025\u20130.1",
+   "n": 68,
+   "call": "unstable",
+   "hit_rate": 0.9705882352941176,
+   "ci95": [
+    0.9264705882352942,
+    1.0
+   ]
+  },
+  {
+   "family": "pnictide",
+   "predicted_bin": "0.1\u20130.3",
+   "n": 94,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "family": "pnictide",
+   "predicted_bin": "0\u20130.025",
+   "n": 15,
+   "call": "unstable",
+   "hit_rate": 0.9333333333333333,
+   "ci95": [
+    0.8,
+    1.0
+   ]
+  },
+  {
+   "family": "pnictide",
+   "predicted_bin": "<0",
+   "n": 28,
+   "call": "stable",
+   "hit_rate": 0.8571428571428571,
+   "ci95": [
+    0.75,
+    0.9642857142857143
+   ]
+  },
+  {
+   "family": "pnictide",
+   "predicted_bin": ">0.3",
+   "n": 34,
+   "call": "unstable",
+   "hit_rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  }
+ ],
+ "reliability_meaning": "observed hit rate of the plain threshold-0 stable/unstable call on the WBM calibration set, per chemistry family x predicted hull bin; reports/validation_report.md \u00a76c"
+}

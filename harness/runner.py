@@ -21,6 +21,18 @@ def _init_worker(threads: int, extra_env: dict[str, str]) -> None:
     for var in THREAD_ENV_VARS:
         os.environ[var] = str(threads)
     import harness  # noqa: F401  (redirects caches before torch import)
+
+    # A spawned worker re-imports the parent's __main__ module, and a script that sets HARNESS_MODEL at
+    # import time therefore pins harness.config to the PARENT's model before this initializer runs. When
+    # a caller asked for a different engine (predict.py's second engine), re-read the registry so the
+    # worker really runs the model it was asked for; the job's own metadata is checked as well.
+    if "HARNESS_MODEL" in extra_env:
+        import importlib
+        import sys
+
+        cfg = sys.modules.get("harness.config")
+        if cfg is not None and cfg.ACTIVE_MODEL != extra_env["HARNESS_MODEL"]:
+            importlib.reload(cfg)
     from harness.platform_check import assert_native_arm64
 
     assert_native_arm64()
@@ -30,7 +42,8 @@ def _init_worker(threads: int, extra_env: dict[str, str]) -> None:
     torch.set_num_interop_threads(1)
 
 
-def _safe_call(fn: Callable, job: dict) -> dict:
+def safe_call(fn: Callable, job: dict) -> dict:
+    """Run fn(job), turning any exception into a {"status": "failed"/"timeout", "error": ...} result."""
     t0 = time.perf_counter()
     try:
         out = fn(job)
@@ -65,7 +78,7 @@ def run_pool(
     try:
         with ProcessPoolExecutor(max_workers=workers, mp_context=ctx, initializer=_init_worker,
                                  initargs=(threads, extra_env)) as pool:
-            futures = {pool.submit(_safe_call, fn, job): job for job in jobs}
+            futures = {pool.submit(safe_call, fn, job): job for job in jobs}
             for fut in as_completed(futures):
                 job = futures[fut]
                 pending.pop(id(job), None)
