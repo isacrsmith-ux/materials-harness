@@ -96,6 +96,11 @@ def main(argv: list[str] | None = None) -> int:
     ft.add_argument("--queue-db", default=str(QUEUE_DB))
     sub.add_parser("candidates", help="Phase 3 candidate table -> reports/phase3/candidates.md")
     sub.add_parser("compare-models", help="Phase 3 screening comparison -> reports/phase3/screening.md")
+    cst = sub.add_parser("costs", help="cost-based operating point from cached calibration results -> reports/costs.md")
+    cst.add_argument("--fp", type=float, help="cost of one wasted lab test (default: config/costs.json)")
+    cst.add_argument("--fn", type=float, help="cost of one missed stable material (default: config/costs.json)")
+    cst.add_argument("--model", help="registry key (default: the recommended engine)")
+    cst.add_argument("--out", help="write somewhere other than reports/costs.md")
     p0 = sub.add_parser("phase0", help="Phase 0 audits, queue ETA, before/after report")
     p0.add_argument("action", choices=["audit", "eta", "report"])
     p0.add_argument("--queue-db", default=str(QUEUE_DB))
@@ -189,6 +194,19 @@ def main(argv: list[str] | None = None) -> int:
         from harness import screening
 
         print(f"Wrote {screening.write_report()}")
+        return 0
+    if args.cmd == "costs":
+        from pathlib import Path
+
+        from harness import costs, screening
+        from harness.report import _costs
+
+        cfg = _costs()
+        fp = args.fp if args.fp is not None else cfg["cost_false_positive"]
+        fn = args.fn if args.fn is not None else cfg["cost_missed_stable"]
+        setting = {k: (k, d, t) for k, d, t in screening.benchmarked_models()}
+        key, device, dtype = setting[args.model or costs.PRIMARY[0]]
+        print(f"Wrote {costs.report(fp, fn, key, device, dtype, out=Path(args.out) if args.out else None)}")
         return 0
     if args.cmd == "phase0":
         from harness import phase0
