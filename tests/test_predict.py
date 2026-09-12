@@ -58,7 +58,7 @@ def stub_hull(monkeypatch, e_above_hull: float, second: float | None = None, rai
     """Replace the MP hull placement with a chosen predicted hull distance (eV/atom)."""
     seen = {"n": 0}
 
-    def _placed(structure, energy_per_atom, label="candidate"):
+    def _placed(structure, energy_per_atom, label="candidate", exclude_ids=()):
         if raises is not None:
             raise raises
         seen["n"] += 1

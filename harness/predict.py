@@ -276,7 +276,8 @@ def _refused(label_reasons, warnings, props, prov, structure=None, e_hull_mev=No
 
 
 def predict(parent_structure, substitution=None, *, engine=None, second_engine=SECOND_ENGINE,
-            use_ladder: bool = True, with_bulk_modulus: bool = False, bundle=None) -> Prediction:
+            use_ladder: bool = True, with_bulk_modulus: bool = False, bundle=None,
+            exclude_mp_ids=()) -> Prediction:
     """One candidate, one decision.
 
     parent_structure  an MP id ('mp-2657'), a CIF string, a path, or a pymatgen Structure
@@ -285,10 +286,14 @@ def predict(parent_structure, substitution=None, *, engine=None, second_engine=S
     engine            (registry key, device, dtype); default the production engine, MACE-MPA-0 medium
     second_engine     the disagreement engine; None runs one engine and uses the rule certified for
                       that configuration (never measured on the locked test set — see docs/predict.md)
+    exclude_mp_ids    EVALUATION ONLY: MP materials to leave out of the reference hull, so a material
+                      Materials Project already has can be scored as if it were new
+                      (harness/hull.py: e_above_hull_mode_a). Empty for a real candidate.
     """
     if substitution is None:
         return predict_structure(parent_structure, engine=engine, second_engine=second_engine,
-                                 use_ladder=use_ladder, with_bulk_modulus=with_bulk_modulus, bundle=bundle)
+                                 use_ladder=use_ladder, with_bulk_modulus=with_bulk_modulus, bundle=bundle,
+                                 exclude_mp_ids=exclude_mp_ids)
     engine = engine or PRODUCTION_ENGINE
     parent, parent_desc = as_structure(parent_structure)
     mapping = parse_substitution(substitution)
@@ -303,23 +308,23 @@ def predict(parent_structure, substitution=None, *, engine=None, second_engine=S
                         f"({'; '.join(info.get('failed_methods') or []) or 'no reason recorded'})")
     return _predict(starts, engine=engine, second_engine=second_engine, use_ladder=use_ladder,
                     with_bulk_modulus=with_bulk_modulus, bundle=bundle, warnings=warnings,
-                    parent_desc=f"{parent_desc}, substitution {mapping}",
+                    exclude_mp_ids=exclude_mp_ids, parent_desc=f"{parent_desc}, substitution {mapping}",
                     start_info={"sub": {"method": "parent volume (unscaled)", "volume_factor": 1.0},
                                 "sub_rescaled": info})
 
 
 def predict_structure(structure, *, engine=None, second_engine=SECOND_ENGINE, use_ladder: bool = True,
-                      with_bulk_modulus: bool = False, bundle=None) -> Prediction:
+                      with_bulk_modulus: bool = False, bundle=None, exclude_mp_ids=()) -> Prediction:
     """The second form: a finished candidate structure, relaxed and decided as it stands."""
     s, desc = as_structure(structure)
     return _predict({"as_given": s}, engine=engine or PRODUCTION_ENGINE, second_engine=second_engine,
                     use_ladder=use_ladder, with_bulk_modulus=with_bulk_modulus, bundle=bundle,
-                    warnings=[], parent_desc=desc,
+                    warnings=[], exclude_mp_ids=exclude_mp_ids, parent_desc=desc,
                     start_info={"as_given": {"method": "supplied structure, unchanged"}})
 
 
 def _predict(starts: dict, *, engine, second_engine, use_ladder, with_bulk_modulus, bundle, warnings,
-             parent_desc, start_info) -> Prediction:
+             parent_desc, start_info, exclude_mp_ids=()) -> Prediction:
     started_at = datetime.now(timezone.utc)
     bundle = bundle or calibration.load()
     warnings = list(warnings)
@@ -347,7 +352,8 @@ def _predict(starts: dict, *, engine, second_engine, use_ladder, with_bulk_modul
     changed = not compare.relaxed_into_target(relaxed, starts[win])
 
     try:
-        placed = hull.e_above_hull_mode_a(relaxed, best["energy_per_atom"], label=formula)
+        placed = hull.e_above_hull_mode_a(relaxed, best["energy_per_atom"], label=formula,
+                                          exclude_ids=exclude_mp_ids)
     except (hull.IncompleteHullError, ValueError) as exc:
         return _refused([f"no Materials Project reference hull for this chemistry ({exc})"],
                         warnings, props, prov(), structure=relaxed)
@@ -359,7 +365,7 @@ def _predict(starts: dict, *, engine, second_engine, use_ladder, with_bulk_modul
         if second.get("status") == "ok" and compare.rejection_reason(second) is None:
             try:
                 pred_2 = hull.e_above_hull_mode_a(second["relaxed"], second["energy_per_atom"],
-                                                 label=f"{formula}:second")["signed"]
+                                                 label=f"{formula}:second", exclude_ids=exclude_mp_ids)["signed"]
             except (hull.IncompleteHullError, ValueError) as exc:
                 warnings.append(f"second engine could not be placed on the hull ({exc}); "
                                 "the disagreement check did not run")
@@ -387,7 +393,8 @@ def _predict(starts: dict, *, engine, second_engine, use_ladder, with_bulk_modul
         props["bulk_modulus"] = bulk_modulus(relaxed, engine)
     extra = {"hull_details": placed, "conformal_interval": decision.interval,
              "predicted_hull_second_engine_mev": None if pred_2 is None else pred_2 * 1000,
-             "relaxation": {"converged": best["converged"], "n_steps": best["n_steps"],
+             "relaxation": {"energy_per_atom_ev": best["energy_per_atom"],
+                            "converged": best["converged"], "n_steps": best["n_steps"],
                             "fmax_final": best["fmax_final"], "max_stress_gpa": best["max_stress_gpa"],
                             "wall_time_s": best["wall_time_s"], "rung": best.get("rung", "default"),
                             "structure_changed": changed}}

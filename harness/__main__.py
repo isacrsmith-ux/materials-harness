@@ -24,7 +24,7 @@ import harness  # noqa: F401  (sets cache env vars first)
 from harness.config import LOG_DIR, QUEUE_DB, load_compute_config, load_unattended_config
 from harness.platform_check import PlatformError, assert_native_arm64, machine_info
 
-SUITES = ["smoke", "substitution", "stability", "ood", "experimental", "bulk", "mode_b"]
+SUITES = ["smoke", "substitution", "stability", "ood", "experimental", "bulk", "mode_b", "polymorph"]
 
 
 def _setup_logging(verbose: bool) -> None:
@@ -67,6 +67,20 @@ def main(argv: list[str] | None = None) -> int:
     pr.add_argument("--no-ladder", action="store_true", help="do not run the fallback ladder on a rejected relaxation")
     cal = sub.add_parser("calibrate", help="freeze the product's calibration bundle from the calibration set")
     cal.add_argument("--force", action="store_true", help="refit and overwrite an existing bundle")
+
+    poly = sub.add_parser("polymorph", help="polymorph ranking (build / eta / report; run with `run --suite polymorph`)")
+    poly.add_argument("action", choices=["build", "eta", "report"])
+    poly.add_argument("--force", action="store_true", help="re-choose the compositions")
+    poly.add_argument("--n", type=int, help="number of compositions (build)")
+    poly.add_argument("--per-relaxation-s", type=float, default=9.5, help="measured cost per relaxation, for the ETA")
+
+    un_ = sub.add_parser("unseen", help="the unseen-real-materials test (build / eta / run / report)")
+    un_.add_argument("action", choices=["build", "eta", "run", "report"])
+    un_.add_argument("--force", action="store_true", help="rebuild an existing frozen set")
+    un_.add_argument("--workers", type=int)
+    un_.add_argument("--threads", type=int)
+    un_.add_argument("--per-candidate-s", type=float, default=29.2,
+                     help="measured serial cost per candidate, for the ETA")
 
     cfg = load_unattended_config()
     prep = sub.add_parser("prepare", help="bulk-download MP/WBM inputs, generate substitution pairs, fill the queue")
@@ -163,6 +177,39 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(f"Wrote {calibration.BUNDLE_FILE.relative_to(harness.ROOT)} "
               f"({b['calibration_set']['n_usable']} calibration structures, engine {b['engine']['name']})")
+        return 0
+    if args.cmd == "polymorph":
+        from harness.suites import polymorph
+
+        if args.action == "build":
+            doc = polymorph.build(**({"n_compositions": args.n} if args.n else {}), force=args.force)
+            print(json.dumps({k: v for k, v in doc.items() if k != "sets"}, indent=1, default=str))
+        elif args.action == "eta":
+            doc = polymorph.load()
+            c = load_compute_config()
+            n = doc["n_relaxations"]
+            for label, w in (("full", c["workers"]), ("polite", max(1, c["workers"] - 2))):
+                print(f"{label} ({w} workers): {n} relaxations x {args.per_relaxation_s:.1f} s "
+                      f"= {n * args.per_relaxation_s / w / 3600:.2f} h")
+        else:
+            print(f"Wrote {polymorph.report()}")
+        return 0
+    if args.cmd == "unseen":
+        from harness import unseen
+
+        if args.action == "build":
+            print(json.dumps(unseen.build(force=args.force), indent=1, default=str))
+        elif args.action == "eta":
+            doc = unseen.load()
+            for label, w in (("full", args.workers or 5), ("polite", 3)):
+                print(f"{label}: {json.dumps(unseen.eta(doc['pairs'], w, args.per_candidate_s), default=str)}")
+        elif args.action == "run":
+            doc = unseen.load()
+            print(json.dumps(unseen.eta(doc["pairs"], args.workers or 5, args.per_candidate_s), indent=1))
+            unseen.prefetch(doc["pairs"])
+            print(f"Wrote {unseen.run(workers=args.workers, threads=args.threads)}")
+        else:
+            print(f"Wrote {unseen.report()}")
         return 0
     if args.cmd == "benchmark":
         from harness.benchmark import run_benchmark

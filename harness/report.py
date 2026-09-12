@@ -43,6 +43,12 @@ VERDICT_RULES = {
     "npv": (0.95, 0.90, False),
     "bulk_mae_pct": (10.0, 20.0, True),
     "mace_minus_pbe_pct": (0.5, 1.0, True),
+    # Polymorph ranking (harness/suites/polymorph.py). A coin flip between three forms is 33 %, so
+    # "trustworthy" is set where the engine is right four times in five, "caution" where it is right
+    # three times in five; the gap error reuses the energy rule, because that is what it is.
+    "ground_state_hit_rate": (0.80, 0.60, False),
+    "spearman": (0.80, 0.60, False),
+    "gap_mae_mev": (30.0, 60.0, True),
 }
 N_BOOT = M.N_BOOT
 MIN_ELEMENT_COUNT = 20

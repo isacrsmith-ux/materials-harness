@@ -159,22 +159,38 @@ def mp_competitors(chemsys: str, elements=None) -> list:
     return processed
 
 
-def e_above_hull_mode_a(structure: Structure, energy_per_atom: float, label: str = "candidate") -> dict:
+def e_above_hull_mode_a(structure: Structure, energy_per_atom: float, label: str = "candidate",
+                       exclude_ids: frozenset | set | tuple = ()) -> dict:
     """Mode (a) hull distance of an engine result: engine energy vs the MP DFT hull of its chemistry.
 
     Returns the signed distance (negative = below the MP hull), the clamped `e_above_hull`, and what
     the hull was built from. Raises IncompleteHullError (missing corner) or ValueError (pymatgen could
     not decompose the composition) — both are refusals, never a number.
+
+    `exclude_ids` drops MP materials from the competitor set. A real candidate is not in Materials
+    Project and there is nothing to drop, so the product never passes it. It exists for EVALUATION: to
+    score a material MP *does* have as if it were new, its own MP entry must come out of the hull —
+    the same removal `stability.evaluate_target` does for mode (a), and the situation WBM's numbers
+    are in (WBM materials are not in MP). Other polymorphs of the formula stay as competitors.
     """
     comp = structure.composition
     chemsys = "-".join(sorted(e.symbol for e in comp.elements))
     competitors = mp_competitors(chemsys, [e.symbol for e in comp.elements])
+    dropped = []
+    if exclude_ids:
+        keep = [e for e in competitors if material_id(e) not in set(exclude_ids)]
+        dropped = sorted({material_id(e) for e in competitors} & set(exclude_ids))
+        competitors = keep
     corrected = process([product_entry(structure, energy_per_atom, label)])
     if not corrected:
         raise ValueError("MaterialsProject2020Compatibility rejected the candidate entry")
     entry = corrected[0]
     signed = signed_hull_energy(competitors, entry)
-    return {"signed": signed, "e_above_hull": max(signed, 0.0), "chemsys": chemsys,
-            "n_mp_entries": len(competitors),
-            "mp2020_corrections": {a.name: float(a.value) for a in entry.energy_adjustments},
-            "construction": "mode (a): engine energy on the MP GGA/GGA+U hull, MP2020 corrections"}
+    out = {"signed": signed, "e_above_hull": max(signed, 0.0), "chemsys": chemsys,
+           "n_mp_entries": len(competitors),
+           "mp2020_corrections": {a.name: float(a.value) for a in entry.energy_adjustments},
+           "construction": "mode (a): engine energy on the MP GGA/GGA+U hull, MP2020 corrections"}
+    if exclude_ids:
+        out["excluded_from_hull"] = dropped
+        out["construction"] += f"; evaluation-only: {len(dropped)} MP entr{'y' if len(dropped) == 1 else 'ies'} removed"
+    return out

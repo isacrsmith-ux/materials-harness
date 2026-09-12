@@ -15,6 +15,8 @@ The harness answers four questions:
 | Does accuracy hold on materials it was *not* trained on? | `ood` | random WBM structures (Matbench Discovery test set): 300 in `run`, 2,000 in the unattended queue |
 | How close is it to *measured* reality? | `experimental` | 33 room-temperature lattice constants (Lucero et al. 2012) |
 | Does it get stiffness right? | `bulk` | MP elastic bulk moduli (K_VRH) |
+| Which *form* of a composition wins? | `polymorph` | MP compositions with ≥3 known polymorphs inside 0.2 eV/atom |
+| Does any of it survive on real chemistry the engine never saw? | `unseen` | real MP materials absent from an MP snapshot dated after MPtrj's, scored end to end through `predict()` |
 
 Results land in one table (`results/results.sqlite`, exported to `results/results.parquet`) — one row per
 structure × test, every value tagged with provenance — and in a report per engine:
@@ -27,6 +29,8 @@ structure × test, every value tagged with provenance — and in a report per en
 | `reports/phase3/screening.md`, `candidates.md` | all engines on identical structures |
 | `reports/leakage_check.md` | whether SevenNet-Omni's screening win survives a WBM-leakage check |
 | `reports/guard_fix.md` | the energy-plausibility guard: before/after numbers |
+| `reports/unseen_test.md` | the product on real MP materials that cannot be in the training data |
+| `reports/polymorph.md` | which form of a composition wins: ground-state hit rate, ordering, gaps |
 
 The top level is the production engine only. `python -m harness report` writes the report for whichever
 engine `HARNESS_MODEL` selects, so the baseline is regenerated with
@@ -84,6 +88,8 @@ Matbench Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the
 ./uvw run python -m harness run --suite smoke    # or substitution | stability | ood | experimental | bulk | all
 ./uvw run python -m harness report               # writes reports/validation_report.md for HARNESS_MODEL (+ figures, parquet)
 ./uvw run python -m harness predict --parent mp-2657 --substitute Ti:Zr    # the product: one candidate -> one decision
+./uvw run python -m harness unseen build|eta|run|report       # the unseen-real-materials test (frozen, opened once)
+./uvw run python -m harness polymorph build|eta|report        # polymorph ranking (run it with `run --suite polymorph`)
 ./uvw run pytest -m "not slow"                   # fast unit tests (no MACE, no network)
 ./uvw run pytest                                 # also the smoke test
 ```
@@ -220,6 +226,7 @@ temperature label), or `wbm_computed` (WBM DFT). Every simulated value is `simul
 
 ```
 harness/            predict.py (THE PRODUCT), calibration.py (the frozen calibration bundle),
+                    unseen.py (the unseen-real-materials test), suites/polymorph.py,
                     hull.py (MP hull placement, shared by the suites and the product),
                     routing.py + confidence.py (labels, thresholds, conformal bounds),
                     engine.py (MACE + relaxation), mp_data.py (cached MP access), compare.py (math),
@@ -228,7 +235,8 @@ harness/            predict.py (THE PRODUCT), calibration.py (the frozen calibra
                     power.py, notify.py, schedule.py (launchd)
 docs/               predict.md — the product's contract, refusal rules and a worked example
 data/               curated inputs: substitution pairs, experimental table, WBM sample ids, auto_pairs.json,
-                    calibration_bundle.json (the product's frozen thresholds)
+                    calibration_bundle.json (the product's frozen thresholds), unseen_test.json (frozen,
+                    hashed, opened once), polymorph_sets.json
 config/             compute.json (benchmark layout), unattended.json (queue/scale/schedule settings)
 run_unattended.sh   background launcher (nohup + caffeinate); scripts/ install/uninstall the nightly agent
 reports/            validation_report.md (production engine) + figures/; mace-mp-0-medium/ (baseline);
