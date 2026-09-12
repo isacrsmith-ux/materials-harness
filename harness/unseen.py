@@ -453,9 +453,14 @@ def score(results: list | None = None, pairs: list | None = None) -> "pd.DataFra
             row["structure_changed"] = relax.get("structure_changed")
             row["start_used"] = prov.get("start_used")
             row["pred_2"] = prov.get("predicted_hull_second_engine_mev")
-            if p["structure"] is not None and ref.get("structure") is not None:
-                relaxed = Structure.from_str(p["structure"], fmt="cif")
-                row["structure_found"] = bool(C.relaxed_into_target(relaxed, ref["structure"]))
+            if ref.get("structure") is not None:
+                # No structure at all is a structure not found, not a missing measurement: the pipeline
+                # was asked for one and did not produce it.
+                if p["structure"] is None:
+                    row["structure_found"] = False
+                else:
+                    relaxed = Structure.from_str(p["structure"], fmt="cif")
+                    row["structure_found"] = bool(C.relaxed_into_target(relaxed, ref["structure"]))
             if row["e_model_per_atom"] is not None and row["e_dft_per_atom"] is not None:
                 row["de_mev"] = (row["e_model_per_atom"] - row["e_dft_per_atom"]) * 1000.0
         rows.append(row)
@@ -478,6 +483,39 @@ def _routing(df: "pd.DataFrame") -> dict:
     d = df.dropna(subset=["label"]).copy()
     d["label"] = d.label.replace({"needs DFT": R.SEND_TO_DFT})
     return R.routing_summary(d[["label", "truly_stable"]])
+
+
+def family_mix(formulas) -> "pd.Series":
+    from harness.confidence import family
+
+    return pd.Series([family(f) for f in formulas]).value_counts(normalize=True)
+
+
+def family_comparison(labelled: "pd.DataFrame") -> "pd.DataFrame":
+    """The chemistry each set is actually made of, against the thresholds that could fire on it.
+
+    This is the table that decides how much the WBM precision can say about real chemistry: a family
+    with no certified threshold on a side can never receive that label, whatever the engine predicts.
+    """
+    from harness import calibration, splits
+
+    test = calibration.calibration_table(ids=set(splits.load_split()["test"]["ids"]),
+                                         init_cache="test_init_structs.json")
+    rule = calibration.load().rule(with_second_engine=True).thresholds
+
+    def thr(fam, side):
+        t = (rule.get(fam) or {}).get(side)
+        return "none" if t is None else f"{t * 1000:+.0f}"
+
+    unseen_mix, wbm_mix = family_mix(labelled.formula), family_mix(test.formula)
+    rows = []
+    for fam in sorted(set(unseen_mix.index) | set(wbm_mix.index), key=lambda f: -unseen_mix.get(f, 0)):
+        rows.append({"chemistry family": fam,
+                     "this unseen set": f"{unseen_mix.get(fam, 0):.0%}",
+                     "locked WBM test": f"{wbm_mix.get(fam, 0):.0%}",
+                     "certified 'stable' threshold (meV/atom)": thr(fam, "stable"),
+                     "certified 'unstable' threshold (meV/atom)": thr(fam, "unstable")})
+    return pd.DataFrame(rows)
 
 
 def locked_test_mix() -> "pd.Series":
@@ -551,6 +589,7 @@ def report(out=None) -> str:
     rs = _routing(labelled)
     mix = locked_test_mix()
     rw = reweighted(labelled, mix)
+    fam_tbl = family_comparison(labelled)
     opened_at = json.loads(OPEN_LOG.read_text())["opened_at"] if opened() else "not recorded"
     bundle = calibration.load()
     bins = [b for b in C.HULL_BINS_WBM if (labelled.bin == b).any()]
@@ -594,9 +633,9 @@ def report(out=None) -> str:
 
     out = out or REPORTS_DIR / "unseen_test.md"
     L = _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_err, reason_counts,
-                  opened_at, bundle, bins)
+                  opened_at, bundle, bins, fam_tbl)
     out.write_text("\n".join(L) + "\n")
-    return str(out.relative_to(ROOT))
+    return str(out.relative_to(ROOT)) if out.is_relative_to(ROOT) else str(out)
 
 
 # Published numbers for the side-by-side. First column: reports/final_test.md exactly as written.
@@ -626,7 +665,7 @@ def _selection_table(doc: dict) -> list:
 
 
 def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_err, reason_counts,
-              opened_at, bundle, bins) -> list:
+              opened_at, bundle, bins, fam_tbl) -> list:
     from harness import metrics as M
 
     sel, n = doc["selection"], doc["n"]
@@ -634,7 +673,12 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
     no_ref = ok[ok.each_true.isna()]
     prevalence = float(labelled.truly_stable.mean())
     wbm_prevalence = float(mix.get("<0", 0.0))
-    rs_tbl = pd.DataFrame({"quantity": list(rs), "value": list(rs.values())})
+    def _cell(v):
+        if isinstance(v, float) and not np.isfinite(v):
+            return "undefined"
+        return f"{v:.3f}" if isinstance(v, float) else f"{v:,}"
+
+    rs_tbl = pd.DataFrame({"quantity": list(rs), "value": [_cell(v) for v in rs.values()]})
     snap = sel["snapshot"]
     prec_s, npv_s = M.fmt_ci(prec, "{:.2f}"), M.fmt_ci(npv, "{:.3f}")
     rw_prec, rw_npv = M.fmt_ci(rw[STABLE], "{:.2f}"), M.fmt_ci(rw[UNSTABLE], "{:.3f}")
@@ -656,8 +700,8 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
          "## 2. What counts as unseen", "",
          f"MACE-MPA-0 trained on MPtrj + sAlex. MPtrj is built from the Materials Project 2022.9 release, so every "
          f"MPtrj material appears in any later MP snapshot. We exclude every one of the {snap['n_ids']:,} ids in "
-         f"Matbench Discovery's MP reference snapshot `{snap['file']}` (sha256 `{snap['sha256'][:16]}…`, "
-         f"{snap['source']}).", "",
+         f"Matbench Discovery's MP reference snapshot `{snap['file']}` — figshare "
+         f"doi:10.6084/m9.figshare.22715158 file 49083124, sha256 `{snap['sha256'][:16]}…`.", "",
          "That is a **proven superset** of MPtrj, not an approximation of it. The full MPtrj release is 12.2 GB of "
          "JSON (1.5 GB as an extxyz mirror) and its exact id list could only ever be a *subset* of what is "
          "excluded here — downloading it would make the exclusion weaker, not stronger, so it was not downloaded.", "",
@@ -666,9 +710,11 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
          "API in `tests/test_unseen.py`.", ""]
     L += _selection_table(doc)
     L += ["", "Rejections while verifying: " + ", ".join(f"{k}: {v}" for k, v in doc["rejected"].items()) + ".", "",
-          f"Composition of the frozen set: {doc['by_bin']} by MP hull bin; "
-          f"{doc['by_chem_class']} by chemistry class; {doc['plausible_swaps']} of {n} swaps score as plausible on "
-          f"the pair sampler's own plausibility model.", "",
+          "Composition of the frozen set: "
+          + ", ".join(f"{k} {v}" for k, v in doc["by_bin"].items()) + " by MP hull bin; "
+          + ", ".join(f"{k} {int(v)}" for k, v in doc["by_chem_class"].items()) + " by chemistry class; "
+          f"{doc['plausible_swaps']} of {n} swaps score as plausible on the pair sampler's own "
+          "plausibility model.", "",
           "**Residual uncertainty — stated, not assumed:**", ""]
     L += [f"* {u}" for u in doc["residual_uncertainty"]]
     L += ["", "## 3. What the pipeline was given", "",
@@ -690,9 +736,16 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
         if len(no_ref):
             parts.append(f"{len(no_ref)} have no usable MP reference hull for scoring")
         L += ["; ".join(parts) + f"; {len(labelled)} are scored below.", ""]
+    from harness import routing as R
+
+    degenerate = R.degenerate_stable_label(rs)
     L += [_md(rs_tbl), "",
-          f"'Likely stable' precision: {prec_s} (target {bundle.rule(True).target_precision:.0%}); 'likely "
-          f"unstable' NPV: {npv_s} (target {bundle.rule(True).target_npv:.0%}).", "",
+          (f"**{R.NO_STABLE_LABEL}** on this set — not one candidate cleared a certified stable threshold, so "
+           f"the precision of 'likely stable' is undefined here, not zero. 'Likely unstable' NPV: {npv_s} "
+           f"(target {bundle.rule(True).target_npv:.0%}). Section 4b says why."
+           if degenerate else
+           f"'Likely stable' precision: {prec_s} (target {bundle.rule(True).target_precision:.0%}); 'likely "
+           f"unstable' NPV: {npv_s} (target {bundle.rule(True).target_npv:.0%})."), "",
           "### Side by side with the locked WBM test set", "",
           "| quantity | locked WBM test (`final_test.md`) | same, with the product's > 0.3 eV/atom refusal | "
           "this unseen set (raw) | this unseen set, reweighted to the WBM bin mix |",
@@ -712,6 +765,17 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
           f"{', '.join(rw['_bins_used'])}), so the two are commensurate. Both columns are shown; neither is hidden.", "",
           "Why candidates were sent to DFT (a candidate can have several reasons): "
           + ", ".join(f"{k}: {v}" for k, v in reason_counts.items()) + ".", "",
+          "### 4b. The two sets are not the same chemistry — and that decides what can be compared at all", "",
+          "The certified thresholds are per chemistry family, and a family with no certified threshold on a side "
+          "can never receive that label, whatever the engine predicts. So the comparison above is only as "
+          "meaningful as the overlap between the two populations' chemistries:", "",
+          fam_tbl.to_markdown(index=False), "",
+          "Read that table before reading any precision number on this page. Random elemental substitution into "
+          "MP prototypes produces rare-earth intermetallics in bulk, which is why the locked WBM test set is "
+          "mostly f-electron — and f-electron is the **only** family in which a 'likely stable' threshold could "
+          "be certified at all. What Materials Project actually adds is complex oxides and halides, where "
+          "neither side is certified. The published precision was therefore measured almost entirely on a "
+          "chemistry that barely appears in this set.", "",
           "## 5. Structure-finding rate — did the pipeline arrive at the right structure at all?", "",
           "Nothing in the harness measured this before, and it is a product outcome rather than a diagnostic: if "
           "the relaxation lands somewhere else, every number attached to it describes a material the user did not "

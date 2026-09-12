@@ -219,9 +219,9 @@ The same call with `--json` (structure CIF elided, everything else verbatim):
   "conformal_interval": {"lo": 0.03306075685099241, "hi": 0.07818961672953284, "family": "f-electron",
                          "pred_bin": "0.025–0.1", "group_level": "family × predicted bin", "n_group": 601,
                          "coverage": 0.9, "coverage_meaning": "each bound alone"},
-  "relaxation": {"converged": true, "n_steps": 9, "fmax_final": 0.00021294690668582916,
-                 "max_stress_gpa": 0.00027196097653359175, "wall_time_s": 0.41844883299199864,
-                 "rung": "default", "structure_changed": false}
+  "relaxation": {"energy_per_atom_ev": -4.135..., "converged": true, "n_steps": 9,
+                 "fmax_final": 0.00021294690668582916, "max_stress_gpa": 0.00027196097653359175,
+                 "wall_time_s": 0.41844883299199864, "rung": "default", "structure_changed": false}
  },
  "warnings": []
 }
@@ -250,5 +250,13 @@ engine agrees within 21 meV/atom, well inside the 165 meV/atom tolerance.* The t
   constant-volume relaxations, with the suite's own fit. Its verdict travels with the number:
   11.9 % MAE against MP's K_VRH (upper bound 16.8 %, n=82) — *use with caution* — and a relaxed-shape
   EOS is a Reuss-like average while MP's K_VRH is a Voigt–Reuss–Hill one.
+* **The raw engine energy** is in `provenance.relaxation.energy_per_atom_ev`, not in `properties`. It is
+  the engine's total energy per atom, meaningful only against MP's *uncorrected* GGA/PBE energies — a
+  validation quantity, not a property of the material — and that is where `reports/unseen_test.md`
+  reads it from.
+* **`exclude_mp_ids` is for evaluation only.** A real candidate is not in Materials Project, so nothing
+  is removed from its reference hull and the parameter stays empty. It exists so a material MP already
+  has can be scored *as if* it were new — its own MP entry taken out of the hull, the same removal
+  `stability.evaluate_target` makes for mode (a). `reports/unseen_test.md` is the only caller.
 * `config/costs.json` still holds 1:1 placeholder costs. Nothing in this module is optimised against
   them; the decision thresholds are certified precision/NPV targets, not cost minima.
