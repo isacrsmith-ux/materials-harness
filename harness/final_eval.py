@@ -109,17 +109,24 @@ def evaluate(primary: tuple[str, str, str], second: tuple[str, str, str] | None)
     prec_ci = M.boot_ci(st.truly_stable.astype(float), M.MEAN) if len(st) else (float("nan"),) * 3
     npv_ci = M.boot_ci((~un.truly_stable).astype(float), M.MEAN) if len(un) else (float("nan"),) * 3
     test = test.assign(bin=test.each_true.map(lambda e: compare.hull_bin(e, below_zero_bin=True)))
-    bins = pd.DataFrame([{"bin": b, "n": int((test.bin == b).sum()), "energy MAE": M.fmt_ci(M.boot_ci(test[test.bin == b].de_mev, M.MAE)),
-                          "median |err|": M.fmt_ci(M.boot_ci(test[test.bin == b].de_mev, M.MEDIAN_ABS))} for b in compare.HULL_BINS_WBM])
+    bins = pd.DataFrame([{"bin": b, "n": int((test.bin == b).sum()),
+                          "energy MAE": M.fmt_ci(M.boot_ci(test[test.bin == b].de_mev, M.MAE)),
+                          "median |err|": M.fmt_ci(M.boot_ci(test[test.bin == b].de_mev, M.MEDIAN_ABS)),
+                          "trimmed mean": M.fmt_ci(M.boot_ci(test[test.bin == b].de_mev, M.TRIMMED_MAE))}
+                         for b in compare.HULL_BINS_WBM])
+    rs_md = pd.DataFrame([{k: ("undefined" if isinstance(v, float) and not np.isfinite(v) else v) for k, v in rs.items()}])
     name = MODELS[primary[0]]["name"] + (f" (second engine for disagreement: {MODELS[second[0]]['name']})" if second else "")
     L = [f"# Final evaluation on the locked WBM test set — {name}", "",
          f"Opened once ({json.loads(FINAL_LOG.read_text())['started_at']}); every rule fitted on the calibration set only. "
          f"{len(test):,} usable test relaxations, {test.attrs['n_rejected']} rejected by the guard (counted). "
          f"Disagreement tolerance {tol * 1000:.0f} meV/atom (95th percentile on calibration)." if tol else "No second engine.", "",
          "## Routing (the complete system)", "",
-         pd.DataFrame([rs]).T.reset_index().rename(columns={"index": "quantity", 0: "value"}).to_markdown(index=False, floatfmt=".3f"), "",
-         f"'Likely stable' precision on test: {M.fmt_ci(prec_ci, '{:.2f}')} (target {C.TARGET_PRECISION:.0%}); 'likely unstable' "
-         f"NPV: {M.fmt_ci(npv_ci, '{:.3f}')} (target {C.TARGET_NPV:.0%}).", "",
+         rs_md.T.reset_index().rename(columns={"index": "quantity", 0: "value"}).to_markdown(index=False, floatfmt=".3f"), "",
+         (f"**{R.NO_STABLE_LABEL}** — the certified thresholds admit no candidate, so 'likely stable' is never awarded and its "
+          f"precision is undefined, not zero. 'Likely unstable' NPV: {M.fmt_ci(npv_ci, '{:.3f}')} (target {C.TARGET_NPV:.0%})."
+          if R.degenerate_stable_label(rs) else
+          f"'Likely stable' precision on test: {M.fmt_ci(prec_ci, '{:.2f}')} (target {C.TARGET_PRECISION:.0%}); 'likely unstable' "
+          f"NPV: {M.fmt_ci(npv_ci, '{:.3f}')} (target {C.TARGET_NPV:.0%})."), "",
          f"## Plain threshold (cost-optimal on calibration: {opt['threshold'] * 1000:+.0f} meV/atom)", "",
          f"precision {M.fmt_ci(dm['precision_ci'], '{:.2f}')}, recall {M.fmt_ci(dm['recall_ci'], '{:.2f}')}, F1 "
          f"{M.fmt_ci(dm['f1_ci'], '{:.2f}')}, NPV {M.fmt_ci(dm['npv_ci'], '{:.3f}')}, DAF {M.fmt_ci(dm['daf_ci'], '{:.2f}')}.", "",

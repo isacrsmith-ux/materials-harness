@@ -144,6 +144,15 @@ def crossval_routing(df: "pd.DataFrame", alpha: float = 0.10, k: int = 5, seed: 
     return pd.DataFrame(rows)
 
 
+NO_STABLE_LABEL = "no stable label certified at this confidence"
+
+
+def degenerate_stable_label(summary: dict) -> bool:
+    """True when the certified thresholds label nothing 'likely stable'. Precision is then undefined —
+    not 0, and not NaN-to-be-averaged — and must be reported as a sentence, never as a number."""
+    return not summary.get("likely stable")
+
+
 def routing_summary(dec: "pd.DataFrame") -> dict:
     n = len(dec)
     st = dec[dec.label == LIKELY_STABLE]

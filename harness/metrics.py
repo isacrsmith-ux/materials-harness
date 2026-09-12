@@ -39,12 +39,31 @@ MEDIAN_ABS = lambda v: float(np.median(np.abs(v)))  # noqa: E731
 MEAN = lambda v: float(np.mean(v))  # noqa: E731
 RMSE = lambda v: float(np.sqrt(np.mean(np.square(v))))  # noqa: E731
 
+TRIM_FRACTION = 0.10  # symmetric trim for the robust mean reported next to every MAE
+
+
+def trimmed_mae(v, frac: float = TRIM_FRACTION) -> float:
+    """Symmetrically trimmed mean of |error|: sort, drop floor(frac*n) values from each end, average the
+    rest. A plain MAE is a mean and one corrupted row can dominate a whole cell; this says what the cell
+    looks like without its extremes. It is a companion to the MAE, never a replacement: no verdict is
+    taken from it, because trimming is exactly the operation that would flatter a heavy-tailed error."""
+    a = np.sort(np.abs(_finite(v)))
+    if not a.size:
+        return float("nan")
+    k = int(np.floor(frac * a.size))
+    core = a[k:a.size - k] if a.size - 2 * k > 0 else a
+    return float(np.mean(core))
+
+
+TRIMMED_MAE = trimmed_mae
+
 
 def error_summary(err, n_boot: int = N_BOOT) -> dict:
-    """n, MAE, median |error|, mean signed error and RMSE, each with a bootstrap interval."""
+    """n, MAE, median |error|, 10 % trimmed MAE, mean signed error and RMSE, each with a bootstrap interval."""
     a = _finite(err)
     out = {"n": len(a)}
-    for name, f in (("mae", MAE), ("median_abs", MEDIAN_ABS), ("mean_signed", MEAN), ("rmse", RMSE)):
+    for name, f in (("mae", MAE), ("median_abs", MEDIAN_ABS), ("trimmed_mae", TRIMMED_MAE),
+                    ("mean_signed", MEAN), ("rmse", RMSE)):
         out[name] = boot_ci(a, f, n_boot)
     return out
 

@@ -144,7 +144,7 @@ def write_report(models: list[tuple[str, str, str]] | None = None) -> str:
          f"{N_WBM} WBM calibration structures; the locked test set is not used). Ranked by the upper bound of the expected cost per "
          f"screened candidate at each engine's cost-optimal threshold (costs in `config/costs.json`: wasted lab test "
          f"{costs['cost_false_positive']}, missed stable material {costs['cost_missed_stable']}), then by the lower bound of precision. "
-         "Engines whose training data is not verified free of WBM ('compliant' ≠ True) may look better on WBM than they are.", "",
+         "Engines whose training data is not verified free of WBM ('compliant' ≠ True) may look better on WBM than they are; `reports/leakage_check.md` works through the evidence for SevenNet-Omni, the only such engine here, and it is not adopted on this ranking.", "",
          show.to_markdown(index=False, floatfmt=".3f"), "",
          "Energy MAE (meV/atom) by hull bin — 'new' = WBM screening structures (relaxed energy), 'known' = MP pairs whose control "
          "stays in the target structure:", "", bins.to_markdown(index=False), ""]

@@ -109,6 +109,104 @@ def is_unphysical(structure: Structure) -> bool:
     return min_distance_ratio(structure) < UNPHYSICAL_DISTANCE_RATIO
 
 
+# Absolute energy-plausibility bounds (eV/atom). The min-distance guard above only catches a *fully*
+# collapsed cell; a relaxation can also fall into a spurious short-range minimum of the model's PES that
+# is shallow enough to keep d/r_cov just above 0.5, converge cleanly (fmax < 0.01 eV/Å, |stress| < 0.01
+# GPa) and still report an energy no PBE calculation could produce. AlN->AlSb [mp-aaaaaazl>mp-aaacfybs]
+# did exactly that: converged in 68 steps, min d/r_cov = 0.514, E = -1131 eV/atom.
+#
+# Bounds chosen from the data, not tuned to a target number (51,110 scored energy-per-atom rows across
+# every suite and both engines, `results.sqlite`):
+#   * The DFT references span [-13.07, -0.07] eV/atom; every model energy that is not a numerical blow-up
+#     spans [-13.22, -0.04]. Outside [-15, 0] there are 21 rows; the two least extreme are -25.6 and
+#     -23.8 eV/atom, then nothing until -13.22. A window of [-20, +5] therefore sits in a >6 eV/atom
+#     empty band on the low side — it cannot reject a physically meaningful result — while catching every
+#     blow-up. (PBE total energies per atom of bound solids are negative; +5 is headroom, not a real case.)
+#   * |E_model - E_DFT| has p99.9 = 2.6 eV/atom and a largest legitimate value of 3.90 eV/atom (MP targets
+#     3-4 eV/atom above the hull that the model relaxes down to a real, much lower minimum). The next
+#     values up are 15.8 and 20.7 eV/atom. A 5 eV/atom cut lies in that empty 12 eV band.
+# Both checks are applied independently of convergence and of the min-distance ratio.
+#
+# Scope note: the absolute window needs no reference and so is a guard the product could also apply;
+# the reference-deviation check needs the DFT energy and is therefore a *validation-time* guard only.
+MIN_ENERGY_PER_ATOM_EV = -20.0
+MAX_ENERGY_PER_ATOM_EV = 5.0
+MAX_ABS_ENERGY_VS_REFERENCE_EV = 5.0
+
+# Payload key aliases: suites name the model energy and the DFT reference differently.
+_ENERGY_KEYS = ("energy_per_atom", "e_mace", "e_static")
+_REFERENCE_KEYS = ("e_dft", "reference_energy_per_atom")
+
+
+def _first(m: dict, keys) -> float | None:
+    for k in keys:
+        v = m.get(k)
+        if v is not None and np.isfinite(v):
+            return float(v)
+    return None
+
+
+def result_energy_per_atom(m: dict) -> float | None:
+    """The model's energy per atom from a suite payload or an engine result (key names vary)."""
+    return _first(m, _ENERGY_KEYS)
+
+
+def energy_rejection(energy_per_atom: float | None, reference_per_atom: float | None = None,
+                     deviation_ev: float | None = None) -> str | None:
+    """Why an energy is not physically possible (None = plausible). `deviation_ev` lets a caller pass
+    E_model - E_DFT directly when it has it but not the reference itself."""
+    if energy_per_atom is None:
+        return None
+    if not (MIN_ENERGY_PER_ATOM_EV <= energy_per_atom <= MAX_ENERGY_PER_ATOM_EV):
+        return (f"implausible energy ({energy_per_atom:.3g} eV/atom outside "
+                f"[{MIN_ENERGY_PER_ATOM_EV:.0f}, {MAX_ENERGY_PER_ATOM_EV:.0f}])")
+    if deviation_ev is None and reference_per_atom is not None:
+        deviation_ev = energy_per_atom - reference_per_atom
+    if deviation_ev is not None and np.isfinite(deviation_ev) and abs(deviation_ev) > MAX_ABS_ENERGY_VS_REFERENCE_EV:
+        return f"energy {deviation_ev:+.3g} eV/atom from the DFT reference (> {MAX_ABS_ENERGY_VS_REFERENCE_EV:.0f})"
+    return None
+
+
+def rejection_reason(m: dict, reference_per_atom: float | None = None) -> str | None:
+    """THE rejection rule: why a model relaxation must not be used as a result (None = usable).
+
+    Every suite calls this one function (ctrl / sub / sub_rescaled / sub_rattled*, stability competitors,
+    mode (b), WBM/ood, bulk EOS points, experimental lattices). `m` is a suite payload or an engine
+    result dict; the energy and the DFT reference are read under whichever key names that suite uses,
+    and `reference_per_atom` overrides when the caller knows the reference and the payload does not.
+    """
+    if not m.get("converged"):
+        return "not converged"
+    ratio = m.get("min_distance_ratio")
+    if (ratio is None or not np.isfinite(ratio)) and m.get("relaxed") is not None:
+        ratio = min_distance_ratio(m["relaxed"])
+    if ratio is not None and np.isfinite(ratio) and ratio < UNPHYSICAL_DISTANCE_RATIO:
+        return f"unphysical geometry (min d/r_cov = {ratio:.2f})"
+    dev = m.get("energy_mev_vs_mp")
+    dev = dev / 1000.0 if dev is not None and np.isfinite(dev) else None
+    return energy_rejection(result_energy_per_atom(m),
+                            reference_per_atom if reference_per_atom is not None else _first(m, _REFERENCE_KEYS),
+                            dev)
+
+
+def recheck(stored_reason: str | None, m: dict, reference_per_atom: float | None = None) -> str | None:
+    """Re-apply the rule to a payload that already carries the verdict recorded when the job ran.
+
+    The convergence and min-distance halves were evaluated then at thresholds that have not changed, and
+    re-deriving min_distance_ratio means re-reading every relaxed structure; the energy halves are pure
+    arithmetic on numbers the payload already holds. So a payload that was rejected stays rejected for the
+    same reason, and one that was accepted is re-tested against the (possibly stricter) energy rule —
+    which is what lets a tightened guard take effect without re-running the suite.
+    """
+    if stored_reason:
+        return stored_reason
+    dev = m.get("energy_mev_vs_mp")
+    dev = dev / 1000.0 if dev is not None and np.isfinite(dev) else None
+    return energy_rejection(result_energy_per_atom(m),
+                            reference_per_atom if reference_per_atom is not None else _first(m, _REFERENCE_KEYS),
+                            dev)
+
+
 def volume_per_atom(structure: Structure) -> float:
     return structure.volume / len(structure)
 

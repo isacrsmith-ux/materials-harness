@@ -114,7 +114,7 @@ def evaluate(wid: str, cs: str, cse: ComputedStructureEntry, mace: dict, comps: 
         if m is None:
             missing.append(mid)
             continue
-        why = rejection_reason(m)
+        why = rejection_reason(m, reference_per_atom=st._mp_energy_per_atom(raw_by_id[mid]))
         if why:
             rejected[mid] = why
             continue
@@ -159,9 +159,12 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
             wid, cs = x["wbm_id"], "-".join(sorted(x["chemsys"].split("-")))
             key = f"{wid}@{tag}"
             m = mace.get(wid)
-            if m is None or m.get("rejection"):
+            # Re-evaluate the guard rather than trusting the reason stored when the job ran: the rule
+            # is allowed to get stricter, and old payloads must be re-filtered without a re-run.
+            why = m and compare.recheck(m.get("rejection"), m)
+            if m is None or why:
                 store.record_job(SUITE, key, "failed", payload={"wbm_id": wid, "bin": b},
-                                 error="no usable model relaxation of the WBM structure" + (f" ({m['rejection']})" if m else ""))
+                                 error="no usable model relaxation of the WBM structure" + (f" ({why})" if m else ""))
                 n_fail += 1
                 continue
             try:

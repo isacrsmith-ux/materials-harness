@@ -313,8 +313,37 @@ def _md(df: pd.DataFrame, fmt=".2f") -> str:
     return df.to_markdown(index=False, floatfmt=fmt) if len(df) else "_no data_"
 
 
+MIN_PAIR_OVERLAP = 0.9  # of the snapshot's auto pairs that must still be in data/auto_pairs.json
+
+
+def _assert_pair_set_unchanged(tag: str) -> None:
+    """Refuse to rebuild the report once the auto pair set has moved on.
+
+    Both halves of the before/after comparison are built against the CURRENT `data/auto_pairs.json`.
+    When that file is regenerated, the 'before' half silently shrinks to the pairs the snapshot and the
+    new list happen to share, and the report turns into a comparison of two different samples with no
+    sign that anything is wrong. `reports/phase0/phase0_report.md` is a dated record of one comparison;
+    it is kept, not rebuilt.
+    """
+    from harness import pairgen
+
+    with store.using(BEFORE_DB):
+        snapshot_pairs = {k.split(":", 1)[0] for k in store.load_payloads("substitution_auto", tag=tag)}
+    if not snapshot_pairs:
+        return
+    current = {p["pair_id"] for p in pairgen.load_pairs()}
+    overlap = len(snapshot_pairs & current) / len(snapshot_pairs)
+    if overlap < MIN_PAIR_OVERLAP:
+        raise RuntimeError(
+            f"the auto pair set has changed since {BEFORE_DB.name} was taken: only {overlap:.0%} of its "
+            f"{len(snapshot_pairs):,} pairs are still in data/auto_pairs.json (need >= {MIN_PAIR_OVERLAP:.0%}). "
+            "Rebuilding would compare two different samples. Keep the existing reports/phase0/phase0_report.md; "
+            "it is a record of the Phase 0 before/after at the pair set of that date.")
+
+
 def report() -> Path:
     tag = _tag()
+    _assert_pair_set_unchanged(tag)
     with store.using(BEFORE_DB):
         before = _tables(tag)
     after = _tables(tag)

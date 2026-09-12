@@ -50,12 +50,29 @@ MAGNETIC_MOMENT_MIN = 0.05  # μB/site in the PBE calculation
 SWEEP = tuple(round(x, 3) for x in np.arange(-0.20, 0.2001, 0.01))
 COSTS_FILE = CONFIG_DIR / "costs.json"
 
-# Matbench Discovery, MACE-MP-0 (checkpoint 2023-12-03-mace-128-L1_epoch-199), unique-prototype subset.
-# Source: models/mace/mace-mp-0.yml in github.com/janosh/matbench-discovery (read 2026-09-11).
-MBD_MACE_MP0 = {"F1": 0.669, "DAF": 3.777, "precision": 0.577, "recall": 0.796, "accuracy": 0.878,
-                "MAE (eV/atom)": 0.057, "RMSE (eV/atom)": 0.101, "R2": 0.697,
-                "protocol": "FIRE, fmax 0.05 eV/Å, ≤ 500 steps, FrechetCellFilter"}
-MBD_SOURCE = "Matbench Discovery, models/mace/mace-mp-0.yml (unique-prototype subset)"
+# Published Matbench Discovery numbers, unique-prototype subset, PER ENGINE. The cross-check is only
+# meaningful against the active engine's own published row: comparing one model's results with another
+# model's published figures produces a table of spurious disagreements. An engine with no pinned row
+# here gets no section 5 — a stated gap, never a comparison against the wrong model.
+#   MACE-MP-0:  models/mace/mace-mp-0.yml  (read 2026-09-11)
+#   MACE-MPA-0: models/mace/mace-mpa-0.yml (read 2026-09-12)
+MBD_PUBLISHED = {
+    "mace-mp-0-medium": {
+        "source": "Matbench Discovery, models/mace/mace-mp-0.yml (unique-prototype subset)",
+        "checkpoint": "2023-12-03-mace-128-L1_epoch-199",
+        "protocol": "FIRE, fmax 0.05 eV/Å, ≤ 500 steps, FrechetCellFilter",
+        "F1": 0.669, "DAF": 3.777, "precision": 0.577, "recall": 0.796, "accuracy": 0.878,
+        "MAE (eV/atom)": 0.057, "RMSE (eV/atom)": 0.101, "R2": 0.697,
+    },
+    "mace-mpa-0-medium": {
+        "source": "Matbench Discovery, models/mace/mace-mpa-0.yml (unique-prototype subset)",
+        "checkpoint": "mace-mpa-0-medium.model (v0.3.9)",
+        "protocol": "FIRE, fmax 0.05 eV/Å, ≤ 500 steps, FrechetCellFilter",
+        "F1": 0.852, "DAF": 5.582, "precision": 0.853, "recall": 0.851, "accuracy": 0.954,
+        "MAE (eV/atom)": 0.028, "RMSE (eV/atom)": 0.073, "R2": 0.842,
+    },
+}
+MBD_METRICS = ("F1", "DAF", "precision", "recall", "accuracy", "MAE (eV/atom)", "RMSE (eV/atom)", "R2")
 
 
 def boot_ci(x, f=M.MAE, seed: int = 0):
@@ -80,6 +97,27 @@ def _md(df: pd.DataFrame, floatfmt=".2f") -> str:
 
 def _ci(t, spec="{:.1f}") -> str:
     return M.fmt_ci(t, spec)
+
+
+def _defined(v, spec="{:.3f}"):
+    """A quantity that does not exist prints as a word, never as 'nan'."""
+    if isinstance(v, float) and not np.isfinite(v):
+        return "undefined"
+    return spec.format(v) if isinstance(v, float) else v
+
+
+def finite_scorecard(score: dict) -> dict:
+    """scorecard.json never carries NaN/Inf: JSON has no such literal, and a downstream comparison that
+    reads one silently propagates it into a verdict. Undefined metrics are dropped and listed by name."""
+    out, undefined = {}, []
+    for k, v in score.items():
+        if isinstance(v, (float, np.floating)) and not np.isfinite(v):
+            undefined.append(k)
+            continue
+        out[k] = float(v) if isinstance(v, (np.floating, float)) else v
+    if undefined:
+        out["undefined_metrics"] = sorted(set(undefined) | set(out.get("undefined_metrics", [])))
+    return out
 
 
 def _costs() -> dict:
@@ -235,10 +273,26 @@ def collect(tag: str) -> dict:
 
 # --- tables -----------------------------------------------------------------------------------------------
 
+def excluded_by_bin(df: pd.DataFrame, rej_col: str, bins, bin_col: str = "bin") -> dict:
+    """bin -> number of results the guard rejected for that metric (a rejection is a reason string)."""
+    if not len(df) or rej_col not in df:
+        return {b: 0 for b in bins}
+    m = df[rej_col].map(lambda x: isinstance(x, str) and bool(x))
+    return {b: int(m[df[bin_col] == b].sum()) for b in bins}
+
+
 def stratified_table(df: pd.DataFrame, bins, e_col: str, v_col: str | None = None, split: str | None = None,
-                     rej_col: str | None = None, bin_col: str = "bin") -> pd.DataFrame:
-    """Per bin (and per value of `split`): n, rejected, energy MAE / median / mean signed with CIs, volume
-    MAE / median with CIs, and the energy verdict from the pessimistic bound."""
+                     excluded: dict | None = None, bin_col: str = "bin") -> pd.DataFrame:
+    """Per bin (and per value of `split`): n, the guard's exclusion count for that bin, energy MAE next to
+    its median |err| and its 10 % trimmed mean, mean signed, volume MAE / median, and the energy verdict
+    from the pessimistic bound of the MAE.
+
+    `excluded` maps bin -> results the guard rejected for this metric; it is REQUIRED, because a verdict
+    read off a mean whose exclusions are not stated is exactly the failure this column exists to prevent.
+    A rejected result has no trustworthy structure outcome either, so the count is per bin, not per split.
+    """
+    if excluded is None:
+        raise ValueError(f"stratified_table({e_col}): pass `excluded` — no verdict may come from an unguarded mean")
     rows = []
     for b in bins:
         g = df[df[bin_col] == b]
@@ -248,10 +302,9 @@ def stratified_table(df: pd.DataFrame, bins, e_col: str, v_col: str | None = Non
             row = {"bin": b}
             if split:
                 row[split.replace("_", " ")] = o
-            row.update({"n": s["n"]})
-            if rej_col and rej_col in sub:
-                row["rejected (guard)"] = int(sub[rej_col].map(lambda x: isinstance(x, str)).sum())
-            row.update({"energy MAE": _ci(s["mae"]), "energy median |err|": _ci(s["median_abs"]),
+            row.update({"n": s["n"], "excluded (guard, per bin)": int(excluded.get(b, 0)),
+                        "energy MAE": _ci(s["mae"]), "energy median |err|": _ci(s["median_abs"]),
+                        "energy trimmed mean": _ci(s["trimmed_mae"]),
                         "mean signed": _ci(s["mean_signed"], "{:+.1f}")})
             if v_col:
                 v = M.error_summary(sub[v_col], N_BOOT)
@@ -370,13 +423,20 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
              "Energies in meV/atom against MP's uncorrected PBE/PBE+U energy; volume in % against the PBE cell. "
              "*Same structure* = the relaxed result still matches the MP target (StructureMatcher, default tolerances); "
              "*relaxed into a different structure* is a different failure and is never mixed into the first.", ""]
+    body += [f"Every table pairs the MAE with its median |error| and its {M.TRIM_FRACTION:.0%} trimmed mean (a symmetric "
+             "trim of the absolute errors). Where the three disagree the cell is dominated by a few results, and only the "
+             "MAE — the worst-case-honest statistic — sets the verdict. **excluded (guard)** counts the results the "
+             "convergence / sanity / energy-plausibility guard rejected in that bin; they are in no average on the row.", ""]
     if len(au):
-        for title, e, v, split_col in (("MP target relaxed with MACE (control)", "ctrl_dE_mev", "ctrl_vol_pct", "ctrl_outcome"),
-                                        ("Substituted parent relaxed — best of two starts (the product's use case)",
-                                         "sub_best_dE_mev", "sub_best_vol_pct", "sub_best_outcome")):
-            body += [f"**{title}:**", "", _md(stratified_table(au, compare.HULL_BINS_MP, e, v, split_col)), ""]
+        for title, e, v, split_col, rej in (("MP target relaxed with MACE (control)", "ctrl_dE_mev", "ctrl_vol_pct",
+                                             "ctrl_outcome", "ctrl_rejection"),
+                                            ("Substituted parent relaxed — best of two starts (the product's use case)",
+                                             "sub_best_dE_mev", "sub_best_vol_pct", "sub_best_outcome", "sub_best_rejection")):
+            n_ex = excluded_by_bin(au, rej, compare.HULL_BINS_MP)
+            body += [f"**{title}:**", "", _md(stratified_table(au, compare.HULL_BINS_MP, e, v, split_col, excluded=n_ex)), ""]
         body += ["**Single point at the PBE structure** (model energy error with no relaxation in the way):", "",
-                 _md(stratified_table(au, compare.HULL_BINS_MP, "static_dE_mev")), ""]
+                 _md(stratified_table(au, compare.HULL_BINS_MP, "static_dE_mev",
+                                      excluded={b: 0 for b in compare.HULL_BINS_MP})), ""]
         rows = []
         for b in compare.HULL_BINS_MP:
             g = au[au.bin == b]
@@ -384,8 +444,11 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
                                ("plausible swap", g[g.plausible == True]), ("implausible swap", g[g.plausible == False])):  # noqa: E712
                 s = M.error_summary(sub.sub_best_dE_mev, N_BOOT)
                 same = (sub.sub_best_outcome == "same structure").mean() if len(sub) else np.nan
-                rows.append({"bin": b, "stratum": label, "n": s["n"], "energy MAE": _ci(s["mae"]),
-                             "energy median |err|": _ci(s["median_abs"]), "stays in target structure": f"{same:.0%}" if np.isfinite(same) else "n/a"})
+                rej_n = int(sub.get("sub_best_rejection", pd.Series(dtype=object)).map(lambda x: isinstance(x, str)).sum())
+                rows.append({"bin": b, "stratum": label, "n": s["n"], "excluded (guard)": rej_n,
+                             "energy MAE": _ci(s["mae"]), "energy median |err|": _ci(s["median_abs"]),
+                             "energy trimmed mean": _ci(s["trimmed_mae"]),
+                             "stays in target structure": f"{same:.0%}" if np.isfinite(same) else "n/a"})
         body += ["**By chemistry class and swap plausibility** (substituted parent, best start):", "", _md(pd.DataFrame(rows)), ""]
         same = au[au.ctrl_outcome == "same structure"]
         for b in compare.HULL_BINS_MP:
@@ -396,10 +459,15 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
     # ---------- 3. new materials by bin ----------
     body += ["## 3. New materials (WBM calibration set), by hull distance against the MP hull", ""]
     if len(wb):
+        rej = d["wb_rej"]
+        ex_wb = {b: 0 for b in compare.HULL_BINS_WBM}
+        if len(rej):
+            rb = rej.each_true.map(lambda e: compare.hull_bin(e, below_zero_bin=True))
+            ex_wb = {b: int((rb == b).sum()) for b in compare.HULL_BINS_WBM}
         body += ["Energy error MACE − DFT (meV/atom, uncorrected), relaxed from WBM's unrelaxed structure:", "",
-                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_mev", None, "outcome")), "",
+                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_mev", None, "outcome", excluded=ex_wb)), "",
                  "Single point at WBM's DFT-relaxed structure:", "",
-                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_static_mev")), ""]
+                 _md(stratified_table(wb, compare.HULL_BINS_WBM, "de_static_mev", excluded=ex_wb)), ""]
         for b in compare.HULL_BINS_WBM:
             s = M.error_summary(wb[wb.bin == b].de_mev, N_BOOT)
             score[f"wbm_energy_mae_{b}"] = s["mae"][0]
@@ -474,19 +542,29 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
                 "RMSE (eV/atom)": float(np.sqrt((e_err ** 2).mean())), "R2": float(r2)}
         cis = {"F1": dm0["f1_ci"], "DAF": dm0["daf_ci"], "precision": dm0["precision_ci"], "recall": dm0["recall_ci"],
                "accuracy": dm0["accuracy_ci"], "MAE (eV/atom)": M.boot_ci(e_err, M.MAE, N_BOOT)}
-        rows = [{"metric": k, "Matbench Discovery (published)": MBD_MACE_MP0[k], "this harness (calibration set)": ours[k],
-                 "95 % CI": _ci(cis[k], "{:.3f}") if k in cis else "", "published value inside CI": (
-                     "yes" if k in cis and cis[k][1] <= MBD_MACE_MP0[k] <= cis[k][2] else "no" if k in cis else "")}
-                for k in ours]
-        body += ["## 5. Cross-check against the published Matbench Discovery numbers", "",
-                 f"Same model checkpoint, same hull-distance construction, threshold 0. Published: {MBD_SOURCE}; their relaxation: "
-                 f"{MBD_MACE_MP0['protocol']}. Ours: {DEFAULT_RELAX.optimizer} + {DEFAULT_RELAX.cell_filter}, fmax "
-                 f"{DEFAULT_RELAX.fmax} eV/Å **and** |stress| ≤ {DEFAULT_RELAX.max_stress_gpa} GPa, fallback ladder on failure.", "",
-                 _md(pd.DataFrame(rows), ".3f"), "",
-                 "Where a published value lies outside our interval, the likely reasons are, in order: (1) our tighter relaxation "
-                 "(5× smaller force tolerance plus an explicit stress criterion) lets structures relax further, which lowers "
-                 "energies of high-energy structures and moves borderline calls; (2) sampling — ours is a 4,000-structure "
-                 "calibration set, theirs the full 215,488; (3) guard-rejected structures are excluded here and counted above.", ""]
+        body += ["## 5. Cross-check against the published Matbench Discovery numbers", ""]
+        pub = MBD_PUBLISHED.get(MODEL["key"])
+        if pub is None:
+            body += [f"**Not available for {MODEL['name']}.** No published Matbench Discovery row is pinned in "
+                     "`harness/report.py` for this checkpoint, and comparing it with another model's published numbers "
+                     "would manufacture disagreements that say nothing about this engine. This cross-check is therefore "
+                     "not reported here. This harness at threshold 0: "
+                     + ", ".join(f"{k} {ours[k]:.3f}" for k in MBD_METRICS) + ".", ""]
+        else:
+            rows = [{"metric": k, "Matbench Discovery (published)": pub[k], "this harness (calibration set)": ours[k],
+                     "95 % CI": _ci(cis[k], "{:.3f}") if k in cis else "", "published value inside CI": (
+                         "yes" if k in cis and cis[k][1] <= pub[k] <= cis[k][2] else "no" if k in cis else "")}
+                    for k in MBD_METRICS]
+            body += [f"Same model checkpoint (`{pub['checkpoint']}`), same hull-distance construction, threshold 0. "
+                     f"Published: {pub['source']}; their relaxation: {pub['protocol']}. Ours: {DEFAULT_RELAX.optimizer} + "
+                     f"{DEFAULT_RELAX.cell_filter}, fmax {DEFAULT_RELAX.fmax} eV/Å **and** |stress| ≤ "
+                     f"{DEFAULT_RELAX.max_stress_gpa} GPa, fallback ladder on failure.", "",
+                     _md(pd.DataFrame(rows), ".3f"), "",
+                     "Where a published value lies outside our interval, the likely reasons are, in order: (1) our tighter "
+                     "relaxation (5× smaller force tolerance plus an explicit stress criterion) lets structures relax further, "
+                     "which lowers energies of high-energy structures and moves borderline calls; (2) sampling — ours is a "
+                     "4,000-structure calibration set, theirs the full 215,488; (3) guard-rejected structures are excluded "
+                     "here and counted above.", ""]
 
     # ---------- 6. mode (a) vs mode (b), curated ----------
     if len(st):
@@ -523,7 +601,9 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
             g = mb[mb.bin == b]
             ra, rb, rs = (M.error_summary(g[c], N_BOOT) for c in ("a_err_mev", "b_err_mev", "b_sub_err_mev"))
             rows.append({"bin (reference)": b, "systems": len(g), "mode (a) MAE": _ci(ra["mae"]), "mode (a) median": _ci(ra["median_abs"]),
+                         "mode (a) trimmed": _ci(ra["trimmed_mae"]),
                          "mode (b) scored": rb["n"], "mode (b) MAE": _ci(rb["mae"]), "mode (b) median": _ci(rb["median_abs"]),
+                         "mode (b) trimmed": _ci(rb["trimmed_mae"]),
                          "stand-in only (flagged)": rs["n"], "mode (b) verdict (upper bound)": verdict_ci("e_hull_mae_mev", rb["mae"])})
         body += [_md(pd.DataFrame(rows)), ""]
         rows = []
@@ -593,8 +673,9 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
                  "known-weak element (MAE lower bound > 60 meV/atom, or fewer than 20 calibration compounds), if its relaxation "
                  "left the starting structure, or if its prediction lies between the certified thresholds; otherwise 'likely "
                  "stable' / 'likely unstable'. The second engine's disagreement signal is added once a second engine has run.", "",
-                 _md(pd.DataFrame({"quantity": list(rs), "certified thresholds (used)": list(rs.values()),
-                                   "conformal bounds (rejected)": [rs_conf.get(k) for k in rs]}), ".3f"), "",
+                 _md(pd.DataFrame({"quantity": list(rs),
+                                   "certified thresholds (used)": [_defined(v) for v in rs.values()],
+                                   "conformal bounds (rejected)": [_defined(rs_conf.get(k)) for k in rs]}), ".3f"), "",
                  f"Certified thresholds fitted on the whole calibration set (what the product would use): {thr_text}.", "",
                  "Why candidates were sent to DFT (a candidate can have several reasons): " +
                  ", ".join(f"{k}: {v}" for k, v in reason_counts.items()) + ".", ""]
@@ -602,7 +683,23 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
         rel = rel.assign(**{"call right": rel["call right"].map(lambda c: _ci(c, "{:.2f}"))})
         body += ["**How often a plain threshold-0 call is right, by chemistry family and predicted hull distance** "
                  "(observed on the calibration set; the product shows this next to every prediction):", "", _md(rel), ""]
-        score.update({f"routing_{k}": v for k, v in rs.items() if isinstance(v, (int, float))})
+        # scorecard.json must stay valid JSON and must never carry a NaN that a later comparison
+        # would silently average or print. An undefined quantity is omitted and named instead.
+        degenerate = R.degenerate_stable_label(rs)
+        undefined = sorted(k for k, v in rs.items() if isinstance(v, float) and not np.isfinite(v))
+        score.update({f"routing_{k}": v for k, v in rs.items()
+                      if isinstance(v, (int, float)) and np.isfinite(v)})
+        score["routing_stable_label_certified"] = not degenerate
+        if undefined:
+            score["routing_undefined"] = undefined
+        if degenerate:
+            body += [f"**Routing: {R.NO_STABLE_LABEL}.** The per-family thresholds certified at "
+                     f"{C.CERT_CONF:.0%} confidence for precision ≥ {C.TARGET_PRECISION:.0%} admit no candidate, so "
+                     "'likely stable' is never awarded and its precision is undefined — not zero, and not a number to "
+                     f"be compared. Every candidate is routed to 'likely unstable' ({rs['likely unstable']:,}) or to "
+                     f"DFT ({rs['send to DFT']:,}). scorecard.json omits "
+                     + ", ".join(f"`routing_{k}`" for k in undefined)
+                     + " rather than emitting NaN.", ""]
 
     # ---------- 7. per element, magnetism ----------
     body += ["## 7. Errors by element and by magnetism", "",
@@ -624,7 +721,8 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
             lambda m: "unknown" if m is None or not np.isfinite(m) else "magnetic in PBE" if m > MAGNETIC_MOMENT_MIN else "non-magnetic in PBE"))
         body += [f"**Magnetic vs non-magnetic (MP pairs; moment > {MAGNETIC_MOMENT_MIN} μB/site in the PBE calculation), control "
                  "energy, same structure only:**", "",
-                 _md(stratified_table(mag[mag.ctrl_outcome == "same structure"], compare.HULL_BINS_MP, "ctrl_dE_mev", None, "mag")), "",
+                 _md(stratified_table(mag[mag.ctrl_outcome == "same structure"], compare.HULL_BINS_MP, "ctrl_dE_mev",
+                                      None, "mag", excluded=excluded_by_bin(au, "ctrl_rejection", compare.HULL_BINS_MP))), "",
                  "WBM entries carry no magnetic moments, so new materials cannot be split this way.", ""]
 
     # ---------- 8. worst cases ----------
@@ -644,32 +742,60 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
 
     # ---------- 9. experiment ----------
     if len(ex):
+        ex_rej = int(ex.rejection.map(lambda x: isinstance(x, str)).sum()) if "rejection" in ex else 0
+        ex_ok = ex[ex.rejection.isna()] if "rejection" in ex else ex
         rows = []
         for status, label in (("rt", "room temperature (Lucero 2012)"), ("zero_k", "0 K extrapolated (Lucero 2012)"),
                               ("zpae_removed", "0 K, zero-point expansion removed (Csonka 2009)")):
             for metal in (True, False):
-                g = ex[(ex.status == status) & (ex.get("metal", False) == metal)]
+                cell = ex[(ex.status == status) & (ex.get("metal", False) == metal)]
+                g = ex_ok[(ex_ok.status == status) & (ex_ok.get("metal", False) == metal)]
                 if len(g):
                     rows.append({"set": label, "class": "metals" if metal else "non-metals", "n": len(g),
+                                 "excluded (guard)": (int(cell.rejection.map(lambda x: isinstance(x, str)).sum())
+                                                      if "rejection" in cell else 0),
                                  "MACE vs exp mean %": g.a_err_pct.mean(), "MACE vs exp MAE %": g.a_err_pct.abs().mean(),
+                                 "MACE vs exp median |%|": g.a_err_pct.abs().median(),
+                                 "MACE vs exp trimmed MAE %": M.trimmed_mae(g.a_err_pct),
                                  "PBE vs exp mean %": g.a_pbe_err_pct.mean(), "MACE − PBE mean %": g.a_mace_vs_pbe_pct.mean()})
         body += ["## 9. Lattice constants against experiment", "",
                  "Room-temperature and 0 K values include thermal and zero-point expansion; the Csonka set removes the zero-point "
                  "anharmonic expansion, so it is the fair target for a static 0 K calculation. PBE overestimates by ~1 %, and MACE "
                  "inherits that. **Coverage gap:** oxides are represented by MgO only, and no bcc transition metals (V, Nb, Ta, Mo, W, "
-                 "Fe) have a verified source in the harness yet.", "", _md(pd.DataFrame(rows)), ""]
-        if "metal" in ex:
-            body += [_md(ex.sort_values("a_err_pct", key=abs, ascending=False)[
+                 f"Fe) have a verified source in the harness yet. Results rejected by the guard: {ex_rej} (excluded from every "
+                 "average below).", "", _md(pd.DataFrame(rows)), ""]
+        if "metal" in ex_ok and len(ex_ok):
+            body += [_md(ex_ok.sort_values("a_err_pct", key=abs, ascending=False)[
                 ["material", "structure", "status", "a_exp", "a_mace", "a_pbe", "a_err_pct", "a_pbe_err_pct", "a_mace_vs_pbe_pct"]].head(20), ".3f"), ""]
 
     # ---------- 10. bulk modulus ----------
     if len(bk):
-        ok = bk[bk.fit.map(lambda f: f["rms_mev"] <= 1.0 and f["v0_in_range"])]
+        from harness.suites import bulk as bulk_mod
+
+        good_fit = bk[bk.fit.map(lambda f: f["rms_mev"] <= 1.0 and f["v0_in_range"])]
+        bad_ref = good_fit[good_fit.k_vrh.map(bulk_mod.reference_implausible)]
+        ok = good_fit[~good_fit.k_vrh.map(bulk_mod.reference_implausible)]
         ci = M.boot_ci(ok.err_pct_vrh, M.MAE, N_BOOT)
+        med = M.boot_ci(ok.err_pct_vrh, M.MEDIAN_ABS, N_BOOT)
+        trm = M.boot_ci(ok.err_pct_vrh, M.TRIMMED_MAE, N_BOOT)
+        ci_all = M.boot_ci(good_fit.err_pct_vrh, M.MAE, N_BOOT)
+        named = "; ".join(f"{r.label} ({r.mp_id}): K_VRH {r.k_vrh:,.0f} GPa next to K_Reuss {r.k_reuss:.1f} GPa"
+                          for r in bad_ref.itertuples())
         body += ["## 10. Bulk modulus (curated known materials)", "",
-                 f"Birch–Murnaghan fits vs MP elastic K_VRH: MAE {_ci(ci, '{:.1f}')} % (n={len(ok)}), verdict "
-                 f"{verdict_ci('bulk_mae_pct', ci)} (pessimistic bound). Not stratified by hull distance: every material is on or "
-                 "near the hull.", ""]
+                 f"Birch–Murnaghan fits vs MP elastic K_VRH: MAE {_ci(ci, '{:.1f}')} % (n={len(ok)}), median |err| "
+                 f"{_ci(med, '{:.1f}')} %, {M.TRIM_FRACTION:.0%} trimmed mean {_ci(trm, '{:.1f}')} %; verdict "
+                 f"{verdict_ci('bulk_mae_pct', ci)} (from the MAE's pessimistic bound). Not stratified by hull distance: "
+                 "every material is on or near the hull. EOS points rejected by the convergence / sanity / energy guard "
+                 "never enter a fit; a fit needs at least 7 usable points.", ""]
+        excl = [f"{len(bk) - len(good_fit)} of {len(bk)} fits excluded for fit quality (RMS > "
+                f"{bulk_mod.MAX_FIT_RMS_MEV} meV/atom or V0 outside the sampled range)"]
+        if len(bad_ref):
+            excl.append(f"{len(bad_ref)} excluded for an impossible MP REFERENCE (K_VRH outside "
+                        f"(0, {bulk_mod.MAX_PLAUSIBLE_K_GPA:.0f}] GPa — above diamond's ~443 GPa): {named}. "
+                        f"Keeping it the MAE is {_ci(ci_all, '{:.1f}')} % over n={len(good_fit)}; that number measures "
+                        "MP's Voigt average, not this engine, which is why the verdict does not use it")
+        body += ["Exclusions, stated in full: " + "; ".join(excl) + ".", ""]
+        score.update({"bulk_mae_pct": ci[0], "bulk_mae_pct_upper": ci[2], "bulk_n": len(ok)})
 
     # ---------- 11. runtime ----------
     if len(jobs):
@@ -753,8 +879,9 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / "validation_report.md"
     out.write_text("\n".join(L) + "\n")
-    (out_dir / "scorecard.json").write_text(json.dumps({k: (float(v) if isinstance(v, (np.floating, float)) else v)
-                                                         for k, v in score.items()}, indent=1, default=str) + "\n")
+    card = finite_scorecard(score)
+    text = json.dumps(card, indent=1, default=str, allow_nan=False) + "\n"
+    (out_dir / "scorecard.json").write_text(text)
     res = store.load_table("results")
     if len(res):
         res["settings_tag"] = res.job_key.map(lambda k: k.rsplit("@", 1)[1] if "@" in k else "pre-tag")

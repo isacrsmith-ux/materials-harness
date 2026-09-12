@@ -66,8 +66,15 @@ MODELS = {
         "sha256": "771543388f360d2762e09f62de685bfb85e9f637a06575f2545f03974d6f0522", "size_bytes": 219904945,
         "modal": "mpa",  # PBE(+U) task used for Matbench Discovery (SevenNet docs)
         "dtypes": ["float32"],  # the calculator runs float32 only; a float64 request is refused, never relabelled
-        "training_data": "15 datasets incl. MPtrj, OMat24 and a 12.1M-structure Alexandria subsample (WBM filtering not stated)",
+        "training_data": "COSMOS: 15 datasets, 242.8M structures (MPtrj, OMat24, Alexandria, MatPES, OC20/22, "
+                         "ODAC23, OMol25, SPICE, QCML, MAD, MP-ALOE, MP-/MatPES-r2SCAN)",
+        # Still "unverified", but no longer unexamined — see reports/leakage_check.md. OMat24 (101.9M) and the
+        # 3D Alexandria part (sAlex, 10.4M) are WBM-prototype-filtered by their authors (arXiv:2410.12771
+        # §2.1.1, §4.3). About 1% of the training set — Alexandria 1D/2D (~1.6M), MatPES (0.78M), MAD (0.09M) —
+        # carries no documented WBM filter, so the flag stays and the engine is not adopted.
         "compliant": "unverified", "license": "MIT (code and checkpoint)",
+        "compliance_note": "reports/leakage_check.md: OMat24 + sAlex filtered at source; ~1% of training "
+                           "(Alexandria 1D/2D, MatPES, MAD) undocumented",
     },
 }
 ACTIVE_MODEL = os.environ.get("HARNESS_MODEL", BASELINE_MODEL)

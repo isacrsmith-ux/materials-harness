@@ -17,7 +17,20 @@ The harness answers four questions:
 | Does it get stiffness right? | `bulk` | MP elastic bulk moduli (K_VRH) |
 
 Results land in one table (`results/results.sqlite`, exported to `results/results.parquet`) — one row per
-structure × test, every value tagged with provenance — and in `reports/validation_report.md`.
+structure × test, every value tagged with provenance — and in a report per engine:
+
+| report | engine |
+|:--|:--|
+| `reports/validation_report.md` | **MACE-MPA-0 medium — the engine the product would ship** |
+| `reports/final_test.md` | MACE-MPA-0 on the locked WBM test set (opened once) |
+| `reports/mace-mp-0-medium/validation_report.md` | MACE-MP-0 medium, the round-1 baseline |
+| `reports/phase3/screening.md`, `candidates.md` | all engines on identical structures |
+| `reports/leakage_check.md` | whether SevenNet-Omni's screening win survives a WBM-leakage check |
+| `reports/guard_fix.md` | the energy-plausibility guard: before/after numbers |
+
+The top level is the production engine only. `python -m harness report` writes the report for whichever
+engine `HARNESS_MODEL` selects, so the baseline is regenerated with
+`python -m harness report --out reports/mace-mp-0-medium`.
 
 ## Setup (macOS, Apple Silicon)
 
@@ -51,7 +64,7 @@ Matbench Discovery data files, figshare doi:10.6084/m9.figshare.22715158. If the
 ```bash
 ./uvw run python -m harness benchmark            # CPU/float64 vs MPS/float32 + worker layouts -> config/compute.json
 ./uvw run python -m harness run --suite smoke    # or substitution | stability | ood | experimental | bulk | all
-./uvw run python -m harness report               # writes reports/validation_report.md (+ figures, parquet)
+./uvw run python -m harness report               # writes reports/validation_report.md for HARNESS_MODEL (+ figures, parquet)
 ./uvw run pytest -m "not slow"                   # fast unit tests (no MACE, no network)
 ./uvw run pytest                                 # also the smoke test
 ```
@@ -194,7 +207,8 @@ harness/            engine.py (MACE + relaxation), mp_data.py (cached MP access)
 data/               curated inputs: substitution pairs, experimental table, WBM sample ids, auto_pairs.json
 config/             compute.json (benchmark layout), unattended.json (queue/scale/schedule settings)
 run_unattended.sh   background launcher (nohup + caffeinate); scripts/ install/uninstall the nightly agent
-reports/            validation_report.md + figures/ (tracked); reports/<run>/ per unattended run
+reports/            validation_report.md (production engine) + figures/; mace-mp-0-medium/ (baseline);
+                    final_test.md, leakage_check.md, guard_fix.md, costs.md, phase0/, phase3/; <run>/ per unattended run
 tests/              unit tests (substitution, comparison, stability, OOD, bulk, guard, report) + smoke test
 cache/ models/ results/ logs/   generated, gitignored (results.sqlite / results.parquet are rebuilt by rerunning)
 ```

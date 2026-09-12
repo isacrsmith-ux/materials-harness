@@ -252,3 +252,19 @@ def test_store_using_reads_another_database(tmp_path):
         assert store.completed_keys("unit") == {"k@tag"}
     with store.using(tmp_path / "other.sqlite"):
         assert store.completed_keys("unit") == set()
+
+
+def test_phase0_report_refuses_to_rebuild_against_a_changed_pair_set(monkeypatch):
+    """The before/after halves are both built against the CURRENT auto pair list, so rebuilding after
+    the pair set is regenerated would compare two different samples."""
+    import pytest
+
+    from harness import phase0
+
+    monkeypatch.setattr(phase0.store, "load_payloads", lambda *a, **k: {f"pair-{i}:x:sub@t": {} for i in range(100)})
+    monkeypatch.setattr("harness.pairgen.load_pairs", lambda: [{"pair_id": f"pair-{i}"} for i in range(50)])
+    with pytest.raises(RuntimeError, match="auto pair set has changed"):
+        phase0._assert_pair_set_unchanged("t")
+
+    monkeypatch.setattr("harness.pairgen.load_pairs", lambda: [{"pair_id": f"pair-{i}"} for i in range(100)])
+    phase0._assert_pair_set_unchanged("t")  # unchanged: no error

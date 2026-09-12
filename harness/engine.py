@@ -215,21 +215,26 @@ def relax(
             filter_fmax /= 2
     wall = time.perf_counter() - t0
 
-    from harness.compare import UNPHYSICAL_DISTANCE_RATIO, min_distance_ratio
+    from harness.compare import UNPHYSICAL_DISTANCE_RATIO, energy_rejection, min_distance_ratio
 
     forces = atoms.get_forces()
     stress = atoms.get_stress(voigt=True)  # eV/Å^3
     fmax_final = float(np.linalg.norm(forces, axis=1).max())
     final = _to_structure(atoms)
     mdr = min_distance_ratio(final)
-    # An unphysical geometry (collapsed atoms) is never reported as a converged result.
+    e_per_atom = float(atoms.get_potential_energy() / len(atoms))
+    # An unphysical geometry (collapsed atoms) or a physically impossible energy is never reported as a
+    # converged result — the fallback ladder stops at the first converged rung, so a rung that landed in
+    # a spurious deep minimum of the model's PES must not end the ladder. Only the reference-free half of
+    # compare's energy rule can apply here: the engine has no DFT energy to compare against.
     converged = (fmax_final <= settings.fmax
                  and (not relax_cell or stress_residual(stress, constant_volume) <= stress_limit)
-                 and mdr >= UNPHYSICAL_DISTANCE_RATIO)
+                 and mdr >= UNPHYSICAL_DISTANCE_RATIO
+                 and energy_rejection(e_per_atom) is None)
     return RelaxResult(
         structure=final,
         min_distance_ratio=mdr,
-        energy_per_atom=float(atoms.get_potential_energy() / len(atoms)),
+        energy_per_atom=e_per_atom,
         converged=converged,
         n_steps=int(opt.get_number_of_steps()),
         fmax_final=fmax_final,

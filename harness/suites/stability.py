@@ -222,16 +222,14 @@ def _record_competitor(job: dict, res: dict) -> None:
                      settings=res["metadata"] | {"layout": job.get("layout")}, runtime_s=res["wall_time_s"])
 
 
-def rejection_reason(m: dict) -> str | None:
-    """Why a MACE relaxation must not be used as an energy (None = usable)."""
-    if not m.get("converged"):
-        return "not converged"
-    ratio = m.get("min_distance_ratio")
-    if ratio is None or not np.isfinite(ratio):
-        ratio = compare.min_distance_ratio(m["relaxed"])
-    if ratio < compare.UNPHYSICAL_DISTANCE_RATIO:
-        return f"unphysical geometry (min d/r_cov = {ratio:.2f})"
-    return None
+# The rejection rule lives in compare.rejection_reason and is shared by every suite; re-exported here
+# because the suites and the tests have always imported it from this module.
+rejection_reason = compare.rejection_reason
+
+
+def _mp_energy_per_atom(entry) -> float:
+    """Uncorrected MP DFT energy per atom of a ComputedStructureEntry (the guard's reference)."""
+    return float(entry.uncorrected_energy) / entry.composition.num_atoms
 
 
 def b_status_of(absent, absent_on_hull) -> str:
@@ -279,7 +277,9 @@ def evaluate_target(pair: dict, sub: dict, mace_competitors: dict[str, dict]) ->
         if m is None:
             missing.append(mid)
             continue
-        reason = m["rejection"] if "rejection" in m else rejection_reason(m)
+        # Guard once more WITH the competitor's own MP DFT energy: the pre-pass in run() has no
+        # reference to hand, so the energy-vs-reference half of the rule can only be applied here.
+        reason = rejection_reason(m, reference_per_atom=_mp_energy_per_atom(raw_by_id[mid]))
         if reason:
             rejected[mid] = reason
             continue

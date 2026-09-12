@@ -117,6 +117,7 @@ def _record(job: dict, res: dict) -> None:
         log.warning("%s %s: %s", row["material"], res["status"], res.get("error"))
         return
     relaxed = res["relaxed"]
+    rejection = compare.rejection_reason(res)  # same rule as every other suite; no DFT energy here
     cell = compare.conventional_cell(relaxed)
     keeps_sg = cell.spacegroup == PROTOTYPE_SG[row["structure"]]
     pbe = job["pbe"]
@@ -126,14 +127,14 @@ def _record(job: dict, res: dict) -> None:
     label = {"rt": "room temperature", "zpae_removed": "0 K, zero-point expansion removed"}.get(row["status"], row["status"])
     exp_src = f"{row.get('citation', CITATION)} [{label}]"
     flags = {"status": row["status"], "keeps_prototype_sg": keeps_sg, "sim_spacegroup": cell.spacegroup,
-             "converged": res["converged"], "note": row["note"] or None}
+             "converged": res["converged"], "rejection": rejection, "note": row["note"] or None}
     base = {"suite": SUITE, "job_key": key, "structure": f"{row['material']} ({row['structure']})",
             "formula": row["formula"], "family": row["structure"], "units": "Å", "flags": flags,
             "settings": res["metadata"], "runtime_s": res["wall_time_s"]}
     rows, out = [], {"material": row["material"], "formula": row["formula"], "structure": row["structure"],
                      "status": row["status"], "source": row.get("citation", CITATION),
                      "metal": all(e.is_metal for e in Composition(row["formula"]).elements),
-                     "keeps_prototype_sg": keeps_sg, "converged": res["converged"],
+                     "keeps_prototype_sg": keeps_sg, "converged": res["converged"], "rejection": rejection,
                      "wall_time_s": res["wall_time_s"], "pbe_material_id": pbe["material_id"] if pbe else None}
     for p, exp, sim, pbe_val in params:
         err = compare.pct_error(sim, exp)
@@ -180,7 +181,17 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
 
 
 def table(tag: str) -> pd.DataFrame:
-    return pd.DataFrame([pl for pl in store.load_payloads(SUITE, tag=tag).values() if "a_err_pct" in pl])
+    """Every finished lattice check, with a `rejection` column (None = usable). Older payloads predate
+    the column, so it is re-derived here from the stored relaxation."""
+    rows = [pl for pl in store.load_payloads(SUITE, tag=tag).values() if "a_err_pct" in pl]
+    df = pd.DataFrame(rows)
+    if len(df):
+        df["rejection"] = [pl.get("rejection") if "rejection" in pl else compare.rejection_reason(pl) for pl in rows]
+        # `metal` was added to the payload after the first runs; without it a groupby on (status, metal)
+        # silently drops those rows from the report. Derive it from the formula for older payloads.
+        df["metal"] = [pl["metal"] if pl.get("metal") is not None
+                       else all(e.is_metal for e in Composition(pl["formula"]).elements) for pl in rows]
+    return df
 
 
 def summarize(df: pd.DataFrame) -> dict:

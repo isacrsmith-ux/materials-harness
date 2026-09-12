@@ -53,7 +53,8 @@ def table() -> pd.DataFrame:
         in_use = json.loads(cp.read_text()) if cp.is_file() else None
         rows.append({"model": m["name"], "F1": p.get("F1"), "DAF": p.get("DAF"), "precision": p.get("precision"),
                      "MAE meV/atom": (p.get("MAE_eV") or float("nan")) * 1000, "κ_SRME": p.get("kappa_SRME"),
-                     "compliant (no WBM in training)": m["compliant"], "license": m["license"],
+                     "compliant (no WBM in training)": m["compliant"],
+                     "compliance evidence": m.get("compliance_note") or m["training_data"], "license": m["license"],
                      "runs on this Mac": "yes" if b else ("gated: needs Hugging Face login" if m.get("gated") else "not yet"),
                      "setting in use": f"{in_use['device']}/{in_use['dtype']}" if in_use else "—",
                      "benchmark recommends": f"{b['device']}/{b['dtype']}" if b else "—",
@@ -72,6 +73,10 @@ def write() -> str:
          "The baseline keeps CPU/float64 although CPU/float32 agrees and is faster: switching would change its settings tag "
          "and orphan every existing result. The other engines run their recommended setting; float32 agreeing with the "
          "reference within 1 meV/atom on every benchmark structure is what makes the cross-model comparison fair.", "",
+         "`compliant` here means *this project's* check — training data verified free of WBM — not the Matbench "
+         "Discovery leaderboard's compliance flag, which is stricter (train on the sanctioned set only) and would "
+         "call every Alexandria- or OMat24-trained engine here non-compliant. Any engine marked `unverified` is a "
+         "candidate, not a choice; SevenNet-Omni's evidence is worked through in `reports/leakage_check.md`.", "",
          "**Not run:**", "", ex.to_markdown(index=False), ""]
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text("\n".join(L) + "\n")

@@ -32,6 +32,17 @@ VOLUME_FACTORS = tuple(float(x) for x in np.linspace(0.96, 1.04, 9))
 MIN_POINTS = 7
 MAX_FIT_RMS_MEV = 1.0  # meV/atom; worse fits are flagged, not hidden
 
+# Sanity bound on the MP REFERENCE, not on our result. No crystalline solid has a bulk modulus above
+# diamond's (~443 GPa), so a K_VRH far above that is a broken elasticity document, not a hard case:
+# MP gives potassium K_VRH = 33,306 GPa next to K_Reuss = 3.7 GPa for the same material. A reference
+# like that measures MP's Voigt average, not the engine. Such rows are NAMED and reported both ways,
+# never silently dropped.
+MAX_PLAUSIBLE_K_GPA = 600.0
+
+
+def reference_implausible(k_vrh) -> bool:
+    return not (k_vrh is not None and np.isfinite(k_vrh) and 0.0 < k_vrh <= MAX_PLAUSIBLE_K_GPA)
+
 
 def fit_birch_murnaghan(volumes, energies) -> dict:
     """Third-order Birch–Murnaghan fit of per-atom E(V). Returns B0 in GPa and fit diagnostics."""
@@ -53,7 +64,7 @@ def materials(tag: str) -> list[dict]:
     pairs = {p["pair_id"]: p for p in resolve_pairs()}
     out = {}
     for pl in store.load_payloads("substitution", tag=tag).values():
-        if pl.get("kind") != "ctrl" or not pl.get("converged"):
+        if pl.get("kind") != "ctrl" or compare.rejection_reason(pl):
             continue
         p = pairs[pl["pair_id"]]
         out.setdefault(p["target_id"], {"mp_id": p["target_id"], "label": p["target_formula"], "family": p["family"],
@@ -61,7 +72,7 @@ def materials(tag: str) -> list[dict]:
                                          "flags": p["flags"], "space_relevant": p["space_relevant"]})
     for pl in store.load_payloads("experimental", tag=tag).values():
         mid = pl.get("pbe_material_id")
-        if not mid or "relaxed" not in pl or not pl.get("converged") or mid in out:
+        if not mid or "relaxed" not in pl or mid in out or compare.rejection_reason(pl):
             continue
         s = pl["relaxed"]
         out[mid] = {"mp_id": mid, "label": pl["material"], "family": f"exp-{pl['structure']}",
@@ -78,11 +89,15 @@ def _record(job: dict, res: dict) -> None:
         log.warning("%s %s: %s", m["label"], res["status"], res.get("error"))
         return
     pts = res["points"]
-    good = [p for p in pts if "error" not in p and p["converged"]
-            and p["min_distance_ratio"] >= compare.UNPHYSICAL_DISTANCE_RATIO]
+    # Same rejection rule as every other suite (no DFT reference per EOS point, so the absolute
+    # energy window applies and the energy-vs-reference half does not).
+    for p in pts:
+        if "error" not in p:
+            p["rejection"] = compare.rejection_reason(p)
+    good = [p for p in pts if "error" not in p and not p["rejection"]]
     runtime = sum(p.get("wall_time_s", 0.0) for p in pts)
     if len(good) < MIN_POINTS:
-        err = f"only {len(good)}/{len(pts)} converged EOS points (need {MIN_POINTS})"
+        err = f"only {len(good)}/{len(pts)} usable EOS points (need {MIN_POINTS})"
         store.record_job(SUITE, key, "failed", payload={"mp_id": m["mp_id"], "points": pts}, error=err, runtime_s=runtime)
         log.warning("%s: %s", m["label"], err)
         return

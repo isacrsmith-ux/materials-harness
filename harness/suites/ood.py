@@ -141,10 +141,9 @@ def retry_jobs(compute: dict, tag: str, done: set | frozenset = frozenset()) -> 
     """Fallback-ladder jobs for WBM relaxations rejected by the convergence / sanity guard (not for
     composition mismatches), restarting the perturbed rung from the WBM initial structure."""
     from harness.config import LADDER_BUDGET_S
-    from harness.suites.stability import rejection_reason
 
     todo = {key: pl for key, pl in store.load_payloads(SUITE, tag=tag).items()
-            if "each_pred" in pl and "ladder" not in pl and rejection_reason(pl)
+            if "each_pred" in pl and "ladder" not in pl and compare.recheck(pl.get("rejection"), pl)
             and key.replace(f"@{tag}", f":ladder@{tag}") not in done}
     if not todo:
         return []
@@ -156,7 +155,8 @@ def retry_jobs(compute: dict, tag: str, done: set | frozenset = frozenset()) -> 
         wid = pl["wbm_id"]
         jobs.append({"job_key": key.replace(f"@{tag}", f":ladder@{tag}"), "record_key": key, "job_fn": "ladder",
                      "wbm_id": wid, "ref": {k: (v.item() if hasattr(v, "item") else v) for k, v in summary.loc[wid].to_dict().items()},
-                     "rung1": pl, "rung1_rejection": rejection_reason(pl), "original": starts.get(wid, pl["relaxed"]),
+                     "rung1": pl, "rung1_rejection": compare.recheck(pl.get("rejection"), pl),
+                     "original": starts.get(wid, pl["relaxed"]),
                      "seed": compare.stable_seed(key), "structure": pl["relaxed"], "budget_s": LADDER_BUDGET_S,
                      "device": compute["device"], "dtype": compute["dtype"]})
     return jobs
@@ -195,8 +195,6 @@ def _record_ladder(job: dict, res: dict) -> None:
 
 
 def _record(job: dict, res: dict) -> None:
-    from harness.suites.stability import rejection_reason
-
     if job.get("job_fn") == "ladder":
         _record_ladder(job, res)
         return
@@ -216,7 +214,7 @@ def _record(job: dict, res: dict) -> None:
     each_true = ref["e_above_hull_mp2020_corrected_ppd_mp"]
     each_pred = predict_e_hull(each_true, e_mace, e_dft)
     e_form_true = ref["e_form_per_atom_mp2020_corrected"]
-    rejection = rejection_reason(res)
+    rejection = compare.rejection_reason(res, reference_per_atom=e_dft)
     comp_ok = relaxed.composition.reduced_composition == Composition(ref["formula"]).reduced_composition
     if not comp_ok:
         rejection = rejection or f"composition mismatch ({relaxed.composition.reduced_formula} vs {ref['formula']})"
@@ -278,10 +276,13 @@ def run(compute: dict, retry_failed: bool = False, limit: int | None = None) -> 
 
 def table(tag: str) -> pd.DataFrame:
     pls = store.load_payloads(SUITE, tag=tag).values()
-    df = pd.DataFrame([pl for pl in pls if "each_pred" in pl])
+    rows = [pl for pl in pls if "each_pred" in pl]
+    df = pd.DataFrame(rows)
     static = {pl["wbm_id"]: pl["de_static_mev"] for pl in pls if pl.get("kind") == "static"}
     if len(df):
         df["de_static_mev"] = df.wbm_id.map(static)
+        # Re-apply the energy guard to stored results so a tightened rule filters them without a re-run.
+        df["rejection"] = [compare.recheck(pl.get("rejection"), pl) for pl in rows]
     return df
 
 
