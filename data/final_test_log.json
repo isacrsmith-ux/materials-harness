@@ -1,0 +1,10 @@
+{
+ "started_at": "2026-09-12T03:33:29+00:00",
+ "models": [
+  "mace-mpa-0-medium",
+  "mace-mp-0-medium"
+ ],
+ "test_sha256": "31f0ad698a2ca07e391c7fbb15ab51c403062444d5071929853024ee6094a025",
+ "n_test": 4000,
+ "rule": "all thresholds fitted on calibration only; applied once to the test set"
+}

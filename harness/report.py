@@ -680,8 +680,10 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
 
     # ---------- plain-language verdict ----------
     verdict_lines += ["## Verdict in plain language", ""]
-    verdict_lines.append(f"* **Engine evaluated:** {MODEL['name']} (the only engine run so far; Phase 3 compares others). "
-                         "All statements below use the pessimistic end of the 95 % interval.")
+    verdict_lines.append(f"* **Engine evaluated:** {MODEL['name']} (`{MODEL['key']}`, {compute['device']}/{compute['dtype']}). "
+                         "Engines are compared on identical structures in `reports/phase3/screening.md`; candidates, licences "
+                         "and measured speed in `reports/phase3/candidates.md`. All statements below use the pessimistic end "
+                         "of the 95 % interval.")
     if opt and dmo:
         verdict_lines.append(
             f"* **Threshold:** call a new material stable when its predicted energy above hull is ≤ {opt['threshold'] * 1000:+.0f} meV/atom "
@@ -728,7 +730,11 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
         else:
             txt = f"mode (b) and mode (a) are not distinguishable ({_ci(mode_b_diff, '{:+.1f}')} meV/atom per system)."
         verdict_lines.append(f"* **Hull construction for new materials:** {txt}")
-    verdict_lines.append("* **Not yet shown:** the locked WBM test set (final evaluation) and other engines (Phase 3: downloads awaiting approval).")
+    from harness import final_eval
+
+    verdict_lines.append("* **The locked WBM test set is reported separately in `reports/final_test.md`** (opened once, every "
+                         "threshold fitted on this calibration set)." if final_eval.started() else
+                         "* **Not yet shown:** the locked WBM test set, evaluated once at the very end.")
     verdict_lines.append("")
 
     # ---------- write ----------
@@ -754,7 +760,8 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
         res["settings_tag"] = res.job_key.map(lambda k: k.rsplit("@", 1)[1] if "@" in k else "pre-tag")
         res.to_parquet(RESULTS_DIR / "results.parquet", index=False)
     log.info("report written: %s", out)
-    return str(out.relative_to(ROOT)) if out.resolve().is_relative_to(ROOT) else str(out)
+    full = out.resolve()
+    return str(full.relative_to(ROOT)) if full.is_relative_to(ROOT) else str(full)
 
 
 def _el_md(t: pd.DataFrame) -> pd.DataFrame:
