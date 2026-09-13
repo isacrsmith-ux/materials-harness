@@ -37,7 +37,7 @@ Two scanners were obtained without touching the project's locked environment:
 * Patterns searched: OpenAI, Anthropic, Google/Gemini, **Hugging Face (`hf_…`)**, Cohere/Mistral/
   together.ai, GitHub PATs and App keys, AWS access keys, GCP service-account JSON, Azure account
   keys, Slack, Stripe, SendGrid, npm `_authToken`, PyPI tokens, `BEGIN … PRIVATE KEY` blocks, JWTs,
-  database connection strings with embedded passwords, **`https://user:password@host` URLs**,
+  database connection strings with embedded passwords, **URLs carrying `user:password@host`**,
   **tokens in query strings**, `MP_API_KEY` assigned a value, and generic
   `password|secret|client_secret|access_token|refresh_token = "…"` assignments.
 * Filenames searched: `.env` and every `.env.*` flavour, `id_rsa`, `id_ed25519`, `id_ecdsa`, `*.pem`,
@@ -98,8 +98,8 @@ network.
 
 ### Commit author identity — your decision, not mine
 
-All **28 commits** (author *and* committer) are `isacsmith <[redacted]>`. Publishing makes
-that address public and permanently associated with the repository. Every commit also carries a
+All **28 commits** (author *and* committer) carry the personal Gmail address currently in
+`git config user.email`. Publishing makes that address public and permanently associated with the repository. Every commit also carries a
 `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>` trailer.
 
 **To use a GitHub noreply address for future commits** (nothing is rewritten):
@@ -274,7 +274,7 @@ rotate and no reason to rewrite history**.
 | # | action | why |
 |:--|:--|:--|
 | 1 | **Choose a licence** and add `LICENSE`. Consider code Apache-2.0 + `data/` and `reports/` CC BY 4.0 | without one, "public" grants no reuse rights at all — `licensing.md` §5 |
-| 2 | **Decide the commit email**: keep `[redacted]` in the 28 existing commits, or rewrite before the first push | after the first push, rewriting stops helping — `publish_audit.md` §2 |
+| 2 | **Decide the commit email**: keep the personal address in the 28 existing commits, or rewrite before the first push | after the first push, rewriting stops helping — `publish_audit.md` §2 |
 | 3 | **Rotate the Materials Project API key** | a 13-character prefix reached this session's transcript. Low risk; rotation is a minute. <https://next-gen.materialsproject.org/api> → regenerate, then update `.env` |
 | 4 | **Decide whether to ship `results/results.parquet`** (8.82 MB recompressed, all 196,639 rows) | it lets a reader check every number; §3 has the command |
 | 5 | **Review the new files and the two banners** | committed locally on `round2`; nothing pushed |

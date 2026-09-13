@@ -116,7 +116,8 @@ cp .env.example .env   # then paste your key after MP_API_KEY=
 ```
 
 ```bash
-./uvw run pytest -m "not slow"   # 223 tests, no API key, no weights, no network
+./uvw run pytest -m "not slow"   # 222 pass; no API key, no weights, no network needed
+                                 # (1 skips until the MP snapshot is cached — harness/unseen.py names it)
 ./uvw run pytest                 # adds the smoke test — needs steps 2 and 3, skips with a reason otherwise
 ```
 
