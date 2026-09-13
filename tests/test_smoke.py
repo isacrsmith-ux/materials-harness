@@ -40,7 +40,12 @@ def test_lattice_vs_experiment(result):
 
 
 def test_settings_recorded(result):
+    # The engine comes from HARNESS_MODEL, so assert against the active registry entry rather than a
+    # hardcoded name — hardcoding made this test pass only because another test happened to reset the
+    # environment first.
+    from harness import config
+
     s = result["settings"]
-    assert s["model_name"] == "MACE-MP-0 medium" and s["dtype"] == "float64" and s["device"] == "cpu"
+    assert s["model_name"] == config.MODEL["name"] and s["dtype"] == "float64" and s["device"] == "cpu"
     assert s["relax"]["fmax"] == 0.01 and s["relax"]["cell_filter"] == "FrechetCellFilter"
     assert s["relax"]["max_stress_gpa"] == 0.01

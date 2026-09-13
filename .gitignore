@@ -23,3 +23,42 @@ reports/[0-9]*/
 
 # macOS
 .DS_Store
+
+# --- added by the pre-publication audit (reports/publish_audit.md) ---
+# Nothing below is tracked today; these rules stop a future commit from adding one by accident.
+
+# Credentials and keys of every flavour
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+id_ecdsa
+id_ecdsa.*
+.netrc
+.npmrc
+.pypirc
+service-account*.json
+*service_account*.json
+*credentials*.json
+secrets.yml
+secrets.yaml
+*.tfvars
+kubeconfig
+# (public keys are fine and deliberately not ignored: *.pub)
+
+# Databases and run state, wherever they land
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.parquet
+!results/results.parquet
+
+# Scratch
+scratch/
+tmp/
+*.tmp

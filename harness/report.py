@@ -22,10 +22,10 @@ import pandas as pd
 from pymatgen.core import Composition
 
 import harness  # noqa: F401  (cache env vars before matplotlib)
-from harness import compare, store
+from harness import calibration, compare, store
 from harness import metrics as M
-from harness.config import (CONFIG_DIR, DEFAULT_RELAX, FIG_DIR, MODEL, REPORTS_DIR, RESULTS_DIR, ROOT,
-                            load_compute_config, settings_tag)
+from harness.config import (CONFIG_DIR, DEFAULT_RELAX, FIG_DIR, MODEL, MODELS, REPORTS_DIR, RESULTS_DIR,
+                            ROOT, load_compute_config, settings_tag)
 from harness.platform_check import machine_info
 
 log = logging.getLogger(__name__)
@@ -50,6 +50,8 @@ VERDICT_RULES = {
     "spearman": (0.80, 0.60, False),
     "gap_mae_mev": (30.0, 60.0, True),
 }
+# The engine this project recommends, from the one place that defines it.
+PRODUCTION_ENGINE_KEY = calibration.PRODUCTION_ENGINE[0]
 N_BOOT = M.N_BOOT
 MIN_ELEMENT_COUNT = 20
 MAGNETIC_MOMENT_MIN = 0.05  # μB/site in the PBE calculation
@@ -871,7 +873,16 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
 
     # ---------- write ----------
     mi = machine_info()
-    head = [f"# Validation report — {MODEL['name']}", "",
+    # A reader who lands on a non-production engine's report must not quote it as "the" result. The
+    # banner is emitted by the generator, so regenerating the report cannot silently drop it.
+    banner = []
+    if MODEL["key"] != PRODUCTION_ENGINE_KEY:
+        banner = [f"> **This is not the production engine.** {MODEL['name']} is kept as a comparison baseline. "
+                  f"The engine this project recommends is "
+                  f"{MODELS[PRODUCTION_ENGINE_KEY]['name']}, whose report is `reports/validation_report.md`; "
+                  f"engines are compared on identical structures in `reports/phase3/screening.md`. Numbers "
+                  f"below describe this engine only.", ""]
+    head = banner + [f"# Validation report — {MODEL['name']}", "",
             f"Generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} · commit `{score['commit']}` · settings tag `{tag}` · "
             f"model `{MODEL['file']}` · {compute['device']}/{compute['dtype']} · {mi['chip']} · macOS {mi['macos']}", "",
             f"Relaxation: {DEFAULT_RELAX.cell_filter} + {DEFAULT_RELAX.optimizer}, fmax {DEFAULT_RELAX.fmax} eV/Å, |stress| ≤ "

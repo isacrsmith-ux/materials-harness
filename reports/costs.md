@@ -2,6 +2,8 @@
 
 Costs supplied: a wasted lab test = **1**, a missed stable material = **1** (ratio 1:1). Computed on the 3,998 usable WBM **calibration** structures; the locked test set is not re-optimised against.
 
+> **These are the 1:1 placeholders in `config/costs.json`, not real costs.** Every threshold and every expected-cost figure on this page is conditional on them. The plateau below says how much that matters: inside it, the exact costs do not change the answer. Supply your real numbers and re-run `python -m harness costs` before quoting anything here.
+
 ## Answer
 
 * **Threshold: +0 meV/atom.**

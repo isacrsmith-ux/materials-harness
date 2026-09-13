@@ -1,3 +1,5 @@
+> **Superseded — historical record, kept on purpose.** This is the Phase 0 audit as it stood on 2026-09-10, at settings tag `207ccc81` (MACE-MP-0, the round-1 baseline). Its numbers predate the energy-plausibility guard added later in `harness/compare.py`, which moved several results from *scored* to *counted-and-excluded* and changed the tables that contained them — `reports/guard_fix.md` gives the before/after figures. It also predates the switch of production engine to MACE-MPA-0. **Do not quote a number from this page as a current result.** The current results are `reports/validation_report.md` (production engine), `reports/final_test.md` (locked test set), `reports/unseen_test.md` and `reports/polymorph.md`. What this page is still good for is the record of what Phase 0 found and fixed.
+
 # Phase 0 — correctness audits: before / after
 
 Settings tag `207ccc81` (unchanged: rung 1 of every relaxation is the same protocol as before). 'Before' = results snapshot `results/snapshots/before_phase0.sqlite` taken before any Phase 0 job ran. Hull-distance bins use the target's GGA/GGA+U energy above hull (eV/atom). Energies in meV/atom.

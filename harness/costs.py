@@ -100,10 +100,17 @@ def report(cost_fp: float, cost_fn: float, model: str = PRIMARY[0], device: str 
     opt, dm, pl = op["optimum"], op["metrics"], op["plateau"]
     name = MODELS[model]["name"]
     ratio = cost_fn / cost_fp if cost_fp else float("inf")
+    placeholder = (cost_fp == 1.0 and cost_fn == 1.0)
     L = [f"# Cost-based operating point — {name}", "",
          f"Costs supplied: a wasted lab test = **{cost_fp:g}**, a missed stable material = **{cost_fn:g}** "
          f"(ratio {ratio:g}:1). Computed on the {len(df):,} usable WBM **calibration** structures; the locked "
-         "test set is not re-optimised against.", "",
+         "test set is not re-optimised against.", ""]
+    if placeholder:
+        L += ["> **These are the 1:1 placeholders in `config/costs.json`, not real costs.** Every threshold and "
+              "every expected-cost figure on this page is conditional on them. The plateau below says how much "
+              "that matters: inside it, the exact costs do not change the answer. Supply your real numbers and "
+              "re-run `python -m harness costs` before quoting anything here.", ""]
+    L += [
          "## Answer", "",
          f"* **Threshold: {opt['threshold'] * 1000:+.0f} meV/atom.**",
          f"* Anything from **{pl['low'] * 1000:+.0f} to {pl['high'] * 1000:+.0f} meV/atom** costs within "
