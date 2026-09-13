@@ -385,9 +385,19 @@ def report(tag: str | None = None, out=None) -> str:
          f"* {kept:.0%} of relaxed forms still match the MP structure they started from (species-aware "
          f"StructureMatcher, default tolerances). The rest moved somewhere else — sometimes onto another form of "
          f"the same composition, which is the line above.", ""]
+    rej = df[df.rejection.notna()]
+    if len(rej):
+        L += [f"* {len(rej)} relaxations were rejected by the guard and excluded from every statistic: "
+              + ", ".join(f"{k} ({v})" for k, v in rej.rejection.value_counts().items()) + ".", ""]
+    undefined_rho = int(scored.spearman.isna().sum())
+    if undefined_rho:
+        L += [f"* For {undefined_rho} composition(s) the Spearman ρ is **undefined**: the engine gave every form "
+              f"the same energy, so there is no ordering to correlate. Those are excluded from the ρ column and "
+              f"counted here, never averaged in as a zero.", ""]
     if len(not_scored):
         L += [f"* {len(not_scored)} compositions are **not scored**: "
-              + ", ".join(f"{k} ({v})" for k, v in not_scored.status.value_counts().items()) + ".", ""]
+              + ", ".join(f"{k.replace('not scored: ', '')} ({v})"
+                          for k, v in not_scored.status.value_counts().items()) + ".", ""]
     L += ["## Caveats", "",
           "* **These are known materials.** The engine trained on MPtrj, which is built from Materials Project, so "
           "this measures ranking skill on material it has seen. `reports/unseen_test.md` is the test that holds "
