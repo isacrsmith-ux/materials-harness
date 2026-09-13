@@ -146,3 +146,33 @@ def test_scoring_reads_the_truth_only_after_the_answer(frozen):
 
     assert "pbe_reference" in inspect.getsource(unseen.reference)
     assert "pbe_reference" not in inspect.getsource(unseen.build_jobs)
+
+
+def test_a_rate_with_no_errors_in_it_does_not_report_a_degenerate_interval():
+    """22 correct calls out of 22 is not evidence that the rate is 1.00 with certainty.
+
+    A bootstrap of an all-ones sample can only ever produce ones, so its 'pessimistic' bound is an
+    artifact. Clopper-Pearson is what the unseen report uses for every rate, on both sides of the
+    comparison.
+    """
+    import numpy as np
+
+    from harness import metrics as M
+
+    boot = M.boot_ci(np.ones(22), M.MEAN)
+    cp = M.proportion_ci(22, 22)
+    assert boot[1] == 1.0, "the bootstrap really is degenerate here"
+    assert 0.80 < cp[1] < 0.90 and cp[2] == 1.0
+    assert M.proportion_ci(0, 10)[1] == 0.0
+    assert M.proportion_ci(36, 38)[1] < 0.947 < M.proportion_ci(36, 38)[2]
+
+
+def test_the_report_compares_both_sides_with_the_same_estimator():
+    import inspect
+
+    src = inspect.getsource(unseen.report)
+    assert "proportion_ci" in src and "locked_test_counts" in src
+    # the headline rates come from Clopper-Pearson, not from a bootstrap of the call outcomes
+    for line in src.splitlines():
+        if line.strip().startswith(("prec = ", "npv = ", "wbm_prec", "wbm_npv")):
+            assert "proportion_ci" in line, line

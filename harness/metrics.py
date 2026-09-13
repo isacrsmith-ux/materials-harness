@@ -58,6 +58,31 @@ def trimmed_mae(v, frac: float = TRIM_FRACTION) -> float:
 TRIMMED_MAE = trimmed_mae
 
 
+def proportion_ci(k: int, n: int, conf: float = 0.95) -> tuple[float, float, float]:
+    """(point, lower, upper) Clopper-Pearson interval for k successes in n trials.
+
+    A bootstrap of a proportion DEGENERATES at k = 0 or k = n: resampling a sample that is all ones can
+    only ever produce ones, so the interval collapses to [1, 1] and a verdict taken from its 'pessimistic'
+    end is an artifact of the estimator, not a statement about the world. 22 of 22 correct is [1.00, 1.00]
+    by bootstrap and [0.85, 1.00] by Clopper-Pearson. Small-sample rates therefore use this, and the
+    report says so where it does.
+    """
+    from scipy.stats import beta
+
+    if n <= 0:
+        return (float("nan"),) * 3
+    a = (1 - conf) / 2
+    lo = 0.0 if k <= 0 else float(beta.ppf(a, k, n - k + 1))
+    hi = 1.0 if k >= n else float(beta.ppf(1 - a, k + 1, n - k))
+    return float(k / n), lo, hi
+
+
+def rate_ci(flags, conf: float = 0.95) -> tuple[float, float, float]:
+    """Clopper-Pearson interval for a boolean series (the share that are True)."""
+    a = np.asarray([bool(v) for v in flags if v is not None and v is not np.nan], bool)
+    return proportion_ci(int(a.sum()), int(a.size), conf)
+
+
 def error_summary(err, n_boot: int = N_BOOT) -> dict:
     """n, MAE, median |error|, 10 % trimmed MAE, mean signed error and RMSE, each with a bootstrap interval."""
     a = _finite(err)

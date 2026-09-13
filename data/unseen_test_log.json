@@ -1,0 +1,7 @@
+{
+ "opened_at": "2026-09-12T23:06:20+00:00",
+ "sha256": "3379392d2bde2e134f588b02c911ecca98de3352b6d28da45420d1b8160da3e6",
+ "n": 325,
+ "note": "",
+ "rule": "scored end to end through harness.predict with the frozen calibration bundle; no threshold refitted"
+}

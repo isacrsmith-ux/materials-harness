@@ -518,6 +518,36 @@ def family_comparison(labelled: "pd.DataFrame") -> "pd.DataFrame":
     return pd.DataFrame(rows)
 
 
+def locked_test_counts(max_trustworthy_hull: float | None = None) -> dict:
+    """(successes, calls) for 'likely stable' and 'likely unstable' on the locked WBM test set.
+
+    Recomputed here so the comparison uses the SAME interval estimator on both sides. Re-running the
+    frozen rules over cached results changes nothing about the locked test: it re-reads an evaluation
+    that has already happened.
+    """
+    from harness import calibration, splits
+    from harness import routing as R
+
+    b = calibration.load()
+    test_ids = set(splits.load_split()["test"]["ids"])
+    test = calibration.calibration_table(ids=test_ids, init_cache="test_init_structs.json")
+    second = calibration.calibration_table(calibration.SECOND_ENGINE, test_ids,
+                                           "test_init_structs.json").set_index("wbm_id").each_pred
+    test = test.assign(pred_2=test.wbm_id.map(second))
+    pol = b.policy(with_second_engine=True, max_trustworthy_hull=max_trustworthy_hull)
+    rule = b.rule(with_second_engine=True)
+    rows = []
+    for r in test.itertuples():
+        d = R.route(R.Candidate(r.wbm_id, r.formula, r.each_pred, r.pred_2, bool(r.structure_changed)),
+                    b.conformal, pol, rule)
+        rows.append({"label": d.label, "truly_stable": r.each_true <= 1e-6})
+    dec = pd.DataFrame(rows)
+    st, un = dec[dec.label == R.LIKELY_STABLE], dec[dec.label == R.LIKELY_UNSTABLE]
+    return {"stable": (int(st.truly_stable.sum()), len(st)),
+            "unstable": (int((~un.truly_stable).sum()), len(un)),
+            "dft_share": float((dec.label == R.SEND_TO_DFT).mean()), "n": len(dec)}
+
+
 def locked_test_mix() -> "pd.Series":
     """Hull-bin proportions of the locked WBM test set — the mix the published precision is measured at."""
     from harness import calibration, compare as C, splits
@@ -576,6 +606,7 @@ def reweighted(df: "pd.DataFrame", weights: "pd.Series", n_boot: int = 2000, see
 def report(out=None) -> str:
     """Write reports/unseen_test.md from the frozen set's one run."""
     from harness import calibration, compare as C
+    from harness import predict as P
     from harness import metrics as M
     from harness import routing as R
     from harness.config import REPORTS_DIR, ROOT
@@ -596,8 +627,16 @@ def report(out=None) -> str:
 
     st = labelled[labelled.label == "likely stable"]
     un = labelled[labelled.label == "likely unstable"]
-    prec = M.boot_ci(st.truly_stable.astype(float), M.MEAN) if len(st) else (float("nan"),) * 3
-    npv = M.boot_ci((~un.truly_stable).astype(float), M.MEAN) if len(un) else (float("nan"),) * 3
+    # Clopper-Pearson, not bootstrap: with 22 calls and no errors among them a bootstrap returns
+    # [1.00, 1.00], and a verdict taken from that bound would be an artifact of the estimator.
+    prec = M.proportion_ci(int(st.truly_stable.sum()), len(st))
+    npv = M.proportion_ci(int((~un.truly_stable).sum()), len(un))
+    wbm = locked_test_counts(max_trustworthy_hull=None)
+    wbm_product = locked_test_counts(max_trustworthy_hull=P.MAX_TRUSTWORTHY_HULL_EV)
+    wbm_prec = M.proportion_ci(*wbm["stable"])
+    wbm_npv = M.proportion_ci(*wbm["unstable"])
+    wbm_p_prec = M.proportion_ci(*wbm_product["stable"])
+    wbm_p_npv = M.proportion_ci(*wbm_product["unstable"])
 
     # structure-finding rate, per bin
     found = labelled.dropna(subset=["structure_found"])
@@ -632,20 +671,15 @@ def report(out=None) -> str:
     reason_counts = reasons.str.replace(r"\(.*", "", regex=True).str.replace(r"[-+]?\d+ meV/atom", "", regex=True).str.strip().value_counts()
 
     out = out or REPORTS_DIR / "unseen_test.md"
+    wbm_ci = {"raw": (wbm_prec, wbm_npv, wbm["dft_share"]),
+              "product": (wbm_p_prec, wbm_p_npv, wbm_product["dft_share"]),
+              "counts": wbm, "product_counts": wbm_product}
     L = _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_err, reason_counts,
-                  opened_at, bundle, bins, fam_tbl)
+                  opened_at, bundle, bins, fam_tbl, wbm_ci)
     out.write_text("\n".join(L) + "\n")
     return str(out.relative_to(ROOT)) if out.is_relative_to(ROOT) else str(out)
 
 
-# Published numbers for the side-by-side. First column: reports/final_test.md exactly as written.
-# Second column: the same locked-test routing with the product's > 0.3 eV/atom refusal switched on
-# (measured in docs/predict.md §2; the certified thresholds are untouched by it).
-FINAL_TEST = {
-    "precision": "0.96 [0.93, 0.98]", "npv": "0.988 [0.984, 0.993]", "dft_share": "0.407",
-    "product_precision": "0.960 [0.933, 0.982]", "product_npv": "0.987 [0.981, 0.991]",
-    "product_dft_share": "0.475",
-}
 STABLE, UNSTABLE, DFT_SHARE = "precision of 'likely stable'", "NPV of 'likely unstable'", "share sent to DFT"
 
 
@@ -665,7 +699,7 @@ def _selection_table(doc: dict) -> list:
 
 
 def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_err, reason_counts,
-              opened_at, bundle, bins, fam_tbl) -> list:
+              opened_at, bundle, bins, fam_tbl, wbm_ci) -> list:
     from harness import metrics as M
 
     sel, n = doc["selection"], doc["n"]
@@ -681,8 +715,19 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
     rs_tbl = pd.DataFrame({"quantity": list(rs), "value": [_cell(v) for v in rs.values()]})
     snap = sel["snapshot"]
     prec_s, npv_s = M.fmt_ci(prec, "{:.2f}"), M.fmt_ci(npv, "{:.3f}")
-    rw_prec, rw_npv = M.fmt_ci(rw[STABLE], "{:.2f}"), M.fmt_ci(rw[UNSTABLE], "{:.3f}")
+    (w_prec, w_npv, w_dft), (wp_prec, wp_npv, wp_dft) = wbm_ci["raw"], wbm_ci["product"]
+    wc, wpc = wbm_ci["counts"], wbm_ci["product_counts"]
+    _st = labelled[labelled.label == "likely stable"]
+    _un = labelled[labelled.label == "likely unstable"]
+    n_prec_k, n_prec_n = int(_st.truly_stable.sum()), len(_st)
+    n_npv_k, n_npv_n = int((~_un.truly_stable).sum()), len(_un)
+    def _degenerate(ci) -> bool:
+        return bool(np.isfinite(ci[1]) and ci[1] == ci[2])
+
+    rw_prec = M.fmt_ci(rw[STABLE], "{:.2f}") + (" †" if _degenerate(rw[STABLE]) else "")
+    rw_npv = M.fmt_ci(rw[UNSTABLE], "{:.3f}") + (" †" if _degenerate(rw[UNSTABLE]) else "")
     rw_dft = M.fmt_ci(rw[DFT_SHARE], "{:.3f}")
+    dagger = _degenerate(rw[STABLE]) or _degenerate(rw[UNSTABLE])
 
     L = [f"# The unseen-real-materials test — {bundle.raw['engine']['name']}", "",
          f"Opened once ({opened_at}). {n} real Materials Project materials that cannot be in the engine's MPtrj "
@@ -747,16 +792,31 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
            f"'Likely stable' precision: {prec_s} (target {bundle.rule(True).target_precision:.0%}); 'likely "
            f"unstable' NPV: {npv_s} (target {bundle.rule(True).target_npv:.0%})."), "",
           "### Side by side with the locked WBM test set", "",
-          "| quantity | locked WBM test (`final_test.md`) | same, with the product's > 0.3 eV/atom refusal | "
+          "Every rate here is a Clopper–Pearson interval on the actual call counts, on both sides. A "
+          "bootstrap collapses to [1.00, 1.00] on a sample with no errors in it — which is exactly this "
+          "set's 'likely stable' calls — and a verdict read off that bound would be an artifact of the "
+          "estimator rather than a statement about the engine. The locked test's rates are recomputed the "
+          "same way from its own counts, so the two columns are comparable; `reports/final_test.md` "
+          "publishes bootstrap intervals, which is why its numbers read slightly narrower there.", "",
+          "| quantity | locked WBM test | same, with the product's > 0.3 eV/atom refusal | "
           "this unseen set (raw) | this unseen set, reweighted to the WBM bin mix |",
           "|:--|:--|:--|:--|:--|",
-          f"| precision of 'likely stable' | {FINAL_TEST['precision']} | {FINAL_TEST['product_precision']} "
-          f"| {prec_s} | {rw_prec} |",
-          f"| NPV of 'likely unstable' | {FINAL_TEST['npv']} | {FINAL_TEST['product_npv']} | {npv_s} | {rw_npv} |",
-          f"| share sent to DFT | {FINAL_TEST['dft_share']} | {FINAL_TEST['product_dft_share']} "
-          f"| {rs[DFT_SHARE]:.3f} | {rw_dft} |",
+          f"| precision of 'likely stable' | {M.fmt_ci(w_prec, '{:.2f}')} ({wc['stable'][0]}/{wc['stable'][1]}) "
+          f"| {M.fmt_ci(wp_prec, '{:.2f}')} ({wpc['stable'][0]}/{wpc['stable'][1]}) "
+          f"| **{prec_s}** ({n_prec_k}/{n_prec_n}) | {rw_prec} |",
+          f"| NPV of 'likely unstable' | {M.fmt_ci(w_npv, '{:.3f}')} ({wc['unstable'][0]}/{wc['unstable'][1]}) "
+          f"| {M.fmt_ci(wp_npv, '{:.3f}')} ({wpc['unstable'][0]}/{wpc['unstable'][1]}) "
+          f"| **{npv_s}** ({n_npv_k}/{n_npv_n}) | {rw_npv} |",
+          f"| share sent to DFT | {w_dft:.3f} | {wp_dft:.3f} | **{rs[DFT_SHARE]:.3f}** | {rw_dft} |",
           f"| prevalence of truly stable | {wbm_prevalence:.3f} | {wbm_prevalence:.3f} | **{prevalence:.3f}** "
-          f"| {wbm_prevalence:.3f} |", "",
+          f"| {wbm_prevalence:.3f} |", ""]
+    if dagger:
+        L += ["† The reweighting resamples within each hull bin, and every 'likely stable' call in every bin "
+              "here was correct — so that resampling cannot produce an error either, and the interval "
+              "collapses just as the plain bootstrap does. Read the Clopper–Pearson column for the bound that "
+              "means something; the reweighted point value still corrects the base rate, which is what it is "
+              "for.", ""]
+    L += [
           "**Why the reweighted column exists.** Precision depends on the base rate. This set is real Materials "
           f"Project materials, and MP adds mostly near-hull materials, so {prevalence:.0%} of these targets are truly "
           f"stable against {wbm_prevalence:.0%} of the locked WBM test set. Comparing the raw numbers would compare two "
@@ -789,11 +849,11 @@ def _markdown(doc, df, ok, labelled, rs, prec, npv, rw, mix, sf, energy, hull_er
           "meV/atom.", "",
           _md(energy), "",
           "### Predicted hull distance against the true hull distance (meV/atom)", "", _md(hull_err), ""]
-    L += _verdict_section(labelled, rw, prec, npv, rs, sf, energy, hull_err, prevalence, wbm_prevalence, bundle)
+    L += _verdict_section(labelled, rw, prec, npv, rs, sf, prevalence, wbm_prevalence, bundle, wbm_ci)
     return L
 
 
-def _verdict_section(labelled, rw, prec, npv, rs, sf, energy, hull_err, prevalence, wbm_prevalence, bundle) -> list:
+def _verdict_section(labelled, rw, prec, npv, rs, sf, prevalence, wbm_prevalence, bundle, wbm_ci) -> list:
     """The plain answer: does the WBM precision hold up on real chemistry?"""
     from harness import metrics as M
     from harness.report import VERDICT_RULES, verdict_ci
@@ -803,17 +863,26 @@ def _verdict_section(labelled, rw, prec, npv, rs, sf, energy, hull_err, prevalen
     n_unstable = int((labelled.label == "likely unstable").sum())
     prec_verdict = verdict_ci("precision", prec) if n_stable else "no data"
     npv_verdict = verdict_ci("npv", npv) if n_unstable else "no data"
+    w_prec, w_npv, w_dft = wbm_ci["raw"]
     L = ["## 7. Does the WBM precision hold up on real chemistry?", "",
-         holds_up(rw[STABLE], WBM_PRECISION_CI, "Precision of 'likely stable', at WBM's base rate"), "",
-         holds_up(rw[UNSTABLE], WBM_NPV_CI, "NPV of 'likely unstable', at WBM's base rate"), "",
-         "Read at face value, without the reweighting:", "",
+         "Compared at the Clopper–Pearson lower bound on both sides. A bootstrap is degenerate on a sample "
+         "with no errors in it (see §4), so a verdict read off one would be an artifact.", "",
+         holds_up(prec, w_prec, "Precision of 'likely stable'"), "",
+         holds_up(npv, w_npv, "NPV of 'likely unstable'"), "",
+         f"At WBM's base rate, after reweighting: precision {M.fmt_ci(rw[STABLE], '{:.2f}')}, "
+         f"NPV {M.fmt_ci(rw[UNSTABLE], '{:.3f}')}. The reweighting corrects the base rate, which is what it "
+         f"is for, but its interval is resampled within bins — so where every call in every bin was correct "
+         f"it collapses for exactly the reason the plain bootstrap does, and the bound above is the one to "
+         f"read.", "",
+         "Read at face value:", "",
          f"* `likely stable` was awarded to {n_stable} of {len(labelled)} candidates; precision "
          f"{M.fmt_ci(prec, '{:.2f}')} — **{prec_verdict}** at the pessimistic bound "
          f"(trustworthy ≥ {VERDICT_RULES['precision'][0]:.2f}, caution ≥ {VERDICT_RULES['precision'][1]:.2f}).",
          f"* `likely unstable` was awarded to {n_unstable}; NPV {M.fmt_ci(npv, '{:.3f}')} — **{npv_verdict}** "
          f"(trustworthy ≥ {VERDICT_RULES['npv'][0]:.2f}, caution ≥ {VERDICT_RULES['npv'][1]:.2f}).",
-         f"* {rs[DFT_SHARE]:.0%} of candidates were sent to DFT, against 40.7 % on the locked WBM test set "
-         f"(47.5 % once the product's > 0.3 eV/atom refusal is applied there too).",
+         f"* {rs[DFT_SHARE]:.0%} of candidates were sent to DFT, against {w_dft:.0%} on the locked WBM test set "
+         f"({wbm_ci['product'][2]:.0%} once the product's > 0.3 eV/atom refusal is applied there too). That is "
+         f"the largest difference between the two populations, and §4b says why.",
          f"* The pipeline arrived at the right structure {found_all} of the time, measured here for the first "
          f"time. Nothing in the WBM numbers speaks to this: a WBM candidate starts from WBM's own initial "
          f"structure, while a real candidate is built from a parent prototype and can land anywhere.", "",
@@ -822,23 +891,21 @@ def _verdict_section(labelled, rw, prec, npv, rs, sf, energy, hull_err, prevalen
          f"them. Intervals here are correspondingly wide, and the thinnest bins should not be read as verdicts.",
          f"* The base rate differs by a factor of {prevalence / wbm_prevalence:.1f} "
          f"({prevalence:.0%} truly stable here against {wbm_prevalence:.0%} on WBM), because Materials Project "
-         f"adds mostly near-hull materials. The reweighted column is the comparable one; the raw column is what a "
-         f"user screening this population would actually see.",
+         f"adds mostly near-hull materials. The reweighted point values are the comparable ones; the raw column "
+         f"is what a user screening this population would actually see. Neither column's interval is any "
+         f"narrower than 22 and 38 calls allow.",
          "* Absence from MPtrj is proven; absence from sAlex is not (see §2).", ""]
     return L
-
-
-# The locked WBM test set's own 'likely stable' precision interval, from reports/final_test.md. The
-# comparison below is between pessimistic bounds, as every verdict in this project is.
-WBM_PRECISION_CI = (0.960, 0.933, 0.982)
-WBM_NPV_CI = (0.988, 0.984, 0.993)
 
 
 def holds_up(unseen_ci: tuple, wbm_ci: tuple, label: str) -> str:
     """Does a rate measured here hold up against the same rate on the locked WBM test set?
 
     Compared at the pessimistic (lower) bound, like every other verdict in this project, and reported
-    as three outcomes, never two: it holds, it does not, or the two sets cannot be told apart.
+    as three outcomes, never two: it holds, it does not, or the two sets cannot be told apart. Both
+    bounds are Clopper-Pearson on the actual call counts — a bootstrap collapses to [1, 1] on a sample
+    with no errors in it, and a verdict read off that bound would be an artifact (see
+    metrics.proportion_ci).
     """
     if not np.isfinite(unseen_ci[0]):
         return f"**{label}: no answer** — no call of that kind was made on this set, so the rate is undefined."
