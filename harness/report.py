@@ -902,7 +902,9 @@ def write_report(out_dir: Path | None = None, compare_previous: bool = False) ->
     res = store.load_table("results")
     if len(res):
         res["settings_tag"] = res.job_key.map(lambda k: k.rsplit("@", 1)[1] if "@" in k else "pre-tag")
-        res.to_parquet(RESULTS_DIR / "results.parquet", index=False)
+        # zstd-19: ~6.9 MB vs ~18 MB for the default snappy. The file is committed, so the
+        # compression has to survive regeneration or history grows by 11 MB every run.
+        res.to_parquet(RESULTS_DIR / "results.parquet", index=False, compression="zstd", compression_level=19)
     log.info("report written: %s", out)
     full = out.resolve()
     return str(full.relative_to(ROOT)) if full.is_relative_to(ROOT) else str(full)

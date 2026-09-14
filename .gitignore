@@ -16,7 +16,6 @@ __pycache__/
 # Downloaded / generated data
 cache/
 models/
-results/
 logs/
 config/launchd/
 reports/[0-9]*/
@@ -56,6 +55,13 @@ kubeconfig
 *.sqlite-shm
 *.sqlite-wal
 *.parquet
+
+# results/ is generated and huge (~1 GB of SQLite), but two files are published:
+# the exported table and its data dictionary. The directory is excluded with
+# results/* rather than results/, because git does not descend into an excluded
+# directory and a negation inside one can never match.
+results/*
+!results/README.md
 !results/results.parquet
 
 # Scratch

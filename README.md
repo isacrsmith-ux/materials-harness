@@ -149,10 +149,21 @@ data/        frozen inputs: pair sets, the WBM split, the unseen test set, the c
 reports/     validation_report.md + final_test.md, unseen_test.md, polymorph.md, guard_fix.md,
              leakage_check.md, costs.md, licensing.md, publish_audit.md
 docs/        predict.md — the product's contract
+results/     results.parquet — the full results table (197,783 rows), plus its data dictionary
 ```
 
-`cache/`, `models/`, `results/` and `logs/` are generated and gitignored; nothing third-party is
-redistributed here.
+`cache/`, `models/` and `logs/` are generated and gitignored, as is the rest of `results/` (~1 GB of
+SQLite job stores); nothing third-party is redistributed here.
+
+**`results/results.parquet` is committed** — 6.9 MB, zstd, every row behind every number in
+`reports/`, so a reader can recompute any table rather than take it on trust.
+[results/README.md](results/README.md) is its data dictionary: every column, its units, its
+provenance fields, and how to join it back to the tables in
+[reports/validation_report.md](reports/validation_report.md).
+
+**Future regenerated versions of `results.parquet` will be attached as GitHub Release assets rather
+than recommitted**, so repository history does not grow by ~7 MB on every run. The committed copy is
+the one the published reports were computed from.
 
 ---
 
