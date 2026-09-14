@@ -151,7 +151,7 @@ why
   - prediction > certified unstable threshold +10 meV/atom (f-electron)
 lattice         a=4.6431 b=4.6431 c=7.2456 Å, α=90.00 β=90.00 γ=120.00°
 volume          22.546 Å³/atom (10.637 g/cm³)
-engine          MACE-MPA-0 medium · cpu/float32 · settings c2480e74 · harness 8177894
+engine          MACE-MPA-0 medium · cpu/float32 · settings c2480e74 · harness 1ad6ba3
 ```
 
 The same call with `--json` (structure CIF elided, everything else verbatim):
@@ -192,12 +192,12 @@ The same call with `--json` (structure CIF elided, everything else verbatim):
   "device": "cpu", "dtype": "float32", "settings_tag": "c2480e74",
   "relax_settings": {"fmax": 0.01, "max_stress_gpa": 0.01, "max_steps": 500,
                      "optimizer": "BFGS", "cell_filter": "FrechetCellFilter", "timeout_s": 900.0},
-  "harness_commit": "8177894",
+  "harness_commit": "1ad6ba3",
   "timestamp": "2026-09-12T20:33:59+00:00",
   "wall_time_s": 4.228881,
   "calibration_bundle": {
    "created_at": "2026-09-12T20:21:45+00:00",
-   "harness_commit": "8177894",
+   "harness_commit": "1ad6ba3",
    "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
    "rules": "with_second_engine"
   },

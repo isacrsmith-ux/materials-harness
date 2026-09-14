@@ -4,7 +4,7 @@ Audit of this repository before it is made public on GitHub. **Nothing here was 
 given a remote**, and no history was rewritten — every decision that is the owner's is listed at the
 end, unmade.
 
-Audited at commit `fe89fe7` on branch `round2`; 28 commits across 2 branches (`main`, `round2`),
+Audited at commit `82a77c1` on branch `round2`; 28 commits across 2 branches (`main`, `round2`),
 127 tracked files, 0 tags, 0 stash entries.
 
 ---
@@ -58,7 +58,7 @@ Two scanners were obtained without touching the project's locked environment:
 | URLs with embedded credentials or tokens in query strings | **none.** The Materials Project and figshare download URLs carry no credentials — MP auth is a header supplied by `MPRester`, and the figshare files are public `ndownloader` links |
 
 **gitleaks reported exactly one finding in history, and it is a false positive.** Rule
-`generic-api-key`, `tests/test_mp_data.py:16`, commit `9bd9f77`. The matched string is
+`generic-api-key`, `tests/test_mp_data.py:16`, commit `7ff64b1`. The matched string is
 `MP2020Compatibility` inside a code comment — a long mixed-case token that trips the generic entropy
 rule. No action.
 
@@ -117,7 +117,7 @@ All **28 commits** (author *and* committer) carry the personal Gmail address cur
 (`git filter-repo --mailmap`, or `--commit-callback`), but:
 
 * every commit SHA changes, so anything that referenced an old SHA — including the SHAs quoted inside
-  `reports/validation_report.md` (`commit a605dbc`) and this audit — becomes wrong;
+  `reports/validation_report.md` (`commit 0a2c263`) and this audit — becomes wrong;
 * it must happen **before** the first push, or every clone keeps the old history;
 * the reports' internal provenance would have to be regenerated to match, which means re-running the
   report writers.
@@ -207,7 +207,7 @@ and stamped where needed.
 
 | tracked report | vintage | action |
 |:--|:--|:--|
-| `validation_report.md`, `final_test.md`, `unseen_test.md`, `polymorph.md`, `guard_fix.md`, `leakage_check.md`, `phase3/*` | at or after the guard fix (`8177894`) | current — no stamp |
+| `validation_report.md`, `final_test.md`, `unseen_test.md`, `polymorph.md`, `guard_fix.md`, `leakage_check.md`, `phase3/*` | at or after the guard fix (`1ad6ba3`) | current — no stamp |
 | `mace-mp-0-medium/validation_report.md` | post-guard (3,993 usable / 7 rejected — matches `guard_fix.md` §5b), but **not the production engine** | ✅ **banner added**: "This is not the production engine." |
 | `phase0/phase0_report.md` | 2026-09-10, **predates the energy-plausibility guard** | ✅ **banner added**: superseded, do not quote as a current result, kept as the record of what Phase 0 fixed |
 | `costs.md` | current, but every figure is conditional on placeholder costs | ✅ **warning added** naming the 1:1 placeholders |
@@ -308,4 +308,4 @@ no licence was chosen, no report was deleted, and the two experimental data file
 
 ---
 
-*Audit performed against commit `fe89fe7`; its own changes are committed locally on `round2` and have not been pushed.*
+*Audit performed against commit `82a77c1`; its own changes are committed locally on `round2` and have not been pushed.*

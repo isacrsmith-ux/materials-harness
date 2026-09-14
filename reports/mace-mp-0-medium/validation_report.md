@@ -2,7 +2,7 @@
 
 # Validation report — MACE-MP-0 medium
 
-Generated 2026-09-13 01:50 UTC · commit `fe89fe7` · settings tag `207ccc81` · model `2023-12-03-mace-128-L1_epoch-199.model` · cpu/float64 · Apple M4 Max · macOS 26.6.2
+Generated 2026-09-13 01:50 UTC · commit `82a77c1` · settings tag `207ccc81` · model `2023-12-03-mace-128-L1_epoch-199.model` · cpu/float64 · Apple M4 Max · macOS 26.6.2
 
 Relaxation: FrechetCellFilter + BFGS, fmax 0.01 eV/Å, |stress| ≤ 0.01 GPa, ≤ 500 steps, fallback ladder on failure. Bins: energy above hull (eV/atom) — MP targets on the GGA/GGA+U hull, WBM against the MP hull (with a '<0' bin). Brackets: 95 % bootstrap intervals; verdicts from the pessimistic end.
 

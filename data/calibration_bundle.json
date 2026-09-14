@@ -1,6 +1,6 @@
 {
  "created_at": "2026-09-12T20:21:45+00:00",
- "harness_commit": "8177894",
+ "harness_commit": "1ad6ba3",
  "engine": {
   "key": "mace-mpa-0-medium",
   "name": "MACE-MPA-0 medium",

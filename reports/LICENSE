@@ -1,0 +1,64 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright 2026 Isac Smith
+
+The reports in this directory -- their text, tables, figures and conclusions --
+are licensed under the Creative Commons Attribution 4.0 International Public
+License ("CC BY 4.0").
+
+SPDX-License-Identifier: CC-BY-4.0
+
+The canonical legal text of CC BY 4.0 is published by Creative Commons at:
+
+    https://creativecommons.org/licenses/by/4.0/legalcode
+
+and the plain-language summary at:
+
+    https://creativecommons.org/licenses/by/4.0/
+
+That published text governs. It is incorporated here by reference rather than
+copied, so that this file cannot drift from the canonical wording.
+
+In short, you are free to share and adapt this material for any purpose,
+including commercially, provided you give appropriate credit, link to the
+licence, and indicate if changes were made.
+
+To credit this material:
+
+    Isac Smith, materials-harness (2026). Licensed CC BY 4.0.
+
+--------------------------------------------------------------------------------
+UPSTREAM ATTRIBUTION THAT TRAVELS WITH THESE REPORTS
+--------------------------------------------------------------------------------
+
+Every table in these reports compares this harness's own computed values against
+reference values from third-party datasets that are themselves CC BY 4.0.
+Redistributing these reports carries their attribution requirement as well:
+
+  * Materials Project (CC BY 4.0) -- reference energies, hull distances and
+    structures. A. Jain et al., APL Materials 1, 011002 (2013).
+    doi:10.1063/1.4812323
+
+  * Matbench Discovery / WBM (CC BY 4.0) -- the calibration and test material
+    sets. J. Riebesell et al., Nature Machine Intelligence (2025),
+    arXiv:2308.14920. H.-C. Wang, S. Botti, M. A. L. Marques,
+    npj Comput. Mater. 7, 12 (2021).
+
+Changes were made: all values reported here are computed by this harness from the
+above sources and are not the sources' own published numbers.
+
+--------------------------------------------------------------------------------
+THIRD-PARTY VALUES QUOTED IN THESE REPORTS
+--------------------------------------------------------------------------------
+
+Where a report quotes experimental lattice constants, those measured values come
+from Lucero, Henderson & Scuseria, J. Phys.: Condens. Matter 24, 145504 (2012)
+(Copyright IOP Publishing) and Csonka, Perdew et al., Phys. Rev. B 79, 155107
+(2009) (Copyright American Physical Society), cited in place. Where a report
+quotes published Matbench Discovery leaderboard metrics, those come from the
+matbench-discovery repository (MIT, Copyright (c) 2022 Janosh Riebesell).
+
+Those quoted third-party values are not licensed by this file. This project's
+CC BY 4.0 grant covers its own text, analysis, tables and computed results.
+
+The root NOTICE file carries the full attribution block.

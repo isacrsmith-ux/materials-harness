@@ -1,7 +1,7 @@
 {
  "generated_at": "2026-09-13T01:50:11+00:00",
  "settings_tag": "207ccc81",
- "commit": "fe89fe7",
+ "commit": "82a77c1",
  "model": "MACE-MP-0 medium",
  "mp_same_structure_energy_mae_\u22640.025": 12.700874750313243,
  "mp_same_structure_energy_mae_upper_\u22640.025": 15.239652045390882,

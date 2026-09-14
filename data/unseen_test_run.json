@@ -61,12 +61,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:06:22+00:00",
      "wall_time_s": 45.074985,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -194,12 +194,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:06:22+00:00",
      "wall_time_s": 53.133843,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -327,12 +327,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:06:22+00:00",
      "wall_time_s": 68.406159,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -460,12 +460,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:06:22+00:00",
      "wall_time_s": 88.025165,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -595,12 +595,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:06:22+00:00",
      "wall_time_s": 101.250936,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -729,12 +729,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:07:31+00:00",
      "wall_time_s": 69.559528,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -863,12 +863,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:07:07+00:00",
      "wall_time_s": 93.311562,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -996,12 +996,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:07:15+00:00",
      "wall_time_s": 103.25246,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1132,12 +1132,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:08:59+00:00",
      "wall_time_s": 50.366796,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1266,12 +1266,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:08:04+00:00",
      "wall_time_s": 149.238301,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1399,12 +1399,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:09:49+00:00",
      "wall_time_s": 62.196521,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1533,12 +1533,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:07:50+00:00",
      "wall_time_s": 182.706983,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1668,12 +1668,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:08:40+00:00",
      "wall_time_s": 167.03499,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1800,12 +1800,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:10:33+00:00",
      "wall_time_s": 69.000903,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -1934,12 +1934,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:08:41+00:00",
      "wall_time_s": 198.338912,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2067,12 +2067,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:10:51+00:00",
      "wall_time_s": 89.010143,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2200,12 +2200,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:11:42+00:00",
      "wall_time_s": 41.089563,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2332,12 +2332,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:11:59+00:00",
      "wall_time_s": 41.588848,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2463,12 +2463,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:12:20+00:00",
      "wall_time_s": 42.076971,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2596,12 +2596,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:10:53+00:00",
      "wall_time_s": 129.804648,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2728,12 +2728,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:12:23+00:00",
      "wall_time_s": 42.232783,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2860,12 +2860,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:12:41+00:00",
      "wall_time_s": 53.931255,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -2993,12 +2993,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:13:05+00:00",
      "wall_time_s": 32.470085,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3125,12 +3125,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:13:03+00:00",
      "wall_time_s": 37.603825,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3256,12 +3256,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:13:38+00:00",
      "wall_time_s": 29.265725,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3388,12 +3388,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:13:41+00:00",
      "wall_time_s": 30.806128,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3521,12 +3521,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "e2d95dd",
+     "harness_commit": "433b882",
      "timestamp": "2026-09-12T23:13:35+00:00",
      "wall_time_s": 47.544175,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3653,12 +3653,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:14:12+00:00",
      "wall_time_s": 33.184144,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3786,12 +3786,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:11:27+00:00",
      "wall_time_s": 197.644237,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -3919,12 +3919,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:14:22+00:00",
      "wall_time_s": 58.619059,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4050,12 +4050,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:13:03+00:00",
      "wall_time_s": 147.590554,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4181,12 +4181,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:15:21+00:00",
      "wall_time_s": 13.960536,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4313,12 +4313,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:14:45+00:00",
      "wall_time_s": 50.902775,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4446,12 +4446,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:14:07+00:00",
      "wall_time_s": 102.614817,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4577,12 +4577,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "d3d9d2d",
+     "harness_commit": "8096b4b",
      "timestamp": "2026-09-12T23:15:30+00:00",
      "wall_time_s": 30.940815,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4709,12 +4709,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:14:45+00:00",
      "wall_time_s": 83.548509,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4841,12 +4841,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:15:35+00:00",
      "wall_time_s": 82.368632,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -4974,12 +4974,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:15:50+00:00",
      "wall_time_s": 73.92509,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5107,12 +5107,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:16:01+00:00",
      "wall_time_s": 65.744182,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5241,12 +5241,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:16:09+00:00",
      "wall_time_s": 72.306006,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5374,12 +5374,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:16:57+00:00",
      "wall_time_s": 25.037084,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5509,12 +5509,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:15:36+00:00",
      "wall_time_s": 108.283879,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5642,12 +5642,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:17:04+00:00",
      "wall_time_s": 62.191492,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5778,12 +5778,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:17:22+00:00",
      "wall_time_s": 54.095244,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -5910,12 +5910,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:17:07+00:00",
      "wall_time_s": 75.138958,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6043,12 +6043,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:18:17+00:00",
      "wall_time_s": 24.633072,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6174,12 +6174,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:18:22+00:00",
      "wall_time_s": 44.73901,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6306,12 +6306,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:17:24+00:00",
      "wall_time_s": 127.484386,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6440,12 +6440,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:19:07+00:00",
      "wall_time_s": 36.386315,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6572,12 +6572,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:18:06+00:00",
      "wall_time_s": 101.34709,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6707,12 +6707,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:17:21+00:00",
      "wall_time_s": 147.469432,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6840,12 +6840,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:19:49+00:00",
      "wall_time_s": 64.519077,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -6975,12 +6975,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:19:48+00:00",
      "wall_time_s": 88.064677,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7111,12 +7111,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:21:16+00:00",
      "wall_time_s": 20.94781,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7244,12 +7244,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:19:43+00:00",
      "wall_time_s": 132.677996,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7380,12 +7380,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:19:32+00:00",
      "wall_time_s": 144.706054,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7515,12 +7515,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:21:37+00:00",
      "wall_time_s": 38.996453,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7648,12 +7648,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:20:53+00:00",
      "wall_time_s": 89.078227,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7782,12 +7782,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:21:56+00:00",
      "wall_time_s": 41.568757,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -7915,12 +7915,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:21:57+00:00",
      "wall_time_s": 50.751037,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8047,12 +8047,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:22:22+00:00",
      "wall_time_s": 30.041904,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8178,12 +8178,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:22:38+00:00",
      "wall_time_s": 28.098785,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8309,12 +8309,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:22:47+00:00",
      "wall_time_s": 27.20187,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8441,12 +8441,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:22:16+00:00",
      "wall_time_s": 78.984115,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8574,12 +8574,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:23:06+00:00",
      "wall_time_s": 34.372534,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8706,12 +8706,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:23:15+00:00",
      "wall_time_s": 27.212028,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8838,12 +8838,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:23:42+00:00",
      "wall_time_s": 21.219169,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -8973,12 +8973,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:23:40+00:00",
      "wall_time_s": 51.611847,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9108,12 +9108,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:22:52+00:00",
      "wall_time_s": 101.237856,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9242,12 +9242,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:23:35+00:00",
      "wall_time_s": 68.762714,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9375,12 +9375,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:03+00:00",
      "wall_time_s": 41.482109,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9509,12 +9509,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:18:41+00:00",
      "wall_time_s": 363.537628,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9643,12 +9643,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:34+00:00",
      "wall_time_s": 23.778511,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9778,12 +9778,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:45+00:00",
      "wall_time_s": 19.765889,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -9911,12 +9911,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:43+00:00",
      "wall_time_s": 26.829284,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10047,12 +10047,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:45+00:00",
      "wall_time_s": 57.313799,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10181,12 +10181,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:32+00:00",
      "wall_time_s": 79.242387,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10314,12 +10314,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:25:04+00:00",
      "wall_time_s": 59.062372,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10448,12 +10448,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:25:11+00:00",
      "wall_time_s": 56.438679,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10582,12 +10582,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:24:58+00:00",
      "wall_time_s": 81.09147,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10715,12 +10715,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:25:42+00:00",
      "wall_time_s": 47.561534,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10849,12 +10849,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:25:51+00:00",
      "wall_time_s": 46.114335,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -10983,12 +10983,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:26:04+00:00",
      "wall_time_s": 70.306166,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11117,12 +11117,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:26:19+00:00",
      "wall_time_s": 56.724027,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11250,12 +11250,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:26:08+00:00",
      "wall_time_s": 72.876974,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11384,12 +11384,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:26:30+00:00",
      "wall_time_s": 55.004147,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11517,12 +11517,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:26:37+00:00",
      "wall_time_s": 54.680135,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11650,12 +11650,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:16+00:00",
      "wall_time_s": 36.083939,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11782,12 +11782,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:25+00:00",
      "wall_time_s": 37.08919,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -11917,12 +11917,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:21+00:00",
      "wall_time_s": 46.803951,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12052,12 +12052,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:14+00:00",
      "wall_time_s": 63.543986,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12186,12 +12186,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:32+00:00",
      "wall_time_s": 57.627015,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12317,12 +12317,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:17+00:00",
      "wall_time_s": 14.83188,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12449,12 +12449,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:08+00:00",
      "wall_time_s": 46.989294,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12582,12 +12582,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:30+00:00",
      "wall_time_s": 33.052569,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12716,12 +12716,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:27:52+00:00",
      "wall_time_s": 76.779303,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12849,12 +12849,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:02+00:00",
      "wall_time_s": 79.355559,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -12982,12 +12982,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:03+00:00",
      "wall_time_s": 24.329988,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13115,12 +13115,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:32+00:00",
      "wall_time_s": 55.392001,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13249,12 +13249,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:28:55+00:00",
      "wall_time_s": 34.532988,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13381,12 +13381,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:21+00:00",
      "wall_time_s": 27.087145,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13514,12 +13514,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:28+00:00",
      "wall_time_s": 37.561441,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13648,12 +13648,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:09+00:00",
      "wall_time_s": 73.83595,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13784,12 +13784,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:05+00:00",
      "wall_time_s": 20.537116,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -13916,12 +13916,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:27+00:00",
      "wall_time_s": 60.332473,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14051,12 +14051,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:29+00:00",
      "wall_time_s": 64.60804,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14184,12 +14184,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:29:49+00:00",
      "wall_time_s": 50.567932,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14317,12 +14317,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:39+00:00",
      "wall_time_s": 15.113384,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14451,12 +14451,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:22+00:00",
      "wall_time_s": 33.336517,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14584,12 +14584,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:28+00:00",
      "wall_time_s": 34.52122,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14719,12 +14719,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:26+00:00",
      "wall_time_s": 41.915468,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14852,12 +14852,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:34+00:00",
      "wall_time_s": 35.510355,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -14984,12 +14984,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:08+00:00",
      "wall_time_s": 13.612487,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15119,12 +15119,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:09+00:00",
      "wall_time_s": 21.922435,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15253,12 +15253,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:56+00:00",
      "wall_time_s": 53.098549,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15386,12 +15386,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:30:54+00:00",
      "wall_time_s": 54.647037,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15519,12 +15519,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:02+00:00",
      "wall_time_s": 48.387146,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15651,12 +15651,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:31+00:00",
      "wall_time_s": 22.721322,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15782,12 +15782,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:54+00:00",
      "wall_time_s": 17.736769,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -15913,12 +15913,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:51+00:00",
      "wall_time_s": 21.609092,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16045,12 +16045,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:21+00:00",
      "wall_time_s": 51.42096,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16178,12 +16178,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:49+00:00",
      "wall_time_s": 37.056673,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16311,12 +16311,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:14+00:00",
      "wall_time_s": 15.377495,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16444,12 +16444,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:12+00:00",
      "wall_time_s": 21.321348,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16575,12 +16575,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:12+00:00",
      "wall_time_s": 22.14072,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16707,12 +16707,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:31:49+00:00",
      "wall_time_s": 52.796,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16841,12 +16841,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:34+00:00",
      "wall_time_s": 16.546839,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -16972,12 +16972,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:34+00:00",
      "wall_time_s": 17.672276,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17104,12 +17104,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:26+00:00",
      "wall_time_s": 37.600882,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17237,12 +17237,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:29+00:00",
      "wall_time_s": 35.751555,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17371,12 +17371,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:52+00:00",
      "wall_time_s": 23.459347,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17502,12 +17502,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:50+00:00",
      "wall_time_s": 35.821061,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17634,12 +17634,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:15+00:00",
      "wall_time_s": 17.492387,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17769,12 +17769,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:04+00:00",
      "wall_time_s": 33.20781,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -17901,12 +17901,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:37+00:00",
      "wall_time_s": 16.500205,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18034,12 +18034,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:05+00:00",
      "wall_time_s": 49.79224,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18167,12 +18167,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:32:42+00:00",
      "wall_time_s": 74.878869,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18300,12 +18300,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:33+00:00",
      "wall_time_s": 25.194638,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18433,12 +18433,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:26+00:00",
      "wall_time_s": 34.972723,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18565,12 +18565,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:53+00:00",
      "wall_time_s": 18.996,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18698,12 +18698,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:57+00:00",
      "wall_time_s": 17.026862,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18830,12 +18830,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:55+00:00",
      "wall_time_s": 23.668614,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -18964,12 +18964,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:01+00:00",
      "wall_time_s": 24.531466,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19099,12 +19099,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:33:58+00:00",
      "wall_time_s": 27.906218,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19234,12 +19234,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:12+00:00",
      "wall_time_s": 21.561689,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19366,12 +19366,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:18+00:00",
      "wall_time_s": 18.903584,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19499,12 +19499,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:26+00:00",
      "wall_time_s": 22.659749,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19632,12 +19632,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:14+00:00",
      "wall_time_s": 35.237224,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19766,12 +19766,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:26+00:00",
      "wall_time_s": 30.400636,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -19898,12 +19898,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:34+00:00",
      "wall_time_s": 22.46774,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20031,12 +20031,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:48+00:00",
      "wall_time_s": 34.422563,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20163,12 +20163,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:56+00:00",
      "wall_time_s": 27.682078,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20298,12 +20298,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:37+00:00",
      "wall_time_s": 52.062151,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20430,12 +20430,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:49+00:00",
      "wall_time_s": 48.035348,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20565,12 +20565,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:34:56+00:00",
      "wall_time_s": 43.221756,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20699,12 +20699,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:29+00:00",
      "wall_time_s": 19.260801,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20831,12 +20831,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:23+00:00",
      "wall_time_s": 27.200553,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -20965,12 +20965,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:24+00:00",
      "wall_time_s": 34.826928,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21097,12 +21097,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:37+00:00",
      "wall_time_s": 23.338013,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21230,12 +21230,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:39+00:00",
      "wall_time_s": 23.645183,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21365,12 +21365,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:50+00:00",
      "wall_time_s": 17.840837,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21497,12 +21497,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:49+00:00",
      "wall_time_s": 24.397261,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21628,12 +21628,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:00+00:00",
      "wall_time_s": 23.599896,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21761,12 +21761,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:03+00:00",
      "wall_time_s": 21.180248,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -21892,12 +21892,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:08+00:00",
      "wall_time_s": 16.837145,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22024,12 +22024,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:35:59+00:00",
      "wall_time_s": 29.497802,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22156,12 +22156,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:13+00:00",
      "wall_time_s": 19.369777,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22287,12 +22287,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:24+00:00",
      "wall_time_s": 16.965319,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22419,12 +22419,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:24+00:00",
      "wall_time_s": 22.744094,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22550,12 +22550,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:25+00:00",
      "wall_time_s": 28.314383,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22684,12 +22684,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:32+00:00",
      "wall_time_s": 28.009999,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22818,12 +22818,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:41+00:00",
      "wall_time_s": 23.558442,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -22951,12 +22951,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:29+00:00",
      "wall_time_s": 37.135572,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23083,12 +23083,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:53+00:00",
      "wall_time_s": 28.572643,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23215,12 +23215,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:36:47+00:00",
      "wall_time_s": 37.340683,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23347,12 +23347,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:00+00:00",
      "wall_time_s": 24.345098,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23481,12 +23481,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:05+00:00",
      "wall_time_s": 30.170358,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23613,12 +23613,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:24+00:00",
      "wall_time_s": 19.370635,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23747,12 +23747,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:25+00:00",
      "wall_time_s": 20.008583,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -23882,12 +23882,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:06+00:00",
      "wall_time_s": 41.901379,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24015,12 +24015,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:44+00:00",
      "wall_time_s": 26.608645,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24148,12 +24148,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:22+00:00",
      "wall_time_s": 49.354155,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24282,12 +24282,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:35+00:00",
      "wall_time_s": 44.707076,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24414,12 +24414,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:10+00:00",
      "wall_time_s": 11.06512,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24546,12 +24546,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:48+00:00",
      "wall_time_s": 35.516284,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24680,12 +24680,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:11+00:00",
      "wall_time_s": 22.212636,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24812,12 +24812,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:20+00:00",
      "wall_time_s": 25.931489,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -24946,12 +24946,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:23+00:00",
      "wall_time_s": 23.197735,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25080,12 +25080,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:21+00:00",
      "wall_time_s": 28.212114,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25213,12 +25213,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:33+00:00",
      "wall_time_s": 21.424811,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25346,12 +25346,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:37:45+00:00",
      "wall_time_s": 75.433705,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25481,12 +25481,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:46+00:00",
      "wall_time_s": 19.039792,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25615,12 +25615,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:00+00:00",
      "wall_time_s": 16.208041,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25750,12 +25750,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:46+00:00",
      "wall_time_s": 35.338827,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -25885,12 +25885,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:50+00:00",
      "wall_time_s": 32.627874,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26020,12 +26020,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:38:55+00:00",
      "wall_time_s": 31.095062,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26157,12 +26157,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:05+00:00",
      "wall_time_s": 25.055534,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26291,12 +26291,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:22+00:00",
      "wall_time_s": 14.03724,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26423,12 +26423,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:21+00:00",
      "wall_time_s": 16.309903,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26554,12 +26554,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:30+00:00",
      "wall_time_s": 10.005271,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26687,12 +26687,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:17+00:00",
      "wall_time_s": 28.140904,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26819,12 +26819,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:26+00:00",
      "wall_time_s": 19.879584,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -26952,12 +26952,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:37+00:00",
      "wall_time_s": 16.634605,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27086,12 +27086,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:36+00:00",
      "wall_time_s": 20.699273,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27222,12 +27222,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:46+00:00",
      "wall_time_s": 11.451995,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27355,12 +27355,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:45+00:00",
      "wall_time_s": 18.426678,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27489,12 +27489,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:54+00:00",
      "wall_time_s": 13.369886,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27622,12 +27622,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:57+00:00",
      "wall_time_s": 12.739604,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27755,12 +27755,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:57+00:00",
      "wall_time_s": 14.693449,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -27890,12 +27890,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:39:40+00:00",
      "wall_time_s": 36.33799,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28023,12 +28023,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:03+00:00",
      "wall_time_s": 14.465753,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28155,12 +28155,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:10+00:00",
      "wall_time_s": 11.638319,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28289,12 +28289,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:07+00:00",
      "wall_time_s": 17.140634,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28423,12 +28423,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:12+00:00",
      "wall_time_s": 17.610288,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28555,12 +28555,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:17+00:00",
      "wall_time_s": 13.356355,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28688,12 +28688,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:24+00:00",
      "wall_time_s": 8.842334,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28820,12 +28820,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:18+00:00",
      "wall_time_s": 17.622608,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -28955,12 +28955,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:22+00:00",
      "wall_time_s": 16.613419,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29089,12 +29089,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:30+00:00",
      "wall_time_s": 8.780042,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29223,12 +29223,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:29+00:00",
      "wall_time_s": 10.716243,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29356,12 +29356,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:40+00:00",
      "wall_time_s": 5.387239,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29490,12 +29490,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:35+00:00",
      "wall_time_s": 10.721079,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29625,12 +29625,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:38+00:00",
      "wall_time_s": 8.095441,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29760,12 +29760,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:39+00:00",
      "wall_time_s": 8.753597,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -29894,12 +29894,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:33+00:00",
      "wall_time_s": 16.330312,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30026,12 +30026,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:46+00:00",
      "wall_time_s": 7.453626,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30157,12 +30157,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:46+00:00",
      "wall_time_s": 8.651563,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30290,12 +30290,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:45+00:00",
      "wall_time_s": 9.444565,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30421,12 +30421,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:55+00:00",
      "wall_time_s": 5.943708,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30555,12 +30555,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:54+00:00",
      "wall_time_s": 7.695555,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30689,12 +30689,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:55+00:00",
      "wall_time_s": 7.650766,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30823,12 +30823,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:48+00:00",
      "wall_time_s": 16.445026,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -30958,12 +30958,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:40:50+00:00",
      "wall_time_s": 17.74874,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31089,12 +31089,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:02+00:00",
      "wall_time_s": 6.808028,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31224,12 +31224,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:03+00:00",
      "wall_time_s": 6.218638,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31356,12 +31356,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:07+00:00",
      "wall_time_s": 8.578618,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31490,12 +31490,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:01+00:00",
      "wall_time_s": 15.446322,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31624,12 +31624,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:08+00:00",
      "wall_time_s": 8.126518,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31756,12 +31756,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:04+00:00",
      "wall_time_s": 12.56344,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -31890,12 +31890,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:16+00:00",
      "wall_time_s": 5.869984,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32023,12 +32023,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:17+00:00",
      "wall_time_s": 7.61078,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32154,12 +32154,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:17+00:00",
      "wall_time_s": 8.378026,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32285,12 +32285,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:16+00:00",
      "wall_time_s": 9.179833,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32418,12 +32418,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:09+00:00",
      "wall_time_s": 19.305043,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32553,12 +32553,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:22+00:00",
      "wall_time_s": 7.590359,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32684,12 +32684,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:25+00:00",
      "wall_time_s": 5.204373,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32815,12 +32815,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:24+00:00",
      "wall_time_s": 9.081055,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -32946,12 +32946,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:25+00:00",
      "wall_time_s": 11.145601,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33078,12 +33078,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:30+00:00",
      "wall_time_s": 6.002767,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33209,12 +33209,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:29+00:00",
      "wall_time_s": 7.193298,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33343,12 +33343,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:36+00:00",
      "wall_time_s": 6.722327,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33474,12 +33474,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:37+00:00",
      "wall_time_s": 6.485872,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33608,12 +33608,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:37+00:00",
      "wall_time_s": 7.149513,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33739,12 +33739,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:34+00:00",
      "wall_time_s": 17.814397,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -33874,12 +33874,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:43+00:00",
      "wall_time_s": 9.438915,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34008,12 +34008,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:51+00:00",
      "wall_time_s": 5.760214,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34141,12 +34141,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:43+00:00",
      "wall_time_s": 15.595098,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34273,12 +34273,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:52+00:00",
      "wall_time_s": 6.793541,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34405,12 +34405,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:44+00:00",
      "wall_time_s": 20.170775,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34539,12 +34539,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:57+00:00",
      "wall_time_s": 7.650532,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34671,12 +34671,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:59+00:00",
      "wall_time_s": 7.285445,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34805,12 +34805,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:59+00:00",
      "wall_time_s": 11.271073,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -34939,12 +34939,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:05+00:00",
      "wall_time_s": 6.634969,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35072,12 +35072,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:04+00:00",
      "wall_time_s": 7.809449,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35206,12 +35206,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:41:28+00:00",
      "wall_time_s": 45.826004,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35340,12 +35340,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:12+00:00",
      "wall_time_s": 5.03585,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35471,12 +35471,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:14+00:00",
      "wall_time_s": 4.806393,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35603,12 +35603,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:06+00:00",
      "wall_time_s": 12.365412,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35736,12 +35736,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:10+00:00",
      "wall_time_s": 9.786223,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35868,12 +35868,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:11+00:00",
      "wall_time_s": 9.151828,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -35999,12 +35999,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:17+00:00",
      "wall_time_s": 5.185159,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36130,12 +36130,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:19+00:00",
      "wall_time_s": 4.943764,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36261,12 +36261,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:19+00:00",
      "wall_time_s": 5.057211,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36393,12 +36393,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:21+00:00",
      "wall_time_s": 7.396537,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36526,12 +36526,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:20+00:00",
      "wall_time_s": 8.818929,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36660,12 +36660,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:24+00:00",
      "wall_time_s": 4.925573,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36792,12 +36792,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:22+00:00",
      "wall_time_s": 7.703862,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -36926,12 +36926,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:24+00:00",
      "wall_time_s": 6.016507,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37057,12 +37057,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:29+00:00",
      "wall_time_s": 4.365325,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37188,12 +37188,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:29+00:00",
      "wall_time_s": 5.235112,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37319,12 +37319,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:28+00:00",
      "wall_time_s": 6.645716,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37453,12 +37453,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:30+00:00",
      "wall_time_s": 5.947435,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37584,12 +37584,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:30+00:00",
      "wall_time_s": 7.494776,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37715,12 +37715,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:36+00:00",
      "wall_time_s": 7.212033,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37847,12 +37847,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:37+00:00",
      "wall_time_s": 6.388058,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -37978,12 +37978,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:34+00:00",
      "wall_time_s": 9.95829,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38109,12 +38109,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:33+00:00",
      "wall_time_s": 11.06831,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38241,12 +38241,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:44+00:00",
      "wall_time_s": 3.781385,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38372,12 +38372,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:44+00:00",
      "wall_time_s": 4.305563,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38503,12 +38503,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:43+00:00",
      "wall_time_s": 4.937707,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38636,12 +38636,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:44+00:00",
      "wall_time_s": 5.038761,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38772,12 +38772,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:35+00:00",
      "wall_time_s": 14.776146,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -38906,12 +38906,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:49+00:00",
      "wall_time_s": 4.612944,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39040,12 +39040,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:48+00:00",
      "wall_time_s": 7.088996,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39172,12 +39172,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:48+00:00",
      "wall_time_s": 8.109452,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39305,12 +39305,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:48+00:00",
      "wall_time_s": 10.810664,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39439,12 +39439,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:49+00:00",
      "wall_time_s": 9.878564,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39573,12 +39573,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:55+00:00",
      "wall_time_s": 5.190266,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39706,12 +39706,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:54+00:00",
      "wall_time_s": 8.440765,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39839,12 +39839,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:58+00:00",
      "wall_time_s": 4.855874,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -39973,12 +39973,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:59+00:00",
      "wall_time_s": 4.733096,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40107,12 +40107,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:00+00:00",
      "wall_time_s": 4.872064,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40242,12 +40242,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:03+00:00",
      "wall_time_s": 4.26021,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40374,12 +40374,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:04+00:00",
      "wall_time_s": 4.959837,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40508,12 +40508,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:03+00:00",
      "wall_time_s": 5.527449,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40639,12 +40639,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:42:56+00:00",
      "wall_time_s": 13.205646,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40775,12 +40775,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:05+00:00",
      "wall_time_s": 4.808974,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -40909,12 +40909,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:07+00:00",
      "wall_time_s": 4.058427,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41040,12 +41040,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:09+00:00",
      "wall_time_s": 3.729061,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41172,12 +41172,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:10+00:00",
      "wall_time_s": 3.174938,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41305,12 +41305,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:09+00:00",
      "wall_time_s": 4.989613,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41438,12 +41438,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:11+00:00",
      "wall_time_s": 3.128715,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41569,12 +41569,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:09+00:00",
      "wall_time_s": 5.598125,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41700,12 +41700,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:13+00:00",
      "wall_time_s": 3.105707,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41831,12 +41831,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:13+00:00",
      "wall_time_s": 3.575626,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -41962,12 +41962,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:14+00:00",
      "wall_time_s": 3.118734,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42094,12 +42094,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:14+00:00",
      "wall_time_s": 3.11507,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42229,12 +42229,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:14+00:00",
      "wall_time_s": 3.18753,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42360,12 +42360,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:17+00:00",
      "wall_time_s": 3.17479,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42491,12 +42491,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:17+00:00",
      "wall_time_s": 3.4887,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42623,12 +42623,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:16+00:00",
      "wall_time_s": 4.532601,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42754,12 +42754,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:17+00:00",
      "wall_time_s": 3.393109,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -42885,12 +42885,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:17+00:00",
      "wall_time_s": 3.754002,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -43016,12 +43016,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:20+00:00",
      "wall_time_s": 3.646771,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },
@@ -43147,12 +43147,12 @@
       "cell_filter": "FrechetCellFilter",
       "timeout_s": 900.0
      },
-     "harness_commit": "ccaaf6d",
+     "harness_commit": "fd0f226",
      "timestamp": "2026-09-12T23:43:21+00:00",
      "wall_time_s": 3.368429,
      "calibration_bundle": {
       "created_at": "2026-09-12T20:21:45+00:00",
-      "harness_commit": "8177894",
+      "harness_commit": "1ad6ba3",
       "calibration_ids_sha256": "29d974a4d56d54a398226c811239075f64217433862b4a5eb0b27bd81dd7efe3",
       "rules": "with_second_engine"
      },

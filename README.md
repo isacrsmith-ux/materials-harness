@@ -175,7 +175,10 @@ in **[reports/licensing.md](reports/licensing.md)**.
 
 - **Matbench Discovery** — benchmark and data files, licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). J. Riebesell *et al.*, *Nature Machine
-  Intelligence* (2025), arXiv:2308.14920. Data files: doi:10.6084/m9.figshare.22715158
+  Intelligence* (2025), arXiv:2308.14920. Data files: doi:10.6084/m9.figshare.22715158.
+  `data/mbd_published.json` additionally reproduces published leaderboard metrics from the
+  matbench-discovery repository, which is licensed **MIT** (© 2022 Janosh Riebesell); that notice is
+  in [NOTICE](NOTICE).
 
 - **MPtrj** — the training set of the engine under test (not used or redistributed here).
   B. Deng *et al.*, *Nature Machine Intelligence* **5**, 1031 (2023). doi:10.6084/m9.figshare.23713842
@@ -193,5 +196,28 @@ are not the sources' own published numbers.
 
 ## Licence
 
-**Not yet chosen.** See [reports/licensing.md §5](reports/licensing.md) for the options and what each
-one costs. Until a `LICENSE` file exists, default copyright applies and no reuse rights are granted.
+This repository is published under a split licence, because the code and the data are different
+kinds of thing and came from different places.
+
+| what | licence | file |
+|:--|:--|:--|
+| **Code** — `harness/`, `tests/`, `scripts/`, `config/`, root files | **Apache-2.0** | [LICENSE](LICENSE) |
+| **`data/`** | **CC BY 4.0** | [data/LICENSE](data/LICENSE) |
+| **`reports/`** | **CC BY 4.0** | [reports/LICENSE](reports/LICENSE) |
+| **`results/results.parquet`** | **CC BY 4.0** | [results/README.md](results/README.md) |
+
+Copyright 2026 Isac Smith. Apache-2.0 was chosen over MIT for its express patent grant and its
+NOTICE mechanism; CC BY 4.0 matches what the input datasets already are, so the data can be reused
+on the same terms it reached us on.
+
+**The CC BY 4.0 grants cover only material this project generated.** Three files in `data/` are
+third-party material, are excluded from those grants, and keep their own terms:
+
+- `data/experimental_lattice_constants.csv` — Lucero *et al.* (2012) Table I, © IOP Publishing
+- `data/experimental_csonka2009.csv` — Csonka *et al.* (2009) Table II, © American Physical Society
+- `data/mbd_published.json` — matbench-discovery model metadata, MIT, © 2022 Janosh Riebesell
+
+[data/README.md](data/README.md) states file by file which data is which, and why each carve-out is
+a carve-out. [NOTICE](NOTICE) carries the full attribution block that must travel with any
+redistribution. [reports/licensing.md](reports/licensing.md) has the underlying analysis, including
+the licence of every dependency.
