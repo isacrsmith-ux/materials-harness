@@ -112,8 +112,9 @@ elif command -v gitleaks >/dev/null 2>&1; then
   if gitleaks git --log-opts="--all --full-history" --redact --no-banner >/dev/null 2>&1; then
     note "gitleaks: no findings across all commits on all branches"
   else
-    note "gitleaks reported findings — review them; the audit's one known false positive is"
-    note "  'MP2020Compatibility' in tests/test_mp_data.py (rule generic-api-key)"
+    note "gitleaks reported findings — review them. The one known false positive"
+    note "  ('MP2020Compatibility', rule generic-api-key) is allowlisted in .gitleaks.toml,"
+    note "  so anything reported here is something new."
     gitleaks git --log-opts="--all --full-history" --redact --no-banner 2>&1 | grep -E '^(Finding|File|RuleID|Commit)' | head -20 | sed 's/^/        /'
     fail=1
   fi

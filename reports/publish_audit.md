@@ -7,6 +7,12 @@ end, unmade.
 Audited at commit `82a77c1` on branch `round2`; 28 commits across 2 branches (`main`, `round2`),
 127 tracked files, 0 tags, 0 stash entries.
 
+> **Status: the checklist in §7 has been executed and closed.** The counts above describe the
+> repository *as audited*; they are left unedited as the record of what was scanned. As published it
+> has **30 commits** and **141 tracked files**, and the commit author email has been rewritten. The
+> commit SHAs quoted throughout this document were rebased onto the post-rewrite hashes, which name
+> byte-identical trees. §7 records the outcome of every step.
+
 ---
 
 ## 1. Credential and secret sweep
@@ -97,6 +103,11 @@ runtime or a worker layout without them — and none of it identifies a person o
 network.
 
 ### Commit author identity — your decision, not mine
+
+> **Decided and done (2026-09-14): rewritten.** All 30 commits now carry
+> `328558739+isacrsmith-ux@users.noreply.github.com` as both author and committer. The section below
+> is the analysis as written before that decision; §7 records what was actually done and how it was
+> verified.
 
 All **28 commits** (author *and* committer) carry the personal Gmail address currently in
 `git config user.email`. Publishing makes that address public and permanently associated with the repository. Every commit also carries a
@@ -261,51 +272,109 @@ stranger gets.
 **Test counts after the fixes** — `pytest -m "not slow"` 223 passed; full run 235 passed with the
 production engine, 232 passed / 3 skipped with the default; `pytest -m slow` 12 passed (was 1 failed).
 
-## 7. Go / no-go checklist
+## 7. Go / no-go checklist — **all items closed**
+
+Every decision below was taken by the owner and executed on 2026-09-14. Nothing has been pushed; no
+remote exists; no visibility setting was touched.
 
 ### Blocking — nothing
 
-No secret, key, token, private key or credentialed URL exists anywhere in the working tree, the
-staged set, any branch, the reflog, or any of the 437 objects in the database. There is **nothing to
-rotate and no reason to rewrite history**.
+| # | item | decision | result |
+|:--|:--|:--|:--|
+| 1 | **Licence** | Apache-2.0 for code, CC BY 4.0 for `data/` and `reports/` | ✅ `LICENSE` (canonical Apache-2.0, 11,341 bytes), `NOTICE`, `data/LICENSE`, `reports/LICENSE`, licence split in the README |
+| 2 | **Commit email** | rewrite before the first push | ✅ all **30** commits on both branches rewritten, author *and* committer, to `328558739+isacrsmith-ux@users.noreply.github.com` |
+| 3 | **MP API key** | rotate | ✅ rotated by the owner; new value in `.env` only, `.env` still gitignored and untracked |
+| 4 | **`results/results.parquet`** | ship it, plain git, no LFS | ✅ committed at **6.9 MB** (zstd-19, 197,783 rows, no columns dropped), with `results/README.md` as its data dictionary |
+| 5 | **Pre-commit hook** | install it | ✅ installed (~0.7 s), plus `scripts/install_hooks.sh` and a CI workflow that needs no secret |
 
-### Do before publishing (mine to hand you, yours to run)
+### What each step actually did
 
-| # | action | why |
-|:--|:--|:--|
-| 1 | **Choose a licence** and add `LICENSE`. Consider code Apache-2.0 + `data/` and `reports/` CC BY 4.0 | without one, "public" grants no reuse rights at all — `licensing.md` §5 |
-| 2 | **Decide the commit email**: keep the personal address in the 28 existing commits, or rewrite before the first push | after the first push, rewriting stops helping — `publish_audit.md` §2 |
-| 3 | **Rotate the Materials Project API key** | a 13-character prefix reached this session's transcript. Low risk; rotation is a minute. <https://next-gen.materialsproject.org/api> → regenerate, then update `.env` |
-| 4 | **Decide whether to ship `results/results.parquet`** (8.82 MB recompressed, all 196,639 rows) | it lets a reader check every number; §3 has the command |
-| 5 | **Review the new files and the two banners** | committed locally on `round2`; nothing pushed |
+**1. Licence.** `LICENSE` is the canonical Apache-2.0 text with the appendix boilerplate filled for
+Isac Smith — verified byte-identical to 30 independent local copies of the licence rather than typed
+from memory. `data/README.md` classifies all 21 tracked data files. **A gap in `licensing.md` was
+found and closed:** `data/mbd_published.json` reproduces published Matbench Discovery leaderboard
+metrics read from that project's *GitHub repository*, which is **MIT** — `licensing.md` covered only
+the figshare data files (CC BY 4.0). Confirmed against GitHub's licence API. **Three files are
+carved out of the CC BY 4.0 grant** rather than relicensed: the two experimental CSVs (© IOP
+Publishing, © American Physical Society) and `mbd_published.json` (MIT). None needed removing.
 
-### Optional
+**2. Commit email.** `git filter-repo` was **not installed**; `git filter-branch --env-filter` over
+`--all` was used instead, after backing `.git` up to
+`~/materials-harness-git-backup-20260914-152734.tar.gz`. Verified afterwards:
 
-| # | action |
+* `git log --all --format='%an <%ae>' | sort -u` returns **exactly one address**; the old Gmail
+  appears **0 times** in author or committer of any live ref.
+* **Tree at each branch tip is byte-identical** to before — `round2` `10a89b64…`, `main` `676b8707…`
+  — while commit hashes changed, which is the signature of a metadata-only rewrite.
+* The full file manifest (path + blob hash) is identical: 131 files on `round2`, 69 on `main`.
+* All 30 commits keep their tree, subject, author date and committer date.
+* **663 stale short SHAs** across 8 tracked files were rebased onto the new hashes, every one
+  verified to resolve; the rebase is disclosed in `data/README.md`. The pre-rewrite history is still
+  in `refs/original/` as a local rollback path and is **not** pushed by an ordinary `git push`.
+
+**3. MP API key.** The audit listed rotation because a **13-character prefix** of the key reached the
+session transcript from my own sweep script — not because the key was in any file. Re-verified before
+rotating: the value appeared in **`.env` and nowhere else** in 34,035 working-tree files, and in
+**0 of 295 blobs** in the object database. **A scanning hazard was found in the process:** the shell's
+`grep` is a `ugrep` wrapper running `--ignore-files`, so recursive greps silently skip everything in
+`.gitignore` — including `.env`, `cache/`, `logs/`, `results/` and `models/`. Every scan quoted here
+was re-run with `/usr/bin/grep`. Anyone re-auditing this repository should do the same.
+
+**4. `results.parquet`.** Recompressed snappy → zstd-19: 17.9 MB → **6.9 MB**, contents verified
+byte-identical via `Table.equals`. No columns dropped. `harness/report.py` now writes zstd so
+regeneration cannot silently restore the 18 MB file. **A `.gitignore` bug was fixed:** the
+`!results/results.parquet` negation could never fire, because `results/` excluded the directory and
+git does not descend into an excluded directory to evaluate a negation. Writing the data dictionary
+surfaced three traps, all now documented: `df.flags` collides with a pandas attribute; null flags
+arrive as truthy `NaN`; and `substitution_auto` covers **3,934 pair ids across both the current and
+the superseded v1 pair sets**, so a join against `auto_pairs.json` alone drops about half the rows
+silently.
+
+**5. Pre-commit hook and CI.** The hook runs `preflight_publish.sh --staged` in ~0.7 s — verified to
+pass a clean commit and to **block a planted `sk-ant-` key with HEAD unmoved**. Two preflight fixes
+were required: §5 asserted `results/` had zero tracked files (now allows exactly the two published
+ones and fails on anything else), and the full-history `gitleaks` scan is skipped in `--staged` mode
+so committing stays fast. `.github/workflows/secret-scan.yml` runs both the preflight and a
+full-history `gitleaks` scan on push and pull request, **needs no secret**, and runs on forks.
+`.gitleaks.toml` allowlists the one known false positive (`MP2020Compatibility`) by exact literal —
+extending the default rules, not disabling any — so CI is not red from its first run.
+
+### Final verification (F)
+
+| check | result |
 |:--|:--|
-| 6 | Install the preflight as a pre-commit hook (**not installed — asking first**): `ln -s ../../scripts/preflight_publish.sh .git/hooks/pre-commit` (it accepts `--staged`) |
-| 7 | Install `gitleaks` locally so the preflight's history scan runs rather than reporting itself skipped |
-| 8 | Drop `data/auto_pairs_v1.json` (1.31 MB, superseded round-1 pair set) if you do not want the history |
-| 9 | Replace the two experimental CSVs with a reconstruct-from-paper script if you want zero transcription risk (costs reproducibility — `licensing.md` §1.4) |
+| `scripts/preflight_publish.sh` | **PREFLIGHT OK** |
+| `pytest -m "not slow"` (working tree) | **223 passed** |
+| fresh `git clone --no-local` into a temp dir | 141 tracked files; **no** `.env`, `cache/`, `models/`, `logs/`, `.venv/`; `results/` contains only the two published files |
+| README followed from scratch in that clone | ✅ uv 0.12.13 → Python 3.12.14 → `uv sync` → **222 passed, 1 skipped** |
+| full suite in the fresh clone | **222 passed, 13 skipped** — skips, not errors |
+| `results.parquet` in the clone | sha256 matches the origin copy exactly |
+| data-dictionary join recipe, run in the clone | ✅ 197,783 rows load; filters to 1,952 distinct pairs on the current set |
+| `scripts/install_hooks.sh` in the clone | ✅ installs and is executable |
+| `preflight_publish.sh` in the clone | **PREFLIGHT OK** |
 
-### Verified clean — no action
+**Not verified locally:** the `gitleaks` history scan and therefore the `.gitleaks.toml` allowlist.
+`gitleaks` is not installed on this machine and installing it means downloading an executable, which
+was not done. The CI workflow installs it, so the **first CI run is the first real test of that
+allowlist** — if `gitleaks-history` fails on `MP2020Compatibility`, the allowlist syntax needs a
+look, not the repository.
 
-* Secrets: all commits, all branches, all 437 objects, reflog, working tree, untracked files, caches.
-* No absolute local paths, emails, hostnames or private IPs in tracked content.
-* `results/` (1.0 GB), `models/`, `cache/` (599 MB), `logs/`, `config/launchd/`, `.envs/`, `.venv/`:
-  zero tracked files.
-* `.gitignore` hardened with key, certificate, database and scratch patterns; **no currently tracked
-  file becomes ignored** by the additions.
-* `scripts/preflight_publish.sh` added and **tested against planted secrets** — an Anthropic key, a
-  Hugging Face token, a Postgres URL with a password and an absolute path were all caught, and the
-  script returns to OK once they are removed.
-* A fresh clone sets up and passes its fast tests from the README alone.
+### Still open, deliberately
+
+| # | item | status |
+|:--|:--|:--|
+| 6 | Install `gitleaks` locally | not done — CI covers it |
+| 7 | Drop `data/auto_pairs_v1.json` (1.31 MB, superseded) | **kept.** `results.parquet` contains results for 1,982 v1-only pairs; deleting the pair set would orphan them |
+| 8 | Replace the two experimental CSVs with a reconstruct-from-paper script | not done — costs reproducibility; assessed low risk in §1.4 of `licensing.md` and restated in `data/README.md` |
+| 9 | Expire `refs/original/` | **kept until after the push**, as the in-repo rollback path. Not published by an ordinary push |
 
 ### What was deliberately not done
 
-No remote was added, nothing was pushed, no visibility setting was touched, no history was rewritten,
-no licence was chosen, no report was deleted, and the two experimental data files were left in place.
+**No remote was added, nothing was pushed, and no visibility setting was touched.** No report history
+was deleted. The repository is ready; creating and pushing it is the owner's action.
 
 ---
 
-*Audit performed against commit `82a77c1`; its own changes are committed locally on `round2` and have not been pushed.*
+*Audit performed against commit `82a77c1`; the go/no-go checklist in §7 was executed and closed out on
+2026-09-14. All changes are committed locally on `round2`. **Nothing has been pushed, no remote has
+been added, and no visibility setting has been touched.***

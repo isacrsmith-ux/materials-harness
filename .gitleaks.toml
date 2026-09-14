@@ -1,0 +1,23 @@
+# gitleaks configuration.
+#
+# Extends the default rule set -- this file only ADDS an allowlist, it never disables a rule.
+# gitleaks picks this up automatically when run from the repository root; CI passes it explicitly.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = """
+One known false positive, documented in reports/publish_audit.md section 1.
+
+The generic-api-key rule fires on the literal string "MP2020Compatibility" -- the name of a
+pymatgen energy-correction scheme. It is a long mixed-case identifier with enough entropy to
+trip the generic rule, and it appears in a source comment and in a provenance string, not in
+any credential position.
+
+Scoped to that exact literal on purpose. It does not allowlist the files, the paths or the
+rule, so a real secret landing in either file is still caught.
+"""
+regexes = [
+  '''MP2020Compatibility''',
+]
