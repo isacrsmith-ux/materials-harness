@@ -359,6 +359,40 @@ was not done. The CI workflow installs it, so the **first CI run is the first re
 allowlist** — if `gitleaks-history` fails on `MP2020Compatibility`, the allowlist syntax needs a
 look, not the repository.
 
+### Post-publication finding — a personal email reached the public repository
+
+**This was found after the first public push, and it is the one thing this audit got wrong.**
+
+The repository was pushed and made public on 2026-09-14. About twenty minutes later, an independent
+re-verification found the owner's personal Gmail address in the published history: **two occurrences
+inside `reports/publish_audit.md` as it stood in the "Pre-publication audit" commit**, where this
+document quoted the address while explaining the email decision. A later commit reworded those lines,
+so the **tip was clean** and every check we had run was blind to it:
+
+* the step-B verification checked `git log --format='%an <%ae>'` — commit **metadata**, which was
+  correct and clean;
+* the preflight's §4 uses `git grep`, which reads **tracked content at HEAD**, where the address no
+  longer appeared;
+* `gitleaks` does not flag email addresses at all, only credentials, so its green tick was accurate
+  and irrelevant.
+
+**Nothing in the chain scanned historical file content.** That is the defect.
+
+**Response.** The repository was set private (exposure window ≈ 20 minutes, 0 forks, 0 stars, 0
+watchers). A second `filter-branch` pass redacted the literal string to `[redacted]` across history
+and commit messages, verified to **0 matches** across all 513 objects reachable from `main` and
+`round2`, with the HEAD tree hash and the full 142-file manifest **unchanged** — only the one
+historical commit's tree moved. The remote is being replaced by delete-and-recreate rather than a
+force-push, because GitHub keeps orphaned commits reachable by SHA after a force-push.
+
+**Fix, so it cannot recur.** `scripts/preflight_publish.sh` §4b now scans every blob, tree and commit
+reachable from `HEAD`, the branches and the tags — file content *and* commit metadata — rather than
+the working tree alone. Regression-tested against the pre-redaction history: §4 reports clean, §4b
+reports the finding, names blob `d3d8e252` and `reports/publish_audit.md`, and the script exits 1.
+
+**The general lesson, worth more than the specific fix:** a check that reads HEAD cannot clear a
+history. Anything published as history has to be audited as history.
+
 ### Still open, deliberately
 
 | # | item | status |

@@ -60,8 +60,18 @@ history scan to run locally rather than report itself skipped. CI installs it ei
 
 | job | what it does |
 |:--|:--|
-| `preflight` | `scripts/preflight_publish.sh` over a full-depth checkout |
+| `preflight` | `scripts/preflight_publish.sh` over a full-depth checkout — including §4b, which scans **every object in the history that would be published**, not just the working tree |
 | `gitleaks-history` | `gitleaks` across all commits on all branches, `--redact` so a finding never prints a secret into a public log |
+
+**Why §4b exists.** `git grep` only sees the tip. A personal email address once reached a published
+repository because it sat in an *older* version of a report and had been edited out by the time of
+the push — every HEAD-based check was clean and the address was still there in history. §4b streams
+every blob, tree and commit reachable from `HEAD`, the local branches and the tags, so file content
+*and* commit metadata are both covered. It deliberately does not scan `--all`: `refs/original/` and
+`refs/backup-*/` are local rollback points that are never pushed.
+
+It adds about two seconds, and it is skipped in `--staged` mode because a commit in progress cannot
+change history that already exists.
 
 **Neither job needs a secret**, an API key or model weights — every check reads only the repository,
 so CI runs on forks and on pull requests from forks.

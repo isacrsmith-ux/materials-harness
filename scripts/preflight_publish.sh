@@ -86,6 +86,56 @@ else
   note "no email addresses (the Co-Authored-By trailer lives in commit messages, not files)"
 fi
 
+echo "== 4b. emails and local paths in PUBLISHED HISTORY (every commit, not just HEAD) =="
+# Section 4 checks the working tree at HEAD. That is not enough: a file can carry a personal
+# address in an OLD commit and be cleaned up later, and `git grep` will never see it while the
+# tip is clean. That is exactly how a personal email reached a published repository once.
+#
+# Scope: objects reachable from HEAD, local branches and tags -- i.e. what a push actually
+# publishes. Deliberately NOT --all: refs/original/ and refs/backup-*/ are local rollback points
+# that are never pushed and still hold pre-redaction content by design.
+if [ "$STAGED" = 1 ]; then
+  note "skipped in --staged mode (a commit in progress cannot change existing history); CI runs it"
+else
+  HIST_EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+  HIST_PATH='/Users/[A-Za-z0-9._-]+|/home/[A-Za-z0-9._-]+'
+  # Addresses that are expected and must not trip the check.
+  EMAIL_OK='noreply@anthropic\.com|users\.noreply\.github\.com|@example\.(com|org|net)|@(domain|host)\.'
+
+  hist_objs=$(git rev-list --objects HEAD --branches --tags 2>/dev/null | awk '{print $1}' | sort -u)
+  n_objs=$(echo "$hist_objs" | grep -c . || true)
+
+  # One streamed pass over every object: blobs (file content) and commits (author/committer and
+  # messages) both go through, so this covers metadata as well as files.
+  bad_emails=$(echo "$hist_objs" | git cat-file --batch 2>/dev/null \
+                 | grep -aoE "$HIST_EMAIL" 2>/dev/null \
+                 | grep -avEi "$EMAIL_OK" 2>/dev/null | sort -u || true)
+  bad_paths=$(echo "$hist_objs" | git cat-file --batch 2>/dev/null \
+                 | grep -aoE "$HIST_PATH" 2>/dev/null | sort -u || true)
+
+  if [ -n "$bad_emails" ]; then
+    bad "email address in published history ($n_objs objects scanned):"
+    echo "$bad_emails" | head -5 | sed 's/^/        /'
+    note "locating the objects (slow path, only on failure):"
+    git rev-list --objects HEAD --branches --tags 2>/dev/null | while read -r sha path; do
+      [ -n "$path" ] || continue
+      m=$(git cat-file blob "$sha" 2>/dev/null | grep -aoE "$HIST_EMAIL" 2>/dev/null \
+            | grep -avEi "$EMAIL_OK" 2>/dev/null | sort -u | head -2)
+      [ -n "$m" ] && printf '        %s  %s  ->  %s\n' "${sha:0:12}" "$path" "$(echo "$m" | tr '\n' ' ')"
+    done
+    note "to find which commits carry it: git log --all --oneline -- <path>"
+  else
+    note "no unexpected email addresses in published history ($n_objs objects: blobs, trees and commits)"
+  fi
+
+  if [ -n "$bad_paths" ]; then
+    bad "absolute local path in published history:"
+    echo "$bad_paths" | head -5 | sed 's/^/        /'
+  else
+    note "no absolute local paths in published history"
+  fi
+fi
+
 echo "== 5. directories that must never be published =="
 # results/ is a deliberate exception: exactly two files there are published (the exported table and
 # its data dictionary). Anything else appearing under results/ is a mistake -- most of the directory
