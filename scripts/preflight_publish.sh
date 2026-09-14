@@ -87,13 +87,28 @@ else
 fi
 
 echo "== 5. directories that must never be published =="
-for d in results models cache logs config/launchd .envs .venv; do
+# results/ is a deliberate exception: exactly two files there are published (the exported table and
+# its data dictionary). Anything else appearing under results/ is a mistake -- most of the directory
+# is ~1 GB of SQLite job stores.
+RESULTS_ALLOWED="results/README.md results/results.parquet"
+for d in models cache logs config/launchd .envs .venv; do
   n=$(git ls-files "$d" | wc -l | tr -d ' ')
   if [ "$n" != 0 ]; then bad "$d has $n tracked file(s)"; else note "$d: not tracked"; fi
 done
+unexpected=$(git ls-files results | grep -vxF -e "results/README.md" -e "results/results.parquet")
+if [ -n "$unexpected" ]; then
+  bad "results/ has tracked file(s) beyond the two published ones:"
+  echo "$unexpected" | sed 's/^/        /'
+else
+  note "results/: only the two published files are tracked ($RESULTS_ALLOWED)"
+fi
 
 echo "== 6. gitleaks (full history) =="
-if command -v gitleaks >/dev/null 2>&1; then
+if [ "$STAGED" = 1 ]; then
+  # A pre-commit hook must stay fast. The full-history scan belongs in CI and in the manual run,
+  # not in front of every commit -- the staged patterns above already cover what is being added.
+  note "skipped in --staged mode (kept fast for the pre-commit hook); CI runs the full scan"
+elif command -v gitleaks >/dev/null 2>&1; then
   if gitleaks git --log-opts="--all --full-history" --redact --no-banner >/dev/null 2>&1; then
     note "gitleaks: no findings across all commits on all branches"
   else

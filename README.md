@@ -205,6 +205,15 @@ in **[reports/licensing.md](reports/licensing.md)**.
 Changes were made: all values in `reports/` are computed by this harness from the above sources and
 are not the sources' own published numbers.
 
+## Contributing
+
+`./scripts/install_hooks.sh` installs a pre-commit secret scan (~0.7 s per commit; bypass a single
+commit with `git commit --no-verify`). Hooks are not cloned, so the same checks run in CI on every
+push and pull request via `.github/workflows/secret-scan.yml`, which needs no secret to run. Details
+in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
 ## Licence
 
 This repository is published under a split licence, because the code and the data are different
