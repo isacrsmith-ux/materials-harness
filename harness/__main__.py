@@ -99,6 +99,9 @@ def main(argv: list[str] | None = None) -> int:
                       help="queue the fallback ladder for rejected stability competitor relaxations")
     prep.add_argument("--wbm-calibration", action="store_true",
                       help="queue relaxation + DFT-geometry single point for every WBM calibration id (never the test set)")
+    prep.add_argument("--family-calibration", action="store_true",
+                      help="queue relaxation + DFT-geometry single point for every oxide/halide CALIBRATION id "
+                           "(data/wbm_split_oxide_halide.json); never any locked test id")
     prep.add_argument("--screening", action="store_true",
                       help="queue the model-screening subset (data/screening_subset.json) for the ACTIVE model (HARNESS_MODEL)")
     prep.add_argument("--mode-b", action="store_true",
@@ -268,7 +271,8 @@ def main(argv: list[str] | None = None) -> int:
                        force_pairs=args.force_pairs,
                        curated_kinds=[k for k in (args.curated_kinds or "").split(",") if k] or None,
                        competitor_retries=args.competitor_retries, retries=args.retries,
-                       wbm_calibration=args.wbm_calibration, mode_b=args.mode_b, screening=args.screening)
+                       wbm_calibration=args.wbm_calibration, mode_b=args.mode_b, screening=args.screening,
+                       family_calibration=args.family_calibration)
         print(json.dumps(info, indent=1, default=str))
         return 0
     if args.cmd == "unattended":

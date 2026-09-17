@@ -210,3 +210,20 @@ def family_test_ids(fam: str, unlock: bool = False, path=FAMILY_SPLIT_FILE) -> l
     if hashlib.sha256(",".join(t["ids"]).encode()).hexdigest() != t["sha256"]:
         raise RuntimeError(f"{fam} test ids do not match their recorded hash")
     return t["ids"]
+
+
+def family_excluded_ids(families=("oxide", "halide"), path=FAMILY_SPLIT_FILE) -> set[str]:
+    """Every locked per-family TEST id, for use as an EXCLUSION FILTER only.
+
+    Same contract as excluded_ids(): it returns ids, never outcomes, so it cannot leak a label, and
+    anything wanting to *score* those ids still has to go through family_test_ids(unlock=True). Each
+    family's hash is verified here, so a tampered split cannot quietly shrink the exclusion set and
+    let a locked id slip into a calibration queue."""
+    split = load_split(path)
+    out: set[str] = set()
+    for fam in families:
+        t = split["families"][fam]["test"]
+        if hashlib.sha256(",".join(t["ids"]).encode()).hexdigest() != t["sha256"]:
+            raise RuntimeError(f"{fam} test ids do not match their recorded hash")
+        out |= set(t["ids"])
+    return out

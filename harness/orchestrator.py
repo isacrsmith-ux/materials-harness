@@ -195,16 +195,34 @@ def build_ood_jobs(n: int, compute: dict) -> list[dict]:
     return jobs
 
 
-def build_wbm_calibration_jobs(compute: dict) -> list[dict]:
+def build_wbm_calibration_jobs(compute: dict, ids: list[str] | None = None, init_cache=None,
+                               cse_cache=None, strict: bool = False) -> list[dict]:
     """Relaxation (from the WBM initial structure) + single point (at the DFT-relaxed structure) for every
-    WBM CALIBRATION id. The locked test ids are never queued here (splits.test_ids is locked)."""
+    WBM CALIBRATION id. The locked test ids are never queued here (splits.test_ids is locked).
+
+    ids/init_cache/cse_cache default to the original WBM calibration split and its caches, so the
+    existing call sites behave exactly as before. A different id set MUST pass its own cache paths:
+    ood.load_structures returns the whole cache file and ignores `ids` whenever that file already
+    exists, so reusing a populated filename silently yields the wrong structures (see strict).
+
+    strict=True turns that failure mode into an error instead of a warning: every requested id must
+    have an initial structure, or nothing is queued."""
     from harness import splits
     from harness.suites import ood
 
     tag, settings = _settings(compute)
-    ids = splits.calibration_ids()
-    starts = ood.load_structures(ids, cache_file=ood.WBM_DIR / "calibration_init_structs.json")
-    cses = ood.load_entries(ids, ood.WBM_DIR / "calibration_cse.json")
+    ids = ids if ids is not None else splits.calibration_ids()
+    starts = ood.load_structures(ids, cache_file=init_cache or ood.WBM_DIR / "calibration_init_structs.json")
+    cses = ood.load_entries(ids, cse_cache or ood.WBM_DIR / "calibration_cse.json")
+    if strict:
+        missing = set(ids) - set(starts)
+        if missing:
+            raise RuntimeError(
+                f"{len(missing)} of {len(ids)} ids have no initial structure "
+                f"(e.g. {sorted(missing)[:3]}). ood.load_structures ignores `ids` when its cache file "
+                "already exists, so this usually means a cache filename was reused for a different "
+                "id set. Use a fresh filename rather than deleting the existing cache."
+            )
     summary = ood.load_summary().set_index("material_id")
     jobs = []
     for rank, wid in enumerate(ids):
@@ -258,7 +276,8 @@ def build_screening_jobs(compute: dict, pair_kinds=("sub", "sub_rescaled", "ctrl
 
 def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, do_ood: bool = True,
             force_pairs: bool = False, curated_kinds: list[str] | None = None, competitor_retries: bool = False,
-            retries: bool = False, wbm_calibration: bool = False, mode_b: bool = False, screening: bool = False) -> dict:
+            retries: bool = False, wbm_calibration: bool = False, mode_b: bool = False, screening: bool = False,
+            family_calibration: bool = False) -> dict:
     """Bulk-download and cache MP/WBM inputs, generate pairs, and enqueue every job (idempotent).
 
     curated_kinds queues curated-pair substitution kinds; competitor_retries queues the fallback ladder
@@ -295,7 +314,11 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
         else:
             info["pairs"] = pairgen.generate(cfg["max_pairs"], cfg["max_atoms"], force=force_pairs)
         sub_jobs = build_auto_substitution_jobs(pairgen.load_pairs(), cfg["auto_pair_kinds"], compute)
-    if wbm_calibration:
+    if family_calibration:
+        ood_jobs = build_family_calibration_jobs(compute)
+        info["family_calibration"] = {"ids": len({j["inputs"]["wbm_id"] for j in ood_jobs}),
+                                      "jobs": len(ood_jobs)}
+    elif wbm_calibration:
         ood_jobs = build_wbm_calibration_jobs(compute)
     elif do_ood:
         ood_jobs = build_ood_jobs(cfg["ood_sample"], compute)
@@ -314,6 +337,52 @@ def prepare(cfg: dict | None = None, queue_db=QUEUE_DB, do_pairs: bool = True, d
     info["jobs"] = {AUTO_SUITE: len(sub_jobs), "ood": len(ood_jobs), "first": len(first)}
     info["n_atoms"] = _size_summary(first + sub_jobs + ood_jobs)
     return info
+
+
+FAMILY_INIT_CACHE = "oxide_halide_calibration_init_structs.json"
+FAMILY_CSE_CACHE = "oxide_halide_calibration_cse.json"
+
+
+def build_family_calibration_jobs(compute: dict, families=("oxide", "halide")) -> list[dict]:
+    """Relaxation + single point for every id of the per-family (oxide/halide) CALIBRATION split.
+
+    This is the new calibration task for the chemistries the original split could not certify. It
+    queues ONLY calibration ids. The four locked halves — the original WBM test set and each
+    family's own test set — are asserted disjoint from the queue before anything is enqueued, using
+    the id-only exclusion accessors; nothing here passes unlock=True, so no locked outcome is
+    readable from this path.
+
+    Its caches are deliberately NOT the original calibration_*.json: those files already hold the
+    original 4,000 calibration entries, and ood.load_structures returns a cache file wholesale and
+    ignores `ids` when the file exists. Reusing those names would hand back the original structures,
+    log every requested id as 'missing' at WARNING level only, and enqueue nothing — a silent no-op
+    that looks like success. strict=True below makes that an error instead."""
+    from harness import splits
+    from harness.suites import ood
+
+    ids: list[str] = []
+    for fam in families:
+        ids += splits.family_calibration_ids(fam)
+
+    if len(ids) != len(set(ids)):
+        raise RuntimeError("family calibration ids contain duplicates")
+
+    # Every locked id, from both the original split and the per-family split. Ids only, no outcomes.
+    locked = splits.excluded_ids() | splits.family_excluded_ids(families)
+    leaked = set(ids) & locked
+    if leaked:
+        raise RuntimeError(
+            f"{len(leaked)} calibration ids are also locked test or prior-split ids "
+            f"(e.g. {sorted(leaked)[:3]}). Relaxing or scoring a locked id before the final "
+            "evaluation is a bug, not a shortcut — refusing to enqueue."
+        )
+
+    return build_wbm_calibration_jobs(
+        compute, ids=ids,
+        init_cache=ood.WBM_DIR / FAMILY_INIT_CACHE,
+        cse_cache=ood.WBM_DIR / FAMILY_CSE_CACHE,
+        strict=True,
+    )
 
 
 def _size_summary(jobs: list[dict]) -> dict:
