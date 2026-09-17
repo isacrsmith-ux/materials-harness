@@ -137,20 +137,21 @@ else
 fi
 
 echo "== 5. directories that must never be published =="
-# results/ is a deliberate exception: exactly two files there are published (the exported table and
-# its data dictionary). Anything else appearing under results/ is a mistake -- most of the directory
-# is ~1 GB of SQLite job stores.
-RESULTS_ALLOWED="results/README.md results/results.parquet"
+# results/ is a deliberate exception: exactly four files there are published (the exported table, its
+# data dictionary, and the database schema/summary that `python -m harness checkpoint` writes). Anything
+# else appearing under results/ is a mistake -- most of the directory is ~1 GB of SQLite job stores.
+RESULTS_ALLOWED="results/README.md results/results.parquet results/schema.sql results/summary.json"
 for d in models cache logs config/launchd .envs .venv; do
   n=$(git ls-files "$d" | wc -l | tr -d ' ')
   if [ "$n" != 0 ]; then bad "$d has $n tracked file(s)"; else note "$d: not tracked"; fi
 done
-unexpected=$(git ls-files results | grep -vxF -e "results/README.md" -e "results/results.parquet")
+# $RESULTS_ALLOWED is the single source of truth: unquoted on purpose, so each path becomes its own -F pattern.
+unexpected=$(git ls-files results | grep -vxF "$(printf '%s\n' $RESULTS_ALLOWED)")
 if [ -n "$unexpected" ]; then
-  bad "results/ has tracked file(s) beyond the two published ones:"
+  bad "results/ has tracked file(s) beyond the published ones ($RESULTS_ALLOWED):"
   echo "$unexpected" | sed 's/^/        /'
 else
-  note "results/: only the two published files are tracked ($RESULTS_ALLOWED)"
+  note "results/: only the published files are tracked ($RESULTS_ALLOWED)"
 fi
 
 echo "== 6. gitleaks (full history) =="

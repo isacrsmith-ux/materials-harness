@@ -185,7 +185,9 @@ UNATTENDED_DEFAULTS = {
     "polite_nice": 10,               # scheduling niceness of polite-mode workers
     "failure_alert_fraction": 0.10,  # notify when more than this fraction of jobs fail
     "failure_alert_min_jobs": 20,    # ...once at least this many finished (always checked at the end)
-    "schedule": {"start": "23:00", "stop": "07:00", "mode": "full"},
+    "schedule": {"start": "23:00", "stop": "07:00", "mode": "full", "backup": "07:30"},
+    "on_phase_end": ["checkpoint", "backup"],  # when a run drains its queue: git checkpoint, then a backup
+    "standup_metric_threshold": 0.05,  # standup lists scorecard metrics whose relative change exceeds this
 }
 
 

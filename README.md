@@ -140,6 +140,29 @@ relaxation settings, so changing any of them re-runs rather than silently reusin
 Longer-running work goes through a queue (`python -m harness prepare`, then `unattended`) — see
 `harness/orchestrator.py`.
 
+## Daily routine
+
+```bash
+./uvw run python -m harness standup            # one screen: progress + ETA, what finished since last time,
+                                               # failures by type, mode/paused, disk, metrics that moved
+./uvw run python -m harness standup --verify   # ...plus: both databases open cleanly, queue reconciles with results
+```
+
+* **Every morning: `standup`.** Read a new error type under *Failures*, or any metric that moved more
+  than 5 % (`standup_metric_threshold` in `config/unattended.json`), before starting more work. Add
+  `--verify` weekly, and always after a crash, a power cut or a restore.
+* **At the end of a phase** the runner does this itself when a queue drains: `checkpoint` (a local
+  git commit of code, reports, `results/schema.sql` and `results/summary.json`, with run ID, model,
+  settings tag, job counts and headline metrics in the message; files over 5 MB stay out; nothing is
+  pushed), then a backup. By hand: `python -m harness checkpoint "what changed"` (`--dry-run` first).
+* **Backups:** `./scripts/backup.sh` writes to `HARNESS_BACKUP_DIR` from `.env`, or `backups/`
+  (gitignored). It warns if that is the same physical disk as the project, which the default is:
+  point it at an external drive. Every archive is re-read after writing; the newest of each of the
+  last 7 days and 4 weeks are kept. Nightly timer (07:30, `schedule.backup`):
+  `./scripts/install_schedule.sh backup`, removed with `./scripts/uninstall_schedule.sh backup`.
+* **Restore:** `./scripts/restore.sh backups/harness-<stamp>.tar.gz <empty dir>` checks the archive
+  checksum, every file against the manifest and every database's integrity, with macOS built-ins only.
+
 ## Layout
 
 ```

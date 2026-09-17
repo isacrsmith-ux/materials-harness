@@ -92,6 +92,9 @@ def connect(path: Path | None = None):
     con = sqlite3.connect(path, timeout=60)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA journal_mode=WAL")  # the unattended runner writes while reports read
+    # Pinned rather than left to the build default: the queue marks a job done only after its results commit,
+    # so a results commit lost to a power cut would leave a 'done' job with no result.
+    con.execute("PRAGMA synchronous=FULL")
     con.executescript(SCHEMA)
     try:
         yield con

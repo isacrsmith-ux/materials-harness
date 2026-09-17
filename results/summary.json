@@ -1,0 +1,86 @@
+{
+ "queue": {
+  "file": "queue.sqlite",
+  "jobs": {
+   "ood": {
+    "done": 8009
+   },
+   "stability": {
+    "done": 4737,
+    "timeout": 3
+   },
+   "substitution": {
+    "done": 150
+   },
+   "substitution_auto": {
+    "done": 15807,
+    "failed": 2,
+    "timeout": 1
+   }
+  },
+  "last_run": {
+   "mode": "full",
+   "n_done": 0,
+   "n_failed": 0,
+   "run_id": "20260916-230005",
+   "status": "finished"
+  }
+ },
+ "results_store": {
+  "jobs": {
+   "bulk": {
+    "ok": 166,
+    "skipped": 26
+   },
+   "experimental": {
+    "ok": 126,
+    "skipped": 2
+   },
+   "mode_b": {
+    "failed": 6,
+    "ok": 594
+   },
+   "ood": {
+    "ok": 25011
+   },
+   "polymorph": {
+    "ok": 1144
+   },
+   "smoke": {
+    "ok": 2
+   },
+   "stability": {
+    "ok": 11535,
+    "timeout": 3
+   },
+   "substitution": {
+    "ok": 450
+   },
+   "substitution_auto": {
+    "failed": 1,
+    "ok": 25779,
+    "timeout": 32
+   }
+  },
+  "result_rows": {
+   "bulk": 332,
+   "experimental": 264,
+   "ood": 58004,
+   "polymorph": 1144,
+   "smoke": 6,
+   "stability": 200,
+   "substitution": 2711,
+   "substitution_auto": 135122
+  }
+ },
+ "scorecard": {
+  "file": "reports/scorecard.json",
+  "model": "MACE-MPA-0 medium",
+  "routing_share sent to DFT": 0.43346673336668334,
+  "settings_tag": "c2480e74",
+  "wbm_daf_0": 5.410572313885432,
+  "wbm_f1_opt": 0.8315703824247355,
+  "wbm_npv_opt": 0.9707013909440663,
+  "wbm_precision_opt": 0.8255250403877221
+ }
+}

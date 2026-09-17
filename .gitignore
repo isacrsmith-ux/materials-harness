@@ -5,6 +5,7 @@
 
 # Environments and tool caches (all kept project-local)
 .venv/
+.envs/
 .tools/
 .uv-cache/
 .uv-python/
@@ -63,6 +64,19 @@ kubeconfig
 results/*
 !results/README.md
 !results/results.parquet
+# written by `python -m harness checkpoint`: the databases' schema and counts, small and diffable
+!results/schema.sql
+!results/summary.json
+
+# Model checkpoints, wherever they land (models/ above covers the usual place)
+*.model
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Local backups (scripts/backup.sh default destination)
+backups/
 
 # Scratch
 scratch/

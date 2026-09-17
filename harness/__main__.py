@@ -8,7 +8,10 @@
        python -m harness unattended   drain the queue (use ./run_unattended.sh to run it in the background)
        python -m harness status       progress, ETA, mode, failures
        python -m harness stop         graceful stop (finish running jobs, then exit)
-       python -m harness schedule     nightly launchd agent: generate the plist, print install commands
+       python -m harness schedule     nightly launchd agents (run + backup): generate the plists, print install commands
+       python -m harness standup [--verify]    the morning screen (and a database integrity check)
+       python -m harness checkpoint "<message>" [--dry-run]   git commit with run metadata (never pushes)
+       python -m harness backup [--dest DIR]  verified, pruned backup (use scripts/backup.sh; restore: scripts/restore.sh)
 """
 
 from __future__ import annotations
@@ -134,6 +137,16 @@ def main(argv: list[str] | None = None) -> int:
     p0.add_argument("--queue-db", default=str(QUEUE_DB))
     sch = sub.add_parser("schedule", help="generate the nightly launchd plist and print install commands")
     sch.add_argument("--write", action="store_true", help="(re)write config/launchd/<label>.plist")
+    su = sub.add_parser("standup", help="the morning screen: progress, what finished, failures, mode, disk, metric moves")
+    su.add_argument("--verify", action="store_true",
+                    help="also check both databases open cleanly and the queue reconciles with the results table")
+    su.add_argument("--queue-db", default=str(QUEUE_DB))
+    ck = sub.add_parser("checkpoint", help="git commit code, reports and database schema/summaries with run metadata")
+    ck.add_argument("message")
+    ck.add_argument("--dry-run", action="store_true", help="show the files and message without committing")
+    ck.add_argument("--queue-db", default=str(QUEUE_DB))
+    bk = sub.add_parser("backup", help="verified, pruned snapshot of results/, reports/, config/ (use scripts/backup.sh)")
+    bk.add_argument("--dest", help="destination directory (default: HARNESS_BACKUP_DIR from .env, else backups/)")
 
     args = parser.parse_args(argv)
     _setup_logging(args.verbose)
@@ -142,6 +155,28 @@ def main(argv: list[str] | None = None) -> int:
     except PlatformError as exc:
         print(f"STOP: {exc}", file=sys.stderr)
         return 2
+
+    if args.cmd == "standup":
+        from harness import ops
+
+        text, ok = ops.standup(args.queue_db, verify=args.verify)
+        print(text)
+        return 0 if ok else 1
+    if args.cmd == "checkpoint":
+        from harness import ops
+
+        print(ops.checkpoint(args.message, queue_db=args.queue_db, dry_run=args.dry_run))
+        return 0
+    if args.cmd == "backup":
+        from harness import ops
+
+        try:
+            info = ops.backup(dest=args.dest)
+        except RuntimeError as exc:
+            print(f"STOP: {exc}", file=sys.stderr)
+            return 3
+        print(ops.backup_summary(info))
+        return 1 if info["problems"] else 0
 
     if args.cmd == "info":
         print(json.dumps({"machine": machine_info(), "compute": {k: v for k, v in load_compute_config().items()
@@ -310,7 +345,7 @@ def main(argv: list[str] | None = None) -> int:
         from harness.schedule import instructions, write_plist
 
         if args.write:
-            print(f"Wrote {write_plist()}")
+            print("Wrote " + ", ".join(str(p) for p in write_plist()))
         print(instructions())
         return 0
 

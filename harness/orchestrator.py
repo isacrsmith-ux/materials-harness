@@ -669,6 +669,20 @@ class Runner:
         tmp.write_text(json.dumps(state, indent=1))
         tmp.replace(self.paths["state"])
 
+    def _after_phase(self) -> None:
+        """The queue drained: the steps in cfg['on_phase_end'] (git checkpoint, backup). Neither may turn a
+        finished run into a failed one, so each failure is logged and notified, never raised."""
+        from harness import ops
+
+        steps = {"checkpoint": lambda: ops.checkpoint(f"Checkpoint: unattended run {self.run_id} finished", queue_db=self.qdb),
+                 "backup": lambda: ops.backup_summary(ops.backup())}
+        for name in self.cfg["on_phase_end"]:
+            try:
+                log.info("after phase, %s:\n%s", name, steps[name]())
+            except Exception as exc:  # noqa: BLE001
+                log.exception("after phase, %s failed", name)
+                notify.notify(f"Materials harness: {name} FAILED", f"{type(exc).__name__}: {exc}")
+
     def _shutdown(self, status: str) -> None:
         if self.pool is not None:
             if status in ("finished", "stopped"):
@@ -691,6 +705,8 @@ class Runner:
             except Exception:  # noqa: BLE001
                 log.exception("final report failed")
         jobqueue.end_run(self.run_id, status, self.n_done, self.n_failed, str(report_dir) if report_dir else None, self.qdb)
+        if status == "finished":
+            self._after_phase()
         self._check_failure_rate(final=True)
         c = jobqueue.counts(self.qdb)
         pending = sum(s.get("pending", 0) for s in c.values())
