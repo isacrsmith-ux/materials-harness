@@ -90,8 +90,21 @@ def operating_point(df: pd.DataFrame, cost_fp: float, cost_fn: float, n_boot: in
 DEFAULT_RATIOS = (0.1, 0.25, 0.5, 1, 2, 4, 10, 25, 100)
 
 
+def provenance() -> dict:
+    """`_provenance` from config/costs.json: what kind of number each coefficient is. Rendered into the
+    report so no reader can take a policy-derived or estimated cost for a measured one."""
+    import json
+
+    from harness.report import COSTS_FILE  # the one definition of the path
+
+    try:
+        return json.loads(COSTS_FILE.read_text()).get("_provenance", {})
+    except (OSError, ValueError):
+        return {}
+
+
 def report(cost_fp: float, cost_fn: float, model: str = PRIMARY[0], device: str = PRIMARY[1],
-           dtype: str = PRIMARY[2], ratios=DEFAULT_RATIOS, out=None) -> str:
+           dtype: str = PRIMARY[2], ratios=DEFAULT_RATIOS, out=None, cost_dft: float | None = None) -> str:
     """Markdown answering 'given these costs, where do we set the threshold?'."""
     from harness.confidence import TARGET_PRECISION
 
@@ -101,6 +114,7 @@ def report(cost_fp: float, cost_fn: float, model: str = PRIMARY[0], device: str 
     name = MODELS[model]["name"]
     ratio = cost_fn / cost_fp if cost_fp else float("inf")
     placeholder = (cost_fp == 1.0 and cost_fn == 1.0)
+    prov = provenance()
     L = [f"# Cost-based operating point — {name}", "",
          f"Costs supplied: a wasted lab test = **{cost_fp:g}**, a missed stable material = **{cost_fn:g}** "
          f"(ratio {ratio:g}:1). Computed on the {len(df):,} usable WBM **calibration** structures; the locked "
@@ -110,6 +124,20 @@ def report(cost_fp: float, cost_fn: float, model: str = PRIMARY[0], device: str 
               "every expected-cost figure on this page is conditional on them. The plateau below says how much "
               "that matters: inside it, the exact costs do not change the answer. Supply your real numbers and "
               "re-run `python -m harness costs` before quoting anything here.", ""]
+    if prov:
+        L += ["## Where these coefficients come from", "",
+              "**These three numbers are not the same kind of number.** One is a definition, one is derived from "
+              "a policy choice, and one is an order-of-magnitude estimate. Read this before quoting any figure "
+              "on this page.", ""]
+        labels = {"cost_false_positive": f"`cost_false_positive` = {cost_fp:g}",
+                  "cost_missed_stable": f"`cost_missed_stable` = {cost_fn:g}",
+                  "cost_dft": f"`cost_dft` = {cost_dft:g}" if cost_dft is not None else "`cost_dft`"}
+        L += [f"* **{labels.get(k, f'`{k}`')}** — {prov[k]}" for k in
+              ("cost_false_positive", "cost_missed_stable", "cost_dft") if k in prov]
+        L += [f"* {prov[k]}" for k in ("cost_dft_usage", "sensitivity_ratios") if k in prov]
+        L += ["", f"Because `cost_missed_stable` is policy-derived rather than measured, the sensitivity table "
+              f"below is the part of this page to trust: it shows what changes, and what does not, across "
+              f"ratios from {min(ratios):g} to {max(ratios):g}.", ""]
     L += [
          "## Answer", "",
          f"* **Threshold: {opt['threshold'] * 1000:+.0f} meV/atom.**",

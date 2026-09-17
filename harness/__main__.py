@@ -333,7 +333,8 @@ def main(argv: list[str] | None = None) -> int:
         fn = args.fn if args.fn is not None else cfg["cost_missed_stable"]
         setting = {k: (k, d, t) for k, d, t in screening.benchmarked_models()}
         key, device, dtype = setting[args.model or costs.PRIMARY[0]]
-        print(f"Wrote {costs.report(fp, fn, key, device, dtype, out=Path(args.out) if args.out else None)}")
+        print(f"Wrote {costs.report(fp, fn, key, device, dtype, ratios=cfg['sensitivity_ratios'],
+                                    out=Path(args.out) if args.out else None, cost_dft=cfg.get('cost_dft'))}")
         return 0
     if args.cmd == "phase0":
         from harness import phase0

@@ -1,6 +1,14 @@
 {
-  "_comment": "Costs for the cost-based operating point (report section 'Stability decisions'). Units are arbitrary but shared: cost_false_positive = one lab test spent on a candidate the engine called stable that is not; cost_missed_stable = value lost when a truly stable material is screened out. PLACEHOLDERS — set them to your real numbers; the report also shows how the optimal threshold moves with the ratio.",
+  "_comment": "Costs for the cost-based operating point (report section 'Stability decisions'). Units are arbitrary but SHARED and relative: only ratios matter. cost_false_positive = one lab test spent on a candidate the engine called stable that is not; cost_missed_stable = value lost when a truly stable material is screened out; cost_dft = one DFT relaxation + hull check for one candidate. Read _provenance before quoting any of these: they are not all the same kind of number.",
   "cost_false_positive": 1.0,
-  "cost_missed_stable": 1.0,
-  "sensitivity_ratios": [0.25, 0.5, 1, 2, 4, 10]
+  "cost_missed_stable": 0.11,
+  "cost_dft": 0.02,
+  "sensitivity_ratios": [0.05, 0.11, 0.25, 0.5, 1, 2],
+  "_provenance": {
+    "cost_false_positive": "NORMALIZATION BASELINE. Fixed at 1.0 by definition, not measured: it is the unit the other two are expressed in. Changing it alone means nothing; only the ratios carry information.",
+    "cost_missed_stable": "POLICY-DERIVED, NOT EMPIRICAL. 0.11 is the ratio implied by the routing layer's frozen 90% precision target (confidence.TARGET_PRECISION): a cost-optimal rule calls a candidate stable when P(stable) > cost_fp/(cost_fp+cost_fn), so a 0.90 floor implies cost_missed_stable/cost_fp = (1-0.90)/0.90 = 1/9. It is chosen for consistency with a target that was already certified and published, NOT because the value of a missed stable material has been measured. No empirical study backs this number.",
+    "cost_dft": "ESTIMATED COMPUTE-TO-EXPERIMENT RATIO. NOT EMPIRICALLY ESTABLISHED. The numerator is measured: one engine screen is 1.67 s/candidate mean over 25,011 ood jobs, and a DFT relaxation of a comparable cell at MP-standard GGA/GGA+U settings is ~10^2-10^3 core-hours. The DENOMINATOR -- what one synthesis + characterization attempt actually costs -- has no defensible source in this project, so the ratio is an order-of-magnitude estimate only. Do not present 0.02 as established until that denominator is sourced. Conclusions that depend on it should be reported across 0.005-0.1.",
+    "cost_dft_usage": "cost_dft does NOT enter the expected-cost minimisation (metrics.expected_cost uses cost_false_positive and cost_missed_stable only). It exists to price routing-to-DFT decisions such as the >0.3 eV/atom refusal, which the threshold sweep does not model.",
+    "sensitivity_ratios": "Sweep for the report's sensitivity table, centred on the proposed 0.11 so no conclusion rests on that single assumption. 0.11 is the policy-consistent point; 1.0 is the old placeholder, kept for comparison."
+  }
 }

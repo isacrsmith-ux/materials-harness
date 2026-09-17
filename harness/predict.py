@@ -18,7 +18,9 @@ the calibration set; nothing is fitted here, per call or otherwise.
 
 WHAT THE PRODUCT REFUSES TO LABEL (label "needs DFT", with the reason):
   * a predicted hull distance above MAX_TRUSTWORTHY_HULL_EV (0.3 eV/atom) — the report's verdict up
-    there is 'not trustworthy' for every engine, so a number with a wide bar is worse than a refusal;
+    there is 'not trustworthy' for every engine, and the pipeline returns the material actually asked
+    for only 38 % of the time in that range, so a number with a wide bar is worse than a refusal
+    (see MAX_TRUSTWORTHY_HULL_EV: the supporting sample is n = 16 and expanding it is open work);
   * a relaxation that left the starting structure — those results carry 4.6x the energy error;
   * a chemistry on the known-weak element list (Be, Pm, Pu, Tc);
   * a prediction between the certified per-family thresholds, or in a family with no certified rule;
@@ -47,8 +49,22 @@ from harness.config import DEFAULT_RELAX, settings_tag
 log = logging.getLogger(__name__)
 
 LIKELY_STABLE, LIKELY_UNSTABLE, NEEDS_DFT = R.LIKELY_STABLE, R.LIKELY_UNSTABLE, "needs DFT"
-# eV/atom. reports/validation_report.md: energy error upper bound 97 meV/atom above 0.3 eV/atom —
-# 'not trustworthy' — and 15 % of those relaxations leave their starting structure.
+# eV/atom. Two separate grounds, and the second is the load-bearing one:
+#   energy    reports/validation_report.md: error upper bound 97 meV/atom above 0.3 eV/atom —
+#             'not trustworthy' — and 15 % of those relaxations leave their starting structure.
+#   structure reports/unseen_test.md §5: in the > 0.3 bin the pipeline returns the material that was
+#             actually asked for only 0.38 [0.12, 0.62] of the time, against 0.81 overall, and 50 % of
+#             relaxations leave their start. Up there the number usually describes a DIFFERENT material,
+#             which no energy-error argument covers.
+# Kept deliberately, and NOT on the strength of the locked WBM test set: there the rule removes 272
+# 'likely unstable' calls, every one of them correct, and prevents no error at all (reports/unseen_test.md
+# side-by-side). That set cannot judge this rule — a WBM candidate starts from WBM's own DFT structure, so
+# structure-finding is never stressed, which is the hazard the rule guards. On the MP-derived set, where it
+# is stressed, the rule refused only 8 of 325 candidates (2.5 %), so its real cost is ~5x smaller than the
+# WBM figure suggests.
+# PRELIMINARY: the structure-finding evidence rests on n = 16 candidates in the > 0.3 bin. Intervals that
+# wide are not a verdict. FUTURE VALIDATION WORK: expand that bin on an MP-derived set before this
+# threshold is moved, loosened or removed in either direction.
 MAX_TRUSTWORTHY_HULL_EV = 0.3
 STARTS = ("sub", "sub_rescaled")
 
