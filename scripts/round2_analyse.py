@@ -80,24 +80,41 @@ def _tm(d):
     return _els(d).map(lambda s: any(Element(x).is_transition_metal for x in s))
 
 
-def _mixed_valence(d):
-    """Two or more distinct transition metals, or one TM in a formula whose stoichiometry admits
-    more than one integer oxidation state for it (pymatgen's own guess returning >1 distinct state)."""
+def _guesses(formula):
+    """Charge-balanced assignments of one integer oxidation state per element, or None when
+    pymatgen could not evaluate the composition at all (kept distinct from 'none balance')."""
     from pymatgen.core import Composition
+    try:
+        return Composition(formula).oxi_state_guesses(max_sites=-1)
+    except Exception:  # noqa: BLE001 — unevaluable, which is not the same as mixed valence
+        return None
 
-    def f(formula):
-        c = Composition(formula)
-        try:
-            guesses = c.oxi_state_guesses(max_sites=-10)
-        except Exception:  # noqa: BLE001 — an unguessable composition is simply not flagged
-            return False
-        if not guesses:
-            return False
-        from pymatgen.core import Element
-        tms = [e.symbol for e in c.elements if Element(e.symbol).is_transition_metal]
-        return any(len({round(g[t]) for t in tms if t in g}) > 1 for g in guesses) or len(tms) > 1
 
-    return d.formula.map(f)
+def _mixed_valence(d):
+    """No assignment of ONE integer oxidation state per element balances the charge — the standard
+    operational test for mixed valence (Fe3O4 fails it, FeO and Fe2O3 pass). Compositions pymatgen
+    could not evaluate are NOT counted as mixed valence; they fall in neither split, and the two
+    splits' n therefore need not sum to the parent's."""
+    # oxi_state_guesses returns a TUPLE; comparing it to [] silently matched nothing.
+    return d.formula.map(lambda f: (lambda g: g is not None and len(g) == 0)(_guesses(f)))
+
+
+def _multi_tm(d):
+    from pymatgen.core import Composition, Element
+    return d.formula.map(lambda f: sum(Element(e.symbol).is_transition_metal
+                                       for e in Composition(f).elements) > 1)
+
+
+def _max_cation_state(formula):
+    g = _guesses(formula)
+    if not g:  # None (unevaluable) or [] (nothing balances)
+        return None
+    pos = [v for v in g[0].values() if v > 0]
+    return max(pos) if pos else None
+
+
+def _ox(pred):
+    return lambda d: d.formula.map(lambda f: pred(_max_cation_state(f)))
 
 
 SUBFAMILIES = {
@@ -105,8 +122,15 @@ SUBFAMILIES = {
     "nonfluoride": lambda d: ~_has("F")(d),
     "tm": _tm,
     "maingroup": lambda d: ~_tm(d),
+    "multi_tm": _multi_tm,
+    "single_tm": lambda d: ~_multi_tm(d),
     "mixed_valence": _mixed_valence,
-    "single_valence": lambda d: ~_mixed_valence(d),
+    "single_valence": lambda d: d.formula.map(lambda f: bool(_guesses(f))),
+    # highest formal cation oxidation state in the first charge-balanced assignment
+    "ox_le2": _ox(lambda s: s is not None and s <= 2),
+    "ox_3": _ox(lambda s: s == 3),
+    "ox_4": _ox(lambda s: s == 4),
+    "ox_ge5": _ox(lambda s: s is not None and s >= 5),
 }
 
 
@@ -192,5 +216,10 @@ if __name__ == "__main__":
     out = REPORTS_DIR / sys.argv[2]
     res = [rows_for(g) for g in sys.argv[3:]]
     out.write_text(render(res))
+    # the same numbers as machine-readable JSON, so the PDF transcribes rather than re-derives
+    import json
+    js = out.with_suffix(".json")
+    js.write_text(json.dumps([{k: (v.to_dict("records") if isinstance(v, pd.DataFrame) else v)
+                               for k, v in r.items()} for r in res], indent=1, default=float) + "\n")
     print(render(res))
-    print(f"written: {out}")
+    print(f"written: {out} and {js}")
