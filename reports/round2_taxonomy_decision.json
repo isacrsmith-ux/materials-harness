@@ -1,0 +1,894 @@
+{
+ "created_at": "2026-09-18T17:17:41+00:00",
+ "regime_comparison": {
+  "A frozen bundle, current taxonomy": {
+   "n": 13204,
+   "dft_share": 0.7506058770069676,
+   "n_called_stable": 0,
+   "precision": NaN,
+   "precision_cp_lower": NaN,
+   "recall_stable": 0.0,
+   "stable_lost": 0.004553734061930784,
+   "thresholds": {
+    "chalcogenide": {
+     "stable": null,
+     "unstable": null,
+     "n": 224
+    },
+    "f-electron": {
+     "stable": -0.02,
+     "unstable": 0.01,
+     "n": 1801
+    },
+    "halide": {
+     "stable": null,
+     "unstable": null,
+     "n": 153
+    },
+    "intermetallic": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 665
+    },
+    "other": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 274
+    },
+    "oxide": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 189
+    },
+    "pnictide": {
+     "stable": null,
+     "unstable": 0.05,
+     "n": 210
+    }
+   },
+   "by_family": {
+    "chalcogenide": {
+     "n": 3698,
+     "dft_share": 1.0
+    },
+    "halide": {
+     "n": 5394,
+     "dft_share": 1.0
+    },
+    "other": {
+     "n": 1784,
+     "dft_share": 0.15022421524663676
+    },
+    "pnictide": {
+     "n": 2328,
+     "dft_share": 0.23668384879725085
+    }
+   }
+  },
+  "B re-certified, current taxonomy": {
+   "n": 13204,
+   "dft_share": 0.07944562253862465,
+   "n_called_stable": 1165,
+   "precision": 0.9467811158798283,
+   "precision_cp_lower": 0.9228732127074575,
+   "recall_stable": 0.5022768670309654,
+   "stable_lost": 0.145264116575592,
+   "thresholds": {
+    "chalcogenide": {
+     "stable": -0.03,
+     "unstable": 0.0,
+     "n": 3698
+    },
+    "halide": {
+     "stable": -0.02,
+     "unstable": 0.0,
+     "n": 5394
+    },
+    "other": {
+     "stable": null,
+     "unstable": -0.01,
+     "n": 1784
+    },
+    "pnictide": {
+     "stable": -0.04,
+     "unstable": 0.0,
+     "n": 2328
+    }
+   },
+   "by_family": {
+    "chalcogenide": {
+     "n": 3698,
+     "dft_share": 0.07030827474310439
+    },
+    "halide": {
+     "n": 5394,
+     "dft_share": 0.09788654060066741
+    },
+    "other": {
+     "n": 1784,
+     "dft_share": 0.07062780269058296
+    },
+    "pnictide": {
+     "n": 2328,
+     "dft_share": 0.05798969072164949
+    }
+   }
+  },
+  "C re-certified, proposed taxonomy": {
+   "n": 13204,
+   "dft_share": 0.14275976976673735,
+   "n_called_stable": 746,
+   "precision": 0.9584450402144772,
+   "precision_cp_lower": 0.930235529355507,
+   "recall_stable": 0.325591985428051,
+   "stable_lost": 0.11748633879781421,
+   "thresholds": {
+    "carbide": {
+     "stable": null,
+     "unstable": -0.01,
+     "n": 1787
+    },
+    "chalcogenide": {
+     "stable": null,
+     "unstable": null,
+     "n": 130
+    },
+    "fluoride": {
+     "stable": null,
+     "unstable": 0.01,
+     "n": 1935
+    },
+    "halide": {
+     "stable": -0.01,
+     "unstable": 0.0,
+     "n": 2910
+    },
+    "nitride": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 2344
+    },
+    "other": {
+     "stable": null,
+     "unstable": 0.03,
+     "n": 248
+    },
+    "pnictide": {
+     "stable": null,
+     "unstable": null,
+     "n": 166
+    },
+    "sulfide": {
+     "stable": -0.03,
+     "unstable": 0.0,
+     "n": 3684
+    }
+   },
+   "by_family": {
+    "carbide": {
+     "n": 1787,
+     "dft_share": 0.08785674314493565
+    },
+    "chalcogenide": {
+     "n": 130,
+     "dft_share": 1.0
+    },
+    "fluoride": {
+     "n": 1935,
+     "dft_share": 0.3705426356589147
+    },
+    "halide": {
+     "n": 2910,
+     "dft_share": 0.060824742268041236
+    },
+    "nitride": {
+     "n": 2344,
+     "dft_share": 0.09513651877133106
+    },
+    "other": {
+     "n": 248,
+     "dft_share": 0.2056451612903226
+    },
+    "pnictide": {
+     "n": 166,
+     "dft_share": 1.0
+    },
+    "sulfide": {
+     "n": 3684,
+     "dft_share": 0.07166123778501629
+    }
+   }
+  },
+  "_population": {
+   "n": 13204,
+   "by_fam1": {
+    "halide": 5394,
+    "chalcogenide": 3698,
+    "pnictide": 2328,
+    "other": 1784
+   },
+   "by_fam2": {
+    "sulfide": 3684,
+    "halide": 2910,
+    "nitride": 2344,
+    "fluoride": 1935,
+    "carbide": 1787,
+    "other": 248,
+    "pnictide": 166,
+    "chalcogenide": 130
+   },
+   "caveat": "the mix is an artifact of what round 2 drew, not a candidate distribution: halide, sulfide, nitride and carbide are over-represented relative to any real stream. Read the per-family rows, not the aggregate, for anything but a sanity check."
+  }
+ },
+ "engine": "MACE-MPA-0 medium cpu/float32, settings_tag c2480e74",
+ "bundle_created_at": "2026-09-12T20:21:45+00:00",
+ "certification": {
+  "target_precision": 0.9,
+  "target_npv": 0.95,
+  "confidence": 0.95,
+  "grid_points": 61,
+  "bound": "one-sided Clopper-Pearson, Bonferroni-corrected over the grid"
+ },
+ "labelable_filter": "bundle weak-element list + structure-change exclusion; no second-engine disagreement term (round 2 ran one engine)",
+ "parents": {
+  "halide": {
+   "evidence": "round-2 halide draw (3,500 round-1 + 2,800 top-up = 6,300)",
+   "children_carved_out": {
+    "fluoride": 2241,
+    "sulfide": 297,
+    "nitride": 165,
+    "carbide": 141
+   },
+   "before": {
+    "n_usable": 6300,
+    "n_labelable": 5135,
+    "usable": {
+     "n": 6300,
+     "base_rate": 0.23476190476190475,
+     "stable_threshold": -0.07,
+     "unstable_threshold": 0.0,
+     "stable_ceiling_point": 0.94375,
+     "stable_ceiling_cp_lower": 0.9028284974267956,
+     "stable_verdict": "certified",
+     "stable_structures_needed": null,
+     "unstable_point": 0.9983722192078134,
+     "unstable_cp_lower": 0.9927962504052346,
+     "n_called_stable": 480,
+     "n_called_unstable": 4687,
+     "precision": 0.94375,
+     "precision_cp_lower": 0.9028284974267956,
+     "npv": 0.9647962449327928,
+     "npv_cp_lower": 0.9555031129734973,
+     "dft_share": 0.17984126984126983,
+     "recall_stable": 0.30628803245436104,
+     "stable_lost": 0.11156186612576065,
+     "n_truly_stable": 1479
+    },
+    "labelable": {
+     "n": 5135,
+     "base_rate": 0.23427458617332034,
+     "stable_threshold": -0.02,
+     "unstable_threshold": 0.0,
+     "stable_ceiling_point": 0.9756838905775076,
+     "stable_ceiling_cp_lower": 0.9360869884354802,
+     "stable_verdict": "certified",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.995592955224042,
+     "n_called_stable": 771,
+     "n_called_unstable": 3870,
+     "precision": 0.9351491569390402,
+     "precision_cp_lower": 0.9025074648445959,
+     "npv": 0.9638242894056848,
+     "npv_cp_lower": 0.9533836323594134,
+     "dft_share": 0.09620253164556962,
+     "recall_stable": 0.5993349958437241,
+     "stable_lost": 0.11637572734829593,
+     "n_truly_stable": 1203
+    }
+   },
+   "after": {
+    "n_usable": 3456,
+    "n_labelable": 2819,
+    "usable": {
+     "n": 3456,
+     "base_rate": 0.2204861111111111,
+     "stable_threshold": -0.02,
+     "unstable_threshold": 0.0,
+     "stable_ceiling_point": 0.9706744868035191,
+     "stable_ceiling_cp_lower": 0.9297833941556333,
+     "stable_verdict": "certified",
+     "stable_structures_needed": null,
+     "unstable_point": 0.9980353634577603,
+     "unstable_cp_lower": 0.9887891021015279,
+     "n_called_stable": 483,
+     "n_called_unstable": 2664,
+     "precision": 0.9544513457556936,
+     "precision_cp_lower": 0.9165676564140633,
+     "npv": 0.9680930930930931,
+     "npv_cp_lower": 0.9559098312922611,
+     "dft_share": 0.08940972222222222,
+     "recall_stable": 0.60498687664042,
+     "stable_lost": 0.1115485564304462,
+     "n_truly_stable": 762
+    },
+    "labelable": {
+     "n": 2819,
+     "base_rate": 0.2149698474636396,
+     "stable_threshold": -0.01,
+     "unstable_threshold": 0.0,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.9515181222781651,
+     "stable_verdict": "certified",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9921522349963425,
+     "n_called_stable": 440,
+     "n_called_unstable": 2208,
+     "precision": 0.9545454545454546,
+     "precision_cp_lower": 0.9144642142531956,
+     "npv": 0.9682971014492754,
+     "npv_cp_lower": 0.9547864867873792,
+     "dft_share": 0.060659808442710184,
+     "recall_stable": 0.693069306930693,
+     "stable_lost": 0.11551155115511551,
+     "n_truly_stable": 606
+    }
+   },
+   "frozen_rule_on_this_population": {
+    "n": 5135,
+    "dft_share": 1.0,
+    "n_called_stable": 0,
+    "recall_stable": 0.0,
+    "stable_lost": 0.0
+   },
+   "bundle_thresholds": {
+    "stable": null,
+    "unstable": null,
+    "n": 153
+   }
+  },
+  "chalcogenide": {
+   "evidence": "original WBM calibration set only",
+   "children_carved_out": {
+    "sulfide": 110,
+    "nitride": 1,
+    "carbide": 2
+   },
+   "before": {
+    "n_usable": 260,
+    "n_labelable": 224,
+    "usable": {
+     "n": 260,
+     "base_rate": 0.1576923076923077,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 0.9642857142857143,
+     "stable_ceiling_cp_lower": 0.7089280467346749,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 1793,
+     "unstable_point": 0.9897435897435898,
+     "unstable_cp_lower": 0.9426083553450415,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 41
+    },
+    "labelable": {
+     "n": 224,
+     "base_rate": 0.17410714285714285,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 0.9629629629629629,
+     "stable_ceiling_cp_lower": 0.6997716264742764,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 1602,
+     "unstable_point": 0.9875776397515528,
+     "unstable_cp_lower": 0.9308424531153282,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 39
+    }
+   },
+   "after": {
+    "n_usable": 147,
+    "n_labelable": 130,
+    "usable": {
+     "n": 147,
+     "base_rate": 0.19727891156462585,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7129030688816306,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 476,
+     "unstable_point": 0.9907407407407407,
+     "unstable_cp_lower": 0.9158122287629628,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 29
+    },
+    "labelable": {
+     "n": 130,
+     "base_rate": 0.2153846153846154,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7129030688816306,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 421,
+     "unstable_point": 0.9891304347826086,
+     "unstable_cp_lower": 0.9018348553669145,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 28
+    }
+   },
+   "frozen_rule_on_this_population": {
+    "n": 224,
+    "dft_share": 1.0,
+    "n_called_stable": 0,
+    "recall_stable": 0.0,
+    "stable_lost": 0.0
+   },
+   "bundle_thresholds": {
+    "stable": null,
+    "unstable": null,
+    "n": 224
+   }
+  },
+  "pnictide": {
+   "evidence": "original WBM calibration set only",
+   "children_carved_out": {
+    "nitride": 51
+   },
+   "before": {
+    "n_usable": 239,
+    "n_labelable": 210,
+    "usable": {
+     "n": 239,
+     "base_rate": 0.11297071129707113,
+     "stable_threshold": null,
+     "unstable_threshold": 0.05,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7437066652186851,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 678,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9592926392594867,
+     "n_called_stable": 0,
+     "n_called_unstable": 171,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 1.0,
+     "npv_cp_lower": 0.9592926392594867,
+     "dft_share": 0.28451882845188287,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 27
+    },
+    "labelable": {
+     "n": 210,
+     "base_rate": 0.12857142857142856,
+     "stable_threshold": null,
+     "unstable_threshold": 0.05,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7437066652186851,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 595,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9515181222781651,
+     "n_called_stable": 0,
+     "n_called_unstable": 143,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 1.0,
+     "npv_cp_lower": 0.9515181222781651,
+     "dft_share": 0.319047619047619,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 27
+    }
+   },
+   "after": {
+    "n_usable": 188,
+    "n_labelable": 166,
+    "usable": {
+     "n": 188,
+     "base_rate": 0.12234042553191489,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7009418790374694,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 640,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9475856737340177,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 23
+    },
+    "labelable": {
+     "n": 166,
+     "base_rate": 0.13855421686746988,
+     "stable_threshold": null,
+     "unstable_threshold": null,
+     "stable_ceiling_point": 1.0,
+     "stable_ceiling_cp_lower": 0.7009418790374694,
+     "stable_verdict": "sample-size limited",
+     "stable_structures_needed": 565,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9379829766341509,
+     "n_called_stable": 0,
+     "n_called_unstable": 0,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": NaN,
+     "npv_cp_lower": NaN,
+     "dft_share": 1.0,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 23
+    }
+   },
+   "frozen_rule_on_this_population": {
+    "n": 210,
+    "dft_share": 0.319047619047619,
+    "n_called_stable": 0,
+    "recall_stable": 0.0,
+    "stable_lost": 0.0
+   },
+   "bundle_thresholds": {
+    "stable": null,
+    "unstable": 0.05,
+    "n": 210
+   }
+  },
+  "other": {
+   "evidence": "original WBM calibration set only",
+   "children_carved_out": {
+    "carbide": 28
+   },
+   "before": {
+    "n_usable": 301,
+    "n_labelable": 274,
+    "usable": {
+     "n": 301,
+     "base_rate": 0.11295681063122924,
+     "stable_threshold": null,
+     "unstable_threshold": 0.03,
+     "stable_ceiling_point": 0.8260869565217391,
+     "stable_ceiling_cp_lower": 0.48537290084580764,
+     "stable_verdict": "precision limited",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9699599902244106,
+     "n_called_stable": 0,
+     "n_called_unstable": 245,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 0.9959183673469387,
+     "npv_cp_lower": 0.9620728036494461,
+     "dft_share": 0.18604651162790697,
+     "recall_stable": 0.0,
+     "stable_lost": 0.029411764705882353,
+     "n_truly_stable": 34
+    },
+    "labelable": {
+     "n": 274,
+     "base_rate": 0.12043795620437957,
+     "stable_threshold": null,
+     "unstable_threshold": 0.03,
+     "stable_ceiling_point": 0.8260869565217391,
+     "stable_ceiling_cp_lower": 0.48537290084580764,
+     "stable_verdict": "precision limited",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9662512063285762,
+     "n_called_stable": 0,
+     "n_called_unstable": 219,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 0.9954337899543378,
+     "npv_cp_lower": 0.9576564911764623,
+     "dft_share": 0.20072992700729927,
+     "recall_stable": 0.0,
+     "stable_lost": 0.030303030303030304,
+     "n_truly_stable": 33
+    }
+   },
+   "after": {
+    "n_usable": 273,
+    "n_labelable": 248,
+    "usable": {
+     "n": 273,
+     "base_rate": 0.10989010989010989,
+     "stable_threshold": null,
+     "unstable_threshold": 0.02,
+     "stable_ceiling_point": 0.7931034482758621,
+     "stable_ceiling_cp_lower": 0.4903225298239446,
+     "stable_verdict": "precision limited",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9684952124993447,
+     "n_called_stable": 0,
+     "n_called_unstable": 232,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 0.9913793103448276,
+     "npv_cp_lower": 0.9515748206953887,
+     "dft_share": 0.15018315018315018,
+     "recall_stable": 0.0,
+     "stable_lost": 0.06666666666666667,
+     "n_truly_stable": 30
+    },
+    "labelable": {
+     "n": 248,
+     "base_rate": 0.12096774193548387,
+     "stable_threshold": null,
+     "unstable_threshold": 0.03,
+     "stable_ceiling_point": 0.7931034482758621,
+     "stable_ceiling_cp_lower": 0.4903225298239446,
+     "stable_verdict": "precision limited",
+     "stable_structures_needed": null,
+     "unstable_point": 1.0,
+     "unstable_cp_lower": 0.9645687749720933,
+     "n_called_stable": 0,
+     "n_called_unstable": 197,
+     "precision": NaN,
+     "precision_cp_lower": NaN,
+     "npv": 1.0,
+     "npv_cp_lower": 0.9645687749720933,
+     "dft_share": 0.2056451612903226,
+     "recall_stable": 0.0,
+     "stable_lost": 0.0,
+     "n_truly_stable": 30
+    }
+   },
+   "frozen_rule_on_this_population": {
+    "n": 274,
+    "dft_share": 0.20072992700729927,
+    "n_called_stable": 0,
+    "recall_stable": 0.0,
+    "stable_lost": 0.030303030303030304
+   },
+   "bundle_thresholds": {
+    "stable": null,
+    "unstable": 0.03,
+    "n": 274
+   }
+  }
+ },
+ "children": {
+  "fluoride": {
+   "source": "halide-draw subset",
+   "n_usable": 2241,
+   "n_labelable": 1888,
+   "usable": {
+    "n": 2241,
+    "base_rate": 0.250334672021419,
+    "stable_threshold": null,
+    "unstable_threshold": 0.01,
+    "stable_ceiling_point": 0.9028571428571428,
+    "stable_ceiling_cp_lower": 0.8132564612649791,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 1393121,
+    "unstable_point": 0.9988193624557261,
+    "unstable_cp_lower": 0.9888943147378277,
+    "n_called_stable": 0,
+    "n_called_unstable": 1444,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9826869806094183,
+    "npv_cp_lower": 0.9690098510241555,
+    "dft_share": 0.355644801427934,
+    "recall_stable": 0.0,
+    "stable_lost": 0.044563279857397504,
+    "n_truly_stable": 561
+   },
+   "labelable": {
+    "n": 1888,
+    "base_rate": 0.2680084745762712,
+    "stable_threshold": null,
+    "unstable_threshold": 0.01,
+    "stable_ceiling_point": 0.9533333333333334,
+    "stable_ceiling_cp_lower": 0.872799200557341,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 3525,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9897386332195489,
+    "n_called_stable": 0,
+    "n_called_unstable": 1199,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9824854045037531,
+    "npv_cp_lower": 0.9670836527482817,
+    "dft_share": 0.3649364406779661,
+    "recall_stable": 0.0,
+    "stable_lost": 0.041501976284584984,
+    "n_truly_stable": 506
+   }
+  },
+  "sulfide": {
+   "source": "round-2 sulfide draw",
+   "n_usable": 4000,
+   "n_labelable": 3402,
+   "usable": {
+    "n": 4000,
+    "base_rate": 0.1275,
+    "stable_threshold": null,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 0.9702970297029703,
+    "stable_ceiling_cp_lower": 0.874732583266009,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 6416,
+    "unstable_point": 0.9994982438534872,
+    "unstable_cp_lower": 0.995266671165999,
+    "n_called_stable": 0,
+    "n_called_unstable": 3587,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9618065235572902,
+    "npv_cp_lower": 0.9506668232323329,
+    "dft_share": 0.10325,
+    "recall_stable": 0.0,
+    "stable_lost": 0.26862745098039215,
+    "n_truly_stable": 510
+   },
+   "labelable": {
+    "n": 3402,
+    "base_rate": 0.1337448559670782,
+    "stable_threshold": -0.03,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.9913793103448276,
+    "stable_ceiling_cp_lower": 0.9214082432265298,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 0.9993979530403372,
+    "unstable_cp_lower": 0.9943229811117936,
+    "n_called_stable": 234,
+    "n_called_unstable": 2936,
+    "precision": 0.9615384615384616,
+    "precision_cp_lower": 0.9047231968391483,
+    "npv": 0.9805858310626703,
+    "npv_cp_lower": 0.971194358051216,
+    "dft_share": 0.06819517930629042,
+    "recall_stable": 0.4945054945054945,
+    "stable_lost": 0.12527472527472527,
+    "n_truly_stable": 455
+   }
+  },
+  "nitride": {
+   "source": "round-2 nitride draw",
+   "n_usable": 2423,
+   "n_labelable": 2159,
+   "usable": {
+    "n": 2423,
+    "base_rate": 0.09162195625257945,
+    "stable_threshold": null,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 0.9859154929577465,
+    "stable_ceiling_cp_lower": 0.874496600157318,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 3106,
+    "unstable_point": 0.9979050279329609,
+    "unstable_cp_lower": 0.9907361349276332,
+    "n_called_stable": 0,
+    "n_called_unstable": 2264,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.965547703180212,
+    "npv_cp_lower": 0.9517655812068455,
+    "dft_share": 0.06562113082955015,
+    "recall_stable": 0.0,
+    "stable_lost": 0.35135135135135137,
+    "n_truly_stable": 222
+   },
+   "labelable": {
+    "n": 2159,
+    "base_rate": 0.10050949513663733,
+    "stable_threshold": null,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.9859154929577465,
+    "stable_ceiling_cp_lower": 0.874496600157318,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 2768,
+    "unstable_point": 0.9983857949959645,
+    "unstable_cp_lower": 0.990781148623586,
+    "n_called_stable": 0,
+    "n_called_unstable": 1959,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9729453802960695,
+    "npv_cp_lower": 0.9593763389788695,
+    "dft_share": 0.09263547938860583,
+    "recall_stable": 0.0,
+    "stable_lost": 0.24423963133640553,
+    "n_truly_stable": 217
+   }
+  },
+  "carbide": {
+   "source": "round-2 carbide draw",
+   "n_usable": 1876,
+   "n_labelable": 1647,
+   "usable": {
+    "n": 1876,
+    "base_rate": 0.09914712153518124,
+    "stable_threshold": -0.02,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 1.0,
+    "stable_ceiling_cp_lower": 0.9293554656409501,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9953385734528831,
+    "n_called_stable": 119,
+    "n_called_unstable": 1730,
+    "precision": 0.9831932773109243,
+    "precision_cp_lower": 0.9073951030373293,
+    "npv": 0.9734104046242774,
+    "npv_cp_lower": 0.9589263824221685,
+    "dft_share": 0.014392324093816631,
+    "recall_stable": 0.6290322580645161,
+    "stable_lost": 0.24731182795698925,
+    "n_truly_stable": 186
+   },
+   "labelable": {
+    "n": 1647,
+    "base_rate": 0.10807528840315725,
+    "stable_threshold": -0.02,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 1.0,
+    "stable_ceiling_cp_lower": 0.9264315466831614,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9945980229059432,
+    "n_called_stable": 115,
+    "n_called_unstable": 1507,
+    "precision": 0.9826086956521739,
+    "precision_cp_lower": 0.9043057981878067,
+    "npv": 0.9708029197080292,
+    "npv_cp_lower": 0.9545144959480218,
+    "dft_share": 0.015179113539769277,
+    "recall_stable": 0.6348314606741573,
+    "stable_lost": 0.24719101123595505,
+    "n_truly_stable": 178
+   }
+  }
+ }
+}
