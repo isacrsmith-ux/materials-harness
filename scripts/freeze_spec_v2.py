@@ -220,8 +220,19 @@ def build_registry() -> dict:
         "OPENED ONCE", "opened 2026-09-12 for the final evaluation (reports/final_test.md); never again")
     add("oxide locked test (round 1)", fam["families"]["oxide"]["test"], "data/wbm_split_oxide_halide.json",
         "UNOPENED", "reserved for the oxide unstable-only routing check, order 2 in the evaluation protocol")
-    add("halide locked test (round 1)", fam["families"]["halide"]["test"], "data/wbm_split_oxide_halide.json",
-        "UNOPENED", "reserved for the FIRST held-out evaluation: the fluoride carve-out and both halide-side thresholds")
+    # state is read from the opening log, not asserted: a registry that can go stale is worse than none
+    hlog = DATA_DIR / "halide_test_log.json"
+    if hlog.is_file():
+        d = json.loads(hlog.read_text())
+        add("halide locked test (round 1)", fam["families"]["halide"]["test"], "data/wbm_split_oxide_halide.json",
+            "OPENED ONCE",
+            (f"opened {d['opened_at']} at commit {d['harness_commit']} under the pre-registration in "
+             "reports/halide_evaluation_preregistration.md; result in reports/halide_test.md "
+             "(H1-H3 PASS, R1 ambiguous). Never to be re-opened; scripts/halide_eval.py refuses "
+             "while data/halide_test_log.json exists."))
+    else:
+        add("halide locked test (round 1)", fam["families"]["halide"]["test"], "data/wbm_split_oxide_halide.json",
+            "UNOPENED", "reserved for the FIRST held-out evaluation: the fluoride carve-out and both halide-side thresholds")
     add("sulfide locked test (round 2)", r2["groups"]["sulfide"]["test"], "data/wbm_split_round2.json",
         "SEALED - UNUSED UNDER THE CURRENT TAXONOMY",
         ("sulfide is not adopted as a family in spec v2, so this half has nothing to settle under "
@@ -246,11 +257,14 @@ def build_registry() -> dict:
 
 
 if __name__ == "__main__":
-    for path, data in ((SPEC_FILE, build_spec()), (REGISTRY_FILE, build_registry())):
-        if path.exists():
-            raise SystemExit(f"{path} exists; it is written once. Refusing to overwrite.")
-        path.write_text(json.dumps(data, indent=1, default=str) + "\n")
-        print(f"written: {path}")
+    if SPEC_FILE.exists():
+        print(f"kept (frozen, written once): {SPEC_FILE}")
+    else:
+        SPEC_FILE.write_text(json.dumps(build_spec(), indent=1, default=str) + "\n")
+        print(f"written: {SPEC_FILE}")
+    # the registry tracks STATE and is regenerated on demand; the spec above is frozen and is not
+    REGISTRY_FILE.write_text(json.dumps(build_registry(), indent=1, default=str) + "\n")
+    print(f"written: {REGISTRY_FILE}")
     reg = json.loads(REGISTRY_FILE.read_text())
     print()
     for s in reg["sets"]:
