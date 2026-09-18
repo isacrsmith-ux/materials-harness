@@ -80,7 +80,7 @@ def failure_set(tag: str) -> pd.DataFrame:
             if classes:
                 rows.append({"wbm_id": wid, "group": name, "cache": CACHE[which], "formula": pl["formula"],
                              "each_true": pl["each_true"], "each_pred": pl["each_pred"], "e_dft": pl["e_dft"],
-                             "e_a": pl["e_mace"], "rejection": rej, "converged": bool(pl.get("converged")),
+                             "e_a": pl["e_mace"], "rejection": _nn(rej), "converged": bool(pl.get("converged")),
                              "classes": classes, "payload": pl,
                              "ms": ms.get(wid)})
     d = pd.DataFrame(rows).drop_duplicates(subset="wbm_id", keep="first")
@@ -132,7 +132,7 @@ def score(r, retry: dict, init) -> dict:
     usable = {k: v for k, v in att.items() if _usable(v)}
     out = {"usable_before": _usable(att["A_wbm_init"]), "usable_after": bool(usable),
            "attempts": {k: {"status": v.get("status"), "converged": v.get("converged"),
-                            "rejection": v.get("rejection"), "rung": v.get("rung"),
+                            "rejection": _nn(v.get("rejection")), "rung": v.get("rung"),
                             "energy_per_atom": v.get("energy_per_atom")} for k, v in att.items()}}
     if usable:
         lo = min(usable, key=lambda k: usable[k]["energy_per_atom"])

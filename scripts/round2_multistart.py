@@ -48,6 +48,14 @@ GROUPS = {"oxide": ("r1", "oxide"), "halide": ("r1", "halide"),
 CACHE = {"r1": "oxide_halide_calibration_init_structs.json", "r2": "round2_calibration_init_structs.json"}
 
 
+def _nn(x):
+    """None for a missing rejection, whatever pandas or json turned it into. A None round-trips
+    through a DataFrame column as NaN, and bool(NaN) is True - which silently marks a clean start
+    as guard-rejected. This excluded start A from all 1,000 comparisons once; every read of a
+    rejection goes through here now."""
+    return None if x is None or x != x else x
+
+
 def sample(n: int, tag: str) -> pd.DataFrame:
     """Candidates with a usable start-A relaxation, sampled proportionally across every group run
     so far. Fixed seed; the id list is written out with the results."""
@@ -106,7 +114,7 @@ def main(n: int = N_DEFAULT) -> None:
             got[job["job_key"]] = {"status": res["status"], "error": res.get("error")}
             return
         rej = compare.rejection_reason(res, reference_per_atom=job["e_dft"])
-        got[job["job_key"]] = {"status": "ok", "converged": res["converged"], "rejection": rej,
+        got[job["job_key"]] = {"status": "ok", "converged": res["converged"], "rejection": _nn(rej),
                                "energy_per_atom": res["energy_per_atom"], "n_steps": res["n_steps"],
                                "each_pred": ood.predict_e_hull(job["each_true"], res["energy_per_atom"], job["e_dft"]),
                                "relaxed": res["relaxed"], "wall_time_s": res["wall_time_s"]}
@@ -119,9 +127,7 @@ def main(n: int = N_DEFAULT) -> None:
     rows = []
     for r in d.itertuples():
         starts = {"A_wbm_init": {"status": "ok", "converged": bool(r.conv_a),
-                                 # a None rejection round-trips through pandas as NaN, and `not NaN`
-                                 # is False - which silently excluded start A from every comparison
-                                 "rejection": (None if (r.rej_a is None or r.rej_a != r.rej_a) else r.rej_a),
+                                 "rejection": _nn(r.rej_a),
                                  "energy_per_atom": r.e_a, "each_pred": r.each_pred, "relaxed": r.relaxed_a}}
         for s in ("B_compressed", "C_perturbed"):
             starts[s] = got.get(f"{r.wbm_id}:{s}", {"status": "missing"})
@@ -149,7 +155,7 @@ def main(n: int = N_DEFAULT) -> None:
 def _derive(starts: dict) -> dict:
     """The comparison, from three already-computed starts. Pure post-processing."""
     usable = {k: v for k, v in starts.items()
-              if v.get("status") == "ok" and not (v.get("rejection") or None)}
+              if v.get("status") == "ok" and not _nn(v.get("rejection"))}
     preds = [v["each_pred"] for v in usable.values() if v.get("each_pred") is not None]
     spread = float(max(preds) - min(preds)) * 1000 if len(preds) > 1 else None
     names = sorted(usable)
@@ -158,7 +164,7 @@ def _derive(starts: dict) -> dict:
         matched = all(compare.relaxed_into_target(usable[names[0]]["relaxed"], usable[k]["relaxed"])
                       for k in names[1:])
     return {"n_usable_starts": len(usable), "n_excluded_starts": len(starts) - len(usable),
-            "excluded_reasons": {k: (v.get("rejection") or v.get("status"))
+            "excluded_reasons": {k: (_nn(v.get("rejection")) or v.get("status"))
                                  for k, v in starts.items() if k not in usable},
             "structures_match": matched, "energy_spread_mev": spread,
             "energy_disagreement": (spread is not None and spread > ENERGY_SPREAD_MEV),
@@ -173,9 +179,8 @@ def recompute() -> None:
     raw = json.loads(OUT.read_text(), cls=MontyDecoder)
     for r in raw["rows"]:
         s = r["starts"]
-        a = s["A_wbm_init"]
-        if a.get("rejection") is not None and a["rejection"] != a["rejection"]:
-            a["rejection"] = None
+        for v in s.values():
+            v["rejection"] = _nn(v.get("rejection"))
         r.update(_derive(s))
         r["each_pred_by_start"] = {k: v.get("each_pred") for k, v in s.items()}
     raw["recomputed_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
