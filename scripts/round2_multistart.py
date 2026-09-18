@@ -118,27 +118,15 @@ def main(n: int = N_DEFAULT) -> None:
 
     rows = []
     for r in d.itertuples():
-        starts = {"A_wbm_init": {"status": "ok", "converged": bool(r.conv_a), "rejection": r.rej_a,
+        starts = {"A_wbm_init": {"status": "ok", "converged": bool(r.conv_a),
+                                 # a None rejection round-trips through pandas as NaN, and `not NaN`
+                                 # is False - which silently excluded start A from every comparison
+                                 "rejection": (None if (r.rej_a is None or r.rej_a != r.rej_a) else r.rej_a),
                                  "energy_per_atom": r.e_a, "each_pred": r.each_pred, "relaxed": r.relaxed_a}}
         for s in ("B_compressed", "C_perturbed"):
             starts[s] = got.get(f"{r.wbm_id}:{s}", {"status": "missing"})
-        usable = {k: v for k, v in starts.items() if v.get("status") == "ok" and not v.get("rejection")}
-        preds = [v["each_pred"] for v in usable.values()]
-        spread = float(max(preds) - min(preds)) * 1000 if len(preds) > 1 else None
-        names = sorted(usable)
-        matched = None
-        if len(names) > 1:
-            matched = all(compare.relaxed_into_target(usable[names[0]]["relaxed"], usable[k]["relaxed"])
-                          for k in names[1:])
         rows.append({"wbm_id": r.wbm_id, "group": r.group, "formula": r.formula, "bin": r.bin,
-                     "each_true": r.each_true, "n_usable_starts": len(usable),
-                     "n_excluded_starts": 3 - len(usable),
-                     "excluded_reasons": {k: (v.get("rejection") or v.get("status"))
-                                          for k, v in starts.items() if k not in usable},
-                     "structures_match": matched,
-                     "energy_spread_mev": spread,
-                     "energy_disagreement": (spread is not None and spread > ENERGY_SPREAD_MEV),
-                     "disagreement": bool((matched is False) or (spread is not None and spread > ENERGY_SPREAD_MEV)),
+                     "each_true": r.each_true, **_derive(starts),
                      "each_pred_by_start": {k: v.get("each_pred") for k, v in starts.items()},
                      "starts": {k: {"status": v.get("status"), "converged": v.get("converged"),
                                     "rejection": v.get("rejection"), "each_pred": v.get("each_pred"),
@@ -158,5 +146,49 @@ def main(n: int = N_DEFAULT) -> None:
     print(f"written: {OUT}")
 
 
+def _derive(starts: dict) -> dict:
+    """The comparison, from three already-computed starts. Pure post-processing."""
+    usable = {k: v for k, v in starts.items()
+              if v.get("status") == "ok" and not (v.get("rejection") or None)}
+    preds = [v["each_pred"] for v in usable.values() if v.get("each_pred") is not None]
+    spread = float(max(preds) - min(preds)) * 1000 if len(preds) > 1 else None
+    names = sorted(usable)
+    matched = None
+    if len(names) > 1:
+        matched = all(compare.relaxed_into_target(usable[names[0]]["relaxed"], usable[k]["relaxed"])
+                      for k in names[1:])
+    return {"n_usable_starts": len(usable), "n_excluded_starts": len(starts) - len(usable),
+            "excluded_reasons": {k: (v.get("rejection") or v.get("status"))
+                                 for k, v in starts.items() if k not in usable},
+            "structures_match": matched, "energy_spread_mev": spread,
+            "energy_disagreement": (spread is not None and spread > ENERGY_SPREAD_MEV),
+            "disagreement": bool((matched is False) or (spread is not None and spread > ENERGY_SPREAD_MEV))}
+
+
+def recompute() -> None:
+    """Rebuild every derived field from the saved starts. Used after the start-A exclusion bug;
+    no relaxation is re-run, so the underlying numbers are untouched."""
+    from monty.json import MontyDecoder
+
+    raw = json.loads(OUT.read_text(), cls=MontyDecoder)
+    for r in raw["rows"]:
+        s = r["starts"]
+        a = s["A_wbm_init"]
+        if a.get("rejection") is not None and a["rejection"] != a["rejection"]:
+            a["rejection"] = None
+        r.update(_derive(s))
+        r["each_pred_by_start"] = {k: v.get("each_pred") for k, v in s.items()}
+    raw["recomputed_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    raw["recompute_note"] = ("derived fields rebuilt from the saved starts: a None rejection on "
+                             "start A round-tripped through pandas as NaN and `not NaN` is False, "
+                             "so the calibration relaxation was excluded from every comparison. "
+                             "No relaxation was re-run.")
+    OUT.write_text(json.dumps(raw, cls=MontyEncoder, indent=1) + "\n")
+    print(f"recomputed: {OUT}")
+
+
 if __name__ == "__main__":
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else N_DEFAULT)
+    if len(sys.argv) > 1 and sys.argv[1] == "recompute":
+        recompute()
+    else:
+        main(int(sys.argv[1]) if len(sys.argv) > 1 else N_DEFAULT)

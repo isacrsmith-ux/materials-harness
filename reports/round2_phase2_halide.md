@@ -1,6 +1,6 @@
 # Round 2 — certification and diagnosis
 
-Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T04:18:27+00:00.
+Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T10:19:06+00:00.
 
 Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap), Bonferroni-corrected over the threshold grid so picking the best threshold keeps the guarantee, verdicts read from the pessimistic end, and guard rejections counted-and-excluded rather than dropped.
 
@@ -38,6 +38,18 @@ Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap
 | halide | -70 meV | 267 | 0.9401 | 0.8803 | -10 meV |
 | halide_topup | -60 meV | 243 | 0.9506 | 0.8909 | -10 meV |
 | halide_combined:fluoride | -70 meV | 175 | 0.9029 | 0.8133 | -30 meV |
+
+## Routing impact of the certified 'likely unstable' threshold
+
+A satisfied NPV target is not the same as keeping your discoveries: both columns belong to any proposal to route on these thresholds.
+
+| group | threshold | share discarded without DFT | truly stable lost | (of) |
+|---|---|---:|---:|---:|
+| halide | +0 meV | 0.747 | 0.114 | 93 of 813 |
+| halide_topup | +0 meV | 0.740 | 0.108 | 72 of 666 |
+| halide_combined | +0 meV | 0.744 | 0.112 | 165 of 1479 |
+| halide_combined:fluoride | +10 meV | 0.644 | 0.045 | 25 of 561 |
+| halide_combined:nonfluoride | +0 meV | 0.759 | 0.102 | 94 of 918 |
 
 ## Precision of the 'likely stable' call by TRUE hull-distance bin
 

@@ -1,0 +1,60 @@
+{
+ "engine": "mace-mpa-0-medium cpu/float32",
+ "settings_tag": "c2480e74",
+ "meaning": "'unopened' means: the hash still verifies, the accessor still raises PermissionError without unlock=True, and no id of the set has a result in the results store under the production tag. The original WBM test set was opened once by design on 2026-09-12 and is reported as such; round 2 did not open it again and did not open any other.",
+ "sets": [
+  {
+   "set": "original WBM locked test",
+   "n": 4000,
+   "locked": true,
+   "opened_once_by_design": true,
+   "sha256": "31f0ad698a2ca07e391c7fbb15ab51c403062444d5071929853024ee6094a025",
+   "hash_verifies": true,
+   "accessor_refuses_without_unlock": true,
+   "n_ids_with_results_in_store": 4000,
+   "example_touched": [
+    "wbm-1-10040",
+    "wbm-1-1009",
+    "wbm-1-10112"
+   ],
+   "state": "opened once, 2026-09-12, reports/final_test.md"
+  },
+  {
+   "set": "oxide locked test (round 1)",
+   "n": 2000,
+   "locked": true,
+   "opened_once_by_design": false,
+   "sha256": "ed5911d40b7df0857580cea6f09288080ca49092eb74a2ae014b5f7c28899c71",
+   "hash_verifies": true,
+   "accessor_refuses_without_unlock": true,
+   "n_ids_with_results_in_store": 0,
+   "example_touched": [],
+   "state": "UNOPENED"
+  },
+  {
+   "set": "halide locked test (round 1)",
+   "n": 2000,
+   "locked": true,
+   "opened_once_by_design": false,
+   "sha256": "26a08e6a360a959740dfe0f975942dae8c35811118e02303de539c6e2c8a610e",
+   "hash_verifies": true,
+   "accessor_refuses_without_unlock": true,
+   "n_ids_with_results_in_store": 0,
+   "example_touched": [],
+   "state": "UNOPENED"
+  },
+  {
+   "set": "sulfide locked test (round 2)",
+   "n": 874,
+   "locked": true,
+   "opened_once_by_design": false,
+   "sha256": "0360c21571af58b506f2d93841fe34f8f1e35c75673eb43cb114dbcc4ab75fe3",
+   "hash_verifies": true,
+   "accessor_refuses_without_unlock": true,
+   "n_ids_with_results_in_store": 0,
+   "example_touched": [],
+   "state": "UNOPENED"
+  }
+ ],
+ "all_locked_and_unopened": true
+}

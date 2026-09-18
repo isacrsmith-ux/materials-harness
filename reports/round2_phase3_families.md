@@ -1,6 +1,6 @@
 # Round 2 — certification and diagnosis
 
-Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T04:53:52+00:00.
+Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T09:58:19+00:00.
 
 Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap), Bonferroni-corrected over the threshold grid so picking the best threshold keeps the guarantee, verdicts read from the pessimistic end, and guard rejections counted-and-excluded rather than dropped.
 
@@ -31,6 +31,16 @@ Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap
 |---|---|---:|---:|---:|---|
 | sulfide | -90 meV | 101 | 0.9703 | 0.8747 | -10 meV |
 | nitride | -40 meV | 71 | 0.9859 | 0.8745 | -10 meV |
+
+## Routing impact of the certified 'likely unstable' threshold
+
+A satisfied NPV target is not the same as keeping your discoveries: both columns belong to any proposal to route on these thresholds.
+
+| group | threshold | share discarded without DFT | truly stable lost | (of) |
+|---|---|---:|---:|---:|
+| sulfide | -10 meV | 0.897 | 0.269 | 137 of 510 |
+| nitride | -10 meV | 0.934 | 0.351 | 78 of 222 |
+| carbide | -10 meV | 0.922 | 0.247 | 46 of 186 |
 
 ## Precision of the 'likely stable' call by TRUE hull-distance bin
 

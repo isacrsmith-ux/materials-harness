@@ -1,15 +1,17 @@
 # Round 2 — certification and diagnosis
 
-Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T11:49:01+00:00.
+Engine: MACE-MPA-0 medium, cpu/float32, settings_tag `c2480e74` (asserted at the start of every phase). Generated 2026-09-18T11:07:15+00:00.
 
 Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap), Bonferroni-corrected over the threshold grid so picking the best threshold keeps the guarantee, verdicts read from the pessimistic end, and guard rejections counted-and-excluded rather than dropped.
+
+Certification confidence is additionally Bonferroni-corrected over 11 subfamily splits (level 0.99545), so a split chosen because it looked best keeps its guarantee.
 
 ## Summary
 
 | group | n requested | n usable | rejected (counted, excluded) | base rate | stable side | unstable side |
 |---|---:|---:|---:|---:|---|---|
 | oxide | 4000 | 3994 | 6 | 0.112 | not certified | **+0 meV** |
-| oxide:tm | 3153 | 3153 | 6 | 0.105 | not certified | **-10 meV** |
+| oxide:tm | 3153 | 3153 | 6 | 0.105 | not certified | **+0 meV** |
 | oxide:maingroup | 841 | 841 | 6 | 0.136 | not certified | **+0 meV** |
 | oxide:multi_tm | 871 | 871 | 6 | 0.096 | not certified | **+0 meV** |
 | oxide:single_tm | 3123 | 3123 | 6 | 0.116 | not certified | **+0 meV** |
@@ -26,44 +28,44 @@ Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap
 
 | group | side | target | best t | n selected | k | point | CP-lower | verdict | n selected needed | n structures needed | factor |
 |---|---|---:|---|---:|---:|---:|---:|---|---:|---:|---:|
-| oxide | stable | 0.90 | -20 meV | 272 | 238 | 0.8750 | 0.8005 | precision limited | - | - | - |
-| oxide | unstable | 0.95 | +60 meV | 2495 | 2489 | 0.9976 | 0.9927 | certified | - | - | - |
-| oxide:tm | stable | 0.90 | -20 meV | 218 | 185 | 0.8486 | 0.7591 | precision limited | - | - | - |
-| oxide:tm | unstable | 0.95 | +100 meV | 1575 | 1573 | 0.9987 | 0.9927 | certified | - | - | - |
-| oxide:maingroup | stable | 0.90 | -20 meV | 54 | 53 | 0.9815 | 0.8380 | sample-size limited | 110 | 1714 | 2.04 |
-| oxide:maingroup | unstable | 0.95 | +50 meV | 530 | 528 | 0.9962 | 0.9786 | certified | - | - | - |
-| oxide:multi_tm | stable | 0.90 | +0 meV | 81 | 68 | 0.8395 | 0.6783 | precision limited | - | - | - |
-| oxide:multi_tm | unstable | 0.95 | +60 meV | 566 | 566 | 1.0000 | 0.9875 | certified | - | - | - |
-| oxide:single_tm | stable | 0.90 | -30 meV | 177 | 157 | 0.8870 | 0.7941 | precision limited | - | - | - |
-| oxide:single_tm | unstable | 0.95 | +50 meV | 2058 | 2052 | 0.9971 | 0.9911 | certified | - | - | - |
-| oxide:mixed_valence | stable | 0.90 | -30 meV | 52 | 49 | 0.9423 | 0.7681 | sample-size limited | 467 | 11370 | 8.98 |
-| oxide:mixed_valence | unstable | 0.95 | +60 meV | 922 | 920 | 0.9978 | 0.9876 | certified | - | - | - |
-| oxide:single_valence | stable | 0.90 | -20 meV | 200 | 174 | 0.8700 | 0.7799 | precision limited | - | - | - |
-| oxide:single_valence | unstable | 0.95 | +50 meV | 1706 | 1702 | 0.9977 | 0.9912 | certified | - | - | - |
-| oxide:ox_le2 | stable | 0.90 | -10 meV | 28 | 21 | 0.7500 | 0.4383 | precision limited | - | - | - |
-| oxide:ox_le2 | unstable | 0.95 | +10 meV | 294 | 294 | 1.0000 | 0.9761 | certified | - | - | - |
-| oxide:ox_3 | stable | 0.90 | -20 meV | 33 | 24 | 0.7273 | 0.4409 | precision limited | - | - | - |
-| oxide:ox_3 | unstable | 0.95 | +40 meV | 497 | 494 | 0.9940 | 0.9735 | certified | - | - | - |
-| oxide:ox_4 | stable | 0.90 | -20 meV | 42 | 42 | 1.0000 | 0.8443 | sample-size limited | 68 | 1284 | 1.62 |
-| oxide:ox_4 | unstable | 0.95 | +20 meV | 620 | 619 | 0.9984 | 0.9849 | certified | - | - | - |
-| oxide:ox_ge5 | stable | 0.90 | -20 meV | 97 | 87 | 0.8969 | 0.7662 | precision limited | - | - | - |
-| oxide:ox_ge5 | unstable | 0.95 | +50 meV | 431 | 431 | 1.0000 | 0.9836 | certified | - | - | - |
+| oxide | stable | 0.90 | -20 meV | 272 | 238 | 0.8750 | 0.7837 | precision limited | - | - | - |
+| oxide | unstable | 0.95 | +60 meV | 2495 | 2489 | 0.9976 | 0.9913 | certified | - | - | - |
+| oxide:tm | stable | 0.90 | -20 meV | 218 | 185 | 0.8486 | 0.7392 | precision limited | - | - | - |
+| oxide:tm | unstable | 0.95 | +60 meV | 2007 | 2003 | 0.9980 | 0.9910 | certified | - | - | - |
+| oxide:maingroup | stable | 0.90 | -20 meV | 54 | 53 | 0.9815 | 0.7979 | sample-size limited | 156 | 2430 | 2.89 |
+| oxide:maingroup | unstable | 0.95 | +50 meV | 530 | 528 | 0.9962 | 0.9734 | certified | - | - | - |
+| oxide:multi_tm | stable | 0.90 | +0 meV | 81 | 68 | 0.8395 | 0.6425 | precision limited | - | - | - |
+| oxide:multi_tm | unstable | 0.95 | +60 meV | 566 | 566 | 1.0000 | 0.9833 | certified | - | - | - |
+| oxide:single_tm | stable | 0.90 | -30 meV | 177 | 157 | 0.8870 | 0.7727 | precision limited | - | - | - |
+| oxide:single_tm | unstable | 0.95 | +50 meV | 2058 | 2052 | 0.9971 | 0.9895 | certified | - | - | - |
+| oxide:mixed_valence | stable | 0.90 | -30 meV | 52 | 49 | 0.9423 | 0.7243 | sample-size limited | 658 | 16020 | 12.65 |
+| oxide:mixed_valence | unstable | 0.95 | +60 meV | 922 | 920 | 0.9978 | 0.9846 | certified | - | - | - |
+| oxide:single_valence | stable | 0.90 | -20 meV | 200 | 174 | 0.8700 | 0.7596 | precision limited | - | - | - |
+| oxide:single_valence | unstable | 0.95 | +50 meV | 1706 | 1702 | 0.9977 | 0.9894 | certified | - | - | - |
+| oxide:ox_le2 | stable | 0.90 | -10 meV | 28 | 21 | 0.7500 | 0.3793 | precision limited | - | - | - |
+| oxide:ox_le2 | unstable | 0.95 | +10 meV | 294 | 294 | 1.0000 | 0.9682 | certified | - | - | - |
+| oxide:ox_3 | stable | 0.90 | +0 meV | 53 | 35 | 0.6604 | 0.3929 | precision limited | - | - | - |
+| oxide:ox_3 | unstable | 0.95 | +40 meV | 497 | 494 | 0.9940 | 0.9677 | certified | - | - | - |
+| oxide:ox_4 | stable | 0.90 | -20 meV | 42 | 42 | 1.0000 | 0.7975 | sample-size limited | 91 | 1719 | 2.17 |
+| oxide:ox_4 | unstable | 0.95 | +20 meV | 620 | 619 | 0.9984 | 0.9807 | certified | - | - | - |
+| oxide:ox_ge5 | stable | 0.90 | -20 meV | 97 | 87 | 0.8969 | 0.7355 | precision limited | - | - | - |
+| oxide:ox_ge5 | unstable | 0.95 | +50 meV | 431 | 431 | 1.0000 | 0.9782 | certified | - | - | - |
 
 ### Stable side at the alternate 0.80 target (test 7's fallback)
 
 | group | best t | n selected | point | CP-lower | certified at 0.80 |
 |---|---|---:|---:|---:|---|
-| oxide | -20 meV | 272 | 0.8750 | 0.8005 | -20 meV |
-| oxide:tm | -20 meV | 218 | 0.8486 | 0.7591 | no |
-| oxide:maingroup | -20 meV | 54 | 0.9815 | 0.8380 | -10 meV |
-| oxide:multi_tm | +0 meV | 81 | 0.8395 | 0.6783 | no |
-| oxide:single_tm | -30 meV | 177 | 0.8870 | 0.7941 | no |
-| oxide:mixed_valence | -30 meV | 52 | 0.9423 | 0.7681 | no |
-| oxide:single_valence | -20 meV | 200 | 0.8700 | 0.7799 | no |
-| oxide:ox_le2 | -10 meV | 28 | 0.7500 | 0.4383 | no |
-| oxide:ox_3 | -20 meV | 33 | 0.7273 | 0.4409 | no |
-| oxide:ox_4 | -20 meV | 42 | 1.0000 | 0.8443 | -20 meV |
-| oxide:ox_ge5 | -20 meV | 97 | 0.8969 | 0.7662 | no |
+| oxide | -20 meV | 272 | 0.8750 | 0.7837 | no |
+| oxide:tm | -20 meV | 218 | 0.8486 | 0.7392 | no |
+| oxide:maingroup | -20 meV | 54 | 0.9815 | 0.7979 | no |
+| oxide:multi_tm | +0 meV | 81 | 0.8395 | 0.6425 | no |
+| oxide:single_tm | -30 meV | 177 | 0.8870 | 0.7727 | no |
+| oxide:mixed_valence | -30 meV | 52 | 0.9423 | 0.7243 | no |
+| oxide:single_valence | -20 meV | 200 | 0.8700 | 0.7596 | no |
+| oxide:ox_le2 | -10 meV | 28 | 0.7500 | 0.3793 | no |
+| oxide:ox_3 | +0 meV | 53 | 0.6604 | 0.3929 | no |
+| oxide:ox_4 | -20 meV | 42 | 1.0000 | 0.7975 | no |
+| oxide:ox_ge5 | -20 meV | 97 | 0.8969 | 0.7355 | no |
 
 ## Routing impact of the certified 'likely unstable' threshold
 
@@ -72,7 +74,7 @@ A satisfied NPV target is not the same as keeping your discoveries: both columns
 | group | threshold | share discarded without DFT | truly stable lost | (of) |
 |---|---|---:|---:|---:|
 | oxide | +0 meV | 0.881 | 0.173 | 77 of 446 |
-| oxide:tm | -10 meV | 0.913 | 0.322 | 107 of 332 |
+| oxide:tm | +0 meV | 0.887 | 0.187 | 62 of 332 |
 | oxide:maingroup | +0 meV | 0.859 | 0.132 | 15 of 114 |
 | oxide:multi_tm | +0 meV | 0.907 | 0.190 | 16 of 84 |
 | oxide:single_tm | +0 meV | 0.874 | 0.169 | 61 of 362 |
@@ -167,15 +169,15 @@ At each group's certified stable threshold, or its best point threshold when not
 | 0.1–0.3 | 3 | 0 | 0.000 |
 | >0.3 | 2 | 0 | 0.000 |
 
-**oxide:ox_3** (threshold -20 meV)
+**oxide:ox_3** (threshold +0 meV)
 
 | true hull bin | n selected | n correct | precision |
 |---|---:|---:|---:|
-| <0 | 24 | 24 | 1.000 |
-| 0–0.025 | 0 | 0 | - |
-| 0.025–0.1 | 0 | 0 | - |
+| <0 | 35 | 35 | 1.000 |
+| 0–0.025 | 5 | 0 | 0.000 |
+| 0.025–0.1 | 1 | 0 | 0.000 |
 | 0.1–0.3 | 2 | 0 | 0.000 |
-| >0.3 | 7 | 0 | 0.000 |
+| >0.3 | 10 | 0 | 0.000 |
 
 **oxide:ox_4** (threshold -20 meV)
 

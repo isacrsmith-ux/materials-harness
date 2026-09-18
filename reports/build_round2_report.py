@@ -110,6 +110,274 @@ def brk(): B.append(("pagebreak",))
 mm_ = 1.0  # widths are given in mm; the PDF renderer multiplies
 
 
+
+
+def section_15():
+    h1("15. The three new families, fully calibrated")
+    small("Source: `reports/round2_phase3_families.md`. sulfide 4,000, nitride 2,423 and carbide "
+          "1,876 calibration structures, drawn sequentially against a shared taken-set from the "
+          "pool ids no earlier split had used. Same methodology as test 7 throughout.")
+    body("Phase 1 diagnosed all three as sample-size limited, so all three were scaled to "
+         "whatever the pool could supply. Only sulfide reached the 4,000 cap the brief named; "
+         "nitride and carbide are the whole of what was available after the leakage guards.")
+    tbl(summary_rows(["sulfide", "nitride", "carbide"], P3), [26, 20, 20, 20, 32, 32])
+    h2("Diagnosis")
+    tbl(diag_rows(["sulfide", "nitride", "carbide"], P3),
+        [24, 15, 12, 15, 11, 9, 14, 15, 30, 22])
+    body("**Carbide certifies both sides.** Its stable threshold is -20 meV/atom, its unstable "
+         "threshold -10 meV/atom. At the ceiling threshold all 97 selected calls were truly "
+         "stable, and the verdict is still read from the bound (0.9294), never from that 1.0000.")
+    body("**Sulfide and nitride miss, narrowly, and the pool is spent.** Sulfide's bound reaches "
+         "0.8747 and nitride's 0.8745 against the 0.90 target; both remain sample-size limited "
+         "rather than precision limited, with point precisions of 0.9703 and 0.9859. Sulfide "
+         "would need about 6,416 calibration structures against the 4,874 the draw could supply, "
+         "and nitride about 3,106 against 2,423. Neither shortfall can be closed from this pool "
+         "without dissolving a locked half or relaxing the reduced-formula leakage guard, and "
+         "neither was done.")
+    note("**Unstable-side certification is not a small result for these families.** All three "
+         "certify it, which is what turns 'send everything to DFT' into 'discard most of it "
+         "without DFT'. But the round-1 caution applies unchanged: a satisfied NPV target is "
+         "not the same as keeping your discoveries, and the share of truly stable candidates "
+         "lost at the certified unstable threshold must be quoted with it every time.")
+
+
+
+def section_16():
+    h1("16. Oxide subfamily split")
+    small("Source: `reports/round2_phase4_oxide_subfamilies.md`. The existing 3,994-row oxide "
+          "calibration set, split by transition-metal against main-group, by the highest formal "
+          "cation oxidation state in the first charge-balanced assignment, and by mixed valence. "
+          "No new structures were run.")
+    body("Test 7's verdict was that oxide is precision limited: its point precision peaks at "
+         "0.8750, below the 0.90 target, so the bound converges under target at any n. That is a "
+         "statement about the family as a whole. This section asks whether some chemically "
+         "coherent part of it behaves better.")
+    body("Mixed valence is tested as 'no assignment of one integer oxidation state per element "
+         "balances the charge' - the standard operational definition, which Fe3O4 fails and both "
+         "FeO and Fe2O3 pass. Compositions pymatgen could not evaluate at all are counted in "
+         "neither split, so the two splits' n need not sum to the parent's.")
+    tbl(summary_rows(["oxide", "oxide:tm", "oxide:maingroup", "oxide:multi_tm", "oxide:single_tm",
+                      "oxide:mixed_valence", "oxide:single_valence",
+                      "oxide:ox_le2", "oxide:ox_3", "oxide:ox_4", "oxide:ox_ge5"], P4),
+        [40, 18, 18, 20, 28, 28])
+    h2("Diagnosis")
+    tbl(diag_rows(["oxide", "oxide:tm", "oxide:maingroup", "oxide:multi_tm", "oxide:single_tm",
+                   "oxide:mixed_valence", "oxide:single_valence",
+                   "oxide:ox_le2", "oxide:ox_3", "oxide:ox_4", "oxide:ox_ge5"], P4),
+        [36, 15, 12, 15, 11, 9, 14, 15, 28, 18])
+    body("**No oxide subfamily certifies a stable threshold at 0.90.** At the 0.80 fallback the "
+         "whole family still certifies at -20 meV/atom, the main-group oxides at -10 meV/atom "
+         "and the +4-cation oxides at -20 meV/atom; nothing else clears 0.80 either.")
+    note("**These splits are hypothesis-generating, not certified results.** The Clopper-Pearson "
+         "level is Bonferroni-corrected over the threshold grid, which is what makes picking the "
+         "best threshold safe - it is not corrected over the eleven splits searched here. A "
+         "split that looks sample-size limited because it was the best of eleven would need its "
+         "own pre-registered draw before any threshold from it could be certified. The "
+         "split-corrected figures are reported alongside in the source report.")
+    body("The one genuinely informative result is an inversion. The mixed-valence oxides, which "
+         "are the half one would expect the engine to handle worst, are the better-behaved half "
+         "on the stable side; the single-valence oxides are the precision-limited ones. That "
+         "does not give oxide a viable threshold, but it does say the family's ceiling is not "
+         "explained by mixed valence.")
+
+def section_17():
+    h1("17. Multi-start structure verification")
+    small("Source: `reports/round2_phase5_multistart.md`, from `results/round2_multistart.json`. "
+          "1,000 candidates sampled proportionally across all six groups run so far, each "
+          "relaxed from three starting configurations instead of one.")
+    body("Test 4 measured structure-finding by comparing one relaxation against a known target "
+         "structure. A real candidate has no known target, so the analogue here is agreement "
+         "between starts: if three entries into the same problem land in different minima, the "
+         "single number the product reports is an artefact of where the relaxation began. "
+         "Start B is a compressed cell (volume x 0.95) - the WBM stand-in for test 4's rescaled "
+         "start, since a WBM candidate has no parent structure to predict a volume from - and "
+         "start C is the fixed-seed rattle and strain of the production retry ladder.")
+    rows = [["family", "n", "all 3 starts usable", "disagreement", "structure", "energy"]]
+    for g, a in sorted(MS.get("by_family", {}).items()):
+        rows.append([g, str(a["n"]), str(a["n_all_three_usable"]), f"{a['disagreement_rate']:.3f}",
+                     f"{a['structure_disagreement']:.3f}", f"{a['energy_disagreement']:.3f}"])
+    o = MS.get("overall", {})
+    if o:
+        rows.append(["**all**", f"**{o['n']}**", str(o["n_all_three_usable"]),
+                     f"**{o['disagreement_rate']:.3f}**",
+                     f"{o['structure_disagreement']:.3f}", f"{o['energy_disagreement']:.3f}"])
+    tbl(rows, [30, 16, 34, 30, 28, 28])
+    h2("By true hull-distance bin")
+    rows = [["bin", "n", "disagreement", "structure", "energy", "median spread"]]
+    for b in ["<0", "0-0.025", "0.025-0.1", "0.1-0.3", ">0.3"]:
+        a = MS.get("by_bin", {}).get(b) or MS.get("by_bin", {}).get(b.replace("-", "–"))
+        if a:
+            rows.append([b, str(a["n"]), f"{a['disagreement_rate']:.3f}",
+                         f"{a['structure_disagreement']:.3f}", f"{a['energy_disagreement']:.3f}",
+                         f"{a['median_energy_spread_mev']:.1f} meV"])
+    tbl(rows, [26, 16, 30, 28, 28, 30])
+    body("**One candidate in five answers differently depending on where its relaxation "
+         "started**, and the rate is not spread evenly. It is 5.6% in the 0-0.025 bin and 8.6% "
+         "below the hull - the bins where 'likely stable' calls are actually made - and 50.9% "
+         "above 0.3 eV/atom.")
+    note("**This independently confirms the >0.3 eV/atom refusal rule from a different "
+         "measurement.** Test 4 put the structure-finding rate above 0.3 eV/atom at 0.38 on a "
+         "sample of 16, which is the thinnest evidence behind any rule in the product. This is "
+         "169 candidates, needs no known target structure, and says the same thing: above 0.3 "
+         "eV/atom the relaxation does not reliably find one answer, so the number attached to "
+         "it does not describe one material.")
+    body("The disagreement is mostly structural rather than energetic - 0.182 against 0.153 "
+         "overall - and the median energy spread is 0.0 meV/atom everywhere except the >0.3 "
+         "bin. Where the starts agree they agree very precisely; where they disagree they have "
+         "found genuinely different minima rather than the same one to different tolerances.")
+
+
+
+def section_18():
+    h1("18. Retesting every failure found in phases 1-5")
+    small("Source: `reports/round2_phase6_retry.md`, from `results/round2_retry.json`. Every "
+          "candidate that failed to converge, was rejected by the energy-plausibility guard, "
+          "disagreed across phase 5's starts, or did not end in the basin of the structure it "
+          "was given.")
+    body("**Nothing was loosened to make a failure pass.** fmax, the maximum-stress criterion "
+         "and the guard are identical on every retry rung; only the starting point and the step "
+         "cap change. A retried job either genuinely converges to a plausible, structure-matched "
+         "result or it stays counted-and-excluded.")
+    note("**The retry is the perturbed restart, not the ladder's first rung.** The production "
+         "ladder's first rung continues from the previous relaxation's end point. For a "
+         "candidate that already converged - which is nearly all of this set, since the "
+         "dominant failure class is 'the relaxation left its start' rather than 'it failed' - "
+         "that rung restarts at the point it converged to and converges again, testing nothing. "
+         "Those candidates get the other rung: a fixed-seed rattle and strain of the ORIGINAL "
+         "structure at the extended step cap, which is a different entry into the same basin "
+         "question. The full ladder is used only for the candidates whose first attempt gave no "
+         "usable result at all.")
+    c = RT.get("by_class_input", {})
+    if c:
+        tbl([["failure class", "candidates"]] + [[k, str(v)] for k, v in sorted(c.items())],
+            [60, 30])
+        body("A candidate can be in several classes, so these do not sum to the "
+             f"{RT.get('n_candidates', '')} retried.")
+    rows = [["failure class", "n", "resolved", "genuine", "rate", "what 'resolved' means here"]]
+    for cls, a in RT.get("by_class", {}).items():
+        rows.append([cls, str(a["n"]), str(a["resolved"]), str(a["genuine"]),
+                     f"{a['resolved_rate']:.3f}", a["meaning"]])
+    if len(rows) > 1:
+        tbl(rows, [32, 12, 18, 16, 14, 76])
+    h2("By family")
+    classes = list(RT.get("by_class", {}))
+    rows = [["family", "n"] + [f"{c}<br/>resolved / genuine" for c in classes]]
+    for fam, row in sorted(RT.get("by_family", {}).items()):
+        cells = []
+        for c in classes:
+            v = row.get(c)
+            cells.append(f"{v['resolved']} / {v['genuine']}" if v else "-")
+        rows.append([fam, str(row["n"])] + cells)
+    if len(rows) > 1:
+        tbl(rows, [26] + [14] + [32] * len(classes))
+
+
+
+def section_synthesis():
+    h1("What the tests say when read together - what round 2 changed")
+    body("The existing document closes on five numbered takeaways. These extend them; none is "
+         "retracted.")
+
+    h2("1. Coverage is still the binding constraint, but it is no longer stuck")
+    body("Test 4's central finding was that the published precision had been measured almost "
+         "entirely on f-electron chemistry, which barely appears in real use, and that 82% of "
+         "real candidates went to DFT because their families had no certified threshold. Round "
+         "2 moves four families off that list. Halide now certifies both sides. Carbide "
+         "certifies both sides. Sulfide and nitride certify the unstable side and miss the "
+         "stable side narrowly. Oxide still certifies only the unstable side.")
+
+    h2("2. The sample-size / precision-limited distinction paid for itself, and needs a third term")
+    body("Test 7 introduced it to decide where more compute was worth spending, and the "
+         "prediction held: halide was called sample-size limited, 2,800 more structures were "
+         "run, and the stable side certified. The phase 1 diagnostic then spent about 25 "
+         "minutes of compute to decide where the next 14 hours should go, and was right about "
+         "all four families it examined.")
+    body("What round 2 adds is that 'sample-size limited' is not by itself an instruction to "
+         "collect more data. Fluoride's point precision is above target, so the label applies - "
+         "but reaching the bound would take 1,393,121 calibration structures, 6.5x WBM's whole "
+         "unique-prototype pool. Sulfide and nitride are genuinely limited and genuinely out of "
+         "reach: they need about 6,416 and 3,106 structures against the 4,874 and 2,423 their "
+         "pools could supply. The useful question is not which of the two labels a family gets, "
+         "but whether the indicated calibration set can actually be drawn.")
+
+    h2("3. Chemistry families are the wrong grain in at least one place")
+    body("Halide certifies at -70 meV/atom as one family. Split fluoride out and the remaining "
+         "halides certify at -20 meV/atom - a far more inclusive threshold, labelling many more "
+         "candidates - while fluoride certifies nothing at 0.90 and nothing at 0.80 either. One "
+         "sub-chemistry was holding back a family it was lumped with, and the frozen taxonomy "
+         "cannot see it.")
+    body("The same move does not rescue oxide. Eleven splits were searched - transition metal "
+         "against main group, formal cation oxidation state, mixed valence - and none certifies "
+         "at 0.90. Oxide has no viable stable-side path at the published target, and the answer "
+         "to test 7's open question is no.")
+
+    h2("4. Structure-finding is measurable without a known target, and it says what test 4 said")
+    body("The >0.3 eV/atom refusal rested on a structure-finding sample of n = 16, flagged as "
+         "open work. Multi-start disagreement measures the same reliability on 1,000 candidates "
+         "with no known target structure, and reaches 50.9% above 0.3 eV/atom against 5.6% in "
+         "the 0-0.025 bin. Two independent measurements now support the refusal, and the "
+         "disagreement rate is low exactly where the certified stable thresholds operate.")
+
+    h2("5. The guards earned their place again, and so did distrusting my own code")
+    body("The engine assertion aborted on a wrong HARNESS_MODEL in a negative test before any "
+         "phase ran - the exact failure that produced a wrong certification verdict in test 7. "
+         "The split's disjointness assertion caught 619 ids that a first, wrong draw had put in "
+         "a calibration set and a locked half at the same time.")
+    body("Three bugs in this round's own analysis code were caught by looking at the numbers "
+         "rather than by any guard, and all three would have produced quietly plausible "
+         "results. The mixed-valence split matched nothing because "
+         "<font face='Courier'>oxi_state_guesses</font> returns a tuple and the test compared it "
+         "to a list. The multi-start comparison excluded the calibration relaxation from all "
+         "1,000 candidates because a None rejection round-trips through pandas as NaN and "
+         "<font face='Courier'>not NaN</font> is False. The same NaN routed every retry to the "
+         "wrong ladder rung. None of them raised; each produced a table that looked reasonable. "
+         "The check that caught all three was reading a count that should not have been what it "
+         "was - 0 mixed-valence oxides, 0 candidates with three usable starts, 0 perturbed "
+         "restarts.")
+
+
+
+def section_ledger():
+    h1("Locked and unopened as of this document")
+    L = json.loads((REPORTS / "round2_ledger.json").read_text()) if (REPORTS / "round2_ledger.json").is_file() else None
+    if not L:
+        return
+    small(L["meaning"])
+    rows = [["locked set", "n", "hash verifies", "accessor refuses without unlock",
+             "ids with results in the store", "state"]]
+    for r in L["sets"]:
+        rows.append([r["set"], str(r["n"]), "yes" if r["hash_verifies"] else "**NO**",
+                     "yes" if r["accessor_refuses_without_unlock"] else "**NO**",
+                     str(r["n_ids_with_results_in_store"]), r["state"]])
+    tbl(rows, [46, 12, 20, 32, 28, 30])
+    body("Round 2 drew 11,099 new calibration structures and never passed "
+         "<font face='Courier'>unlock=True</font> anywhere. Every phase asserted this before "
+         "enqueueing anything, alongside the engine check. The one new locked half round 2 "
+         "created - 874 sulfide ids - is listed above and has not been opened either.")
+    note("**Sulfide could be certified at 0.90 by dissolving that half into its calibration "
+         "set, and it was not.** Sulfide needs about 6,416 calibration structures and has "
+         "4,000; adding the 874 would still leave it short, and would spend a held-out half "
+         "for a result that would then have nothing to validate against. The same is true of "
+         "relaxing the reduced-formula leakage guard, which dropped 4,111 candidates across "
+         "the round-2 draw. Neither is a decision this document should make.")
+
+
+def section_timing():
+    h1("Time against budget")
+    body("The brief budgeted wall-clock per phase on an assumed 9.8 s per relaxation. That figure "
+         "is section 1's engine-screening benchmark, measured on the screening subset's larger "
+         "cells; WBM calibration structures average 8.6 atoms and the production engine relaxes "
+         "them far faster. Measured on the completed round-1 run before any round-2 phase started: "
+         "15,000 jobs in 57 minutes, or 0.23 s per job. The budgets were recomputed on that basis "
+         "after phase 1, as the brief required, rather than being allowed to drift.")
+    rows = [["phase", "budget", "actual", "what dominated"]]
+    for p in TIMING.get("phases", []):
+        rows.append([p.get("phase", ""), p.get("budget", "-"), p.get("actual", "-"), p.get("note", "")])
+    if len(rows) > 1:
+        tbl(rows, [34, 20, 20, 94])
+
+
+
 def build_content():
     h1("Materials Harness - round 2")
     small(f"New families, the halide confirmation, the oxide splits, multi-start structure "
@@ -239,73 +507,18 @@ def build_content():
     brk()
 
     # ------------------------------------------------------------------ 16 (15 is inserted before it at render time)
-    def section_16():
-        h1("16. Oxide subfamily split")
-        small("Source: `reports/round2_phase4_oxide_subfamilies.md`. The existing 3,994-row oxide "
-              "calibration set, split by transition-metal against main-group, by the highest formal "
-              "cation oxidation state in the first charge-balanced assignment, and by mixed valence. "
-              "No new structures were run.")
-        body("Test 7's verdict was that oxide is precision limited: its point precision peaks at "
-             "0.8750, below the 0.90 target, so the bound converges under target at any n. That is a "
-             "statement about the family as a whole. This section asks whether some chemically "
-             "coherent part of it behaves better.")
-        body("Mixed valence is tested as 'no assignment of one integer oxidation state per element "
-             "balances the charge' - the standard operational definition, which Fe3O4 fails and both "
-             "FeO and Fe2O3 pass. Compositions pymatgen could not evaluate at all are counted in "
-             "neither split, so the two splits' n need not sum to the parent's.")
-        tbl(summary_rows(["oxide", "oxide:tm", "oxide:maingroup", "oxide:multi_tm", "oxide:single_tm",
-                          "oxide:mixed_valence", "oxide:single_valence",
-                          "oxide:ox_le2", "oxide:ox_3", "oxide:ox_4", "oxide:ox_ge5"], P4),
-            [40, 18, 18, 20, 28, 28])
-        h2("Diagnosis")
-        tbl(diag_rows(["oxide", "oxide:tm", "oxide:maingroup", "oxide:multi_tm", "oxide:single_tm",
-                       "oxide:mixed_valence", "oxide:single_valence",
-                       "oxide:ox_le2", "oxide:ox_3", "oxide:ox_4", "oxide:ox_ge5"], P4),
-            [36, 15, 12, 15, 11, 9, 14, 15, 28, 18])
-        body("**No oxide subfamily certifies a stable threshold at 0.90.** At the 0.80 fallback the "
-             "whole family still certifies at -20 meV/atom, the main-group oxides at -10 meV/atom "
-             "and the +4-cation oxides at -20 meV/atom; nothing else clears 0.80 either.")
-        note("**These splits are hypothesis-generating, not certified results.** The Clopper-Pearson "
-             "level is Bonferroni-corrected over the threshold grid, which is what makes picking the "
-             "best threshold safe - it is not corrected over the eleven splits searched here. A "
-             "split that looks sample-size limited because it was the best of eleven would need its "
-             "own pre-registered draw before any threshold from it could be certified. The "
-             "split-corrected figures are reported alongside in the source report.")
-        body("The one genuinely informative result is an inversion. The mixed-valence oxides, which "
-             "are the half one would expect the engine to handle worst, are the better-behaved half "
-             "on the stable side; the single-valence oxides are the precision-limited ones. That "
-             "does not give oxide a viable threshold, but it does say the family's ceiling is not "
-             "explained by mixed valence.")
-    B.append(("__section16__", section_16))
-
-
-    def section_15():
-        h1("15. The three new families, fully calibrated")
-        small("Source: `reports/round2_phase3_families.md`. sulfide 4,000, nitride 2,423 and carbide "
-              "1,876 calibration structures, drawn sequentially against a shared taken-set from the "
-              "pool ids no earlier split had used. Same methodology as test 7 throughout.")
-        body("Phase 1 diagnosed all three as sample-size limited, so all three were scaled to "
-             "whatever the pool could supply. Only sulfide reached the 4,000 cap the brief named; "
-             "nitride and carbide are the whole of what was available after the leakage guards.")
-        tbl(summary_rows(["sulfide", "nitride", "carbide"], P3), [26, 20, 20, 20, 32, 32])
-        h2("Diagnosis")
-        tbl(diag_rows(["sulfide", "nitride", "carbide"], P3),
-            [24, 15, 12, 15, 11, 9, 14, 15, 30, 22])
-        body("**Carbide certifies both sides.** Its stable threshold is -20 meV/atom, its unstable "
-             "threshold -10 meV/atom. At the ceiling threshold all 97 selected calls were truly "
-             "stable, and the verdict is still read from the bound (0.9294), never from that 1.0000.")
-        body("**Sulfide and nitride miss, narrowly, and the pool is spent.** Sulfide's bound reaches "
-             "0.8747 and nitride's 0.8745 against the 0.90 target; both remain sample-size limited "
-             "rather than precision limited, with point precisions of 0.9703 and 0.9859. Sulfide "
-             "would need about 6,416 calibration structures against the 4,874 the draw could supply, "
-             "and nitride about 3,106 against 2,423. Neither shortfall can be closed from this pool "
-             "without dissolving a locked half or relaxing the reduced-formula leakage guard, and "
-             "neither was done.")
-        note("**Unstable-side certification is not a small result for these families.** All three "
-             "certify it, which is what turns 'send everything to DFT' into 'discard most of it "
-             "without DFT'. But the round-1 caution applies unchanged: a satisfied NPV target is "
-             "not the same as keeping your discoveries, and the share of truly stable candidates "
-             "lost at the certified unstable threshold must be quoted with it every time.")
+    section_15()
+    brk()
+    section_16()
+    brk()
+    section_17()
+    brk()
+    section_18()
+    brk()
+    section_synthesis()
+    brk()
+    section_timing()
+    section_ledger()
 
 
 # --------------------------------------------------------------------------- renderers
@@ -318,12 +531,14 @@ def _md_inline(t: str) -> str:
 
 def to_markdown(blocks) -> str:
     L = []
+    first = True
     for b in blocks:
         kind = b[0]
         if kind == "pagebreak":
             L.append("")
         elif kind == "h1":
-            L.append(f"\n## {_md_inline(b[1])}\n")
+            L.append(f"\n{'#' if first else '##'} {_md_inline(b[1])}\n")
+            first = False
         elif kind == "h2":
             L.append(f"\n### {_md_inline(b[1])}\n")
         elif kind == "note":
@@ -443,3 +658,15 @@ def to_pdf(blocks, out_path):
                             topMargin=18 * mm, bottomMargin=20 * mm,
                             title="Materials Harness - round 2 results", author="Materials Harness")
     doc.build(F, onFirstPage=chrome, onLaterPages=chrome)
+
+
+
+
+if __name__ == '__main__':
+    build_content()
+    md = REPORTS / 'round2_results.md'
+    md.write_text(to_markdown(B))
+    pdf = REPORTS / 'round2_results.pdf'
+    to_pdf(B, pdf)
+    print(f'written: {md}')
+    print(f'written: {pdf}')

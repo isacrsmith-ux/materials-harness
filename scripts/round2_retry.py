@@ -35,7 +35,7 @@ from monty.json import MontyEncoder
 
 from harness import calibration as CAL, compare, round2, splits, store
 from harness.config import LADDER_BUDGET_S, RESULTS_DIR, load_compute_config, settings_tag
-from harness.jobs import ladder_job
+from harness.jobs import run_job
 from harness.runner import run_pool
 from harness.suites import ood
 
@@ -97,12 +97,23 @@ def build(d: pd.DataFrame, compute: dict) -> list[dict]:
             jobs.append({"job_key": f"{r.wbm_id}:retry", "wbm_id": r.wbm_id,
                          "rung1": r.payload, "original": starts.get(r.wbm_id, r.payload["relaxed"]),
                          "seed": compare.stable_seed(f"{r.wbm_id}:retry"), "budget_s": LADDER_BUDGET_S,
+                         # the ladder's continue-rung is only meaningful for a candidate whose rung 1
+                         # did NOT give a usable result; for one that converged, it restarts from the
+                         # point it converged to and converges again, testing nothing
+                         "job_fn": ("ladder" if (bool(_nn(r.rejection)) or not r.converged)
+                                    else "perturbed_restart"),
                          "device": compute["device"], "dtype": compute["dtype"]})
     return jobs
 
 
+def _nn(x):
+    """None for a missing rejection, whatever pandas turned it into. A None round-trips through a
+    DataFrame as NaN, and bool(NaN) is True - which silently marks every clean row as rejected."""
+    return None if x is None or x != x else x
+
+
 def _usable(att: dict) -> bool:
-    return att.get("status") == "ok" and not att.get("rejection")
+    return att.get("status") == "ok" and not _nn(att.get("rejection"))
 
 
 def score(r, retry: dict, init) -> dict:
@@ -112,12 +123,12 @@ def score(r, retry: dict, init) -> dict:
     reproduced        is the lowest-energy usable attempt reached from at least two distinct starts
     stayed_in_start   does any usable attempt end in the basin of the structure it was given
     """
-    att = {"A_wbm_init": {"status": "ok", "rejection": r.rejection, "converged": r.converged,
+    att = {"A_wbm_init": {"status": "ok", "rejection": _nn(r.rejection), "converged": r.converged,
                           "energy_per_atom": r.e_a, "relaxed": r.payload["relaxed"]}}
     for k, v in ((r.ms or {}).get("starts") or {}).items():
         if k != "A_wbm_init" and v.get("relaxed") is not None:
             att[k] = v
-    att["ladder"] = retry
+    att[retry.get("rung") or "retry"] = retry
     usable = {k: v for k, v in att.items() if _usable(v)}
     out = {"usable_before": _usable(att["A_wbm_init"]), "usable_after": bool(usable),
            "attempts": {k: {"status": v.get("status"), "converged": v.get("converged"),
@@ -152,6 +163,7 @@ def main(cap: int | None = None) -> None:
     if not len(d):
         return
     jobs = build(d, compute)
+    jobs.sort(key=lambda j: j["job_fn"] != "ladder")  # slowest first: they must not finish last
     got: dict[str, dict] = {}
 
     def on_result(job, res):
@@ -160,13 +172,19 @@ def main(cap: int | None = None) -> None:
             got[wid] = {"status": res["status"], "error": res.get("error")}
             return
         rej = compare.rejection_reason(res, reference_per_atom=None)
-        got[wid] = {"status": "ok", "converged": res["converged"], "rejection": rej, "rung": res.get("rung"),
+        got[wid] = {"status": "ok", "converged": res["converged"], "rejection": _nn(rej), "rung": res.get("rung"),
                     "energy_per_atom": res["energy_per_atom"], "relaxed": res["relaxed"],
                     "ladder": res.get("ladder", []), "n_steps": res.get("n_steps")}
         if len(got) % 50 == 0:
             print(f"  {len(got)}/{len(jobs)}", flush=True)
 
-    run_pool(ladder_job, jobs, compute["workers"], compute["threads_per_worker"], on_result,
+    # ONE pool, dispatching per job on job_fn. Run as two pools the handful of full-ladder jobs
+    # block it: each may spend the ladder's whole 5,400 s budget, and six of them on five workers
+    # held the 3,038 perturbed restarts for nearly two hours before any of them started.
+    n_ladder = sum(j["job_fn"] == "ladder" for j in jobs)
+    print(f"  {n_ladder} full-ladder retries (rung 1 gave no usable result), "
+          f"{len(jobs) - n_ladder} perturbed restarts, one pool")
+    run_pool(run_job, jobs, compute["workers"], compute["threads_per_worker"], on_result,
              extra_env={"HARNESS_MODEL": "mace-mpa-0-medium"})
 
     inits = {}
@@ -178,11 +196,13 @@ def main(cap: int | None = None) -> None:
         retry = got.get(r.wbm_id, {"status": "missing"})
         s = score(r, retry, inits[r.wbm_id])
         rows.append({"wbm_id": r.wbm_id, "group": r.group, "formula": r.formula, "bin": r.bin,
-                     "classes": r.classes, "rejection_before": r.rejection, **s})
+                     "classes": r.classes, "rejection_before": _nn(r.rejection), **s})
     OUT.write_text(json.dumps({
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "engine": "mace-mpa-0-medium cpu/float32", "settings_tag": tag,
-        "ladder": "config.FALLBACK_LADDER — FIRE/1500 continuing, then perturbed restart/1000",
+        "ladder": ("config.FALLBACK_LADDER — the perturbed restart from the ORIGINAL structure at a "
+                   "1,000 step cap for every candidate whose rung 1 already gave a usable result, and the "
+                   "full ladder (FIRE/1500 continuing, then the perturbed restart) for the ones it did not"),
         "unchanged": "fmax, max stress and the energy-plausibility guard are identical on every rung",
         "energy_spread_threshold_mev": SPREAD_MEV,
         "n_candidates": len(rows), "by_class": dict(counts), "rows": rows},

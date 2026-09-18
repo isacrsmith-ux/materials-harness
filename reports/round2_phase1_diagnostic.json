@@ -1,0 +1,482 @@
+[
+ {
+  "group": "sulfide@p1",
+  "n_requested": 500,
+  "n_usable": 500,
+  "n_rejected": 0,
+  "base_rate": 0.144,
+  "n_splits_corrected": 1,
+  "cert_conf": 0.95,
+  "diagnoses": [
+   {
+    "side": "stable",
+    "target": 0.9,
+    "certified_threshold": null,
+    "best_threshold": -0.01,
+    "n_selected": 54,
+    "k": 51,
+    "point": 0.9444444444444444,
+    "cp_lower": 0.7758428757693069,
+    "verdict": "sample-size limited",
+    "n_selected_needed": 415,
+    "selection_rate": 0.108,
+    "n_structures_needed": 3843,
+    "scale_factor": 7.685185185185185
+   },
+   {
+    "side": "unstable",
+    "target": 0.95,
+    "certified_threshold": 0.01,
+    "best_threshold": 0.03,
+    "n_selected": 360,
+    "k": 359,
+    "point": 0.9972222222222222,
+    "cp_lower": 0.9740462590355476,
+    "verdict": "certified",
+    "n_selected_needed": null,
+    "selection_rate": 0.72,
+    "n_structures_needed": null,
+    "scale_factor": null
+   }
+  ],
+  "alt": {
+   "side": "stable",
+   "target": 0.8,
+   "certified_threshold": null,
+   "best_threshold": -0.01,
+   "n_selected": 54,
+   "k": 51,
+   "point": 0.9444444444444444,
+   "cp_lower": 0.7758428757693069,
+   "verdict": "sample-size limited",
+   "n_selected_needed": 70,
+   "selection_rate": 0.108,
+   "n_structures_needed": 649,
+   "scale_factor": 1.2962962962962963
+  },
+  "routing": {
+   "unstable_threshold": 0.01,
+   "discard_share": 0.806,
+   "n_truly_stable": 72,
+   "n_truly_stable_discarded": 7,
+   "truly_stable_lost": 0.09722222222222222
+  },
+  "by_true_bin": [
+   {
+    "bin": "<0",
+    "n_selected": 51,
+    "n_correct": 51,
+    "precision": 1.0
+   },
+   {
+    "bin": "0\u20130.025",
+    "n_selected": 1,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.025\u20130.1",
+    "n_selected": 1,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.1\u20130.3",
+    "n_selected": 1,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": ">0.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   }
+  ],
+  "threshold_used_for_bins": -0.01
+ },
+ {
+  "group": "nitride@p1",
+  "n_requested": 500,
+  "n_usable": 500,
+  "n_rejected": 0,
+  "base_rate": 0.092,
+  "n_splits_corrected": 1,
+  "cert_conf": 0.95,
+  "diagnoses": [
+   {
+    "side": "stable",
+    "target": 0.9,
+    "certified_threshold": null,
+    "best_threshold": -0.01,
+    "n_selected": 35,
+    "k": 34,
+    "point": 0.9714285714285714,
+    "cp_lower": 0.7602291854546294,
+    "verdict": "sample-size limited",
+    "n_selected_needed": 162,
+    "selection_rate": 0.07,
+    "n_structures_needed": 2315,
+    "scale_factor": 4.628571428571429
+   },
+   {
+    "side": "unstable",
+    "target": 0.95,
+    "certified_threshold": 0.01,
+    "best_threshold": 0.08,
+    "n_selected": 350,
+    "k": 350,
+    "point": 1.0,
+    "cp_lower": 0.9799001610714962,
+    "verdict": "certified",
+    "n_selected_needed": null,
+    "selection_rate": 0.7,
+    "n_structures_needed": null,
+    "scale_factor": null
+   }
+  ],
+  "alt": {
+   "side": "stable",
+   "target": 0.8,
+   "certified_threshold": null,
+   "best_threshold": -0.01,
+   "n_selected": 35,
+   "k": 34,
+   "point": 0.9714285714285714,
+   "cp_lower": 0.7602291854546294,
+   "verdict": "sample-size limited",
+   "n_selected_needed": 43,
+   "selection_rate": 0.07,
+   "n_structures_needed": 615,
+   "scale_factor": 1.2285714285714286
+  },
+  "routing": {
+   "unstable_threshold": 0.01,
+   "discard_share": 0.89,
+   "n_truly_stable": 46,
+   "n_truly_stable_discarded": 6,
+   "truly_stable_lost": 0.13043478260869565
+  },
+  "by_true_bin": [
+   {
+    "bin": "<0",
+    "n_selected": 34,
+    "n_correct": 34,
+    "precision": 1.0
+   },
+   {
+    "bin": "0\u20130.025",
+    "n_selected": 1,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.025\u20130.1",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   },
+   {
+    "bin": "0.1\u20130.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   },
+   {
+    "bin": ">0.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   }
+  ],
+  "threshold_used_for_bins": -0.01
+ },
+ {
+  "group": "carbide@p1",
+  "n_requested": 500,
+  "n_usable": 500,
+  "n_rejected": 0,
+  "base_rate": 0.102,
+  "n_splits_corrected": 1,
+  "cert_conf": 0.95,
+  "diagnoses": [
+   {
+    "side": "stable",
+    "target": 0.9,
+    "certified_threshold": null,
+    "best_threshold": -0.03,
+    "n_selected": 29,
+    "k": 29,
+    "point": 1.0,
+    "cp_lower": 0.7826611900875118,
+    "verdict": "sample-size limited",
+    "n_selected_needed": 68,
+    "selection_rate": 0.058,
+    "n_structures_needed": 1173,
+    "scale_factor": 2.3448275862068964
+   },
+   {
+    "side": "unstable",
+    "target": 0.95,
+    "certified_threshold": 0.0,
+    "best_threshold": 0.03,
+    "n_selected": 415,
+    "k": 415,
+    "point": 1.0,
+    "cp_lower": 0.9830214362157644,
+    "verdict": "certified",
+    "n_selected_needed": null,
+    "selection_rate": 0.83,
+    "n_structures_needed": null,
+    "scale_factor": null
+   }
+  ],
+  "alt": {
+   "side": "stable",
+   "target": 0.8,
+   "certified_threshold": null,
+   "best_threshold": -0.03,
+   "n_selected": 29,
+   "k": 29,
+   "point": 1.0,
+   "cp_lower": 0.7826611900875118,
+   "verdict": "sample-size limited",
+   "n_selected_needed": 32,
+   "selection_rate": 0.058,
+   "n_structures_needed": 552,
+   "scale_factor": 1.103448275862069
+  },
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.89,
+   "n_truly_stable": 51,
+   "n_truly_stable_discarded": 4,
+   "truly_stable_lost": 0.0784313725490196
+  },
+  "by_true_bin": [
+   {
+    "bin": "<0",
+    "n_selected": 29,
+    "n_correct": 29,
+    "precision": 1.0
+   },
+   {
+    "bin": "0\u20130.025",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   },
+   {
+    "bin": "0.025\u20130.1",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   },
+   {
+    "bin": "0.1\u20130.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   },
+   {
+    "bin": ">0.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   }
+  ],
+  "threshold_used_for_bins": -0.03
+ },
+ {
+  "group": "halide:fluoride",
+  "n_requested": 1208,
+  "n_usable": 1208,
+  "n_rejected": 0,
+  "base_rate": 0.24834437086092714,
+  "n_splits_corrected": 1,
+  "cert_conf": 0.95,
+  "diagnoses": [
+   {
+    "side": "stable",
+    "target": 0.9,
+    "certified_threshold": null,
+    "best_threshold": -0.02,
+    "n_selected": 219,
+    "k": 192,
+    "point": 0.8767123287671232,
+    "cp_lower": 0.7926002450079845,
+    "verdict": "precision limited",
+    "n_selected_needed": null,
+    "selection_rate": 0.18129139072847683,
+    "n_structures_needed": null,
+    "scale_factor": null
+   },
+   {
+    "side": "unstable",
+    "target": 0.95,
+    "certified_threshold": 0.01,
+    "best_threshold": 0.05,
+    "n_selected": 494,
+    "k": 494,
+    "point": 1.0,
+    "cp_lower": 0.9857171394283379,
+    "verdict": "certified",
+    "n_selected_needed": null,
+    "selection_rate": 0.40894039735099336,
+    "n_structures_needed": null,
+    "scale_factor": null
+   }
+  ],
+  "alt": {
+   "side": "stable",
+   "target": 0.8,
+   "certified_threshold": null,
+   "best_threshold": -0.02,
+   "n_selected": 219,
+   "k": 192,
+   "point": 0.8767123287671232,
+   "cp_lower": 0.7926002450079845,
+   "verdict": "sample-size limited",
+   "n_selected_needed": 266,
+   "selection_rate": 0.18129139072847683,
+   "n_structures_needed": 1468,
+   "scale_factor": 1.2146118721461188
+  },
+  "routing": {
+   "unstable_threshold": 0.01,
+   "discard_share": 0.6531456953642384,
+   "n_truly_stable": 300,
+   "n_truly_stable_discarded": 11,
+   "truly_stable_lost": 0.03666666666666667
+  },
+  "by_true_bin": [
+   {
+    "bin": "<0",
+    "n_selected": 192,
+    "n_correct": 192,
+    "precision": 1.0
+   },
+   {
+    "bin": "0\u20130.025",
+    "n_selected": 7,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.025\u20130.1",
+    "n_selected": 13,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.1\u20130.3",
+    "n_selected": 5,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": ">0.3",
+    "n_selected": 2,
+    "n_correct": 0,
+    "precision": 0.0
+   }
+  ],
+  "threshold_used_for_bins": -0.02
+ },
+ {
+  "group": "halide:nonfluoride",
+  "n_requested": 2292,
+  "n_usable": 2292,
+  "n_rejected": 0,
+  "base_rate": 0.2238219895287958,
+  "n_splits_corrected": 1,
+  "cert_conf": 0.95,
+  "diagnoses": [
+   {
+    "side": "stable",
+    "target": 0.9,
+    "certified_threshold": null,
+    "best_threshold": -0.05,
+    "n_selected": 225,
+    "k": 215,
+    "point": 0.9555555555555556,
+    "cp_lower": 0.8947499849916847,
+    "verdict": "sample-size limited",
+    "n_selected_needed": 252,
+    "selection_rate": 0.09816753926701571,
+    "n_structures_needed": 2568,
+    "scale_factor": 1.12
+   },
+   {
+    "side": "unstable",
+    "target": 0.95,
+    "certified_threshold": 0.0,
+    "best_threshold": 0.1,
+    "n_selected": 705,
+    "k": 703,
+    "point": 0.9971631205673759,
+    "cp_lower": 0.9838451356760225,
+    "verdict": "certified",
+    "n_selected_needed": null,
+    "selection_rate": 0.3075916230366492,
+    "n_structures_needed": null,
+    "scale_factor": null
+   }
+  ],
+  "alt": {
+   "side": "stable",
+   "target": 0.8,
+   "certified_threshold": -0.01,
+   "best_threshold": -0.05,
+   "n_selected": 225,
+   "k": 215,
+   "point": 0.9555555555555556,
+   "cp_lower": 0.8947499849916847,
+   "verdict": "certified",
+   "n_selected_needed": null,
+   "selection_rate": 0.09816753926701571,
+   "n_structures_needed": null,
+   "scale_factor": null
+  },
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.7595986038394416,
+   "n_truly_stable": 513,
+   "n_truly_stable_discarded": 55,
+   "truly_stable_lost": 0.10721247563352826
+  },
+  "by_true_bin": [
+   {
+    "bin": "<0",
+    "n_selected": 215,
+    "n_correct": 215,
+    "precision": 1.0
+   },
+   {
+    "bin": "0\u20130.025",
+    "n_selected": 4,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.025\u20130.1",
+    "n_selected": 2,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": "0.1\u20130.3",
+    "n_selected": 4,
+    "n_correct": 0,
+    "precision": 0.0
+   },
+   {
+    "bin": ">0.3",
+    "n_selected": 0,
+    "n_correct": 0,
+    "precision": NaN
+   }
+  ],
+  "threshold_used_for_bins": -0.05
+ }
+]

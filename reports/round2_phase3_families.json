@@ -54,6 +54,13 @@
    "n_structures_needed": null,
    "scale_factor": null
   },
+  "routing": {
+   "unstable_threshold": -0.01,
+   "discard_share": 0.89675,
+   "n_truly_stable": 510,
+   "n_truly_stable_discarded": 137,
+   "truly_stable_lost": 0.26862745098039215
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -143,6 +150,13 @@
    "n_structures_needed": null,
    "scale_factor": null
   },
+  "routing": {
+   "unstable_threshold": -0.01,
+   "discard_share": 0.9343788691704499,
+   "n_truly_stable": 222,
+   "n_truly_stable_discarded": 78,
+   "truly_stable_lost": 0.35135135135135137
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -218,6 +232,13 @@
    }
   ],
   "alt": null,
+  "routing": {
+   "unstable_threshold": -0.01,
+   "discard_share": 0.9221748400852878,
+   "n_truly_stable": 186,
+   "n_truly_stable_discarded": 46,
+   "truly_stable_lost": 0.24731182795698925
+  },
   "by_true_bin": [
    {
     "bin": "<0",

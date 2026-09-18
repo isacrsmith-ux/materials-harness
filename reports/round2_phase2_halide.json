@@ -54,6 +54,13 @@
    "n_structures_needed": null,
    "scale_factor": null
   },
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.7474285714285714,
+   "n_truly_stable": 813,
+   "n_truly_stable_discarded": 93,
+   "truly_stable_lost": 0.11439114391143912
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -143,6 +150,13 @@
    "n_structures_needed": null,
    "scale_factor": null
   },
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.7396428571428572,
+   "n_truly_stable": 666,
+   "n_truly_stable_discarded": 72,
+   "truly_stable_lost": 0.10810810810810811
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -218,6 +232,13 @@
    }
   ],
   "alt": null,
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.743968253968254,
+   "n_truly_stable": 1479,
+   "n_truly_stable_discarded": 165,
+   "truly_stable_lost": 0.11156186612576065
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -307,6 +328,13 @@
    "n_structures_needed": null,
    "scale_factor": null
   },
+  "routing": {
+   "unstable_threshold": 0.01,
+   "discard_share": 0.644355198572066,
+   "n_truly_stable": 561,
+   "n_truly_stable_discarded": 25,
+   "truly_stable_lost": 0.044563279857397504
+  },
   "by_true_bin": [
    {
     "bin": "<0",
@@ -382,6 +410,13 @@
    }
   ],
   "alt": null,
+  "routing": {
+   "unstable_threshold": 0.0,
+   "discard_share": 0.7590539541759054,
+   "n_truly_stable": 918,
+   "n_truly_stable_discarded": 94,
+   "truly_stable_lost": 0.10239651416122005
+  },
   "by_true_bin": [
    {
     "bin": "<0",

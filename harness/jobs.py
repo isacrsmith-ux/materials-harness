@@ -65,6 +65,26 @@ def ladder_job(job: dict) -> dict:
     return last | {"rung": None, "ladder": history}
 
 
+def perturbed_restart_job(job: dict) -> dict:
+    """FALLBACK_LADDER's perturbed-restart rung on its own: restart from the ORIGINAL structure with
+    the fixed-seed rattle + strain, at the extended step cap.
+
+    The ladder's first rung continues from the previous relaxation's END POINT, which for a job that
+    already converged there converges again immediately and tests nothing. A candidate whose
+    relaxation left the structure it was given needs the other rung: a different entry into the
+    basin. Convergence criteria (fmax, max stress) and the physical-sanity guard are the production
+    ones and are not touched here - only the starting point and the step cap change.
+    """
+    from harness import compare, engine
+    from harness.config import FALLBACK_LADDER, PERTURB_RESTART
+
+    settings = next(s for name, s, _ in FALLBACK_LADDER if name == "perturbed_restart")
+    start = compare.perturb(job["original"], seed=job["seed"], **PERTURB_RESTART)
+    res = engine.relax(start, settings, job["device"], job["dtype"])
+    return _relax_out(res) | {"rung": "perturbed_restart",
+                              "settings": {"optimizer": settings.optimizer, "max_steps": settings.max_steps}}
+
+
 def eos_job(job: dict) -> dict:
     """Energy-volume points: isotropically scale job['structure'] by job['volume_factors'] and relax
     shape + positions at constant volume at each point. Failed points are reported, not raised."""
@@ -99,7 +119,8 @@ def static_job(job: dict) -> dict:
             "metadata": engine.engine_metadata(job["device"], job["dtype"]) | {"calculation": "single_point"}}
 
 
-JOB_FUNCTIONS = {"relax": relax_job, "static": static_job, "ladder": ladder_job, "eos": eos_job}
+JOB_FUNCTIONS = {"relax": relax_job, "static": static_job, "ladder": ladder_job, "eos": eos_job,
+                 "perturbed_restart": perturbed_restart_job}
 
 
 def run_job(job: dict) -> dict:
