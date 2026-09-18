@@ -1,0 +1,67 @@
+{
+ "created_at": "2026-09-18T18:39:21+00:00",
+ "purpose": "every held-out set this project has created, its hash, its provenance and its state. Nothing here hands out ids: each set's accessor still raises PermissionError without unlock=True.",
+ "accessor_contract": {
+  "original WBM": "splits.test_ids(unlock=True)",
+  "round-1 families": "splits.family_test_ids(fam, unlock=True)",
+  "round-2 groups": "round2.test_ids(group, unlock=True)",
+  "round-3 groups": "round2.test_ids3(group, unlock=True)"
+ },
+ "sets": [
+  {
+   "name": "original WBM locked test",
+   "n": 4000,
+   "sha256": "31f0ad698a2ca07e391c7fbb15ab51c403062444d5071929853024ee6094a025",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split.json",
+   "status": "OPENED ONCE",
+   "note": "opened 2026-09-12 for the final evaluation (reports/final_test.md); never again"
+  },
+  {
+   "name": "oxide locked test (round 1)",
+   "n": 2000,
+   "sha256": "ed5911d40b7df0857580cea6f09288080ca49092eb74a2ae014b5f7c28899c71",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_oxide_halide.json",
+   "status": "UNOPENED",
+   "note": "reserved for the oxide unstable-only routing check, order 2 in the evaluation protocol"
+  },
+  {
+   "name": "halide locked test (round 1)",
+   "n": 2000,
+   "sha256": "26a08e6a360a959740dfe0f975942dae8c35811118e02303de539c6e2c8a610e",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_oxide_halide.json",
+   "status": "UNOPENED",
+   "note": "reserved for the FIRST held-out evaluation: the fluoride carve-out and both halide-side thresholds"
+  },
+  {
+   "name": "sulfide locked test (round 2)",
+   "n": 874,
+   "sha256": "0360c21571af58b506f2d93841fe34f8f1e35c75673eb43cb114dbcc4ab75fe3",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_round2.json",
+   "status": "SEALED - UNUSED UNDER THE CURRENT TAXONOMY",
+   "note": "sulfide is not adopted as a family in spec v2, so this half has nothing to settle under the current taxonomy. It is NOT deleted and NOT closed permanently: its ids, hash and provenance are retained intact and it remains unavailable to the present analysis, available to a future separately pre-registered question if one arises."
+  },
+  {
+   "name": "chalcogenide_residual locked test (round 3)",
+   "n": 1500,
+   "sha256": "2182aff9a32dbb4963595dcf4ffc0447fdc139159735599d882d9e1dbff7f008",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_round3.json",
+   "status": "UNOPENED",
+   "note": "reserved for the provisional chalcogenide threshold, order 3-4 in the protocol"
+  },
+  {
+   "name": "other_residual locked test (round 3)",
+   "n": 1500,
+   "sha256": "72a86b02e7f6572d0307c3ff1f6195927838fbba2dea679429d6ad93acb1d726",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_round3.json",
+   "status": "UNOPENED",
+   "note": "reserved for the provisional other threshold, order 3-4 in the protocol"
+  }
+ ],
+ "all_hashes_verify": true
+}

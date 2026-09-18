@@ -1,0 +1,259 @@
+{
+ "spec_version": 2,
+ "created_at": "2026-09-18T18:39:21+00:00",
+ "harness_commit": "dad450c",
+ "status": "FROZEN SPECIFICATION - NOT THE ACTIVE BUNDLE",
+ "active_bundle": {
+  "file": "data/calibration_bundle.json",
+  "spec_version": 1,
+  "created_at": "2026-09-12T20:21:45+00:00",
+  "note": "v1 remains what harness.predict loads and is unmodified. v2 is promoted only if the halide held-out evaluation passes the pre-registered criteria in reports/halide_evaluation_preregistration.md. v1's historical meaning is preserved: it is the bundle the locked WBM test of 2026-09-12 validated."
+ },
+ "engine": {
+  "key": "mace-mpa-0-medium",
+  "name": "MACE-MPA-0 medium",
+  "checkpoint": "mace-mpa-0-medium.model",
+  "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+  "device": "cpu",
+  "dtype": "float32",
+  "settings_tag": "c2480e74"
+ },
+ "taxonomy": {
+  "chain": [
+   "f-electron",
+   "intermetallic",
+   "oxide",
+   "fluoride",
+   "halide",
+   "chalcogenide",
+   "pnictide",
+   "other"
+  ],
+  "rule": "first match wins, as in confidence.family()",
+  "change_from_v1": "fluoride inserted immediately before halide; nothing else changed",
+  "implemented_in_code": false,
+  "implementation_note": "confidence.family() is NOT changed by this file. Changing it would leave fluoride with no entry in v1's threshold table and silently stop the product labelling fluorides. family() changes when v2 is promoted.",
+  "justification": {
+   "criterion": "a child is carved out only where the parent's pooled rule has a genuine PRECISION deficit on the child - point precision below the 0.90 target on the child's own rows - not merely a loose confidence bound on a small subgroup",
+   "fluoride": "ADOPTED ON VALIDITY GROUNDS, NOT ROUTING GROUNDS. Under halide's pooled -20 meV rule, 350 of 1,888 fluorides are labelled 'likely stable' at a point precision of 0.8971, which FAILS the >= 0.90 requirement the product promises (CP-lower 0.8366). The carve-out INCREASES DFT routing rather than decreasing it: halide's DFT share rises 0.096 -> 0.192 and its recall of truly stable candidates falls 0.599 -> 0.338. That cost is accepted as the price of not making a precision promise the engine cannot keep on this chemistry.",
+   "sulfide": "NOT carved out: point precision 0.9448 on 290 calls under chalcogenide's pooled rule - no deficit. Splitting costs recall 0.575 -> 0.545 and buys nothing.",
+   "carbide": "NOT carved out: point precision 0.9826 on 115 calls under 'other's pooled rule, bound 0.9043 - holds outright. Splitting collapses residual 'other' recall 0.547 -> 0.220.",
+   "nitride": "REJECTED by the user, and independently: it removes pnictide's only certified threshold (+50 meV, bound 0.9515 -> nothing at n=166).",
+   "rejected_criterion": "routing efficiency was considered and rejected as the criterion: it rejects all three carve-outs including the valid one, because pooling always buys statistical power and a split always spends it"
+  }
+ },
+ "population": {
+  "name": "labelable",
+  "definition": "calibration rows that would actually receive a label from the product: usable (not rejected by the energy-plausibility guard), AND not containing a known-weak element, AND whose relaxation did not leave the structure it was given",
+  "authoritative_for": "certification of every threshold in this specification",
+  "second_engine_term": "NOT applied. Round 2 and round 3 ran one engine, so this corresponds to v1's 'without_second_engine' rule set.",
+  "secondary_diagnostic": "all-usable rows, retained in reports/round2_results.md; they describe engine behaviour on a chemistry, not what the product labels, and are NOT the certification footing"
+ },
+ "exclusion_rules": {
+  "energy_plausibility_guard": "compare.rejection_reason - convergence, minimum interatomic distance, and energy plausibility against the DFT reference. Rejections are COUNTED AND EXCLUDED, never dropped, so an exclusion cannot quietly improve a rate.",
+  "weak_elements": [
+   "Be",
+   "Pm",
+   "Pu",
+   "Tc"
+  ],
+  "weak_elements_provenance": "frozen bundle v1, routing.weak_elements_from on the original calibration set",
+  "structure_change": "routing.route_structure_change - a candidate whose relaxation did not end in the basin of the structure it was given is routed to DFT and is not labelable. Phase 6 measured this exclusion to be reproducible: 95.9% of such candidates leave again on a perturbed restart.",
+  "above_trusted_range": "the > 0.3 eV/atom refusal is applied at ROUTING, not at certification, exactly as in v1, so the thresholds here are the ones the reports publish"
+ },
+ "certification": {
+  "target_precision": 0.9,
+  "target_npv": 0.95,
+  "confidence": 0.95,
+  "grid": [
+   -0.3,
+   0.3,
+   61
+  ],
+  "bound": "one-sided Clopper-Pearson, Bonferroni-corrected over the threshold grid so picking the best threshold keeps the guarantee; never a bootstrap",
+  "verdict_rule": "read from the pessimistic end of the interval, never the point estimate",
+  "min_selected": 20,
+  "min_family": 100
+ },
+ "thresholds": {
+  "fluoride": {
+   "stable": null,
+   "unstable": 0.01,
+   "n_labelable": 1888,
+   "base_rate": 0.2680084745762712,
+   "n_called_stable": 0,
+   "n_called_unstable": 1199,
+   "n_truly_stable": 506,
+   "stable_precision": NaN,
+   "stable_precision_cp_lower": NaN,
+   "unstable_npv": 0.9824854045037531,
+   "unstable_npv_cp_lower": 0.9670836527482817,
+   "recall_stable": 0.0,
+   "stable_lost": 0.041501976284584984,
+   "dft_share": 0.3649364406779661,
+   "status": "certified",
+   "provenance": "round 2 halide draw (6,300), labelable rows",
+   "population": "halide draw, F-bearing rows"
+  },
+  "halide": {
+   "stable": -0.02,
+   "unstable": 0.0,
+   "n_labelable": 3247,
+   "base_rate": 0.21465968586387435,
+   "n_called_stable": 421,
+   "n_called_unstable": 2528,
+   "n_truly_stable": 697,
+   "stable_precision": 0.9667458432304038,
+   "stable_precision_cp_lower": 0.929621868237982,
+   "unstable_npv": 0.9695411392405063,
+   "unstable_npv_cp_lower": 0.9572317155389051,
+   "recall_stable": 0.5839311334289814,
+   "stable_lost": 0.11047345767575323,
+   "dft_share": 0.0917770249461041,
+   "status": "certified",
+   "provenance": "round 2 halide draw (6,300), labelable rows",
+   "population": "halide draw, non-F rows"
+  },
+  "oxide": {
+   "stable": null,
+   "unstable": 0.0,
+   "n_labelable": 3310,
+   "base_rate": 0.1229607250755287,
+   "n_called_stable": 0,
+   "n_called_unstable": 2896,
+   "n_truly_stable": 407,
+   "stable_precision": NaN,
+   "stable_precision_cp_lower": NaN,
+   "unstable_npv": 0.9765193370165746,
+   "unstable_npv_cp_lower": 0.9662843907469991,
+   "recall_stable": 0.0,
+   "stable_lost": 0.16707616707616707,
+   "dft_share": 0.12507552870090635,
+   "status": "certified",
+   "provenance": "round 1 oxide draw (4,000), labelable rows",
+   "population": "round-1 oxide draw"
+  },
+  "chalcogenide": {
+   "stable": -0.02,
+   "unstable": 0.0,
+   "n_labelable": 5708,
+   "base_rate": 0.15171688857743518,
+   "n_called_stable": 520,
+   "n_called_unstable": 4832,
+   "n_truly_stable": 866,
+   "stable_precision": 0.9576923076923077,
+   "stable_precision_cp_lower": 0.9223933529790886,
+   "unstable_npv": 0.9733029801324503,
+   "unstable_npv_cp_lower": 0.9651918443935078,
+   "recall_stable": 0.5750577367205543,
+   "stable_lost": 0.1489607390300231,
+   "dft_share": 0.06236860546601261,
+   "status": "provisional",
+   "provenance": "round-3 residual draw (4,000) + round-2 sulfide draw, mixed at the pool's true 0.6212 / 0.3750 ratio",
+   "population": "reconstructed undivided parent"
+  },
+  "other": {
+   "stable": -0.02,
+   "unstable": -0.01,
+   "n_labelable": 3935,
+   "base_rate": 0.10266836086404066,
+   "n_called_stable": 230,
+   "n_called_unstable": 3632,
+   "n_truly_stable": 404,
+   "stable_precision": 0.9608695652173913,
+   "stable_precision_cp_lower": 0.9031169693419574,
+   "unstable_npv": 0.9644823788546255,
+   "unstable_npv_cp_lower": 0.9537553529684013,
+   "recall_stable": 0.5470297029702971,
+   "stable_lost": 0.3193069306930693,
+   "dft_share": 0.01855146124523507,
+   "status": "provisional",
+   "provenance": "round-3 residual draw (4,000) + round-2 carbide draw, mixed at the pool's true 0.8921 / 0.1079 ratio",
+   "population": "reconstructed undivided parent"
+  },
+  "f-electron": {
+   "stable": -0.02,
+   "unstable": 0.01,
+   "n_labelable": 1801,
+   "status": "carried over",
+   "provenance": "frozen bundle, 2026-09-12; NOT re-measured in round 2 or 3"
+  },
+  "intermetallic": {
+   "stable": null,
+   "unstable": 0.0,
+   "n_labelable": 665,
+   "status": "carried over",
+   "provenance": "frozen bundle, 2026-09-12; NOT re-measured in round 2 or 3"
+  },
+  "pnictide": {
+   "stable": null,
+   "unstable": 0.05,
+   "n_labelable": 210,
+   "status": "carried over",
+   "provenance": "frozen bundle, 2026-09-12; NOT re-measured in round 2 or 3"
+  }
+ },
+ "status_meanings": {
+  "certified": "certified on calibration data at the stated target, on a single representative draw of that family",
+  "provisional": "certified on calibration data, but on a population reconstructed by mixing two draws at the pool's true ratio rather than on one draw of the family. MUST NOT be described as held-out certified anywhere.",
+  "carried over": "unchanged from bundle v1, 2026-09-12, and NOT re-measured in round 2 or round 3. Fitted on 210-1,801 rows; the weakest part of the product."
+ },
+ "in_sample_caveat": "every threshold in this specification is fitted and scored on calibration rows and is in-sample by construction. NO held-out evaluation has been run against any of them. No locked half has been opened for this specification.",
+ "calibration_id_sets": {
+  "halide_draw": {
+   "n": 6300,
+   "sha256": "ad69104bdae84138c2400f9f8c1d40cd0c03b07ccd376dbc5fdf7ac6aa8d08fc",
+   "source": "data/wbm_split_oxide_halide.json halide calibration + data/wbm_split_round2.json halide_topup calibration",
+   "used_for": [
+    "fluoride",
+    "halide"
+   ]
+  },
+  "oxide_draw": {
+   "n": 4000,
+   "sha256": "4bb179bb13c4ee6f491f5ddeac84db38b2ec61cfa6ac2ba53cf3079a0a02474f",
+   "source": "data/wbm_split_oxide_halide.json oxide calibration",
+   "used_for": [
+    "oxide"
+   ]
+  },
+  "chalcogenide_residual_draw": {
+   "n": 4000,
+   "sha256": "e65ead02e6cc8cee77d5958ed2a069a319cba83f90e1b061d299353a688a27f9",
+   "source": "data/wbm_split_round3.json chalcogenide_residual calibration",
+   "used_for": [
+    "chalcogenide"
+   ]
+  },
+  "other_residual_draw": {
+   "n": 4000,
+   "sha256": "bc7e3b9aa6bbc6811367371439f574e3af7ac1dd54d57d5e57f6a80b7589b4d9",
+   "source": "data/wbm_split_round3.json other_residual calibration",
+   "used_for": [
+    "other"
+   ]
+  },
+  "sulfide_draw": {
+   "n": 4000,
+   "sha256": "a546c2ef5fdf13a1d9a316e1df1e640309ae52f19d75ef278f7c302176fad9a3",
+   "source": "data/wbm_split_round2.json sulfide calibration",
+   "used_for": [
+    "chalcogenide (subsampled into the reconstructed mixture)"
+   ]
+  },
+  "carbide_draw": {
+   "n": 1876,
+   "sha256": "69dd22cd054fe1173ec7b6d19ec93ed43338b6d47322c523b5927593eac2d06e",
+   "source": "data/wbm_split_round2.json carbide calibration",
+   "used_for": [
+    "other (subsampled into the reconstructed mixture)"
+   ]
+  }
+ },
+ "evaluation_procedure": {
+  "document": "reports/halide_evaluation_preregistration.md",
+  "state": "written and committed; NOT yet executed",
+  "first_set": "halide locked half (round 1, n=2,000)",
+  "rule": "criteria are pre-registered before the half is opened and are not changed afterwards; each half is opened once and never re-opened; a miss is reported as a miss"
+ }
+}
