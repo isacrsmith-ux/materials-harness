@@ -176,7 +176,14 @@ elif [ ! -x "./uvw" ] || [ ! -x "./.tools/bin/uv" ]; then
   # message in CI instead of saying it could not run. The workflow installs uv to that path.
   note "SKIPPED: .tools/bin/uv not available, so tracked PDFs were NOT checked. Do not publish on this run."
 else
-  if pdf_out=$(echo "$pdfs" | ./uvw run --with pypdf --no-project --quiet python -c '
+  # fonttools is named explicitly, not left to chance. pypdf uses it to decode CFF/Type1 font
+  # encodings and logs "fontTools is required to fully parse ... encoding problems" without it.
+  # It happened to be present in the local uv environment and absent in CI, so the two ran
+  # DIFFERENT extraction paths and only CI emitted the warnings -- an environment discrepancy in
+  # a check whose whole job is reading text out of a PDF. Naming it keeps both sides identical
+  # and keeps extraction maximally faithful for whatever PDF is added later. On the two PDFs
+  # tracked today the extracted text is byte-identical either way (verified by sha256).
+  if pdf_out=$(echo "$pdfs" | ./uvw run --with pypdf --with fonttools --no-project --quiet python -c '
 import re, sys, pypdf
 OK = re.compile(r"noreply@anthropic\.com|users\.noreply\.github\.com|@example\.(com|org|net)|help@sti\.nasa\.gov", re.I)
 BAD = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|/Users/[A-Za-z0-9._-]+|/home/[A-Za-z0-9._-]+")
