@@ -39,9 +39,13 @@
    "sha256": "26a08e6a360a959740dfe0f975942dae8c35811118e02303de539c6e2c8a610e",
    "hash_verifies": true,
    "accessor_refuses_without_unlock": true,
-   "n_ids_with_results_in_store": 0,
-   "example_touched": [],
-   "state": "UNOPENED"
+   "n_ids_with_results_in_store": 2000,
+   "example_touched": [
+    "wbm-1-10006",
+    "wbm-1-10017",
+    "wbm-1-10019"
+   ],
+   "state": "*** TOUCHED ***"
   },
   {
    "set": "sulfide locked test (round 2)",
@@ -56,5 +60,5 @@
    "state": "UNOPENED"
   }
  ],
- "all_locked_and_unopened": true
+ "all_locked_and_unopened": false
 }
