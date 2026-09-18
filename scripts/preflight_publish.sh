@@ -100,13 +100,36 @@ else
   HIST_EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
   HIST_PATH='/Users/[A-Za-z0-9._-]+|/home/[A-Za-z0-9._-]+'
   # Addresses that are expected and must not trip the check.
-  EMAIL_OK='noreply@anthropic\.com|users\.noreply\.github\.com|@example\.(com|org|net)|@(domain|host)\.'
+  #   help@sti.nasa.gov is printed in the standard back matter of NASA/TM-2006-214482, the
+  #   public-domain technical memorandum vendored verbatim at
+  #   reference_data/raw/NASA-TM-2006-214482_MISSE2_PEACE.pdf. It is a published institutional
+  #   help desk, not a personal address, and the file is stored byte-for-byte so that its
+  #   recorded sha256 verifies -- editing it out is not an option and is not warranted.
+  EMAIL_OK='noreply@anthropic\.com|users\.noreply\.github\.com|@example\.(com|org|net)|@(domain|host)\.|help@sti\.nasa\.gov'
 
-  hist_objs=$(git rev-list --objects HEAD --branches --tags 2>/dev/null | awk '{print $1}' | sort -u)
+  # Binary blobs are excluded from the TEXT scan below and checked by 4c instead.
+  #
+  # Why: scanning compressed binary for text patterns is both noisy and incomplete.
+  #
+  # Noisy, because a ReportLab PDF's ASCII85 streams throw up address-shaped runs by chance --
+  # things of the form "aW_Fjs6+G6r(at)VT.gqUh", written with (at) here because a literal example
+  # in this comment would trip the very check it documents.
+  #
+  # Incomplete, because a real address inside a Flate stream is invisible to the same scan.
+  # Measured on this repo: the raw pass reported two chance runs from reports/test_results.pdf and
+  # one from the vendored NASA memorandum, and MISSED that memorandum's genuine STI help-desk
+  # address, which sits in a compressed stream. It raised false alarms and gave false assurance at
+  # the same time, which is why the real check is 4c.
+  BINARY_RE='\.(pdf|gz|zip|parquet|sqlite|model|png|jpe?g|gif|ico|woff2?|ttf|so|dylib|whl)$'
+
+  hist_objs=$(git rev-list --objects HEAD --branches --tags 2>/dev/null \
+                | awk -v re="$BINARY_RE" '$2 == "" || $2 !~ re {print $1}' | sort -u)
   n_objs=$(echo "$hist_objs" | grep -c . || true)
+  n_skipped=$(git rev-list --objects HEAD --branches --tags 2>/dev/null \
+                | awk -v re="$BINARY_RE" '$2 != "" && $2 ~ re' | wc -l | tr -d ' ')
 
-  # One streamed pass over every object: blobs (file content) and commits (author/committer and
-  # messages) both go through, so this covers metadata as well as files.
+  # One streamed pass over every non-binary object: blobs (file content) and commits
+  # (author/committer and messages) both go through, so this covers metadata as well as files.
   bad_emails=$(echo "$hist_objs" | git cat-file --batch 2>/dev/null \
                  | grep -aoE "$HIST_EMAIL" 2>/dev/null \
                  | grep -avEi "$EMAIL_OK" 2>/dev/null | sort -u || true)
@@ -125,7 +148,7 @@ else
     done
     note "to find which commits carry it: git log --all --oneline -- <path>"
   else
-    note "no unexpected email addresses in published history ($n_objs objects: blobs, trees and commits)"
+    note "no unexpected email addresses in published history ($n_objs objects: blobs, trees and commits; $n_skipped binary blobs excluded, see 4c)"
   fi
 
   if [ -n "$bad_paths" ]; then
@@ -133,6 +156,44 @@ else
     echo "$bad_paths" | head -5 | sed 's/^/        /'
   else
     note "no absolute local paths in published history"
+  fi
+fi
+
+echo "== 4c. tracked PDFs, by EXTRACTED TEXT (4b cannot see inside them) =="
+# 4b excludes binary blobs, so a PDF is not text-scanned there. This closes that gap the only way
+# that actually works: decode the document and scan what it really says -- the extracted text, the
+# decompressed content streams, and the document metadata (which carries an /Author field).
+pdfs=$(git ls-files -- '*.pdf' 2>/dev/null || true)
+if [ -z "$pdfs" ]; then
+  note "no tracked PDFs"
+elif [ ! -x "./uvw" ]; then
+  note "SKIPPED: ./uvw not available, so tracked PDFs were NOT checked. Do not publish on this run."
+else
+  if pdf_out=$(echo "$pdfs" | ./uvw run --with pypdf --no-project --quiet python -c '
+import re, sys, pypdf
+OK = re.compile(r"noreply@anthropic\.com|users\.noreply\.github\.com|@example\.(com|org|net)|help@sti\.nasa\.gov", re.I)
+BAD = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|/Users/[A-Za-z0-9._-]+|/home/[A-Za-z0-9._-]+")
+rc = 0
+for path in (l.strip() for l in sys.stdin if l.strip()):
+    try:
+        r = pypdf.PdfReader(path)
+        blob = "".join((p.extract_text() or "") for p in r.pages)
+        for p in r.pages:
+            try: blob += p.get_contents().get_data().decode("latin-1")
+            except Exception: pass
+        blob += " ".join(f"{k}={v}" for k, v in (r.metadata or {}).items())
+    except Exception as exc:
+        print(f"UNREADABLE {path}: {type(exc).__name__}"); rc = 1; continue
+    hits = sorted({h for h in BAD.findall(blob) if not OK.search(h)})
+    print(("FOUND " + path + ": " + ", ".join(hits[:4])) if hits else ("clean  " + path))
+    if hits: rc = 1
+sys.exit(rc)
+' 2>/dev/null); then
+    echo "$pdf_out" | sed 's/^/  /'
+    note "tracked PDFs carry no unexpected address or local path in their real content"
+  else
+    bad "a tracked PDF contains an unexpected address or local path, or could not be read:"
+    echo "$pdf_out" | sed 's/^/        /'
   fi
 fi
 
