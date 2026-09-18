@@ -1,0 +1,145 @@
+{
+ "created_at": "2026-09-18T22:22:46+00:00",
+ "question": "is fluoride's true precision under the POOLED halide -20 meV rule below 0.90 (a validity deficit, carve out) or at/above it (no deficit, keep pooled)?",
+ "uses_locked_data": false,
+ "pools_historical_results": false,
+ "refits_any_threshold": false,
+ "target": 0.9,
+ "confidence": 0.95,
+ "powers": [
+  0.8,
+  0.9
+ ],
+ "fixed_evidence": {
+  "calibration": {
+   "n_calls": 350,
+   "n_correct": 314,
+   "point": 0.8971428571428571,
+   "source": "spec v2 fit on the 6,300-structure halide calibration draw, labelable rows"
+  },
+  "held_out": {
+   "n_calls": 107,
+   "n_correct": 101,
+   "point": 0.9439252336448598,
+   "source": "R1 of the halide locked-half evaluation, 2026-09-18"
+  }
+ },
+ "yield_assumptions": {
+  "labelable_fraction": 0.8295,
+  "stable_calls_per_labelable_fluoride": 0.16640746500777606,
+  "source": "the halide locked half, the cleanest single measurement of the chain"
+ },
+ "sizing": [
+  {
+   "p_true": 0.8,
+   "certify_calls_80": null,
+   "certify_structures_80": null,
+   "deficit_calls_80": 79,
+   "deficit_structures_80": 573,
+   "certify_calls_90": null,
+   "certify_structures_90": null,
+   "deficit_calls_90": 121,
+   "deficit_structures_90": 877
+  },
+  {
+   "p_true": 0.84,
+   "certify_calls_80": null,
+   "certify_structures_80": null,
+   "deficit_calls_80": 216,
+   "deficit_structures_80": 1565,
+   "certify_calls_90": null,
+   "certify_structures_90": null,
+   "deficit_calls_90": 287,
+   "deficit_structures_90": 2080
+  },
+  {
+   "p_true": 0.86,
+   "certify_calls_80": null,
+   "certify_structures_80": null,
+   "deficit_calls_80": 439,
+   "deficit_structures_80": 3181,
+   "certify_calls_90": null,
+   "certify_structures_90": null,
+   "deficit_calls_90": 581,
+   "deficit_structures_90": 4210
+  },
+  {
+   "p_true": 0.88,
+   "certify_calls_80": null,
+   "certify_structures_80": null,
+   "deficit_calls_80": 1784,
+   "deficit_structures_80": 12925,
+   "certify_calls_90": null,
+   "certify_structures_90": null,
+   "deficit_calls_90": 2360,
+   "deficit_structures_90": 17098
+  },
+  {
+   "p_true": 0.8971,
+   "certify_calls_80": null,
+   "certify_structures_80": null,
+   "deficit_calls_80": 67656,
+   "deficit_structures_80": 490137,
+   "certify_calls_90": null,
+   "certify_structures_90": null,
+   "deficit_calls_90": 102898,
+   "deficit_structures_90": 745449
+  },
+  {
+   "p_true": 0.92,
+   "certify_calls_80": 1348,
+   "certify_structures_80": 9766,
+   "deficit_calls_80": null,
+   "deficit_structures_80": null,
+   "certify_calls_90": 1784,
+   "certify_structures_90": 12925,
+   "deficit_calls_90": null,
+   "deficit_structures_90": null
+  },
+  {
+   "p_true": 0.9439,
+   "certify_calls_80": 287,
+   "certify_structures_80": 2080,
+   "deficit_calls_80": null,
+   "deficit_structures_80": null,
+   "certify_calls_90": 381,
+   "certify_structures_90": 2761,
+   "deficit_calls_90": null,
+   "deficit_structures_90": null
+  },
+  {
+   "p_true": 0.96,
+   "certify_calls_80": 140,
+   "certify_structures_80": 1015,
+   "deficit_calls_80": null,
+   "deficit_structures_80": null,
+   "certify_calls_90": 187,
+   "certify_structures_90": 1355,
+   "deficit_calls_90": null,
+   "deficit_structures_90": null
+  }
+ ],
+ "feasibility": {
+  "pool_available": 429,
+  "max_calls": 59,
+  "vs_evidence_in_hand": {
+   "calibration_calls": 350,
+   "heldout_calls": 107
+  },
+  "p=0.8971": {
+   "label": "calibration estimate",
+   "power_to_certify": 0.012820066985808176,
+   "power_to_establish_deficit": 0.03668498363572704
+  },
+  "p=0.9439": {
+   "label": "held-out estimate",
+   "power_to_certify": 0.1494459878561888,
+   "power_to_establish_deficit": 0.0003946823111123263
+  },
+  "p=0.86": {
+   "label": "a deficit worth acting on",
+   "power_to_certify": 0.0014484550106294014,
+   "power_to_establish_deficit": 0.19629986436849536
+  }
+ }
+}
