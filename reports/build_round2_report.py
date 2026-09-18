@@ -277,3 +277,169 @@ def build_content():
              "does not give oxide a viable threshold, but it does say the family's ceiling is not "
              "explained by mixed valence.")
     B.append(("__section16__", section_16))
+
+
+    def section_15():
+        h1("15. The three new families, fully calibrated")
+        small("Source: `reports/round2_phase3_families.md`. sulfide 4,000, nitride 2,423 and carbide "
+              "1,876 calibration structures, drawn sequentially against a shared taken-set from the "
+              "pool ids no earlier split had used. Same methodology as test 7 throughout.")
+        body("Phase 1 diagnosed all three as sample-size limited, so all three were scaled to "
+             "whatever the pool could supply. Only sulfide reached the 4,000 cap the brief named; "
+             "nitride and carbide are the whole of what was available after the leakage guards.")
+        tbl(summary_rows(["sulfide", "nitride", "carbide"], P3), [26, 20, 20, 20, 32, 32])
+        h2("Diagnosis")
+        tbl(diag_rows(["sulfide", "nitride", "carbide"], P3),
+            [24, 15, 12, 15, 11, 9, 14, 15, 30, 22])
+        body("**Carbide certifies both sides.** Its stable threshold is -20 meV/atom, its unstable "
+             "threshold -10 meV/atom. At the ceiling threshold all 97 selected calls were truly "
+             "stable, and the verdict is still read from the bound (0.9294), never from that 1.0000.")
+        body("**Sulfide and nitride miss, narrowly, and the pool is spent.** Sulfide's bound reaches "
+             "0.8747 and nitride's 0.8745 against the 0.90 target; both remain sample-size limited "
+             "rather than precision limited, with point precisions of 0.9703 and 0.9859. Sulfide "
+             "would need about 6,416 calibration structures against the 4,874 the draw could supply, "
+             "and nitride about 3,106 against 2,423. Neither shortfall can be closed from this pool "
+             "without dissolving a locked half or relaxing the reduced-formula leakage guard, and "
+             "neither was done.")
+        note("**Unstable-side certification is not a small result for these families.** All three "
+             "certify it, which is what turns 'send everything to DFT' into 'discard most of it "
+             "without DFT'. But the round-1 caution applies unchanged: a satisfied NPV target is "
+             "not the same as keeping your discoveries, and the share of truly stable candidates "
+             "lost at the certified unstable threshold must be quoted with it every time.")
+
+
+# --------------------------------------------------------------------------- renderers
+import re
+
+
+def _md_inline(t: str) -> str:
+    return t.replace("<br/>", " ").replace("&#183;", "·")
+
+
+def to_markdown(blocks) -> str:
+    L = []
+    for b in blocks:
+        kind = b[0]
+        if kind == "pagebreak":
+            L.append("")
+        elif kind == "h1":
+            L.append(f"\n## {_md_inline(b[1])}\n")
+        elif kind == "h2":
+            L.append(f"\n### {_md_inline(b[1])}\n")
+        elif kind == "note":
+            L.append("> " + _md_inline(b[1]).replace("\n", "\n> ") + "\n")
+        elif kind in ("body", "small"):
+            L.append(_md_inline(b[1]) + "\n")
+        elif kind == "table":
+            rows = b[1]
+            L.append("| " + " | ".join(_md_inline(str(c)) for c in rows[0]) + " |")
+            L.append("|" + "---|" * len(rows[0]))
+            for r in rows[1:]:
+                L.append("| " + " | ".join(_md_inline(str(c)) for c in r) + " |")
+            L.append("")
+    return "\n".join(L).replace("\n\n\n", "\n\n") + "\n"
+
+
+_ASCII = {"–": "-", "—": " - ", "≤": "<=", "≥": ">=", "·": "-", "×": "x", "’": "'", "“": '"', "”": '"'}
+
+
+def _pdf_inline(t: str) -> str:
+    """reportlab's Helvetica is WinAnsi: anything outside it draws as a black box."""
+    for k, v in _ASCII.items():
+        t = t.replace(k, v)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
+    t = re.sub(r"`(.+?)`", r"<font face='Courier'>\1</font>", t)
+    return t
+
+
+def to_pdf(blocks, out_path):
+    from reportlab.lib import colors
+    from reportlab.lib.enums import TA_LEFT
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib.units import mm
+    from reportlab.platypus import (KeepTogether, PageBreak, Paragraph, SimpleDocTemplate,
+                                    Spacer, Table, TableStyle)
+
+    INK = colors.HexColor("#1a1a1a")
+    MUTED = colors.HexColor("#5b6169")
+    RULE = colors.HexColor("#d4d7dc")
+    BAND = colors.HexColor("#f2f4f6")
+    ACCENT = colors.HexColor("#1f4e79")
+    WARN = colors.HexColor("#8a4b08")
+    ss = getSampleStyleSheet()
+    S = {
+        "title": ParagraphStyle("title", parent=ss["Title"], fontName="Helvetica-Bold", fontSize=24,
+                                leading=28, textColor=INK, alignment=TA_LEFT, spaceAfter=4),
+        "sub": ParagraphStyle("sub", parent=ss["Normal"], fontSize=11, leading=15, textColor=MUTED,
+                              spaceAfter=18),
+        "h1": ParagraphStyle("h1", parent=ss["Heading1"], fontName="Helvetica-Bold", fontSize=15,
+                             leading=19, textColor=ACCENT, spaceBefore=16, spaceAfter=7),
+        "h2": ParagraphStyle("h2", parent=ss["Heading2"], fontName="Helvetica-Bold", fontSize=10.5,
+                             leading=14, textColor=INK, spaceBefore=11, spaceAfter=4),
+        "body": ParagraphStyle("body", parent=ss["Normal"], fontSize=9.4, leading=13.6, textColor=INK,
+                               spaceAfter=7),
+        "small": ParagraphStyle("small", parent=ss["Normal"], fontSize=8.2, leading=11.4,
+                                textColor=MUTED, spaceAfter=6),
+        "cell": ParagraphStyle("cell", parent=ss["Normal"], fontSize=7.4, leading=9.8, textColor=INK),
+        "cellh": ParagraphStyle("cellh", parent=ss["Normal"], fontSize=7.4, leading=9.8,
+                                textColor=colors.white, fontName="Helvetica-Bold"),
+    }
+
+    def chrome(canvas, doc):
+        canvas.saveState()
+        canvas.setFont("Helvetica", 7.5)
+        canvas.setFillColor(MUTED)
+        canvas.drawString(20 * mm, 12 * mm, "Materials Harness - round 2 results")
+        canvas.drawRightString(190 * mm, 12 * mm, f"page {doc.page}")
+        canvas.setStrokeColor(RULE)
+        canvas.setLineWidth(0.4)
+        canvas.line(20 * mm, 15 * mm, 190 * mm, 15 * mm)
+        canvas.restoreState()
+
+    F = []
+    first_h1 = True
+    for b in blocks:
+        kind = b[0]
+        if kind == "pagebreak":
+            F.append(PageBreak())
+        elif kind == "h1":
+            if first_h1:
+                F.append(Paragraph(_pdf_inline(b[1]), S["title"]))
+                first_h1 = False
+            else:
+                F.append(Paragraph(_pdf_inline(b[1]), S["h1"]))
+        elif kind == "h2":
+            F.append(Paragraph(_pdf_inline(b[1]), S["h2"]))
+        elif kind == "body":
+            F.append(Paragraph(_pdf_inline(b[1]), S["body"]))
+        elif kind == "small":
+            F.append(Paragraph(_pdf_inline(b[1]), S["sub" if len(F) < 2 else "small"]))
+        elif kind == "note":
+            t = Table([[Paragraph(_pdf_inline(b[1]), ParagraphStyle(
+                "n", parent=S["body"], fontSize=8.6, leading=12.2, textColor=WARN))]],
+                colWidths=[168 * mm])
+            t.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fdf6ec")),
+                ("LINEBEFORE", (0, 0), (0, -1), 2.2, WARN),
+                ("LEFTPADDING", (0, 0), (-1, -1), 8), ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 6), ("BOTTOMPADDING", (0, 0), (-1, -1), 6)]))
+            F += [t, Spacer(1, 7)]
+        elif kind == "table":
+            rows, widths = b[1], b[2]
+            data = [[Paragraph(_pdf_inline(str(c)), S["cellh" if i == 0 else "cell"]) for c in r]
+                    for i, r in enumerate(rows)]
+            t = Table(data, colWidths=[w * mm for w in widths], repeatRows=1)
+            style = [("BACKGROUND", (0, 0), (-1, 0), ACCENT),
+                     ("GRID", (0, 0), (-1, -1), 0.4, RULE),
+                     ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                     ("LEFTPADDING", (0, 0), (-1, -1), 4), ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                     ("TOPPADDING", (0, 0), (-1, -1), 3.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3.5)]
+            for i in range(2, len(rows), 2):
+                style.append(("BACKGROUND", (0, i), (-1, i), BAND))
+            t.setStyle(TableStyle(style))
+            F += [t, Spacer(1, 8)]
+    doc = SimpleDocTemplate(str(out_path), pagesize=A4, leftMargin=20 * mm, rightMargin=20 * mm,
+                            topMargin=18 * mm, bottomMargin=20 * mm,
+                            title="Materials Harness - round 2 results", author="Materials Harness")
+    doc.build(F, onFirstPage=chrome, onLaterPages=chrome)

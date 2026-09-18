@@ -151,6 +151,21 @@ def rows_for(group: str, targets=((0.90, "stable"), (0.95, "unstable")), alt_tar
     stable_dx = out["diagnoses"][0]
     if stable_dx["certified_threshold"] is None:
         out["alt"] = round2.diagnose(d.each_pred, d.stable, alt_target, "stable", conf=conf)
+    # Routing impact of the certified UNSTABLE threshold. The project's standing rule is that a
+    # satisfied NPV target is not the same as keeping your discoveries, so the share discarded and
+    # the share of truly stable candidates lost are always reported together.
+    ut = out["diagnoses"][1]["certified_threshold"]
+    if ut is not None and len(d):
+        called_unstable = d.each_pred > ut + M.ON_HULL_TOL
+        n_stable = int(d.stable.sum())
+        out["routing"] = {"unstable_threshold": ut,
+                          "discard_share": float(called_unstable.mean()),
+                          "n_truly_stable": n_stable,
+                          "n_truly_stable_discarded": int((called_unstable & d.stable).sum()),
+                          "truly_stable_lost": float((called_unstable & d.stable).sum() / n_stable)
+                          if n_stable else float("nan")}
+    else:
+        out["routing"] = None
     t = stable_dx["certified_threshold"]
     t = t if t is not None else stable_dx["best_threshold"]
     out["by_true_bin"] = (round2.precision_by_true_bin(d.each_pred, d.stable, d.each_true, t)
@@ -212,6 +227,17 @@ def render(results: list[dict]) -> str:
             a = r["alt"]
             L.append(f"| {r['group']} | {mev(a['best_threshold'])} | {a['n_selected']} | {fmt(a['point'])} | "
                      f"{fmt(a['cp_lower'])} | {mev(a['certified_threshold']) if a['certified_threshold'] is not None else 'no'} |")
+    routed = [r for r in results if r.get("routing")]
+    if routed:
+        L += ["", "## Routing impact of the certified 'likely unstable' threshold", "",
+              "A satisfied NPV target is not the same as keeping your discoveries: both columns "
+              "belong to any proposal to route on these thresholds.", "",
+              "| group | threshold | share discarded without DFT | truly stable lost | (of) |",
+              "|---|---|---:|---:|---:|"]
+        for r in routed:
+            g = r["routing"]
+            L.append(f"| {r['group']} | {mev(g['unstable_threshold'])} | {g['discard_share']:.3f} | "
+                     f"{g['truly_stable_lost']:.3f} | {g['n_truly_stable_discarded']} of {g['n_truly_stable']} |")
     L += ["", "## Precision of the 'likely stable' call by TRUE hull-distance bin", "",
           "At each group's certified stable threshold, or its best point threshold when nothing certified.", ""]
     for r in results:
