@@ -26,7 +26,7 @@ import numpy as np
 import pandas as pd
 
 from harness import calibration as CAL, confidence as C, metrics as M, round2, splits
-from harness.config import REPORTS_DIR
+from harness.config import DATA_DIR, REPORTS_DIR
 
 R2_CACHE = "round2_calibration_init_structs.json"
 R1_CACHE = "oxide_halide_calibration_init_structs.json"
@@ -47,6 +47,10 @@ def resolve(group: str) -> pd.DataFrame:
         out = d[mask].copy()
         out.attrs = dict(d.attrs) | {"n_requested": int(mask.sum()), "subfamily_of": parent}
         return out
+    if group.endswith("@p1"):
+        import json
+        sel = json.loads((DATA_DIR / "round2_phase1_ids.json").read_text())["groups"]
+        return _table(sel[group[:-3]], R2_CACHE)
     if group in ("sulfide", "nitride", "carbide", round2.HALIDE_TOPUP):
         return _table(round2.calibration_ids(group), R2_CACHE)
     if group in ("oxide", "halide"):

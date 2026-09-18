@@ -297,6 +297,8 @@ def diagnose(pred, stable, target: float, side: str = "stable", conf: float | No
         verdict = "sample-size limited"
     else:
         verdict = "precision limited"
+    if cert is not None:
+        need = None  # already certified: "how many more would it take" has no meaning
     return {"side": side, "target": target, "certified_threshold": cert,
             "best_threshold": b["t"], "n_selected": b["n_selected"], "k": b["k"],
             "point": b["point"], "cp_lower": float(lower), "verdict": verdict,
