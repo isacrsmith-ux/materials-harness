@@ -88,19 +88,106 @@ def build() -> dict:
         n_child = min(n_child, len(k_lab))
         whole = pd.concat([r_lab, k_lab.sample(n=n_child, random_state=SEED)], ignore_index=True)
 
+        # head-to-head on ONE population: the reconstructed undivided parent, routed either with a
+        # single pooled rule or with one rule per sub-family. Both rules are fitted on these same
+        # rows, so both carry the same in-sample optimism and the comparison is fair.
+        m_whole = _tax.certify_both(whole)
+        m_res = _tax.certify_both(r_lab)
+        m_kid = _tax.certify_both(k_lab)
+        split_rules = {parent: m_res, child: m_kid}
+        calls = []
+        for r in whole.itertuples():
+            th = split_rules[r.fam3]
+            if th["stable_threshold"] is not None and r.each_pred <= th["stable_threshold"] + M.ON_HULL_TOL:
+                calls.append("stable")
+            elif th["unstable_threshold"] is not None and r.each_pred > th["unstable_threshold"] + M.ON_HULL_TOL:
+                calls.append("unstable")
+            else:
+                calls.append(None)
+        c = pd.Series(calls, index=whole.index)
+        ns = int(whole.stable.sum())
+        sel = c == "stable"
+        lvl = 1 - (1 - C.CERT_CONF) / len(C.DEC_GRID)
+        head_to_head = {
+            "population": "the reconstructed undivided parent, at its true mixture",
+            "n": len(whole), "n_truly_stable": ns,
+            "pooled_one_rule": {k: m_whole[k] for k in
+                                ("dft_share", "recall_stable", "stable_lost", "precision",
+                                 "precision_cp_lower", "n_called_stable")},
+            "split_two_rules": {
+                "dft_share": float(c.isna().mean()),
+                "recall_stable": float((sel & whole.stable).sum() / ns) if ns else float("nan"),
+                "stable_lost": float(((c == "unstable") & whole.stable).sum() / ns) if ns else float("nan"),
+                "precision": float(whole.stable[sel].mean()) if sel.any() else float("nan"),
+                "precision_cp_lower": C.cp_lower(int(whole.stable[sel].sum()), int(sel.sum()), lvl) if sel.any() else float("nan"),
+                "n_called_stable": int(sel.sum())},
+        }
+
         out["parents"][parent] = {
+            "head_to_head": head_to_head,
             "true_share_residual": w_r, "true_share_child": w_c,
             "n_drawn_residual": len(resid), "n_rejected_residual": int(resid.attrs["n_rejected"]),
             "n_labelable_residual": len(r_lab),
             "n_labelable_child": len(k_lab), "n_child_subsampled_for_whole": n_child,
-            "whole_before_carveout": _tax.certify_both(whole),
-            "residual_after_carveout": _tax.certify_both(r_lab),
-            "child": _tax.certify_both(k_lab),
+            "whole_before_carveout": m_whole,
+            "residual_after_carveout": m_res,
+            "child": m_kid,
             "child_name": child,
             "old_residual_estimate": {
                 "n_labelable": 130 if parent == "chalcogenide" else 248,
                 "source": "original 4,000-id calibration set, reports/round2_taxonomy_decision.md"},
         }
+    # The approved fluoride carve-out, judged by the SAME head-to-head test, so all three
+    # carve-outs are decided on one criterion. The 6,300-structure halide draw is already a
+    # representative whole-parent sample, so nothing needs reconstructing here.
+    hal = pd.concat([_table(splits.family_calibration_ids("halide"), "oxide_halide_calibration_init_structs.json"),
+                     _table(round2.calibration_ids(round2.HALIDE_TOPUP), R2_CACHE)], ignore_index=True)
+    hal = hal[_tax.labelable_mask(hal)]
+    from pymatgen.core import Composition
+    # "subfam", not "sub": DataFrame.sub is subtraction, and attribute access silently returns it
+    has_f = hal.formula.map(lambda x: "F" in {e.symbol for e in Composition(x).elements})
+    hal = hal.assign(subfam=np.where(has_f, "fluoride", "halide"))
+    m_whole = _tax.certify_both(hal)
+    subs = {s: _tax.certify_both(g) for s, g in hal.groupby("subfam")}
+    calls = []
+    for r in hal.itertuples():
+        th = subs[r.subfam]
+        if th["stable_threshold"] is not None and r.each_pred <= th["stable_threshold"] + M.ON_HULL_TOL:
+            calls.append("stable")
+        elif th["unstable_threshold"] is not None and r.each_pred > th["unstable_threshold"] + M.ON_HULL_TOL:
+            calls.append("unstable")
+        else:
+            calls.append(None)
+    c = pd.Series(calls, index=hal.index)
+    ns = int(hal.stable.sum())
+    sel = c == "stable"
+    lvl = 1 - (1 - C.CERT_CONF) / len(C.DEC_GRID)
+    out["parents"]["halide"] = {
+        "child_name": "fluoride", "true_share_residual": float((hal.subfam == "halide").mean()),
+        "true_share_child": float((hal.subfam == "fluoride").mean()),
+        "n_drawn_residual": int((hal.subfam == "halide").sum()), "n_rejected_residual": 0,
+        "n_labelable_residual": int((hal.subfam == "halide").sum()),
+        "n_labelable_child": int((hal.subfam == "fluoride").sum()),
+        "n_child_subsampled_for_whole": int((hal.subfam == "fluoride").sum()),
+        "whole_before_carveout": m_whole,
+        "residual_after_carveout": subs["halide"], "child": subs["fluoride"],
+        "old_residual_estimate": {"n_labelable": 115, "source": "original calibration set"},
+        "note": ("no reconstruction needed: the 6,300-structure halide draw is already a "
+                 "representative sample of the undivided parent"),
+        "head_to_head": {
+            "population": "the 6,300-structure halide draw, labelable rows",
+            "n": len(hal), "n_truly_stable": ns,
+            "pooled_one_rule": {k: m_whole[k] for k in
+                                ("dft_share", "recall_stable", "stable_lost", "precision",
+                                 "precision_cp_lower", "n_called_stable")},
+            "split_two_rules": {
+                "dft_share": float(c.isna().mean()),
+                "recall_stable": float((sel & hal.stable).sum() / ns) if ns else float("nan"),
+                "stable_lost": float(((c == "unstable") & hal.stable).sum() / ns) if ns else float("nan"),
+                "precision": float(hal.stable[sel].mean()) if sel.any() else float("nan"),
+                "precision_cp_lower": C.cp_lower(int(hal.stable[sel].sum()), int(sel.sum()), lvl) if sel.any() else float("nan"),
+                "n_called_stable": int(sel.sum())}},
+    }
     return out
 
 
@@ -134,7 +221,9 @@ def render(D: dict) -> str:
          "## True composition of each parent in the WBM pool", "",
          "| parent | total in pool | residual share | child share |", "|---|---:|---:|---:|"]
     for p, r in D["parents"].items():
-        L.append(f"| {p} | {D['pool_shares'][p]['total']:,} | {r['true_share_residual']:.4f} | "
+        tot = D["pool_shares"].get(p, {}).get("total")
+        tot = f"{tot:,}" if tot else "(measured on the draw itself)"
+        L.append(f"| {p} | {tot} | {r['true_share_residual']:.4f} | "
                  f"{r['child_name']} {r['true_share_child']:.4f} |")
     L += ["", "The 'whole' rows below reconstruct the undivided parent by subsampling the child draw "
               "down to that true share, so the mixture is the real one and every count stays an "
@@ -153,6 +242,19 @@ def render(D: dict) -> str:
         L.append("| " + " | ".join(row("whole parent, before carve-out", r["whole_before_carveout"])) + " |")
         L.append("| " + " | ".join(row("residual parent, after carve-out", r["residual_after_carveout"])) + " |")
         L.append("| " + " | ".join(row(f"{r['child_name']} (the child)", r["child"])) + " |")
+        h = r["head_to_head"]
+        L += ["", "### Head to head, on one population", "",
+              f"The reconstructed undivided parent ({h['n']:,} rows, {h['n_truly_stable']} truly "
+              "stable), routed either with a single pooled rule or with one rule per sub-family. "
+              "Both rule sets are fitted on these same rows, so the in-sample optimism is identical "
+              "and only the structural difference remains.", "",
+              "| routing | to DFT | n called stable | precision | CP-lower | recall (stable) | stable lost |",
+              "|---|---:|---:|---:|---:|---:|---:|"]
+        for label, key in (("one pooled rule (no carve-out)", "pooled_one_rule"),
+                           ("two rules (carve-out)", "split_two_rules")):
+            m = h[key]
+            L.append(f"| {label} | {f(m['dft_share'],3)} | {m['n_called_stable']} | {f(m['precision'])} | "
+                     f"{f(m['precision_cp_lower'])} | {f(m['recall_stable'],3)} | {f(m['stable_lost'],3)} |")
         L.append("")
     return "\n".join(L) + "\n"
 
