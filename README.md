@@ -245,8 +245,10 @@ kinds of thing and came from different places.
 | what | licence | file |
 |:--|:--|:--|
 | **Code** — `harness/`, `tests/`, `scripts/`, `config/`, root files | **Apache-2.0** | [LICENSE](LICENSE) |
+| **Code** — `reference_data/loader.py`, `reference_data/extract/`, `reference_data/tests/` | **Apache-2.0** | [LICENSE](LICENSE) |
 | **`data/`** | **CC BY 4.0** | [data/LICENSE](data/LICENSE) |
 | **`reports/`** | **CC BY 4.0** | [reports/LICENSE](reports/LICENSE) |
+| **`reference_data/`** — CSV tables, `schema/`, prose | **CC BY 4.0** | [reference_data/LICENSE](reference_data/LICENSE) |
 | **`results/results.parquet`** | **CC BY 4.0** | [results/README.md](results/README.md) |
 
 Copyright 2026 Isac Smith. Apache-2.0 was chosen over MIT for its express patent grant and its
@@ -259,6 +261,11 @@ third-party material, are excluded from those grants, and keep their own terms:
 - `data/experimental_lattice_constants.csv` — Lucero *et al.* (2012) Table I, © IOP Publishing
 - `data/experimental_csonka2009.csv` — Csonka *et al.* (2009) Table II, © American Physical Society
 - `data/mbd_published.json` — matbench-discovery model metadata, MIT, © 2022 Janosh Riebesell
+
+`reference_data/raw/` is likewise excluded — it vendors two **public-domain** sources verbatim so
+the reference-data build reproduces offline: NASA/TM-2006-214482 (a US Government work) and cached
+Crystallography Open Database responses (CC0). Neither is under any grant this project makes; see
+[reference_data/LICENSE](reference_data/LICENSE).
 
 [data/README.md](data/README.md) states file by file which data is which, and why each carve-out is
 a carve-out. [NOTICE](NOTICE) carries the full attribution block that must travel with any

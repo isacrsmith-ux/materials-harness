@@ -1,0 +1,86 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright 2026 Isac Smith
+
+The data files in this directory -- the CSV tables, their JSON Schemas, and the
+prose documents (SOURCES.md, COVERAGE.md, README.md) -- EXCEPT the third-party
+material listed under "Exclusions" below, are licensed under the Creative
+Commons Attribution 4.0 International Public License ("CC BY 4.0").
+
+SPDX-License-Identifier: CC-BY-4.0
+
+The canonical legal text of CC BY 4.0 is published by Creative Commons at:
+
+    https://creativecommons.org/licenses/by/4.0/legalcode
+
+and the plain-language summary at:
+
+    https://creativecommons.org/licenses/by/4.0/
+
+That published text governs. It is incorporated here by reference rather than
+copied, so that this file cannot drift from the canonical wording.
+
+To credit this material:
+
+    Isac Smith, materials-harness (2026). Licensed CC BY 4.0.
+
+--------------------------------------------------------------------------------
+CODE IN THIS DIRECTORY IS APACHE-2.0, NOT CC BY 4.0
+--------------------------------------------------------------------------------
+
+The Python files here are code and fall under the root LICENSE (Apache-2.0),
+consistent with the rest of this project's code:
+
+    reference_data/loader.py
+    reference_data/extract/*.py
+    reference_data/tests/*.py
+
+--------------------------------------------------------------------------------
+UPSTREAM ATTRIBUTION THAT TRAVELS WITH THESE FILES
+--------------------------------------------------------------------------------
+
+Every row in every table here carries its own source in a `source_key` column,
+resolved in SOURCES.md, and -- for the lattice-constant table -- its own DOI
+naming the original structure determination. Those citations travel with the
+values; the grant above does not replace them.
+
+  * Crystallography Open Database (CC0 1.0) -- the lattice-constant values.
+    COD dedicates its data to the public domain but asks that users acknowledge
+    the original authors of each structure determination, which is why every row
+    carries its own DOI, author list and COD entry id.
+    https://www.crystallography.net/cod/
+
+  * NASA Glenn Research Center -- the atomic-oxygen erosion yields.
+    K. K. de Groh, B. A. Banks, C. E. McCarthy, R. N. Rucker, L. M. Roberts,
+    L. A. Berger, "MISSE PEACE Polymers Atomic Oxygen Erosion Results",
+    NASA/TM-2006-214482 (2006). https://ntrs.nasa.gov/citations/20070002707
+    A US Government work; not subject to copyright in the United States.
+
+  * Materials Project (CC BY 4.0) -- material ids in materials.csv, used only as
+    join keys. No Materials Project VALUE is used as reference data anywhere in
+    this collection; see SOURCES.md for why.
+    A. Jain et al., APL Materials 1, 011002 (2013). doi:10.1063/1.4812323
+
+--------------------------------------------------------------------------------
+EXCLUSIONS -- third-party material NOT licensed by this file
+--------------------------------------------------------------------------------
+
+The following are not this project's to license. They are excluded from the
+CC BY 4.0 grant above and keep their own status:
+
+  reference_data/raw/NASA-TM-2006-214482_MISSE2_PEACE.pdf
+      The NASA technical memorandum itself, vendored verbatim so that the
+      extraction is reproducible offline, with its sha256 recorded alongside.
+      A US Government work, in the public domain in the United States. The NASA
+      insignia and logotype are NOT in the public domain and must not be reused
+      separately; NASA's use of any third-party material inside the document
+      conveys no rights to others.
+
+  reference_data/raw/cod/*.json
+      Cached responses from the Crystallography Open Database, stored verbatim
+      so that the build reproduces without network access. CC0 1.0 (public
+      domain dedication), Copyright waived by the COD depositors; the original
+      structure authors are credited per row as described above.
+
+See reference_data/SOURCES.md for the licence of every source, including the
+sources that were examined and rejected, and why.

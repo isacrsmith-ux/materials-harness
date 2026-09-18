@@ -1,0 +1,21 @@
+# Files git must treat as binary.
+#
+# Git guesses binary-ness from NUL bytes in the first 8 KB. A ReportLab PDF whose streams are
+# ASCII85-encoded has no NUL bytes there, so git classes it as TEXT: `git grep -I` then scans the
+# compressed streams and matches credential- and email-shaped noise inside them. That is a false
+# positive, and it made scripts/preflight_publish.sh fail on reports/test_results.pdf.
+#
+# Declaring them binary fixes the scan, and also stops git producing meaningless line diffs for them.
+#
+# NOTE the blind spot this creates: a PDF is no longer text-scanned by the preflight, so a real
+# email address or secret inside one would not be caught by section 4. Any PDF added here must be
+# checked by extracting its text first -- see reports/build_test_results_pdf.py, whose output is
+# verified that way before committing.
+
+*.pdf   binary
+*.gz    binary
+*.parquet binary
+*.sqlite  binary
+*.model   binary
+*.png   binary
+*.jpg   binary

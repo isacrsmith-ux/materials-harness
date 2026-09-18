@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Room-temperature lattice constants (oxides)",
+  "description": "One row per independent crystal-structure determination. Determinations of the same phase are kept SEPARATELY and never averaged, so the spread between independent measurements can be reported as the experimental floor. Phase identity is (formula, space_group_number); the a parameter is only comparable between rows sharing a cell setting.",
+  "si_units": {
+    "a_m": "m",
+    "temperature_k": "K"
+  },
+  "unit_pairs": [
+    [
+      "a_m",
+      "a_original_angstrom",
+      "original_units",
+      1e-10
+    ]
+  ],
+  "type": "object",
+  "required": [
+    "material_key",
+    "formula",
+    "cod_id",
+    "a_m",
+    "a_original_angstrom",
+    "a_uncertainty_angstrom",
+    "original_units",
+    "temperature_status",
+    "doi",
+    "source_key",
+    "source_locator",
+    "status",
+    "quality_flag",
+    "space_group"
+  ],
+  "properties": {
+    "material_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "formula": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cod_id": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "mineral_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "chemical_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "space_group": {
+      "type": "string",
+      "minLength": 1
+    },
+    "space_group_number": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{1,3}$",
+      "description": "Absent in some COD entries; space_group (the Hermann-Mauguin symbol) is then the phase identifier."
+    },
+    "a_m": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "a_original_angstrom": {
+      "type": "string"
+    },
+    "a_uncertainty_angstrom": {
+      "type": "string",
+      "description": "The source's own stated standard uncertainty on a, in angstrom. Required: a value without one cannot bound a comparison."
+    },
+    "b_original_angstrom": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "b_uncertainty_angstrom": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "c_original_angstrom": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "c_uncertainty_angstrom": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "alpha_deg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "beta_deg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gamma_deg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "original_units": {
+      "type": "string",
+      "enum": [
+        "angstrom"
+      ]
+    },
+    "temperature_k": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 283,
+      "maximum": 303,
+      "description": "Empty where the source states no temperature. Never inferred: crystallographic cells are usually ambient, but 'usually' is not a citation."
+    },
+    "temperature_status": {
+      "type": "string",
+      "enum": [
+        "recorded_cell",
+        "recorded_diffraction",
+        "not_stated_in_source"
+      ]
+    },
+    "sample_form": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "r_factor_all": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "doi": {
+      "type": "string",
+      "minLength": 5
+    },
+    "authors": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "journal": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "year": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "unverified",
+        "disputed"
+      ]
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "low_precision",
+        "implausible_precision"
+      ],
+      "description": "low_precision: stated relative uncertainty worse than 1e-3, too coarse to test a simulation against (in practice the pre-1926 determinations). implausible_precision: stated relative uncertainty better than 1e-6, which no diffraction cell determination supports - treat the stated uncertainty as unreliable. Exclude both before computing an experimental spread."
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

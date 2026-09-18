@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Atomic oxygen erosion yield (space environment exposure)",
+  "description": "One row per exposed sample. Erosion yield is volume removed per incident atomic oxygen atom. Rows are lookup data for spacecraft material selection, NOT validation targets for an interatomic-potential simulation: the samples are polymers and one pyrolytic graphite.",
+  "si_units": {
+    "erosion_yield_m3_per_atom": "m^3/atom",
+    "mass_loss_kg": "kg",
+    "density_kg_per_m3": "kg/m^3",
+    "area_m2": "m^2",
+    "fluence_atoms_per_m2": "atoms/m^2"
+  },
+  "unit_pairs": [
+    [
+      "erosion_yield_m3_per_atom",
+      "erosion_yield_original",
+      "original_units",
+      1e-06
+    ],
+    [
+      "mass_loss_kg",
+      "mass_loss_original_g",
+      null,
+      0.001
+    ],
+    [
+      "density_kg_per_m3",
+      "density_original_g_per_cm3",
+      null,
+      1000.0
+    ],
+    [
+      "area_m2",
+      "area_original_cm2",
+      null,
+      0.0001
+    ],
+    [
+      "fluence_atoms_per_m2",
+      "fluence_original",
+      "fluence_original_units",
+      10000.0
+    ]
+  ],
+  "type": "object",
+  "required": [
+    "material_key",
+    "sample_id",
+    "material_name",
+    "erosion_yield_m3_per_atom",
+    "erosion_yield_original",
+    "original_units",
+    "is_lower_bound",
+    "fluence_atoms_per_m2",
+    "mission",
+    "exposure_start",
+    "exposure_end",
+    "source_key",
+    "source_locator",
+    "status"
+  ],
+  "properties": {
+    "material_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sample_id": {
+      "type": "string"
+    },
+    "material_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "abbreviation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "erosion_yield_m3_per_atom": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "erosion_yield_original": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "original_units": {
+      "type": "string",
+      "enum": [
+        "cm^3/atom"
+      ]
+    },
+    "is_lower_bound": {
+      "type": "boolean",
+      "description": "True where the source printed '>': the sample partially or completely eroded, so the value bounds the yield from below and must not be compared as an equality."
+    },
+    "mass_loss_kg": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "mass_loss_original_g": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "density_kg_per_m3": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "density_original_g_per_cm3": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "area_m2": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "area_original_cm2": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fluence_atoms_per_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "fluence_original": {
+      "type": "string"
+    },
+    "fluence_original_units": {
+      "type": "string",
+      "enum": [
+        "atoms/cm^2"
+      ]
+    },
+    "mission": {
+      "type": "string"
+    },
+    "exposure_start": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "exposure_end": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "is_fluence_witness": {
+      "type": "boolean",
+      "description": "True for the Kapton H witness samples whose ASSUMED erosion yield defines the fluence. Their yields are calibration inputs, not independent measurements, and are circular if used as validation targets."
+    },
+    "source_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "unverified",
+        "disputed"
+      ]
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}
