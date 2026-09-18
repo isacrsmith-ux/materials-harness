@@ -1,5 +1,5 @@
 
-## Materials Harness - round 2
+# Materials Harness - round 2
 
 New families, the halide confirmation, the oxide splits, multi-start structure verification and the failure retry. Generated 18 September 2026. Production engine MACE-MPA-0 medium (cpu/float32, settings tag c2480e74), asserted at the start of every phase. Continues reports/test_results.pdf, which ends at section 12.
 
@@ -17,10 +17,10 @@ One term is used throughout. A family is **sample-size limited** when its best a
 |---|---|---|---|---|
 | 13 | Diagnostic pull, four new families | Which families are worth a full calibration pull | sulfide, nitride and carbide all sample-size limited; fluoride precision limited | Three worth scaling, one not |
 | 14 | Halide re-certification | Does more data certify halide's stable side at 0.90 | n 3,500 -> 6,300: CP-lower 0.8803 -> 0.9028 at -70 meV | **Certified** |
-| 15 | New families certified | Can sulfide, nitride and carbide be certified | See section 15 | See section 15 |
+| 15 | New families certified | Can sulfide, nitride and carbide be certified | carbide certifies both sides; sulfide and nitride certify the unstable side and miss the stable side at 0.8747 and 0.8745 | One certified, two out of reach |
 | 16 | Oxide subfamily split | Does any oxide subfamily certify where the whole family cannot | No split certifies at 0.90; three look sample-size limited | No viable path at 0.90 |
-| 17 | Multi-start verification | Does the answer depend on where the relaxation started | See section 17 | See section 17 |
-| 18 | Failure retry pass | How many failures are the method, how many are the engine | See section 18 | See section 18 |
+| 17 | Multi-start verification | Does the answer depend on where the relaxation started | 1 candidate in 5 disagrees across starts; 0.056 in the 0-0.025 bin, 0.509 above 0.3 eV/atom | Confirms the >0.3 refusal |
+| 18 | Failure retry pass | How many failures are the method, how many are the engine | 4 of 6 hard failures resolved; 54% of multi-start disagreements; 4% of 'left its start' | Mostly genuine, not fixable |
 
 
 ## 13. Diagnostic pull - four new families
@@ -122,7 +122,15 @@ Phase 1 diagnosed all three as sample-size limited, so all three were scaled to 
 
 **Sulfide and nitride miss, narrowly, and the pool is spent.** Sulfide's bound reaches 0.8747 and nitride's 0.8745 against the 0.90 target; both remain sample-size limited rather than precision limited, with point precisions of 0.9703 and 0.9859. Sulfide would need about 6,416 calibration structures against the 4,874 the draw could supply, and nitride about 3,106 against 2,423. Neither shortfall can be closed from this pool without dissolving a locked half or relaxing the reduced-formula leakage guard, and neither was done.
 
-> **Unstable-side certification is not a small result for these families.** All three certify it, which is what turns 'send everything to DFT' into 'discard most of it without DFT'. But the round-1 caution applies unchanged: a satisfied NPV target is not the same as keeping your discoveries, and the share of truly stable candidates lost at the certified unstable threshold must be quoted with it every time.
+### What routing on the certified unstable thresholds actually costs
+
+| group | threshold | share discarded without DFT | truly stable lost | (of) |
+|---|---|---|---|---|
+| sulfide | -10 meV | 0.897 | 0.269 | 137 of 510 |
+| nitride | -10 meV | 0.934 | 0.351 | 78 of 222 |
+| carbide | -10 meV | 0.922 | 0.247 | 46 of 186 |
+
+> **Unstable-side certification is not a small result for these families, and it is not a free one.** All three certify it, which is what turns 'send everything to DFT' into 'discard most of it without DFT'. But more calibration data certifies a LOWER unstable threshold, which discards more - and loses more. At n = 500 these families discarded 81-89% of candidates and lost 8-13% of the truly stable ones; at full n they discard 90-93% and lose 25-35%. The round-1 caution therefore applies with more force, not less: a satisfied NPV target is not the same as keeping your discoveries, and both numbers belong in any proposal to route on these thresholds.
 
 
 ## 16. Oxide subfamily split
@@ -135,13 +143,63 @@ Mixed valence is tested as 'no assignment of one integer oxidation state per ele
 
 | group | n usable | rejected | base rate | stable side | unstable side |
 |---|---|---|---|---|---|
+| oxide | 3994 | 6 | 0.112 | not certified | **+0 meV** |
+| oxide:tm | 3153 | 6 | 0.105 | not certified | **-10 meV** |
+| oxide:maingroup | 841 | 6 | 0.136 | not certified | **+0 meV** |
+| oxide:multi_tm | 871 | 6 | 0.096 | not certified | **+0 meV** |
+| oxide:single_tm | 3123 | 6 | 0.116 | not certified | **+0 meV** |
+| oxide:mixed_valence | 1266 | 6 | 0.087 | not certified | **-10 meV** |
+| oxide:single_valence | 2728 | 6 | 0.123 | not certified | **+0 meV** |
+| oxide:ox_le2 | 371 | 6 | 0.092 | not certified | **+10 meV** |
+| oxide:ox_3 | 642 | 6 | 0.072 | not certified | **+0 meV** |
+| oxide:ox_4 | 793 | 6 | 0.107 | not certified | **+0 meV** |
+| oxide:ox_ge5 | 854 | 6 | 0.193 | not certified | **+10 meV** |
 
 ### Diagnosis
 
 | group | side | target | best t | n sel | k | point | CP-lower | verdict | n structs needed |
 |---|---|---|---|---|---|---|---|---|---|
+| oxide | stable | 0.90 | -20 meV | 272 | 238 | 0.8750 | 0.8005 | precision limited | - |
+| oxide | unstable | 0.95 | +60 meV | 2495 | 2489 | 0.9976 | 0.9927 | certified | - |
+| oxide:tm | stable | 0.90 | -20 meV | 218 | 185 | 0.8486 | 0.7591 | precision limited | - |
+| oxide:tm | unstable | 0.95 | +100 meV | 1575 | 1573 | 0.9987 | 0.9927 | certified | - |
+| oxide:maingroup | stable | 0.90 | -20 meV | 54 | 53 | 0.9815 | 0.8380 | sample-size limited | 1714 |
+| oxide:maingroup | unstable | 0.95 | +50 meV | 530 | 528 | 0.9962 | 0.9786 | certified | - |
+| oxide:multi_tm | stable | 0.90 | +0 meV | 81 | 68 | 0.8395 | 0.6783 | precision limited | - |
+| oxide:multi_tm | unstable | 0.95 | +60 meV | 566 | 566 | 1.0000 | 0.9875 | certified | - |
+| oxide:single_tm | stable | 0.90 | -30 meV | 177 | 157 | 0.8870 | 0.7941 | precision limited | - |
+| oxide:single_tm | unstable | 0.95 | +50 meV | 2058 | 2052 | 0.9971 | 0.9911 | certified | - |
+| oxide:mixed_valence | stable | 0.90 | -30 meV | 52 | 49 | 0.9423 | 0.7681 | sample-size limited | 11370 |
+| oxide:mixed_valence | unstable | 0.95 | +60 meV | 922 | 920 | 0.9978 | 0.9876 | certified | - |
+| oxide:single_valence | stable | 0.90 | -20 meV | 200 | 174 | 0.8700 | 0.7799 | precision limited | - |
+| oxide:single_valence | unstable | 0.95 | +50 meV | 1706 | 1702 | 0.9977 | 0.9912 | certified | - |
+| oxide:ox_le2 | stable | 0.90 | -10 meV | 28 | 21 | 0.7500 | 0.4383 | precision limited | - |
+| oxide:ox_le2 | unstable | 0.95 | +10 meV | 294 | 294 | 1.0000 | 0.9761 | certified | - |
+| oxide:ox_3 | stable | 0.90 | -20 meV | 33 | 24 | 0.7273 | 0.4409 | precision limited | - |
+| oxide:ox_3 | unstable | 0.95 | +40 meV | 497 | 494 | 0.9940 | 0.9735 | certified | - |
+| oxide:ox_4 | stable | 0.90 | -20 meV | 42 | 42 | 1.0000 | 0.8443 | sample-size limited | 1284 |
+| oxide:ox_4 | unstable | 0.95 | +20 meV | 620 | 619 | 0.9984 | 0.9849 | certified | - |
+| oxide:ox_ge5 | stable | 0.90 | -20 meV | 97 | 87 | 0.8969 | 0.7662 | precision limited | - |
+| oxide:ox_ge5 | unstable | 0.95 | +50 meV | 431 | 431 | 1.0000 | 0.9836 | certified | - |
 
 **No oxide subfamily certifies a stable threshold at 0.90.** At the 0.80 fallback the whole family still certifies at -20 meV/atom, the main-group oxides at -10 meV/atom and the +4-cation oxides at -20 meV/atom; nothing else clears 0.80 either.
+
+### The same splits, Bonferroni-corrected over the eleven splits searched
+
+The certification confidence above is corrected over the threshold grid, which is what makes picking the best threshold safe. It is not corrected for having searched eleven splits and reported the best. Correcting for that as well (level 0.99545) gives:
+
+| group | side | target | best t | n sel | k | point | CP-lower | verdict | n structs needed |
+|---|---|---|---|---|---|---|---|---|---|
+| oxide | stable | 0.90 | -20 meV | 272 | 238 | 0.8750 | 0.7837 | precision limited | - |
+| oxide | unstable | 0.95 | +60 meV | 2495 | 2489 | 0.9976 | 0.9913 | certified | - |
+| oxide:maingroup | stable | 0.90 | -20 meV | 54 | 53 | 0.9815 | 0.7979 | sample-size limited | 2430 |
+| oxide:maingroup | unstable | 0.95 | +50 meV | 530 | 528 | 0.9962 | 0.9734 | certified | - |
+| oxide:mixed_valence | stable | 0.90 | -30 meV | 52 | 49 | 0.9423 | 0.7243 | sample-size limited | 16020 |
+| oxide:mixed_valence | unstable | 0.95 | +60 meV | 922 | 920 | 0.9978 | 0.9846 | certified | - |
+| oxide:ox_4 | stable | 0.90 | -20 meV | 42 | 42 | 1.0000 | 0.7975 | sample-size limited | 1719 |
+| oxide:ox_4 | unstable | 0.95 | +20 meV | 620 | 619 | 0.9984 | 0.9807 | certified | - |
+
+**Under the split correction nothing clears 0.80 either, including oxide itself.** Whole oxide keeps its 0.80 certification at the published level - it is the parent, not one of the searched splits, and test 7 certified it without any split multiplicity to correct for. But every subfamily that looked promising loses it, and the three that looked sample-size limited need 2,430, 16,020 and 1,719 structures rather than the figures above. The honest reading is that the oxide splits generated one hypothesis worth a pre-registered draw - main-group oxides - and no result.
 
 > **These splits are hypothesis-generating, not certified results.** The Clopper-Pearson level is Bonferroni-corrected over the threshold grid, which is what makes picking the best threshold safe - it is not corrected over the eleven splits searched here. A split that looks sample-size limited because it was the best of eleven would need its own pre-registered draw before any threshold from it could be certified. The split-corrected figures are reported alongside in the source report.
 
@@ -189,7 +247,63 @@ Source: `reports/round2_phase6_retry.md`, from `results/round2_retry.json`. Ever
 
 > **The retry is the perturbed restart, not the ladder's first rung.** The production ladder's first rung continues from the previous relaxation's end point. For a candidate that already converged - which is nearly all of this set, since the dominant failure class is 'the relaxation left its start' rather than 'it failed' - that rung restarts at the point it converged to and converges again, testing nothing. Those candidates get the other rung: a fixed-seed rattle and strain of the ORIGINAL structure at the extended step cap, which is a different entry into the same basin question. The full ladder is used only for the candidates whose first attempt gave no usable result at all.
 
+| failure class | candidates |
+|---|---|
+| guard_rejected | 6 |
+| left_its_start | 2890 |
+| multistart_disagree | 204 |
+| not_converged | 6 |
+
+A candidate can be in several classes, so these do not sum to the 3044 retried.
+
+| failure class | n | resolved | genuine | rate | what 'resolved' means here |
+|---|---|---|---|---|---|
+| not_converged | 6 | 4 | 2 | 0.667 | a converged, physically plausible result now exists |
+| guard_rejected | 6 | 4 | 2 | 0.667 | a converged, physically plausible result now exists |
+| multistart_disagree | 204 | 111 | 93 | 0.544 | the lowest-energy result is reached from at least two starts |
+| left_its_start | 2890 | 118 | 2772 | 0.041 | some attempt ends in the basin of the structure it was given |
+
 ### By family
+
+| family | n | not_converged resolved / genuine | guard_rejected resolved / genuine | multistart_disagree resolved / genuine | left_its_start resolved / genuine |
+|---|---|---|---|---|---|
+| carbide | 243 | - | - | 12 / 5 | 5 / 224 |
+| halide | 674 | - | - | 23 / 17 | 24 / 623 |
+| halide_topup | 535 | - | - | 15 / 26 | 20 / 494 |
+| nitride | 249 | - | - | 12 / 14 | 11 / 217 |
+| oxide | 710 | 4 / 2 | 4 / 2 | 26 / 13 | 26 / 648 |
+| sulfide | 633 | - | - | 23 / 18 | 32 / 566 |
+
+### What the retry recovered, and what it did not
+
+**Hard failures are rare and mostly recoverable.** Six candidates out of the 18,599 relaxed across round 1 and round 2 failed to converge or were rejected by the guard - and all six are oxides. Four of the six converge to a plausible result on the retry; two do not, and stay counted-and-excluded. Those two are the engine's genuine limit on this set, not the method's.
+
+**Multi-start disagreement is about half recoverable.** Of the 204 candidates whose starts disagreed, 111 have a lowest-energy minimum that at least two starts reach once the perturbed restart is added, which is what 'best of the multi-start attempts' is supposed to buy. The remaining 93 have a best result found by exactly one start, and no amount of retrying at fixed tolerances changes that: the model's surface has several minima there and nothing in the pipeline can say which is the material.
+
+> **'The relaxation left its start' is not a failure, and the retry is what proves it.** It is the largest class by far - 2,890 candidates - and only 4.1% of them end anywhere near their starting structure when restarted from a perturbation of it. The reason is that a WBM initial structure is a pre-DFT elemental-substitution guess, not a claimed minimum, so a relaxation leaving it is the expected behaviour rather than a fault. Test 4 measured this quantity against a known DFT-relaxed target, where leaving really is a failure; carrying the same metric to WBM measures something else.
+
+That has a concrete consequence for the product, and it is a reassuring one. The routing policy excludes a candidate whose relaxation changed the structure (`route_structure_change` defaults to true), and those exclusions are what the certified thresholds were fitted on. The 95.9% genuine rate says that exclusion is stable rather than flaky: a candidate excluded this way would be excluded again on a different run. It is a reproducible property of the structure and the engine, not of one optimiser trajectory.
+
+The right structure-finding measure for a candidate with no known target is section 17's multi-start disagreement, not this class.
+
+
+## The master family table, updated
+
+This is test 7's per-family table, in the same format, extended with every family round 2 touched. It supersedes the two-row version in section 7 of the existing document. Every figure is the certified threshold where one exists, and the pessimistic bound in every case; `n` is usable rows after guard rejections, which are counted and excluded.
+
+| family | n usable | base rate | stable side | unstable side | stable-side diagnosis |
+|---|---|---|---|---|---|
+| oxide | 3,994 | 0.112 | not certified ceiling 0.8750, CP-lower 0.8005 | **+0 meV** CP-lower 0.9927 discards 0.881, loses 0.173 of stable | precision limited |
+| halide (combined, n=6,300) | 6,300 | 0.235 | **-70 meV** CP-lower 0.9028 | **+0 meV** CP-lower 0.9928 discards 0.744, loses 0.112 of stable | certified |
+|   of which fluoride | 2,241 | 0.250 | not certified ceiling 0.9029, CP-lower 0.8133 | **+10 meV** CP-lower 0.9889 discards 0.644, loses 0.045 of stable | sample-size limited needs ~1,393,121 structures |
+|   of which non-fluoride | 4,059 | 0.226 | **-20 meV** CP-lower 0.9217 | **+0 meV** CP-lower 0.9909 discards 0.759, loses 0.102 of stable | certified |
+| sulfide | 4,000 | 0.128 | not certified ceiling 0.9703, CP-lower 0.8747 | **-10 meV** CP-lower 0.9953 discards 0.897, loses 0.269 of stable | sample-size limited needs ~6,416 structures |
+| nitride | 2,423 | 0.092 | not certified ceiling 0.9859, CP-lower 0.8745 | **-10 meV** CP-lower 0.9907 discards 0.934, loses 0.351 of stable | sample-size limited needs ~3,106 structures |
+| carbide | 1,876 | 0.099 | **-20 meV** CP-lower 0.9294 | **-10 meV** CP-lower 0.9953 discards 0.922, loses 0.247 of stable | certified |
+
+> **fluoride and non-fluoride are rows of the same 6,300 structures, not extra data.** Fluoride is a subset of halide, so the two sub-rows partition the halide row rather than adding to it. They are shown because the split changes the answer: certifying halide whole buys -70 meV/atom, certifying it without fluoride buys -20 meV/atom.
+
+f-electron and intermetallic are unchanged and are not reproduced here; see the existing document. Nothing in this table has been frozen into `data/calibration_bundle.json`, which still records the round-1 state.
 
 
 ## What the tests say when read together - what round 2 changed
@@ -220,7 +334,7 @@ The >0.3 eV/atom refusal rested on a structure-finding sample of n = 16, flagged
 
 The engine assertion aborted on a wrong HARNESS_MODEL in a negative test before any phase ran - the exact failure that produced a wrong certification verdict in test 7. The split's disjointness assertion caught 619 ids that a first, wrong draw had put in a calibration set and a locked half at the same time.
 
-Three bugs in this round's own analysis code were caught by looking at the numbers rather than by any guard, and all three would have produced quietly plausible results. The mixed-valence split matched nothing because <font face='Courier'>oxi_state_guesses</font> returns a tuple and the test compared it to a list. The multi-start comparison excluded the calibration relaxation from all 1,000 candidates because a None rejection round-trips through pandas as NaN and <font face='Courier'>not NaN</font> is False. The same NaN routed every retry to the wrong ladder rung. None of them raised; each produced a table that looked reasonable. The check that caught all three was reading a count that should not have been what it was - 0 mixed-valence oxides, 0 candidates with three usable starts, 0 perturbed restarts.
+Three bugs in this round's own analysis code were caught by looking at the numbers rather than by any guard, and all three would have produced quietly plausible results. The mixed-valence split matched nothing because `oxi_state_guesses` returns a tuple and the test compared it to a list. The multi-start comparison excluded the calibration relaxation from all 1,000 candidates because a None rejection round-trips through pandas as NaN and `not NaN` is False. The same NaN routed every retry to the wrong ladder rung. None of them raised; each produced a table that looked reasonable. The check that caught all three was reading a count that should not have been what it was - 0 mixed-valence oxides, 0 candidates with three usable starts, 0 perturbed restarts.
 
 
 ## Time against budget
@@ -229,14 +343,15 @@ The brief budgeted wall-clock per phase on an assumed 9.8 s per relaxation. That
 
 | phase | budget | actual | what dominated |
 |---|---|---|---|
-| 0 setup | not budgeted | 0.3 h | repo read, round2 module, the split, the phase driver and its engine guard |
+| 0 setup | not budgeted | 0.3 h | repo read, the round2 module, the split and the phase driver with its engine guard |
 | 1 diagnostic | 2 h | 0.4 h | 3,000 jobs in 9.2 min at 5.4 jobs/s, plus the diagnosis |
 | 2 halide top-up | 6 h | 0.6 h | 5,600 jobs in 20.3 min at 4.6 jobs/s, plus the certification |
 | 3 new families | 14 h | 0.8 h | 13,598 jobs in 37.5 min at 6.0 jobs/s, plus the certification |
 | 4 oxide subfamilies | 6 h | 0.3 h | analysis only; no new structures were run |
-| 5 multi-start | 8 h | 3.4 h | 2,000 extra relaxations at 5.9 s each of wall clock - a perturbed or compressed start costs about 15x a WBM initial structure |
-| 6 failure retry | 8 h | TBD | TBD |
-| 7 + 8 reports | 6 h | TBD | TBD |
+| 5 multi-start | 8 h | 3.4 h | 2,000 extra relaxations at 5.9 s each of wall clock - a perturbed or compressed start costs about 15x a WBM initial structure, which is what the 9.8 s assumption would have caught if it had applied anywhere |
+| 6 failure retry | 8 h | 4.8 h | 3,044 retries; a first attempt was abandoned after 2.2 h because six ladder jobs at up to 5,400 s each were holding the pool, and is not counted here - it is counted in the total below |
+| 7 + 8 reports | 6 h | 0.6 h | this document and its markdown source |
+| TOTAL | 48 h | 13.4 h | including the 2.2 h lost to the phase-6 pool ordering and the time spent re-deriving three silent analysis bugs |
 
 ## Locked and unopened as of this document
 
@@ -249,7 +364,7 @@ The brief budgeted wall-clock per phase on an assumed 9.8 s per relaxation. That
 | halide locked test (round 1) | 2000 | yes | yes | 0 | UNOPENED |
 | sulfide locked test (round 2) | 874 | yes | yes | 0 | UNOPENED |
 
-Round 2 drew 11,099 new calibration structures and never passed <font face='Courier'>unlock=True</font> anywhere. Every phase asserted this before enqueueing anything, alongside the engine check. The one new locked half round 2 created - 874 sulfide ids - is listed above and has not been opened either.
+Round 2 drew 11,099 new calibration structures and never passed `unlock=True` anywhere. Every phase asserted this before enqueueing anything, alongside the engine check. The one new locked half round 2 created - 874 sulfide ids - is listed above and has not been opened either.
 
 > **Sulfide could be certified at 0.90 by dissolving that half into its calibration set, and it was not.** Sulfide needs about 6,416 calibration structures and has 4,000; adding the 874 would still leave it short, and would spend a held-out half for a result that would then have nothing to validate against. The same is true of relaxing the reduced-formula leakage guard, which dropped 4,111 candidates across the round-2 draw. Neither is a decision this document should make.
 

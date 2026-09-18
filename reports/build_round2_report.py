@@ -57,6 +57,7 @@ P1 = by_group(load("round2_phase1_diagnostic.json"))
 P2 = by_group(load("round2_phase2_halide.json"))
 P3 = by_group(load("round2_phase3_families.json"))
 P4 = by_group(load("round2_phase4_oxide_subfamilies.json"))
+P4C = by_group(load("round2_phase4_oxide_subfamilies_corrected.json"))
 MS = json.loads((RESULTS / "round2_multistart_summary.json").read_text()) \
     if (RESULTS / "round2_multistart_summary.json").is_file() else {}
 RT = json.loads((RESULTS / "round2_retry_summary.json").read_text()) \
@@ -134,11 +135,24 @@ def section_15():
          "and nitride about 3,106 against 2,423. Neither shortfall can be closed from this pool "
          "without dissolving a locked half or relaxing the reduced-formula leakage guard, and "
          "neither was done.")
-    note("**Unstable-side certification is not a small result for these families.** All three "
-         "certify it, which is what turns 'send everything to DFT' into 'discard most of it "
-         "without DFT'. But the round-1 caution applies unchanged: a satisfied NPV target is "
-         "not the same as keeping your discoveries, and the share of truly stable candidates "
-         "lost at the certified unstable threshold must be quoted with it every time.")
+    h2("What routing on the certified unstable thresholds actually costs")
+    rows = [["group", "threshold", "share discarded without DFT", "truly stable lost", "(of)"]]
+    for g in ("sulfide", "nitride", "carbide"):
+        r = (P3.get(g) or {}).get("routing")
+        if r:
+            rows.append([g, mev(r["unstable_threshold"]), f"{r['discard_share']:.3f}",
+                         f"{r['truly_stable_lost']:.3f}",
+                         f"{r['n_truly_stable_discarded']} of {r['n_truly_stable']}"])
+    if len(rows) > 1:
+        tbl(rows, [26, 24, 48, 34, 32])
+    note("**Unstable-side certification is not a small result for these families, and it is not a "
+         "free one.** All three certify it, which is what turns 'send everything to DFT' into "
+         "'discard most of it without DFT'. But more calibration data certifies a LOWER unstable "
+         "threshold, which discards more - and loses more. At n = 500 these families discarded "
+         "81-89% of candidates and lost 8-13% of the truly stable ones; at full n they discard "
+         "90-93% and lose 25-35%. The round-1 caution therefore applies with more force, not "
+         "less: a satisfied NPV target is not the same as keeping your discoveries, and both "
+         "numbers belong in any proposal to route on these thresholds.")
 
 
 
@@ -168,6 +182,19 @@ def section_16():
     body("**No oxide subfamily certifies a stable threshold at 0.90.** At the 0.80 fallback the "
          "whole family still certifies at -20 meV/atom, the main-group oxides at -10 meV/atom "
          "and the +4-cation oxides at -20 meV/atom; nothing else clears 0.80 either.")
+    h2("The same splits, Bonferroni-corrected over the eleven splits searched")
+    body("The certification confidence above is corrected over the threshold grid, which is what "
+         "makes picking the best threshold safe. It is not corrected for having searched eleven "
+         "splits and reported the best. Correcting for that as well (level 0.99545) gives:")
+    tbl(diag_rows(["oxide", "oxide:maingroup", "oxide:mixed_valence", "oxide:ox_4"], P4C),
+        [36, 15, 12, 15, 11, 9, 14, 15, 28, 18])
+    body("**Under the split correction nothing clears 0.80 either, including oxide itself.** Whole "
+         "oxide keeps its 0.80 certification at the published level - it is the parent, not one of "
+         "the searched splits, and test 7 certified it without any split multiplicity to correct "
+         "for. But every subfamily that looked promising loses it, and the three that looked "
+         "sample-size limited need 2,430, 16,020 and 1,719 structures rather than the figures "
+         "above. The honest reading is that the oxide splits generated one hypothesis worth a "
+         "pre-registered draw - main-group oxides - and no result.")
     note("**These splits are hypothesis-generating, not certified results.** The Clopper-Pearson "
          "level is Bonferroni-corrected over the threshold grid, which is what makes picking the "
          "best threshold safe - it is not corrected over the eleven splits searched here. A "
@@ -271,6 +298,35 @@ def section_18():
     if len(rows) > 1:
         tbl(rows, [26] + [14] + [32] * len(classes))
 
+    h2("What the retry recovered, and what it did not")
+    body("**Hard failures are rare and mostly recoverable.** Six candidates out of the 18,599 "
+         "relaxed across round 1 and round 2 failed to converge or were rejected by the guard - "
+         "and all six are oxides. Four of the six converge to a plausible result on the retry; two "
+         "do not, and stay counted-and-excluded. Those two are the engine's genuine limit on this "
+         "set, not the method's.")
+    body("**Multi-start disagreement is about half recoverable.** Of the 204 candidates whose "
+         "starts disagreed, 111 have a lowest-energy minimum that at least two starts reach once "
+         "the perturbed restart is added, which is what 'best of the multi-start attempts' is "
+         "supposed to buy. The remaining 93 have a best result found by exactly one start, and no "
+         "amount of retrying at fixed tolerances changes that: the model's surface has several "
+         "minima there and nothing in the pipeline can say which is the material.")
+    note("**'The relaxation left its start' is not a failure, and the retry is what proves it.** "
+         "It is the largest class by far - 2,890 candidates - and only 4.1% of them end anywhere "
+         "near their starting structure when restarted from a perturbation of it. The reason is "
+         "that a WBM initial structure is a pre-DFT elemental-substitution guess, not a claimed "
+         "minimum, so a relaxation leaving it is the expected behaviour rather than a fault. Test "
+         "4 measured this quantity against a known DFT-relaxed target, where leaving really is a "
+         "failure; carrying the same metric to WBM measures something else.")
+    body("That has a concrete consequence for the product, and it is a reassuring one. The routing "
+         "policy excludes a candidate whose relaxation changed the structure "
+         "(<font face='Courier'>route_structure_change</font> defaults to true), and those "
+         "exclusions are what the certified thresholds were fitted on. The 95.9% genuine rate says "
+         "that exclusion is stable rather than flaky: a candidate excluded this way would be "
+         "excluded again on a different run. It is a reproducible property of the structure and "
+         "the engine, not of one optimiser trajectory.")
+    body("The right structure-finding measure for a candidate with no known target is section 17's "
+         "multi-start disagreement, not this class.")
+
 
 
 def section_synthesis():
@@ -362,6 +418,50 @@ def section_ledger():
          "the round-2 draw. Neither is a decision this document should make.")
 
 
+def section_master():
+    h1("The master family table, updated")
+    body("This is test 7's per-family table, in the same format, extended with every family round 2 "
+         "touched. It supersedes the two-row version in section 7 of the existing document. Every "
+         "figure is the certified threshold where one exists, and the pessimistic bound in every "
+         "case; `n` is usable rows after guard rejections, which are counted and excluded.")
+    rows = [["family", "n usable", "base rate", "stable side", "unstable side", "stable-side diagnosis"]]
+    spec = [("oxide", P4, "oxide"),
+            ("halide (combined, n=6,300)", P2, "halide_combined"),
+            ("  of which fluoride", P2, "halide_combined:fluoride"),
+            ("  of which non-fluoride", P2, "halide_combined:nonfluoride"),
+            ("sulfide", P3, "sulfide"),
+            ("nitride", P3, "nitride"),
+            ("carbide", P3, "carbide")]
+    for label, src, key in spec:
+        r = src.get(key)
+        if not r:
+            continue
+        s, u = dx(r, "stable"), dx(r, "unstable")
+        if s.get("certified_threshold") is not None:
+            stable = f"**{mev(s['certified_threshold'])}**<br/>CP-lower {f4(s['cp_lower'])}"
+            diag = "certified"
+        else:
+            stable = f"not certified<br/>ceiling {f4(s.get('point'))}, CP-lower {f4(s.get('cp_lower'))}"
+            n = s.get("n_structures_needed")
+            diag = (f"{s.get('verdict')}<br/>needs ~{n:,} structures" if n else str(s.get("verdict")))
+        ut = u.get("certified_threshold")
+        unstable = (f"**{mev(ut)}**<br/>CP-lower {f4(u['cp_lower'])}" if ut is not None else "not certified")
+        rt = r.get("routing")
+        if rt:
+            unstable += (f"<br/>discards {rt['discard_share']:.3f}, "
+                         f"loses {rt['truly_stable_lost']:.3f} of stable")
+        rows.append([label, f"{r['n_usable']:,}", f4(r["base_rate"], 3), stable, unstable, diag])
+    tbl(rows, [34, 16, 16, 40, 46, 38])
+    note("**fluoride and non-fluoride are rows of the same 6,300 structures, not extra data.** "
+         "Fluoride is a subset of halide, so the two sub-rows partition the halide row rather than "
+         "adding to it. They are shown because the split changes the answer: certifying halide "
+         "whole buys -70 meV/atom, certifying it without fluoride buys -20 meV/atom.")
+    body("f-electron and intermetallic are unchanged and are not reproduced here; see the existing "
+         "document. Nothing in this table has been frozen into "
+         "<font face='Courier'>data/calibration_bundle.json</font>, which still records the "
+         "round-1 state.")
+
+
 def section_timing():
     h1("Time against budget")
     body("The brief budgeted wall-clock per phase on an assumed 9.8 s per relaxation. That figure "
@@ -423,20 +523,21 @@ def build_content():
          "**Certified**"],
         ["15", "New families<br/>certified",
          "Can sulfide, nitride and carbide be certified",
-         "See section 15",
-         "See section 15"],
+         "carbide certifies both sides; sulfide and nitride certify the unstable side and miss "
+         "the stable side at 0.8747 and 0.8745",
+         "One certified,<br/>two out of reach"],
         ["16", "Oxide subfamily<br/>split",
          "Does any oxide subfamily certify where the whole family cannot",
          "No split certifies at 0.90; three look sample-size limited",
          "No viable path<br/>at 0.90"],
         ["17", "Multi-start<br/>verification",
          "Does the answer depend on where the relaxation started",
-         "See section 17",
-         "See section 17"],
+         "1 candidate in 5 disagrees across starts; 0.056 in the 0-0.025 bin, 0.509 above 0.3 eV/atom",
+         "Confirms the<br/>&gt;0.3 refusal"],
         ["18", "Failure retry<br/>pass",
          "How many failures are the method, how many are the engine",
-         "See section 18",
-         "See section 18"],
+         "4 of 6 hard failures resolved; 54% of multi-start disagreements; 4% of 'left its start'",
+         "Mostly genuine,<br/>not fixable"],
     ], [8, 26, 38, 62, 28])
     brk()
 
@@ -515,6 +616,8 @@ def build_content():
     brk()
     section_18()
     brk()
+    section_master()
+    brk()
     section_synthesis()
     brk()
     section_timing()
@@ -526,7 +629,9 @@ import re
 
 
 def _md_inline(t: str) -> str:
-    return t.replace("<br/>", " ").replace("&#183;", "·")
+    t = re.sub(r"<font face='Courier'>(.+?)</font>", r"`\1`", t)
+    t = t.replace("&lt;", "<").replace("&gt;", ">").replace("&#183;", "·")
+    return t.replace("<br/>", " ")
 
 
 def to_markdown(blocks) -> str:

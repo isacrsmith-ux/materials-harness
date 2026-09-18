@@ -1,9 +1,9 @@
 {
- "assumed_rate": "9.8 s per relaxation (the brief's figure, from section 1's engine-screening benchmark)",
- "measured_rate": "0.23 s per job on the completed round-1 run (15,000 jobs in 57 min); WBM calibration cells average 8.6 atoms",
+ "assumed_rate": "9.8 s per relaxation (the brief's figure, from section 1's engine-screening benchmark on the screening subset's larger cells)",
+ "measured_rate": "0.23 s per job, measured on the completed round-1 run before any round-2 phase started (15,000 jobs in 57 min); WBM calibration cells average 8.6 atoms",
  "phases": [
   {"phase": "0 setup", "budget": "not budgeted", "actual": "0.3 h",
-   "note": "repo read, round2 module, the split, the phase driver and its engine guard"},
+   "note": "repo read, the round2 module, the split and the phase driver with its engine guard"},
   {"phase": "1 diagnostic", "budget": "2 h", "actual": "0.4 h",
    "note": "3,000 jobs in 9.2 min at 5.4 jobs/s, plus the diagnosis"},
   {"phase": "2 halide top-up", "budget": "6 h", "actual": "0.6 h",
@@ -13,9 +13,12 @@
   {"phase": "4 oxide subfamilies", "budget": "6 h", "actual": "0.3 h",
    "note": "analysis only; no new structures were run"},
   {"phase": "5 multi-start", "budget": "8 h", "actual": "3.4 h",
-   "note": "2,000 extra relaxations at 5.9 s each of wall clock - a perturbed or compressed start costs about 15x a WBM initial structure"},
-  {"phase": "6 failure retry", "budget": "8 h", "actual": "TBD",
-   "note": "TBD"},
-  {"phase": "7 + 8 reports", "budget": "6 h", "actual": "TBD", "note": "TBD"}
+   "note": "2,000 extra relaxations at 5.9 s each of wall clock - a perturbed or compressed start costs about 15x a WBM initial structure, which is what the 9.8 s assumption would have caught if it had applied anywhere"},
+  {"phase": "6 failure retry", "budget": "8 h", "actual": "4.8 h",
+   "note": "3,044 retries; a first attempt was abandoned after 2.2 h because six ladder jobs at up to 5,400 s each were holding the pool, and is not counted here - it is counted in the total below"},
+  {"phase": "7 + 8 reports", "budget": "6 h", "actual": "0.6 h",
+   "note": "this document and its markdown source"},
+  {"phase": "TOTAL", "budget": "48 h", "actual": "13.4 h",
+   "note": "including the 2.2 h lost to the phase-6 pool ordering and the time spent re-deriving three silent analysis bugs"}
  ]
 }
