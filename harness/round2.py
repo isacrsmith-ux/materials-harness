@@ -325,3 +325,179 @@ def precision_by_true_bin(pred, stable, each_true, threshold: float) -> pd.DataF
         rows.append({"bin": b, "n_selected": len(g), "n_correct": int(g.stable.sum()),
                      "precision": float(g.stable.mean()) if len(g) else float("nan")})
     return pd.DataFrame(rows)
+
+
+# --- round 3: the taxonomy actually on the table, and representative residual-parent draws --------
+#
+# fluoride is APPROVED, nitride is REJECTED (nitrogen stays in pnictide), sulfide and carbide are
+# PENDING a measurement of what is left of their parents. family3() is that taxonomy; it is what the
+# residual populations below are defined by. family2() is left exactly as the round-2 report used it.
+
+ROUND3_SPLIT_FILE = DATA_DIR / "wbm_split_round3.json"
+ROUND3_SEED = 20260919
+RESIDUAL_PARENTS = ("chalcogenide", "other")
+ROUND3_SIZES = {"calibration": 4000, "test": 1500}
+
+
+def family3(formula: str) -> str:
+    """Round-3 taxonomy: family2 with nitride removed (rejected) — N-bearing compounds stay in
+    pnictide, as they are today."""
+    els = Composition(formula).elements
+    syms = {e.symbol for e in els}
+    if syms & compare.F_ELECTRON:
+        return "f-electron"
+    if all(e.is_metal for e in els):
+        return "intermetallic"
+    if "O" in syms:
+        return "oxide"
+    if "F" in syms:
+        return "fluoride"
+    if "S" in syms:
+        return "sulfide"
+    if "C" in syms:
+        return "carbide"
+    if syms & HALOGENS:
+        return "halide"
+    if syms & CHALCOGENS:
+        return "chalcogenide"
+    if syms & PNICTOGENS:
+        return "pnictide"
+    return "other"
+
+
+def _spent_ids_round3() -> set[str]:
+    """Every id any earlier split has spent — original, round-1 family, round-2 — calibration and
+    locked test alike. Ids only, never outcomes; every test hash is verified on the way."""
+    out = _spent_ids()
+    for g in load()["groups"].values():
+        out |= set(g["calibration"]["ids"])
+        if g.get("test"):
+            out |= set(g["test"]["ids"])
+    return out
+
+
+def make_round3_split(summary: pd.DataFrame, seed: int = ROUND3_SEED, path=ROUND3_SPLIT_FILE) -> dict:
+    """Representative calibration draws for the RESIDUAL parents — what chalcogenide and 'other'
+    would be after their carve-outs.
+
+    Round 2 drew the children (sulfide, carbide) and never drew their parents, so the residuals could
+    only be measured on whatever the original 4,000-id set happened to contain: 130 and 248 labelable
+    rows. This draws them properly, on the same terms as every earlier split: only ids no split has
+    used, every candidate sharing a reduced formula with ANY locked test id dropped, per-bin
+    proportional so the residual's own base rate is preserved, groups drawn sequentially against a
+    shared taken-set. Made once.
+    """
+    from harness.confidence import family
+    from harness.suites import ood
+
+    if path.exists():
+        raise splits.SplitExists(f"{path} exists; the round-3 split is made once and never regenerated")
+    pool = summary[(summary["unique_prototype"] == True) & summary[ood.REQUIRED].notna().all(axis=1)].copy()  # noqa: E712
+    pool["bin"] = pool[splits.HULL_COL].map(lambda e: compare.hull_bin(e, below_zero_bin=True))
+
+    spent = _spent_ids_round3()
+    locked_formulas = _locked_formulas(pool) | {
+        Composition(f).reduced_formula
+        for f in pool[pool.material_id.isin(excluded_ids())].formula}
+    rest = pool[~pool.material_id.isin(spent)].copy()
+    rest["reduced_formula"] = [Composition(f).reduced_formula for f in rest.formula]
+    n_before = len(rest)
+    rest = rest[~rest.reduced_formula.isin(locked_formulas)]
+    rest["fam1"] = [family(f) for f in rest.formula]
+    rest["fam3"] = [family3(f) for f in rest.formula]
+
+    out = {"created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "seed": seed,
+           "pool": "WBM unique_prototype == True with every required column", "pool_size": len(pool),
+           "hull_column": splits.HULL_COL, "bins": list(compare.HULL_BINS_WBM),
+           "excluded_prior_ids": len(spent),
+           "dropped_sharing_locked_test_formula": n_before - len(rest),
+           "taxonomy": ("harness.round2.family3 — fluoride approved, nitride rejected (N stays in "
+                        "pnictide), sulfide and carbide pending; the residual parent is "
+                        "family()==parent AND family3()==parent"),
+           "purpose": ("measure what is left of chalcogenide and 'other' after their carve-outs, on a "
+                       "representative draw rather than on the handful of rows the original "
+                       "calibration set happens to contain"),
+           "method": ("only ids no earlier split has used; every candidate sharing a reduced formula "
+                      "with ANY locked test id dropped; per-bin proportional to the residual's own "
+                      "share; groups drawn sequentially against a shared taken-set"),
+           "leakage_guards": ["every original, round-1 and round-2 calibration and locked-test id excluded by id",
+                              "every candidate sharing a reduced formula with any locked-test id dropped",
+                              "groups drawn sequentially, so no id is in two draws or in both a "
+                              "calibration draw and a locked half"],
+           "groups": {}}
+
+    taken: set[str] = set()
+    for gi, parent in enumerate(RESIDUAL_PARENTS):
+        g = rest[(rest.fam1 == parent) & (rest.fam3 == parent) & ~rest.material_id.isin(taken)]
+        shares = g["bin"].value_counts(normalize=True).reindex(compare.HULL_BINS_WBM).fillna(0)
+        cal_q = splits._quotas(shares, min(ROUND3_SIZES["calibration"], len(g)))
+        cal = []
+        for i, b in enumerate(compare.HULL_BINS_WBM):
+            avail = g[g.bin == b]
+            cal.append(avail.sample(n=min(cal_q[b], len(avail)), random_state=seed + 1000 * gi + i))
+        cal = pd.concat(cal)
+        taken |= set(cal.material_id)
+        left = g.drop(cal.index)
+        entry = {"parent": parent, "available": len(g),
+                 "calibration": {"n": len(cal), "by_bin": cal.bin.value_counts().to_dict(),
+                                 "ids": sorted(cal.material_id)}, "test": None}
+        if len(left) >= MIN_LOCKED_HALF:
+            test_q = splits._quotas(shares, min(ROUND3_SIZES["test"], len(left)))
+            tst = []
+            for i, b in enumerate(compare.HULL_BINS_WBM):
+                avail = left[left.bin == b]
+                tst.append(avail.sample(n=min(test_q[b], len(avail)), random_state=seed + 1000 * gi + 500 + i))
+            tst = pd.concat(tst)
+            t_ids = sorted(tst.material_id)
+            taken |= set(t_ids)
+            entry["test"] = {"n": len(t_ids), "by_bin": tst.bin.value_counts().to_dict(), "locked": True,
+                             "sha256": hashlib.sha256(",".join(t_ids).encode()).hexdigest(), "ids": t_ids}
+        assert not set(cal.material_id) & spent
+        out["groups"][f"{parent}_residual"] = entry
+
+    cal_all = {i for g in out["groups"].values() for i in g["calibration"]["ids"]}
+    test_all = {i for g in out["groups"].values() if g["test"] for i in g["test"]["ids"]}
+    assert not cal_all & test_all, "a calibration id is also in a locked half"
+    assert not (cal_all | test_all) & spent, "a round-3 id was already spent"
+    out["n_unique_calibration_ids"] = len(cal_all)
+    path.write_text(json.dumps(out, indent=1) + "\n")
+    return out
+
+
+def load3(path=ROUND3_SPLIT_FILE) -> dict:
+    return json.loads(path.read_text())
+
+
+def calibration_ids3(group: str, path=ROUND3_SPLIT_FILE) -> list[str]:
+    return load3(path)["groups"][group]["calibration"]["ids"]
+
+
+def groups3(path=ROUND3_SPLIT_FILE) -> list[str]:
+    return list(load3(path)["groups"])
+
+
+def test_ids3(group: str, unlock: bool = False, path=ROUND3_SPLIT_FILE) -> list[str]:
+    """Locked round-3 test ids. Nothing in this project passes unlock=True."""
+    if not unlock:
+        raise PermissionError(f"the round-3 {group} test set is locked (test_ids3('{group}', unlock=True))")
+    t = load3(path)["groups"][group]["test"]
+    if t is None:
+        raise KeyError(f"{group} has no test half")
+    if hashlib.sha256(",".join(t["ids"]).encode()).hexdigest() != t["sha256"]:
+        raise RuntimeError(f"round-3 {group} test ids do not match their recorded hash")
+    return t["ids"]
+
+
+def excluded_ids3(path=ROUND3_SPLIT_FILE) -> set[str]:
+    """Every round-3 LOCKED test id, for exclusion only. Each hash verified, as elsewhere."""
+    if not path.exists():
+        return set()
+    out: set[str] = set()
+    for name, g in load3(path)["groups"].items():
+        t = g.get("test")
+        if not t:
+            continue
+        if hashlib.sha256(",".join(t["ids"]).encode()).hexdigest() != t["sha256"]:
+            raise RuntimeError(f"round-3 {name} test ids do not match their recorded hash")
+        out |= set(t["ids"])
+    return out

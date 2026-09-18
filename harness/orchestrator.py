@@ -435,6 +435,51 @@ def build_round2_jobs(compute: dict, only_ids: set[str] | None = None) -> list[d
     return jobs
 
 
+ROUND3_INIT_CACHE = "round3_calibration_init_structs.json"
+ROUND3_CSE_CACHE = "round3_calibration_cse.json"
+
+
+def build_round3_jobs(compute: dict, only_ids: set[str] | None = None) -> list[dict]:
+    """Relaxation + single point for the round-3 residual-parent calibration ids (harness.round2's
+    chalcogenide_residual and other_residual draws).
+
+    Same contract as build_round2_jobs: jobs are built for the WHOLE round-3 calibration set and
+    then filtered, so the cache files always hold every round-3 id; and every locked half - the
+    original WBM test, both round-1 family halves, the round-2 sulfide half and the two new round-3
+    halves - is asserted disjoint from the queue by id before anything is enqueued.
+    """
+    from harness import round2, splits
+    from harness.suites import ood
+
+    seen: set[str] = set()
+    ids: list[str] = []
+    for g in round2.groups3():
+        for wid in round2.calibration_ids3(g):
+            if wid not in seen:
+                seen.add(wid)
+                ids.append(wid)
+
+    locked = (splits.excluded_ids() | splits.family_excluded_ids()
+              | round2.excluded_ids() | round2.excluded_ids3())
+    leaked = set(ids) & locked
+    if leaked:
+        raise RuntimeError(
+            f"{len(leaked)} round-3 calibration ids are also locked test or prior-split ids "
+            f"(e.g. {sorted(leaked)[:3]}). Relaxing or scoring a locked id before the final "
+            "evaluation is a bug, not a shortcut - refusing to enqueue."
+        )
+
+    jobs = build_wbm_calibration_jobs(
+        compute, ids=ids,
+        init_cache=ood.WBM_DIR / ROUND3_INIT_CACHE,
+        cse_cache=ood.WBM_DIR / ROUND3_CSE_CACHE,
+        strict=True,
+    )
+    if only_ids is not None:
+        jobs = [j for j in jobs if j["inputs"]["wbm_id"] in only_ids]
+    return jobs
+
+
 def _size_summary(jobs: list[dict]) -> dict:
     import numpy as np
 

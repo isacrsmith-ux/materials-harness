@@ -57,15 +57,18 @@ def _assert_locked_untouched() -> None:
     """Every locked half is still locked, still hash-verified, and still refuses to hand out ids."""
     from harness import splits
 
-    for fn, args in ((splits.test_ids, ()), (splits.family_test_ids, ("oxide",)),
-                     (splits.family_test_ids, ("halide",)), (round2.test_ids, ("sulfide",)),
-                     (round2.test_ids, ("halide_topup",))):
+    checks = [(splits.test_ids, ()), (splits.family_test_ids, ("oxide",)),
+              (splits.family_test_ids, ("halide",)), (round2.test_ids, ("sulfide",)),
+              (round2.test_ids, ("halide_topup",))]
+    checks += [(round2.test_ids3, (g,)) for g in (round2.groups3() if round2.ROUND3_SPLIT_FILE.exists() else [])]
+    for fn, args in checks:
         try:
             fn(*args)
         except PermissionError:
             continue
         raise SystemExit(f"ABORT - {fn.__name__}{args} handed out locked ids without unlock=True")
-    n = len(splits.excluded_ids() | splits.family_excluded_ids() | round2.excluded_ids())
+    n = len(splits.excluded_ids() | splits.family_excluded_ids() | round2.excluded_ids()
+            | round2.excluded_ids3())
     print(f"locked/prior ids verified by hash and excluded from every draw: {n}")
 
 
@@ -115,6 +118,12 @@ def enqueue(phase: str) -> None:
         ids = {i for f in round2.NEW_FAMILIES for i in round2.calibration_ids(f)} - done
         print(f"  phase 3: {len(ids)} remaining ids across {', '.join(round2.NEW_FAMILIES)}")
         _enqueue(O.build_round2_jobs(compute, only_ids=ids), "phase3")
+
+    elif phase == "round3":
+        ids = {i for g in round2.groups3() for i in round2.calibration_ids3(g)}
+        for g in round2.groups3():
+            print(f"  round 3 {g}: {len(round2.calibration_ids3(g))} calibration ids")
+        _enqueue(O.build_round3_jobs(compute, only_ids=ids), "round3")
 
     elif phase == "retries":
         jobs = O.build_retry_jobs(compute)

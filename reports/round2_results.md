@@ -95,6 +95,31 @@ It certified on slightly less data than indicated because the top-up's own preci
 > **The split matters more than the total.** Certifying halide as one family buys a threshold of -70 meV/atom. Splitting fluoride out and certifying the rest buys -20 meV/atom on the non-fluoride halides - a far more inclusive rule, which labels many more candidates - while fluoride certifies nothing. Fluoride's own ceiling is 0.9029 on 175 calls, which is technically above target, but reaching the bound would take 1,393,121 calibration structures: 6.5x the whole 215,488-structure WBM unique-prototype pool. Sample-size limited and unreachable are not the same verdict, and fluoride is the second.
 
 
+## Correction, 18 September 2026 - which rows a threshold is certified on
+
+**Every certification in this document is on all USABLE rows. The production bundle certifies on LABELABLE rows, and the two do not always agree.** This section records the difference and what it changes. Nothing below has been deleted or rewritten: the all-usable figures are correct for the population they describe, and are retained as the secondary diagnostic they are.
+
+### The distinction
+
+A usable row is one the energy-plausibility guard did not reject. A labelable row is one that would actually receive a label from the product: usable, and also surviving the weak-element exclusion and the structure-change exclusion (`route_structure_change`). `calibration.fit()` is explicitly documented to take "only the rows that would actually receive a label", and that is the population the frozen per-family thresholds were fitted on. This document's sections 13 to 18 used all usable rows, matching test 7's own family analysis, and therefore certified on a superset of the population the product labels.
+
+Which is right depends on the question. For **how the engine behaves on a chemistry**, all usable rows is the honest denominator - excluding the structure-changed rows would be choosing the easy cases. For **what threshold to adopt**, labelable rows is the only correct footing, because the product never labels the others. The user has ruled that labelable is authoritative for certification; the all-usable figures stay as the diagnostic.
+
+### What moves
+
+| family | all usable (this document) | labelable (authoritative) | changes the conclusion? |
+|---|---|---|---|
+| halide | n=6300, stable -70 meV, CP-lower 0.9028 | n=5135, stable -20 meV, CP-lower 0.9025 | **yes** - a far looser threshold and recall 0.306 -> 0.599 |
+| sulfide | n=4000, stable not certified (ceiling bound 0.8747) | n=3402, stable -30 meV, CP-lower 0.9047 | **yes** - certifies; it does not need ~6,416 more structures |
+| carbide | n=1876, stable -20 meV, CP-lower 0.9074 | n=1647, stable -20 meV, CP-lower 0.9043 | no - certifies on both footings, marginally |
+| nitride | n=2423, stable not certified (ceiling bound 0.8745) | n=2159, stable not certified (ceiling bound 0.8745) | no - certifies on neither |
+| fluoride | n=2241, stable not certified (ceiling bound 0.8133) | n=1888, stable not certified (ceiling bound 0.8728) | no - certifies on neither |
+
+> **Two conclusions in this document are superseded by the labelable footing.** Section 14's halide threshold of -70 meV/atom becomes -20 meV/atom, and its recall roughly doubles. Section 15's finding that sulfide is sample-size limited and would need about 6,416 calibration structures is an artefact of the footing: on labelable rows sulfide certifies a stable threshold at -30 meV/atom with a bound of 0.9047. The structure-changed rows that the product already refuses to label were what was dragging both families down. The master family table below is the all-usable version; the labelable version is in `reports/round2_taxonomy_decision.md`.
+
+Nothing else in sections 13 to 18 changes sign or verdict under the labelable footing. Oxide remains without a stable-side path, nitride remains uncertified on the stable side, and the multi-start and retry results of sections 17 and 18 do not depend on the distinction at all, since neither certifies a threshold.
+
+
 ## 15. The three new families, fully calibrated
 
 Source: `reports/round2_phase3_families.md`. sulfide 4,000, nitride 2,423 and carbide 1,876 calibration structures, drawn sequentially against a shared taken-set from the pool ids no earlier split had used. Same methodology as test 7 throughout.
@@ -288,6 +313,8 @@ The right structure-finding measure for a candidate with no known target is sect
 
 
 ## The master family table, updated
+
+Footing: all usable rows, as everywhere else in this document. See the correction section for the labelable figures, which are authoritative for adoption.
 
 This is test 7's per-family table, in the same format, extended with every family round 2 touched. It supersedes the two-row version in section 7 of the existing document. Every figure is the certified threshold where one exists, and the pessimistic bound in every case; `n` is usable rows after guard rejections, which are counted and excluded.
 

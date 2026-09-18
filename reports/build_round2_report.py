@@ -58,6 +58,7 @@ P2 = by_group(load("round2_phase2_halide.json"))
 P3 = by_group(load("round2_phase3_families.json"))
 P4 = by_group(load("round2_phase4_oxide_subfamilies.json"))
 P4C = by_group(load("round2_phase4_oxide_subfamilies_corrected.json"))
+TAX = load("round2_taxonomy_decision.json")
 MS = json.loads((RESULTS / "round2_multistart_summary.json").read_text()) \
     if (RESULTS / "round2_multistart_summary.json").is_file() else {}
 RT = json.loads((RESULTS / "round2_retry_summary.json").read_text()) \
@@ -111,6 +112,66 @@ def brk(): B.append(("pagebreak",))
 mm_ = 1.0  # widths are given in mm; the PDF renderer multiplies
 
 
+
+
+def section_correction():
+    h1("Correction, 18 September 2026 - which rows a threshold is certified on")
+    body("**Every certification in this document is on all USABLE rows. The production bundle "
+         "certifies on LABELABLE rows, and the two do not always agree.** This section records the "
+         "difference and what it changes. Nothing below has been deleted or rewritten: the "
+         "all-usable figures are correct for the population they describe, and are retained as the "
+         "secondary diagnostic they are.")
+    h2("The distinction")
+    body("A usable row is one the energy-plausibility guard did not reject. A labelable row is one "
+         "that would actually receive a label from the product: usable, and also surviving the "
+         "weak-element exclusion and the structure-change exclusion "
+         "(<font face='Courier'>route_structure_change</font>). "
+         "<font face='Courier'>calibration.fit()</font> is explicitly documented to take \"only the "
+         "rows that would actually receive a label\", and that is the population the frozen "
+         "per-family thresholds were fitted on. This document's sections 13 to 18 used all usable "
+         "rows, matching test 7's own family analysis, and therefore certified on a superset of the "
+         "population the product labels.")
+    body("Which is right depends on the question. For **how the engine behaves on a chemistry**, "
+         "all usable rows is the honest denominator - excluding the structure-changed rows would be "
+         "choosing the easy cases. For **what threshold to adopt**, labelable rows is the only "
+         "correct footing, because the product never labels the others. The user has ruled that "
+         "labelable is authoritative for certification; the all-usable figures stay as the "
+         "diagnostic.")
+    h2("What moves")
+    rows = [["family", "all usable (this document)", "labelable (authoritative)", "changes the conclusion?"]]
+    def two(name, tax_key, kind):
+        src = TAX["children"] if kind == "child" else None
+        if kind == "child":
+            r = TAX["children"][tax_key]
+            u, l = r["usable"], r["labelable"]
+        else:
+            r = TAX["parents"][tax_key]
+            u, l = r["before"]["usable"], r["before"]["labelable"]
+        def cell(m):
+            s = m.get("stable_threshold")
+            return (f"n={m['n']}, stable {mev(s)}, CP-lower {f4(m['precision_cp_lower'])}"
+                    if s is not None else
+                    f"n={m['n']}, stable not certified (ceiling bound {f4(m['stable_ceiling_cp_lower'])})")
+        return [name, cell(u), cell(l)]
+    rows.append(two("halide", "halide", "parent") + ["**yes** - a far looser threshold and recall 0.306 -> 0.599"])
+    rows.append(two("sulfide", "sulfide", "child") + ["**yes** - certifies; it does not need ~6,416 more structures"])
+    rows.append(two("carbide", "carbide", "child") + ["no - certifies on both footings, marginally"])
+    rows.append(two("nitride", "nitride", "child") + ["no - certifies on neither"])
+    rows.append(two("fluoride", "fluoride", "child") + ["no - certifies on neither"])
+    tbl(rows, [20, 52, 52, 48])
+    note("**Two conclusions in this document are superseded by the labelable footing.** "
+         "Section 14's halide threshold of -70 meV/atom becomes -20 meV/atom, and its recall "
+         "roughly doubles. Section 15's finding that sulfide is sample-size limited and would need "
+         "about 6,416 calibration structures is an artefact of the footing: on labelable rows "
+         "sulfide certifies a stable threshold at -30 meV/atom with a bound of 0.9047. The "
+         "structure-changed rows that the product already refuses to label were what was dragging "
+         "both families down. The master family table below is the all-usable version; the "
+         "labelable version is in "
+         "<font face='Courier'>reports/round2_taxonomy_decision.md</font>.")
+    body("Nothing else in sections 13 to 18 changes sign or verdict under the labelable footing. "
+         "Oxide remains without a stable-side path, nitride remains uncertified on the stable side, "
+         "and the multi-start and retry results of sections 17 and 18 do not depend on the "
+         "distinction at all, since neither certifies a threshold.")
 
 
 def section_15():
@@ -420,6 +481,8 @@ def section_ledger():
 
 def section_master():
     h1("The master family table, updated")
+    small("Footing: all usable rows, as everywhere else in this document. See the correction "
+          "section for the labelable figures, which are authoritative for adoption.")
     body("This is test 7's per-family table, in the same format, extended with every family round 2 "
          "touched. It supersedes the two-row version in section 7 of the existing document. Every "
          "figure is the certified threshold where one exists, and the pessimistic bound in every "
@@ -608,6 +671,8 @@ def build_content():
     brk()
 
     # ------------------------------------------------------------------ 16 (15 is inserted before it at render time)
+    section_correction()
+    brk()
     section_15()
     brk()
     section_16()
