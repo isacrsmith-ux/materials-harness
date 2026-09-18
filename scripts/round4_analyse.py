@@ -134,6 +134,50 @@ def round4_composition(fam: str) -> dict:
             "bin_shares": {k: float(v) for k, v in dl.bin.value_counts(normalize=True).items()}}
 
 
+def replication_check(fam: str) -> dict:
+    """Apply the ACTIVE v1 rule for `fam` to both populations — the one it was fitted on and the
+    round-4 draw — and report the same pre-specified quantity on each.
+
+    The two samples are NEVER pooled. Pooling a fit population with a fresh one produces a number
+    that is neither, and would turn a failed replication into a tuned threshold (the same reasoning
+    that kept the two fluoride R1 measurements apart in reports/fluoride_followup_power.md).
+    """
+    import numpy as np
+    from scipy.stats import norm
+
+    from harness import metrics as M, splits
+
+    a = active_thresholds(fam)["without_second_engine"]
+    if a["stable"] is None:
+        return {"applicable": False, "reason": "v1 has no stable rule for this family to replicate"}
+
+    d = CAL.calibration_table(CAL.PRODUCTION_ENGINE, set(splits.calibration_ids()))
+    d = d.assign(fam=d.formula.map(C.family), stable=d.each_true <= M.ON_HULL_TOL)
+    orig = d[labelable_mask(d)]
+    orig = orig[orig.fam == fam]
+    d4 = table(fam)
+    new = d4[labelable_mask(d4)]
+
+    out = {"applicable": True, "rule_stable": a["stable"], "rule_unstable": a["unstable"], "samples": {}}
+    counts = {}
+    for label, sub in (("original (v1 fit population)", orig), ("round 4 (fresh, disjoint)", new)):
+        sel = sub.each_pred <= a["stable"] + M.ON_HULL_TOL
+        n, k = int(sel.sum()), int(sub.stable[sel].sum())
+        counts[label] = (k, n)
+        out["samples"][label] = {
+            "n_labelable": len(sub), "n_called_stable": n, "n_correct": k,
+            "point": (k / n) if n else float("nan"),
+            "cp_lower": C.cp_lower(k, n, 1 - (1 - C.CERT_CONF) / len(C.DEC_GRID)) if n else float("nan"),
+        }
+    (k1, n1), (k2, n2) = counts["original (v1 fit population)"], counts["round 4 (fresh, disjoint)"]
+    pp = (k1 + k2) / (n1 + n2)
+    se = float(np.sqrt(pp * (1 - pp) * (1 / n1 + 1 / n2)))
+    z = (k1 / n1 - k2 / n2) / se if se else float("nan")
+    out["difference"] = {"delta": k1 / n1 - k2 / n2, "se": se, "z": float(z),
+                         "p_two_sided": float(2 * (1 - norm.cdf(abs(z))))}
+    return out
+
+
 def analyse(fam: str) -> dict:
     d = table(fam)
     n_req, n_rej = d.attrs["n_requested"], d.attrs["n_rejected"]
@@ -316,6 +360,32 @@ def report(out_md: Path) -> dict:
                  f"{_fmt(m['precision_cp_lower'])} | {_mev(m['unstable_threshold'])} | {_fmt(m['npv'])} | "
                  f"{_fmt(m['npv_cp_lower'])} | {_fmt(m['recall_stable'],3)} | {_fmt(m['dft_share'],3)} |")
     L += [""]
+
+    # --- replication of the live rules
+    L += ["## 6a. Does the ACTIVE rule replicate on a fresh matched population?", "",
+          "For every family where v1 already has a stable-side rule, that rule is applied unchanged to "
+          "both populations. The two samples are **never pooled**: pooling a fitting population with a "
+          "fresh one yields a number that is neither, and would convert a failed replication into a "
+          "tuned threshold. Same reasoning as the two fluoride R1 measurements.", ""]
+    for f in fams:
+        rc = replication_check(f)
+        if not rc.get("applicable"):
+            L += [f"**{f}** — {rc.get('reason')}", ""]
+            continue
+        L += [f"**{f}**, v1 rule stable {_mev(rc['rule_stable'])}:", "",
+              "| sample | labelable | called stable | correct | point | CP-lower | clears 0.90? |",
+              "|---|---:|---:|---:|---:|---:|---|"]
+        for label, m in rc["samples"].items():
+            clears = "**yes**" if m["cp_lower"] >= C.TARGET_PRECISION else "**no**"
+            L.append(f"| {label} | {m['n_labelable']:,} | {m['n_called_stable']:,} | {m['n_correct']:,} | "
+                     f"{_fmt(m['point'])} | {_fmt(m['cp_lower'])} | {clears} |")
+        dd = rc["difference"]
+        L += ["", f"Difference {dd['delta']:+.4f} (SE {dd['se']:.4f}, z {dd['z']:.2f}, two-sided "
+                  f"p {dd['p_two_sided']:.3f}). The two samples are "
+                  f"{'not statistically distinguishable' if dd['p_two_sided'] >= 0.05 else 'statistically distinguishable'}"
+                  " — this note is descriptive and settles nothing.", ""]
+    L += ["This is DEVELOPMENT data. It cannot revise the v1 certification, no threshold may be refitted "
+          "to rescue a bound that fell, and nothing here is grounds for a change on its own.", ""]
 
     # --- pool left
     L += ["## 6. What pool is left, and what it could support", "",

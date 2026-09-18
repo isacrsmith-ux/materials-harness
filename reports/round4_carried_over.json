@@ -1,0 +1,319 @@
+{
+ "generated_at": "2026-09-18T23:39:53+00:00",
+ "split": {
+  "created_at": "2026-09-18T22:57:33+00:00",
+  "seed": 20260920,
+  "pool": "WBM unique_prototype == True with every required column",
+  "pool_size": 215488,
+  "hull_column": "e_above_hull_mp2020_corrected_ppd_mp",
+  "bins": [
+   "<0",
+   "0\u20130.025",
+   "0.025\u20130.1",
+   "0.1\u20130.3",
+   ">0.3"
+  ],
+  "excluded_prior_ids": 42473,
+  "locked_test_ids_excluded": 11874,
+  "dropped_sharing_locked_test_formula": 4977,
+  "taxonomy": "harness.confidence.family() UNCHANGED \u2014 no round-2/3 overlay. The population measured is exactly the population production routes.",
+  "purpose": "re-measure f-electron, intermetallic and pnictide, which still carry thresholds fitted on 1,747 / 645 / 202 labelable rows from 2026-09-12 and were not touched by round 2 or round 3",
+  "held_out_half": "NONE RESERVED. This is a development-only draw. Reserving a locked half is a separate decision that belongs with a pre-registration; unspent_after_draw below records what remains eligible for one.",
+  "method": "only ids no earlier split has used; every candidate sharing a reduced formula with ANY of the six locked test halves dropped; per-bin proportional to the family's own share; families drawn sequentially against a shared taken-set",
+  "leakage_guards": [
+   "every original, round-1, round-2 and round-3 calibration and locked-test id excluded by id, each half's hash verified on the way",
+   "every candidate sharing a reduced formula with any locked-test id dropped",
+   "families drawn sequentially, so no id lands in two draws",
+   "no test half is reserved, so no id drawn here can later be mistaken for held-out data"
+  ],
+  "n_unique_calibration_ids": 12000,
+  "sha256_all_calibration_ids": "8e67815d048720beb50625ae211ab5e2c0cce5dbf0ec28cbd5d548cce1915e9a"
+ },
+ "results": {
+  "f-electron": {
+   "family": "f-electron",
+   "n_requested": 4000,
+   "n_rejected_by_guard": 0,
+   "n_usable": 4000,
+   "n_labelable": 3495,
+   "n_excluded_not_labelable": 505,
+   "failures": {
+    "n_failed_jobs": 0,
+    "by_kind": {},
+    "n_not_yet_run": 0
+   },
+   "active_v1": {
+    "with_second_engine": {
+     "stable": -0.02,
+     "unstable": 0.01,
+     "n": 1747
+    },
+    "without_second_engine": {
+     "stable": -0.02,
+     "unstable": 0.01,
+     "n": 1801
+    }
+   },
+   "labelable": {
+    "n": 3495,
+    "base_rate": 0.18483547925608013,
+    "stable_threshold": null,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.952054794520548,
+    "stable_ceiling_cp_lower": 0.8993996897500058,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 3687,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9955235555050806,
+    "n_called_stable": 0,
+    "n_called_unstable": 2809,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9747241011035955,
+    "npv_cp_lower": 0.9639881900401936,
+    "dft_share": 0.19628040057224608,
+    "recall_stable": 0.0,
+    "stable_lost": 0.10990712074303406,
+    "n_truly_stable": 646
+   },
+   "all_usable": {
+    "n": 4000,
+    "base_rate": 0.1835,
+    "stable_threshold": null,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.9113573407202216,
+    "stable_ceiling_cp_lower": 0.8547505238606103,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 75136,
+    "unstable_point": 0.999457111834962,
+    "unstable_cp_lower": 0.9948795411243954,
+    "n_called_stable": 0,
+    "n_called_unstable": 3201,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9753202124336144,
+    "npv_cp_lower": 0.9654485877093264,
+    "dft_share": 0.19975,
+    "recall_stable": 0.0,
+    "stable_lost": 0.10762942779291552,
+    "n_truly_stable": 734
+   },
+   "carried_over_n": 1747,
+   "calibration_sha256": "c00f2bfe4ac1257e5efecbdcd810a2f86be169466288f70781bcefa12c64e033",
+   "today_routing_labelable": {
+    "n_called_stable": 441,
+    "n_called_unstable": 2657,
+    "precision": 0.9387755102040817,
+    "precision_cp_lower": 0.8944406850681692,
+    "npv": 0.9868272487768159,
+    "npv_cp_lower": 0.9783038695493012,
+    "dft_share": 0.11359084406294706,
+    "recall_stable": 0.6408668730650154,
+    "stable_lost": 0.05417956656346749,
+    "n_truly_stable": 646
+   },
+   "new_routing_labelable": {
+    "n_called_stable": 0,
+    "n_called_unstable": 2809,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9747241011035955,
+    "npv_cp_lower": 0.9639881900401936,
+    "dft_share": 0.19628040057224608,
+    "recall_stable": 0.0,
+    "stable_lost": 0.10990712074303406,
+    "n_truly_stable": 646
+   }
+  },
+  "intermetallic": {
+   "family": "intermetallic",
+   "n_requested": 4000,
+   "n_rejected_by_guard": 0,
+   "n_usable": 4000,
+   "n_labelable": 3613,
+   "n_excluded_not_labelable": 387,
+   "failures": {
+    "n_failed_jobs": 0,
+    "by_kind": {},
+    "n_not_yet_run": 0
+   },
+   "active_v1": {
+    "with_second_engine": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 645
+    },
+    "without_second_engine": {
+     "stable": null,
+     "unstable": 0.0,
+     "n": 665
+    }
+   },
+   "labelable": {
+    "n": 3613,
+    "base_rate": 0.09742596180459452,
+    "stable_threshold": -0.02,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 1.0,
+    "stable_ceiling_cp_lower": 0.921562087096491,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9971579884584582,
+    "n_called_stable": 182,
+    "n_called_unstable": 3365,
+    "precision": 0.978021978021978,
+    "precision_cp_lower": 0.9197369487841499,
+    "npv": 0.9658246656760773,
+    "npv_cp_lower": 0.9548171456377657,
+    "dft_share": 0.018267367838361474,
+    "recall_stable": 0.5056818181818182,
+    "stable_lost": 0.32670454545454547,
+    "n_truly_stable": 352
+   },
+   "all_usable": {
+    "n": 4000,
+    "base_rate": 0.09175,
+    "stable_threshold": null,
+    "unstable_threshold": -0.01,
+    "stable_ceiling_point": 0.9633507853403142,
+    "stable_ceiling_cp_lower": 0.8991693114216102,
+    "stable_verdict": "sample-size limited",
+    "stable_structures_needed": 4042,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9974687560408211,
+    "n_called_stable": 0,
+    "n_called_unstable": 3737,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9681562750869681,
+    "npv_cp_lower": 0.9580758552717166,
+    "dft_share": 0.06575,
+    "recall_stable": 0.0,
+    "stable_lost": 0.3242506811989101,
+    "n_truly_stable": 367
+   },
+   "carried_over_n": 645,
+   "calibration_sha256": "c92b8c1007087821fd257428ee2b9e46bce7535a88006186d39b68103bc5c6fd",
+   "today_routing_labelable": {
+    "n_called_stable": 0,
+    "n_called_unstable": 3251,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9843125192248539,
+    "npv_cp_lower": 0.9761961606333673,
+    "dft_share": 0.10019374481040687,
+    "recall_stable": 0.0,
+    "stable_lost": 0.14488636363636365,
+    "n_truly_stable": 352
+   },
+   "new_routing_labelable": {
+    "n_called_stable": 182,
+    "n_called_unstable": 3365,
+    "precision": 0.978021978021978,
+    "precision_cp_lower": 0.9197369487841499,
+    "npv": 0.9658246656760773,
+    "npv_cp_lower": 0.9548171456377657,
+    "dft_share": 0.018267367838361474,
+    "recall_stable": 0.5056818181818182,
+    "stable_lost": 0.32670454545454547,
+    "n_truly_stable": 352
+   }
+  },
+  "pnictide": {
+   "family": "pnictide",
+   "n_requested": 4000,
+   "n_rejected_by_guard": 0,
+   "n_usable": 4000,
+   "n_labelable": 3637,
+   "n_excluded_not_labelable": 363,
+   "failures": {
+    "n_failed_jobs": 0,
+    "by_kind": {},
+    "n_not_yet_run": 0
+   },
+   "active_v1": {
+    "with_second_engine": {
+     "stable": null,
+     "unstable": null,
+     "n": 202
+    },
+    "without_second_engine": {
+     "stable": null,
+     "unstable": 0.05,
+     "n": 210
+    }
+   },
+   "labelable": {
+    "n": 3637,
+    "base_rate": 0.13857574924388233,
+    "stable_threshold": -0.02,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.9788135593220338,
+    "stable_ceiling_cp_lower": 0.9308480615583608,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9951209530125216,
+    "n_called_stable": 306,
+    "n_called_unstable": 3154,
+    "precision": 0.9607843137254902,
+    "precision_cp_lower": 0.9127943399138314,
+    "npv": 0.974001268230818,
+    "npv_cp_lower": 0.9638281795801172,
+    "dft_share": 0.04866648336541105,
+    "recall_stable": 0.5833333333333334,
+    "stable_lost": 0.1626984126984127,
+    "n_truly_stable": 504
+   },
+   "all_usable": {
+    "n": 4000,
+    "base_rate": 0.13125,
+    "stable_threshold": -0.02,
+    "unstable_threshold": 0.0,
+    "stable_ceiling_point": 0.968,
+    "stable_ceiling_cp_lower": 0.9164355790020531,
+    "stable_verdict": "certified",
+    "stable_structures_needed": null,
+    "unstable_point": 1.0,
+    "unstable_cp_lower": 0.9957962901036027,
+    "n_called_stable": 322,
+    "n_called_unstable": 3487,
+    "precision": 0.953416149068323,
+    "precision_cp_lower": 0.9043573274853443,
+    "npv": 0.9756237453398336,
+    "npv_cp_lower": 0.9662657964369704,
+    "dft_share": 0.04775,
+    "recall_stable": 0.5847619047619048,
+    "stable_lost": 0.1619047619047619,
+    "n_truly_stable": 525
+   },
+   "carried_over_n": 202,
+   "calibration_sha256": "c6682a9575c60c56de4a63e85d03df5fe05f9d177a174f60eef176b64b6caf3b",
+   "today_routing_labelable": {
+    "n_called_stable": 0,
+    "n_called_unstable": 2502,
+    "precision": NaN,
+    "precision_cp_lower": NaN,
+    "npv": 0.9976019184652278,
+    "npv_cp_lower": 0.9926844618870847,
+    "dft_share": 0.3120703876821556,
+    "recall_stable": 0.0,
+    "stable_lost": 0.011904761904761904,
+    "n_truly_stable": 504
+   },
+   "new_routing_labelable": {
+    "n_called_stable": 306,
+    "n_called_unstable": 3154,
+    "precision": 0.9607843137254902,
+    "precision_cp_lower": 0.9127943399138314,
+    "npv": 0.974001268230818,
+    "npv_cp_lower": 0.9638281795801172,
+    "dft_share": 0.04866648336541105,
+    "recall_stable": 0.5833333333333334,
+    "stable_lost": 0.1626984126984127,
+    "n_truly_stable": 504
+   }
+  }
+ }
+}
