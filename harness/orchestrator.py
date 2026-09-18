@@ -385,6 +385,56 @@ def build_family_calibration_jobs(compute: dict, families=("oxide", "halide")) -
     )
 
 
+ROUND2_INIT_CACHE = "round2_calibration_init_structs.json"
+ROUND2_CSE_CACHE = "round2_calibration_cse.json"
+
+
+def build_round2_jobs(compute: dict, only_ids: set[str] | None = None) -> list[dict]:
+    """Relaxation + single point for the round-2 calibration ids (four new anion families and the
+    halide top-up; harness.round2).
+
+    Jobs are always built for the WHOLE round-2 calibration set and then filtered to `only_ids`, so
+    the cache files always hold every round-2 id. Building a phase's subset directly would populate
+    them with that subset, and ood.load_structures returns a cache file wholesale and ignores `ids`
+    once it exists — the silent no-op documented on build_family_calibration_jobs.
+
+    Every locked half — the original WBM test set, both round-1 family halves and the two round-2
+    halves — is asserted disjoint from the queue first, by id only. Nothing here passes unlock=True.
+    """
+    from harness import round2, splits
+    from harness.suites import ood
+
+    # Groups overlap on purpose: fluoride is a subset of confidence.family()'s halide, so the halide
+    # top-up and the fluoride family share ids. One relaxation serves both groupings, so the id list
+    # is deduplicated rather than queued twice.
+    seen: set[str] = set()
+    ids: list[str] = []
+    for g in round2.groups():
+        for wid in round2.calibration_ids(g):
+            if wid not in seen:
+                seen.add(wid)
+                ids.append(wid)
+
+    locked = splits.excluded_ids() | splits.family_excluded_ids() | round2.excluded_ids()
+    leaked = set(ids) & locked
+    if leaked:
+        raise RuntimeError(
+            f"{len(leaked)} round-2 calibration ids are also locked test or prior-split ids "
+            f"(e.g. {sorted(leaked)[:3]}). Relaxing or scoring a locked id before the final "
+            "evaluation is a bug, not a shortcut - refusing to enqueue."
+        )
+
+    jobs = build_wbm_calibration_jobs(
+        compute, ids=ids,
+        init_cache=ood.WBM_DIR / ROUND2_INIT_CACHE,
+        cse_cache=ood.WBM_DIR / ROUND2_CSE_CACHE,
+        strict=True,
+    )
+    if only_ids is not None:
+        jobs = [j for j in jobs if j["inputs"]["wbm_id"] in only_ids]
+    return jobs
+
+
 def _size_summary(jobs: list[dict]) -> dict:
     import numpy as np
 
