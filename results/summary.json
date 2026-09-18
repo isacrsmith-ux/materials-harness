@@ -3,8 +3,7 @@
   "file": "queue.sqlite",
   "jobs": {
    "ood": {
-    "done": 46609,
-    "pending": 13598
+    "done": 60207
    },
    "stability": {
     "done": 4737,
@@ -21,9 +20,9 @@
   },
   "last_run": {
    "mode": "full",
-   "n_done": 5600,
+   "n_done": 13598,
    "n_failed": 0,
-   "run_id": "20260917-215505",
+   "run_id": "20260917-221550",
    "status": "finished"
   }
  },
@@ -42,7 +41,7 @@
     "ok": 594
    },
    "ood": {
-    "ok": 63611
+    "ok": 77209
    },
    "polymorph": {
     "ok": 1144
@@ -66,7 +65,7 @@
   "result_rows": {
    "bulk": 332,
    "experimental": 264,
-   "ood": 135204,
+   "ood": 162400,
    "polymorph": 1144,
    "smoke": 6,
    "stability": 200,
@@ -75,7 +74,7 @@
   }
  },
  "scorecard": {
-  "file": "reports/20260917-215505/scorecard.json",
+  "file": "reports/20260917-221550/scorecard.json",
   "model": "MACE-MPA-0 medium",
   "routing_share sent to DFT": 0.43346673336668334,
   "settings_tag": "c2480e74",
