@@ -136,17 +136,21 @@ SUBFAMILIES = {
 
 # --- report ------------------------------------------------------------------------------------------
 
-def rows_for(group: str, targets=((0.90, "stable"), (0.95, "unstable")), alt_target: float = 0.80) -> dict:
+def rows_for(group: str, targets=((0.90, "stable"), (0.95, "unstable")), alt_target: float = 0.80,
+             n_splits: int = 1) -> dict:
+    """n_splits > 1 additionally Bonferroni-corrects the certification confidence over the number of
+    subfamily splits searched, so a split picked because it looked best still keeps its guarantee."""
+    conf = 1 - (1 - C.CERT_CONF) / n_splits
     d = resolve(group)
     d = d.assign(stable=d.each_true <= M.ON_HULL_TOL)
     out = {"group": group, "n_requested": d.attrs.get("n_requested"), "n_usable": len(d),
            "n_rejected": d.attrs.get("n_rejected"), "base_rate": float(d.stable.mean()) if len(d) else float("nan"),
-           "diagnoses": [], "alt": None}
+           "n_splits_corrected": n_splits, "cert_conf": conf, "diagnoses": [], "alt": None}
     for target, side in targets:
-        out["diagnoses"].append(round2.diagnose(d.each_pred, d.stable, target, side))
+        out["diagnoses"].append(round2.diagnose(d.each_pred, d.stable, target, side, conf=conf))
     stable_dx = out["diagnoses"][0]
     if stable_dx["certified_threshold"] is None:
-        out["alt"] = round2.diagnose(d.each_pred, d.stable, alt_target, "stable")
+        out["alt"] = round2.diagnose(d.each_pred, d.stable, alt_target, "stable", conf=conf)
     t = stable_dx["certified_threshold"]
     t = t if t is not None else stable_dx["best_threshold"]
     out["by_true_bin"] = (round2.precision_by_true_bin(d.each_pred, d.stable, d.each_true, t)
@@ -170,7 +174,13 @@ def render(results: list[dict]) -> str:
          "Method is test 7's, unchanged: Clopper-Pearson one-sided bounds (never bootstrap), "
          "Bonferroni-corrected over the threshold grid so picking the best threshold keeps the "
          "guarantee, verdicts read from the pessimistic end, and guard rejections counted-and-excluded "
-         "rather than dropped.", "",
+         "rather than dropped.", ""]
+    ns = {r.get("n_splits_corrected", 1) for r in results}
+    if ns != {1}:
+        L += [f"Certification confidence is additionally Bonferroni-corrected over "
+              f"{max(ns)} subfamily splits (level {max(r.get('cert_conf', 0.95) for r in results):.5f}), "
+              f"so a split chosen because it looked best keeps its guarantee.", ""]
+    L += [
          "## Summary", "",
          "| group | n requested | n usable | rejected (counted, excluded) | base rate | stable side | unstable side |",
          "|---|---:|---:|---:|---:|---|---|"]
@@ -181,13 +191,18 @@ def render(results: list[dict]) -> str:
                  f"{'**' + mev(s['certified_threshold']) + '**' if s['certified_threshold'] is not None else 'not certified'} | "
                  f"{'**' + mev(u['certified_threshold']) + '**' if u['certified_threshold'] is not None else 'not certified'} |")
     L += ["", "## Diagnosis — sample-size limited or precision limited", "",
-          "| group | side | target | best t | n selected | k | point | CP-lower | verdict | n selected needed | factor |",
-          "|---|---|---:|---|---:|---:|---:|---:|---|---:|---:|"]
+          "`n structures needed` converts `n selected needed` by the group's own selection rate: it is "
+          "how large the calibration set would have to be, not how many calls. A figure larger than "
+          "WBM's whole 215,488-structure unique-prototype pool means the group is sample-size limited "
+          "only in principle.", "",
+          "| group | side | target | best t | n selected | k | point | CP-lower | verdict | n selected needed | n structures needed | factor |",
+          "|---|---|---:|---|---:|---:|---:|---:|---|---:|---:|---:|"]
     for r in results:
         for dx in r["diagnoses"]:
             L.append(f"| {r['group']} | {dx['side']} | {dx['target']:.2f} | {mev(dx['best_threshold'])} | "
                      f"{dx['n_selected']} | {dx['k']} | {fmt(dx['point'])} | {fmt(dx['cp_lower'])} | "
                      f"{dx['verdict']} | {dx['n_selected_needed'] or '-'} | "
+                     f"{dx.get('n_structures_needed') or '-'} | "
                      f"{fmt(dx['scale_factor'], 2) if dx['scale_factor'] else '-'} |")
     alts = [r for r in results if r["alt"]]
     if alts:
@@ -213,8 +228,13 @@ def render(results: list[dict]) -> str:
 if __name__ == "__main__":
     if len(sys.argv) < 4 or sys.argv[1] != "diagnose":
         raise SystemExit(__doc__)
+    args = sys.argv[3:]
+    n_splits = 1
+    if args and args[0].startswith("--splits="):
+        n_splits = int(args[0].split("=", 1)[1])
+        args = args[1:]
     out = REPORTS_DIR / sys.argv[2]
-    res = [rows_for(g) for g in sys.argv[3:]]
+    res = [rows_for(g, n_splits=n_splits) for g in args]
     out.write_text(render(res))
     # the same numbers as machine-readable JSON, so the PDF transcribes rather than re-derives
     import json

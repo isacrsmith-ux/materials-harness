@@ -299,10 +299,14 @@ def diagnose(pred, stable, target: float, side: str = "stable", conf: float | No
         verdict = "precision limited"
     if cert is not None:
         need = None  # already certified: "how many more would it take" has no meaning
+    n_total = len(np.asarray(pred, float))
+    rate = (b["n_selected"] / n_total) if n_total else 0.0
+    structs = int(np.ceil(need / rate)) if (need and rate) else None
     return {"side": side, "target": target, "certified_threshold": cert,
             "best_threshold": b["t"], "n_selected": b["n_selected"], "k": b["k"],
             "point": b["point"], "cp_lower": float(lower), "verdict": verdict,
-            "n_selected_needed": need,
+            "n_selected_needed": need, "selection_rate": rate,
+            "n_structures_needed": structs,
             "scale_factor": (need / b["n_selected"]) if (need and b["n_selected"]) else None}
 
 
