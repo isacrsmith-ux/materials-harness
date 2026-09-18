@@ -1,0 +1,106 @@
+{
+ "evaluated_at": "2026-09-18T19:27:41+00:00",
+ "log": {
+  "opened_at": "2026-09-18T19:12:05+00:00",
+  "harness_commit": "4027b57",
+  "set": "halide locked test (round 1)",
+  "n": 2000,
+  "sha256": "26a08e6a360a959740dfe0f975942dae8c35811118e02303de539c6e2c8a610e",
+  "source_file": "data/wbm_split_oxide_halide.json",
+  "preregistration": {
+   "file": "data/halide_evaluation_preregistration.json",
+   "sha256": "88de659a2abf5a308b9de94a73ab81367d0f0945a231fecf956572182a192ef3"
+  },
+  "specification": {
+   "file": "data/calibration_spec_v2.json",
+   "version": 2,
+   "sha256": "e021845162ead995d9c84e735b0eadaf3b8568de2facb8d57c94ce50cd6b6d89"
+  },
+  "engine": {
+   "model": "mace-mpa-0-medium",
+   "settings_tag": "c2480e74"
+  },
+  "rule": "every threshold, exclusion and criterion was fixed before this file was written; nothing is fitted on this set, and it is opened once"
+ },
+ "population": {
+  "n_ids": 2000,
+  "n_usable": 2000,
+  "n_rejected_by_guard": 0,
+  "n_excluded_not_labelable": 341,
+  "n_labelable": 1659,
+  "n_non_fluoride": 1016,
+  "n_fluoride": 643
+ },
+ "confidence": {
+  "primary": 0.9833333333333333,
+  "secondary": 0.95
+ },
+ "hypotheses": [
+  {
+   "id": "H1",
+   "n_population": 1016,
+   "n_calls": 157,
+   "n_correct": 153,
+   "n_errors": 4,
+   "point": 0.9745222929936306,
+   "cp_lower_primary": 0.932363956236947,
+   "cp_lower_secondary": 0.9426491050674592,
+   "target": 0.9,
+   "pass": true
+  },
+  {
+   "id": "H2",
+   "n_population": 1016,
+   "n_calls": 771,
+   "n_correct": 753,
+   "n_errors": 18,
+   "point": 0.9766536964980544,
+   "cp_lower_primary": 0.9621319592320774,
+   "cp_lower_secondary": 0.9655757892688765,
+   "target": 0.95,
+   "pass": true
+  },
+  {
+   "id": "H3",
+   "n_population": 643,
+   "n_calls": 428,
+   "n_correct": 423,
+   "n_errors": 5,
+   "point": 0.9883177570093458,
+   "cp_lower_primary": 0.9714695774921558,
+   "cp_lower_secondary": 0.9755947606704861,
+   "target": 0.95,
+   "pass": true
+  }
+ ],
+ "rationale_check": {
+  "id": "R1",
+  "threshold": -0.02,
+  "n_calls": 107,
+  "n_correct": 101,
+  "n_errors": 6,
+  "point": 0.9439252336448598,
+  "ci95_two_sided": [
+   0.8819384267355852,
+   0.9791460559332783
+  ],
+  "cp_lower_secondary": 0.8923280439232408,
+  "expectation": "point precision below 0.90",
+  "deficit_reproduced": false,
+  "contradicts_prereg": false
+ },
+ "r1_posthoc": {
+  "cal_n": 350,
+  "cal_k": 314,
+  "cal_point": 0.8971428571428571,
+  "test_n": 107,
+  "test_k": 101,
+  "test_point": 0.9439252336448598,
+  "difference": 0.046782376502002676,
+  "se": 0.02753773155451355,
+  "z": 1.6988464140335062,
+  "p_two_sided": 0.08934812576625806,
+  "power_ratio": 0.3057142857142857
+ },
+ "overall_pass": true
+}
