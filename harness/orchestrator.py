@@ -480,6 +480,54 @@ def build_round3_jobs(compute: dict, only_ids: set[str] | None = None) -> list[d
     return jobs
 
 
+ROUND4_INIT_CACHE = "round4_calibration_init_structs.json"
+ROUND4_CSE_CACHE = "round4_calibration_cse.json"
+
+
+def build_round4_jobs(compute: dict, only_ids: set[str] | None = None) -> list[dict]:
+    """Relaxation + single point for the round-4 carried-over-family calibration ids (harness.round4's
+    f-electron / intermetallic / pnictide draws).
+
+    Same contract as build_round2_jobs and build_round3_jobs: jobs are built for the WHOLE round-4
+    calibration set and then filtered, so the cache files always hold every round-4 id; distinct cache
+    filenames, because ood.load_structures returns a populated cache wholesale and ignores `ids`; and
+    every locked half - the original WBM test, both round-1 family halves, the round-2 sulfide half and
+    the two round-3 halves - is asserted disjoint from the queue by id before anything is enqueued.
+
+    Round 4 reserved no locked half of its own, so there is nothing new to assert disjoint from.
+    """
+    from harness import round2, round4, splits
+    from harness.suites import ood
+
+    seen: set[str] = set()
+    ids: list[str] = []
+    for fam in round4.groups():
+        for wid in round4.calibration_ids(fam):
+            if wid not in seen:
+                seen.add(wid)
+                ids.append(wid)
+
+    locked = (splits.excluded_ids() | splits.family_excluded_ids()
+              | round2.excluded_ids() | round2.excluded_ids3())
+    leaked = set(ids) & locked
+    if leaked:
+        raise RuntimeError(
+            f"{len(leaked)} round-4 calibration ids are also locked test or prior-split ids "
+            f"(e.g. {sorted(leaked)[:3]}). Relaxing or scoring a locked id outside a pre-registered "
+            "evaluation is a bug, not a shortcut - refusing to enqueue."
+        )
+
+    jobs = build_wbm_calibration_jobs(
+        compute, ids=ids,
+        init_cache=ood.WBM_DIR / ROUND4_INIT_CACHE,
+        cse_cache=ood.WBM_DIR / ROUND4_CSE_CACHE,
+        strict=True,
+    )
+    if only_ids is not None:
+        jobs = [j for j in jobs if j["inputs"]["wbm_id"] in only_ids]
+    return jobs
+
+
 def _size_summary(jobs: list[dict]) -> dict:
     import numpy as np
 
