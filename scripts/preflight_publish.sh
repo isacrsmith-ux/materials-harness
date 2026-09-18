@@ -120,7 +120,10 @@ else
   # one from the vendored NASA memorandum, and MISSED that memorandum's genuine STI help-desk
   # address, which sits in a compressed stream. It raised false alarms and gave false assurance at
   # the same time, which is why the real check is 4c.
-  BINARY_RE='\.(pdf|gz|zip|parquet|sqlite|model|png|jpe?g|gif|ico|woff2?|ttf|so|dylib|whl)$'
+  # [.] rather than \. on purpose: awk -v processes escape sequences in the assigned value, so
+  # a backslash here becomes "escape sequence `\.' treated as plain `.'" on every run. The
+  # character class means the same thing and passes through untouched.
+  BINARY_RE='[.](pdf|gz|zip|parquet|sqlite|model|png|jpe?g|gif|ico|woff2?|ttf|so|dylib|whl)$'
 
   hist_objs=$(git rev-list --objects HEAD --branches --tags 2>/dev/null \
                 | awk -v re="$BINARY_RE" '$2 == "" || $2 !~ re {print $1}' | sort -u)
@@ -166,8 +169,12 @@ echo "== 4c. tracked PDFs, by EXTRACTED TEXT (4b cannot see inside them) =="
 pdfs=$(git ls-files -- '*.pdf' 2>/dev/null || true)
 if [ -z "$pdfs" ]; then
   note "no tracked PDFs"
-elif [ ! -x "./uvw" ]; then
-  note "SKIPPED: ./uvw not available, so tracked PDFs were NOT checked. Do not publish on this run."
+elif [ ! -x "./uvw" ] || [ ! -x "./.tools/bin/uv" ]; then
+  # Test the BINARY, not just the wrapper. ./uvw is tracked and executable, but it execs
+  # .tools/bin/uv, and .tools/ is gitignored -- so on a fresh clone the wrapper exists and the
+  # tool behind it does not. Checking only the wrapper made this section fail with an empty
+  # message in CI instead of saying it could not run. The workflow installs uv to that path.
+  note "SKIPPED: .tools/bin/uv not available, so tracked PDFs were NOT checked. Do not publish on this run."
 else
   if pdf_out=$(echo "$pdfs" | ./uvw run --with pypdf --no-project --quiet python -c '
 import re, sys, pypdf
@@ -188,7 +195,7 @@ for path in (l.strip() for l in sys.stdin if l.strip()):
     print(("FOUND " + path + ": " + ", ".join(hits[:4])) if hits else ("clean  " + path))
     if hits: rc = 1
 sys.exit(rc)
-' 2>/dev/null); then
+' 2>&1); then
     echo "$pdf_out" | sed 's/^/  /'
     note "tracked PDFs carry no unexpected address or local path in their real content"
   else

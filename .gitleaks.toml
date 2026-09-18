@@ -8,16 +8,27 @@ useDefault = true
 
 [allowlist]
 description = """
-One known false positive, documented in reports/publish_audit.md section 1.
+Two known false positives. Both are scoped to an exact literal on purpose: neither allowlists
+a file, a path or a rule, so a real secret landing anywhere is still caught.
 
-The generic-api-key rule fires on the literal string "MP2020Compatibility" -- the name of a
-pymatgen energy-correction scheme. It is a long mixed-case identifier with enough entropy to
-trip the generic rule, and it appears in a source comment and in a provenance string, not in
-any credential position.
+1. "MP2020Compatibility" -- documented in reports/publish_audit.md section 1. The name of a
+pymatgen energy-correction scheme: a long mixed-case identifier with enough entropy to trip
+the generic-api-key rule, appearing in a source comment and a provenance string, never in a
+credential position.
 
-Scoped to that exact literal on purpose. It does not allowlist the files, the paths or the
-rule, so a real secret landing in either file is still caught.
+2. "degroh2006_misse2_peace" -- the citation identifier for de Groh et al., NASA/TM-2006-214482,
+which ties each row of reference_data/space_ao_erosion.csv to its entry in SOURCES.md. It tripped
+generic-api-key (entropy 3.83) because it was assigned to a constant named SOURCE_KEY, and the
+rule keys on an identifier containing "KEY".
+
+The constant has since been renamed to CITATION_ID, which clears the rule at its cause -- verified
+against gitleaks 8.30.1: of SOURCE_KEY, CITATION_KEY, CITATION_ID, SOURCE_REF, CITATION_SLUG,
+SOURCE_TAG, CITATION and BIB_REF, only the two containing "KEY" are flagged. Note that renaming
+alone does NOT clear the finding, because the history scan still sees the original line in commit
+eb2323a, which is already published. This entry covers that commit. Rewriting published history to
+erase a citation key would be disproportionate to a false positive, so it is not done.
 """
 regexes = [
   '''MP2020Compatibility''',
+  '''degroh2006_misse2_peace''',
 ]

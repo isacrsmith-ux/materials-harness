@@ -34,7 +34,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT / "reference_data" / "raw" / "cod"
 OUT = ROOT / "reference_data" / "lattice_constants.csv"
-SOURCE_KEY = "cod"
+CITATION_ID = "cod"
 
 # COD writes formulae with element symbols in alphabetical order.
 TARGETS = [
@@ -160,7 +160,7 @@ def build(refresh: bool) -> list[dict]:
                     "journal": rec.get("journal") or "",
                     "year": rec.get("year") or "",
                     "title": (rec.get("title") or "").strip(),
-                    "source_key": SOURCE_KEY,
+                    "source_key": CITATION_ID,
                     "source_locator": f"COD entry {rec['file']}",
                     "status": "verified",
                     "note": (

@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PDF = ROOT / "reference_data" / "raw" / "NASA-TM-2006-214482_MISSE2_PEACE.pdf"
 OUT = ROOT / "reference_data" / "space_ao_erosion.csv"
 
-SOURCE_KEY = "degroh2006_misse2_peace"
+CITATION_ID = "degroh2006_misse2_peace"
 
 # Exposure conditions, all read from the report body (page numbers are PDF pages).
 # p13: deployed 2001-08-16 on STS-105 at the ISS Quest Airlock.
@@ -100,7 +100,7 @@ def main() -> None:
                 "area_original_cm2": m.group("area"),
                 **EXPOSURE,
                 "is_fluence_witness": "true" if serial in WITNESS_SAMPLES else "false",
-                "source_key": SOURCE_KEY,
+                "source_key": CITATION_ID,
                 "source_locator": "Table 4, p. 17 (PDF p. 21)",
                 "status": "verified",
                 "note": (
