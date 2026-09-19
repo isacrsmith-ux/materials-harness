@@ -194,6 +194,63 @@ def report(out_md: Path) -> dict:
                  f"{_fmt(dd['base_rate'],3)} |")
     L += [""]
 
+    # --- findings, stated in the artifact rather than only in a conversation
+    fe = res["f-electron"]["paths"]
+    pn = res["pnictide"]["paths"]
+    tot = {}
+    for path in ("A single engine", "C + >0.3 refusal (product)"):
+        n = sum(v["paths"][path]["n_labelable"] for v in res.values())
+        w = sum((v["paths"][path].get("dft_share") or 1.0) * v["paths"][path]["n_labelable"]
+                for v in res.values())
+        tot[path] = (n, w / n if n else float("nan"))
+
+    L += ["## 4. What this shows", "",
+          "### 4.1 Supplying a second engine makes the product WORSE across these three families", "",
+          f"| | labelable | weighted DFT share |", "|---|---:|---:|",
+          f"| A single engine | {tot['A single engine'][0]:,} | {tot['A single engine'][1]:.4f} |",
+          f"| C product (2nd engine supplied) | {tot['C + >0.3 refusal (product)'][0]:,} | "
+          f"{tot['C + >0.3 refusal (product)'][1]:.4f} |", "",
+          "Adding a second engine's information more than doubles the share sent to DFT. That is "
+          "perverse, and it is not the engines' fault: it is the `with_second_engine` rule table, "
+          "whose entries for these families were fitted on 1,747 / 645 / 202 rows in 2026-09-12 and "
+          "have never been re-measured.", "",
+          "### 4.2 pnictide has NO rule at all on the with_second_engine path", "",
+          f"`with_second_engine` gives pnictide `stable: none / unstable: none` (fitted on n=202). So "
+          f"every pnictide candidate is sent to DFT: DFT share "
+          f"**{pn['C + >0.3 refusal (product)']['dft_share']:.4f}** against "
+          f"**{pn['A single engine']['dft_share']:.4f}** on the single-engine path — "
+          f"{pn['A single engine']['n_called_unstable']:,} routings away from DFT lost outright.", "",
+          "This is the dominant term in 4.1. Round 4 measured that pnictide certifies **both** sides "
+          "on 3,637 single-engine labelable rows (-20 / +0 meV, bounds 0.9128 / 0.9638), so the "
+          "emptiness is a sample-size artefact of the original fit, not a property of the chemistry. "
+          "Whether it is also fixable *on the with-second-engine footing* is NOT answered here: that "
+          "needs a fit on the path-B population, which would be a refit and was not performed.", "",
+          "### 4.3 The second engine rescues f-electron's stable rule by 0.0004", ""]
+    lvl = 1 - (1 - C.CERT_CONF) / len(C.DEC_GRID)
+    L += ["| path | calls | correct | point | CP-lower | clears 0.90? | if one more call were wrong |",
+          "|---|---:|---:|---:|---:|---|---:|"]
+    for label in ("A single engine", "B + disagreement"):
+        m = fe[label]
+        n = int(m["n_called_stable"]); k = int(round(float(m["precision"]) * n))
+        lo = C.cp_lower(k, n, lvl)
+        L.append(f"| {label} | {n:,} | {k:,} | {k/n:.4f} | **{lo:.6f}** | "
+                 f"{'**yes**' if lo >= 0.90 else '**no**'} | {C.cp_lower(k-1, n, lvl):.6f} |")
+    L += ["", "The disagreement term removes 83 rows, 12 of which the stable rule had called stable, "
+              "3 of those wrongly - a 4x enrichment in errors over the 6.1% base error rate of stable "
+              "calls. The filter is doing real work. But it is doing it on 12 of 441 calls, and the "
+              "resulting bound clears the target by **0.000359**. One further error takes it to 0.8974. "
+              "That is not a margin; it is a knife edge, and it should not be described as a "
+              "certification that holds.", "",
+          "### 4.4 intermetallic is unaffected and still labels nothing stable", "",
+          "v1 has no intermetallic stable rule on either path, so the second engine changes nothing "
+          "except to send slightly more to DFT (0.100 -> 0.117). The 66 rows its disagreement term "
+          "removes contain 0 stable calls and have a base rate of 0.015 - it is removing rows that "
+          "were heading to an unstable call anyway.", "",
+          "### 4.5 Scope", "",
+          "Development evidence on development data. Nothing here is a held-out result, no threshold "
+          "was refitted, and no change to the bundle, taxonomy or exclusions is adopted or implied by "
+          "this document.", ""]
+
     out_md.write_text("\n".join(L) + "\n")
     out_md.with_suffix(".json").write_text(json.dumps(
         {"generated_at": now, "disagreement_tol_ev": tol, "results": res},
