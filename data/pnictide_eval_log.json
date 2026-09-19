@@ -1,0 +1,36 @@
+{
+ "opened_at": "2026-09-19T05:26:57+00:00",
+ "harness_commit": "a82f149",
+ "set": "pnictide evaluation (round 4)",
+ "n": 3500,
+ "sha256": "f304bd2064e0cc92d20a13978f818816226265b3c24222901df1692205c08a71",
+ "source_file": "data/wbm_split_pnictide_eval.json",
+ "preregistration": {
+  "file": "data/pnictide_evaluation_preregistration.json",
+  "sha256": "effe583b501cd0b7021481eeaf77ffec0c80fb48588f9510d9a222a99252852b"
+ },
+ "thresholds_under_test": {
+  "stable": -0.02,
+  "unstable": 0.0,
+  "note": "fixed by the pre-registration; NOT refittable on this sample"
+ },
+ "active_bundle": {
+  "file": "data/calibration_bundle.json",
+  "sha256": "41395f1adb3377180e57915b1f8c97e437e6dbaa981e3c830572b2fb6d9006d7"
+ },
+ "engines": [
+  {
+   "model": "mace-mpa-0-medium",
+   "settings_tag": "c2480e74",
+   "role": "primary",
+   "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638"
+  },
+  {
+   "model": "mace-mp-0-medium",
+   "settings_tag": "207ccc81",
+   "role": "second / disagreement check",
+   "checkpoint_sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845"
+  }
+ ],
+ "rule": "every threshold, exclusion, hypothesis, target, confidence and correction was fixed before this file was written; nothing is fitted on this sample, and it is opened once"
+}
