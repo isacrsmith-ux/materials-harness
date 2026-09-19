@@ -84,3 +84,41 @@ def test_production_is_untouched_by_round_4():
     b = json.loads((round4.DATA_DIR / "calibration_bundle.json").read_text())
     assert b["created_at"] == "2026-09-12T20:21:45+00:00"
     assert "fluoride" not in C.FAMILIES
+
+
+# --- round 4b: the with_second_engine path ---------------------------------------------------------
+
+def test_a_missing_second_engine_prediction_passes_the_disagreement_term():
+    """The behaviour every round-4b number depends on, pinned so it cannot change silently.
+
+    routing.labelable's disagreement term is `~((each_pred - pred_2).abs() > tol)`. With pred_2 NaN
+    the comparison is False, so the row stays labelable — it passes the check by never being tested.
+    That mirrors harness.predict, which warns that "the certified thresholds in use assume the
+    disagreement check ran" and labels the candidate anyway. If this ever flips to excluding such
+    rows, round 4b's populations change and the report must be regenerated.
+    """
+    import pandas as pd
+
+    from harness import calibration as CAL, routing as R
+
+    b = CAL.load()
+    pol = b.policy(with_second_engine=True, max_trustworthy_hull=None)
+    d = pd.DataFrame({
+        "formula": ["NaCl", "NaCl", "NaCl"],
+        "each_pred": [0.0, 0.0, 0.0],
+        "pred_2": [0.0, float("nan"), 9.0],   # agrees / unknown / wildly disagrees
+        "structure_changed": [False, False, False],
+    })
+    ok = R.labelable(d, pol)
+    assert bool(ok.iloc[0]) is True, "agreeing pair must stay labelable"
+    assert bool(ok.iloc[1]) is True, "missing pred_2 passes untested — production's real behaviour"
+    assert bool(ok.iloc[2]) is False, "a pair past the tolerance must be refused a label"
+
+
+def test_the_two_engines_have_distinct_settings_tags():
+    """If the tags ever collided, one engine's results would overwrite the other's in the store."""
+    from harness import config
+    from harness.calibration import PRODUCTION_ENGINE, SECOND_ENGINE
+
+    tags = {config.settings_tag(dev, dt, model=key) for key, dev, dt in (PRODUCTION_ENGINE, SECOND_ENGINE)}
+    assert len(tags) == 2

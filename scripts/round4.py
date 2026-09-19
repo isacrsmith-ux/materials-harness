@@ -3,7 +3,8 @@
 
     python scripts/round4.py assert-engine
     python scripts/round4.py split            # make the calibration draws (once)
-    python scripts/round4.py enqueue          # queue them
+    python scripts/round4.py enqueue          # queue them (production engine)
+    python scripts/round4.py enqueue-second   # queue the SAME ids on the second engine
 
 f-electron, intermetallic and pnictide carry the 2026-09-12 thresholds, fitted on 1,747 / 645 / 202
 labelable rows. Nothing in round 2 or round 3 touched them.
@@ -76,6 +77,56 @@ def enqueue() -> None:
     print(f"round4: {len(jobs)} jobs -> {info}")
 
 
+def assert_second_engine() -> tuple[str, dict]:
+    """Abort unless this process is the bundle's SECOND engine at its benchmarked layout.
+
+    The with_second_engine rule set is the path harness.predict takes whenever a second engine is
+    supplied, and it is the path round 4's single-engine draw could not evaluate. Scoring it needs the
+    same 12,000 structures run on the second engine - no new ids, no new draw.
+    """
+    from harness import config
+    from harness.calibration import SECOND_ENGINE
+
+    key, device, dtype = SECOND_ENGINE
+    compute = load_compute_config()
+    tag = config.settings_tag(compute["device"], compute["dtype"])
+    expect = config.settings_tag(device, dtype, model=key)
+    problems = []
+    if config.ACTIVE_MODEL != key:
+        problems.append(f"HARNESS_MODEL resolves to {config.ACTIVE_MODEL!r}, not the second engine {key!r}")
+    if (compute["device"], compute["dtype"]) != (device, dtype):
+        problems.append(f"compute config is {compute['device']}/{compute['dtype']}, not {device}/{dtype}")
+    if tag != expect:
+        problems.append(f"settings_tag {tag} != second-engine tag {expect}")
+    config.model_path(key)  # re-verifies the checkpoint sha256
+    print(f"engine   {config.MODEL['name']} ({config.ACTIVE_MODEL})  [SECOND engine]")
+    print(f"checkpoint sha256 {config.MODEL['sha256']}  verified on disk")
+    print(f"settings_tag {tag}   device {compute['device']}/{compute['dtype']}  "
+          f"workers {compute.get('workers')}x{compute.get('threads_per_worker')}")
+    if problems:
+        raise SystemExit("ABORT - engine mismatch:\n  " + "\n  ".join(problems))
+    return tag, compute
+
+
+def enqueue_second() -> None:
+    """The same 12,000 round-4 ids, on the second engine. Job keys carry the engine tag, so these
+    cannot collide with or overwrite the production-engine results."""
+    from harness import orchestrator as O
+
+    tag, compute = assert_second_engine()
+    _assert_locked_untouched()
+    _assert_round4_reserves_nothing()
+
+    ids = {i for fam in round4.groups() for i in round4.calibration_ids(fam)}
+    print(f"  second engine over the EXISTING round-4 draw: {len(ids):,} ids, no new structures")
+    jobs = O.build_round4_jobs(compute, only_ids=ids)
+    done = set()
+    for suite in ("ood", "substitution_auto", "substitution", "stability"):
+        done |= store.completed_keys(suite, retry_failed=True)
+    info = jobqueue.enqueue(jobs, QUEUE_DB, done_keys=done)
+    print(f"round4-second: {len(jobs)} jobs -> {info}")
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
@@ -88,5 +139,7 @@ if __name__ == "__main__":
         make_split()
     elif cmd == "enqueue":
         enqueue()
+    elif cmd == "enqueue-second":
+        enqueue_second()
     else:
         raise SystemExit(__doc__)

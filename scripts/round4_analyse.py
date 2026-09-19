@@ -68,15 +68,21 @@ def table(fam: str) -> pd.DataFrame:
 
 def failures(fam: str) -> dict:
     """Queue rows for this family's ids that never finished OK, read straight from the queue so a
-    failure cannot be lost between the runner and the analysis. Recorded, never filtered out."""
+    failure cannot be lost between the runner and the analysis. Recorded, never filtered out.
+
+    Filtered to THIS engine's settings tag. Job keys are `<id>@<tag>` and `<id>:static@<tag>`, and the
+    same 12,000 ids are also queued for the second engine under a different tag; without the tag filter
+    another engine's in-flight jobs are counted as this engine's unrun ones."""
     from harness import jobqueue
 
+    tag = CAL.settings_tag(CAL.PRODUCTION_ENGINE[1], CAL.PRODUCTION_ENGINE[2], model=CAL.PRODUCTION_ENGINE[0])
     ids = set(round4.calibration_ids(fam))
     kinds: dict[str, int] = {}
     n = 0
     with jobqueue.connect() as con:
         rows = con.execute(
-            "SELECT job_key, status, error FROM queue WHERE suite='ood' AND status != 'done'"
+            "SELECT job_key, status, error FROM queue WHERE suite='ood' AND status != 'done' "
+            "AND job_key LIKE ?", (f"%@{tag}",)
         ).fetchall()
     unrun = 0
     for r in rows:
