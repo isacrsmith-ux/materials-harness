@@ -737,7 +737,9 @@ def _pdf_inline(t: str) -> str:
     return t
 
 
-def to_pdf(blocks, out_path):
+def to_pdf(blocks, out_path, doc_title="Materials Harness - round 2 results", footer=None):
+    """Render `blocks` to a PDF. doc_title/footer default to the round-2 strings so existing
+    call sites are unchanged; other reports pass their own."""
     from reportlab.lib import colors
     from reportlab.lib.enums import TA_LEFT
     from reportlab.lib.pagesizes import A4
@@ -775,7 +777,7 @@ def to_pdf(blocks, out_path):
         canvas.saveState()
         canvas.setFont("Helvetica", 7.5)
         canvas.setFillColor(MUTED)
-        canvas.drawString(20 * mm, 12 * mm, "Materials Harness - round 2 results")
+        canvas.drawString(20 * mm, 12 * mm, footer or doc_title)
         canvas.drawRightString(190 * mm, 12 * mm, f"page {doc.page}")
         canvas.setStrokeColor(RULE)
         canvas.setLineWidth(0.4)
@@ -826,7 +828,7 @@ def to_pdf(blocks, out_path):
             F += [t, Spacer(1, 8)]
     doc = SimpleDocTemplate(str(out_path), pagesize=A4, leftMargin=20 * mm, rightMargin=20 * mm,
                             topMargin=18 * mm, bottomMargin=20 * mm,
-                            title="Materials Harness - round 2 results", author="Materials Harness")
+                            title=doc_title, author="Materials Harness")
     doc.build(F, onFirstPage=chrome, onLaterPages=chrome)
 
 
