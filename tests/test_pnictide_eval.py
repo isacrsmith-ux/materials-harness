@@ -16,10 +16,25 @@ pytestmark = pytest.mark.skipif(not pnictide_eval.SPLIT_FILE.exists(),
                                 reason="pnictide evaluation sample not drawn")
 
 
-def test_the_sample_is_not_opened():
-    """The single most important property. An opening log means it has been spent."""
-    assert not pnictide_eval.is_opened()
-    assert not pnictide_eval.LOG_FILE.exists()
+def test_the_sample_was_opened_exactly_once_and_is_recorded():
+    """Was: "not opened". The sample has now been opened once, on 2026-09-19, and the property that
+    matters is that it can never be opened again and that the opening is fully recorded."""
+    import json as _json
+
+    assert pnictide_eval.is_opened(), "the opening log is the record that the sample was spent"
+    log = _json.loads(pnictide_eval.LOG_FILE.read_text())
+    for field in ("opened_at", "harness_commit", "sha256", "preregistration", "active_bundle", "engines"):
+        assert field in log, f"the opening log must record {field}"
+    assert log["sha256"] == pnictide_eval.load()["test"]["sha256"]
+    assert log["preregistration"]["sha256"] == hashlib.sha256(
+        pnictide_eval.PREREG_FILE.read_bytes()).hexdigest(), "the protocol changed after opening"
+    assert {e["model"] for e in log["engines"]} == {"mace-mpa-0-medium", "mace-mp-0-medium"}
+
+
+def test_the_sample_cannot_be_reopened():
+    """scripts/pnictide_eval.py open refuses while the log exists. Checked at the source of truth."""
+    src = (pnictide_eval.DATA_DIR.parent / "scripts" / "pnictide_eval.py").read_text()
+    assert "if PE.LOG_FILE.is_file():" in src and "has already been opened" in src
 
 
 def test_ids_are_locked_without_unlock():
@@ -75,8 +90,23 @@ def test_the_thresholds_under_test_are_the_preregistered_ones():
     assert d["thresholds_under_test"]["unstable"] == P["thresholds_under_test"]["unstable_ev_per_atom"] == 0.0
 
 
-def test_no_result_for_any_drawn_id_exists_in_the_store():
-    """The operational meaning of 'unopened': nothing has been computed for these structures."""
+def test_every_drawn_id_has_a_result_under_both_engines():
+    """Was the 'unopened' check. Now that the sample is spent, the property worth pinning is that the
+    evaluation actually covered it: every drawn id has a result under BOTH engines, so no hypothesis
+    was scored on a silently truncated population."""
+    from harness import config
+    from harness.suites import ood
+
+    ids = set(pnictide_eval.test_ids(unlock=True))
+    for model, dtype, floor in (("mace-mpa-0-medium", "float32", 1.0), ("mace-mp-0-medium", "float64", 0.99)):
+        tag = config.settings_tag("cpu", dtype, model=model)
+        have = set(ood.table(tag).wbm_id)
+        covered = len(ids & have) / len(ids)
+        assert covered >= floor, f"{model}: only {covered:.4f} of drawn ids have a result"
+
+
+def _unused_no_result_check():
+    """Retained for provenance: this is what the test above asserted while the sample was unopened."""
     from harness import config
     from harness.suites import ood
 

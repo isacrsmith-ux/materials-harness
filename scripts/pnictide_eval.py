@@ -109,6 +109,25 @@ def open_sample() -> None:
                                         cse_cache=ood.WBM_DIR / CSE_CACHE, strict=True)
     done = store.completed_keys("ood", retry_failed=True)
     print("enqueue:", jobqueue.enqueue(jobs, QUEUE_DB, done_keys=done), f"({len(jobs)} jobs, tag {tag})")
+    _warn_one_runner_per_engine()
+
+
+def _warn_one_runner_per_engine() -> None:
+    """A runner executes ONE settings tag. Queueing two engines and draining once leaves the other
+    engine's jobs to fail with SettingsMismatch - which is what happened on the first attempt at this
+    evaluation. The guard caught it, but the operator should not have to rediscover that.
+    """
+    with jobqueue.connect() as con:
+        rows = con.execute(
+            "SELECT substr(job_key, instr(job_key,'@')+1) tag, COUNT(*) n FROM queue "
+            "WHERE suite='ood' AND status IN ('pending','running') GROUP BY tag").fetchall()
+    tags = {r["tag"]: r["n"] for r in rows}
+    if len(tags) > 1:
+        print("\n  NOTE: the queue now holds pending jobs under more than one settings tag:")
+        for t, n in sorted(tags.items()):
+            print(f"    {t}: {n:,} pending")
+        print("  A runner executes ONE tag. Drain each engine with its own HARNESS_MODEL, or the")
+        print("  other engine's jobs will fail with SettingsMismatch and need requeueing.")
 
 
 def enqueue_only() -> None:
@@ -125,6 +144,7 @@ def enqueue_only() -> None:
                                         cse_cache=ood.WBM_DIR / CSE_CACHE, strict=True)
     done = store.completed_keys("ood", retry_failed=True)
     print("enqueue:", jobqueue.enqueue(jobs, QUEUE_DB, done_keys=done), f"({len(jobs)} jobs, tag {tag})")
+    _warn_one_runner_per_engine()
 
 
 def _table(engine, ids):
