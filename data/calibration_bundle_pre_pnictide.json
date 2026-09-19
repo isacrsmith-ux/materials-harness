@@ -229,11 +229,9 @@
      "n": 185
     },
     "pnictide": {
-     "stable": -0.02,
-     "unstable": 0.0,
-     "n": 3501,
-     "status": "PREREGISTERED HELD-OUT CONFIRMED",
-     "provenance": "see promotions[] in this file; reports/pnictide_test.md"
+     "stable": null,
+     "unstable": null,
+     "n": 202
     }
    }
   },
@@ -274,11 +272,9 @@
      "n": 189
     },
     "pnictide": {
-     "stable": -0.02,
-     "unstable": 0.0,
-     "n": 3637,
-     "status": "PREREGISTERED HELD-OUT CONFIRMED",
-     "provenance": "see promotions[] in this file; reports/pnictide_test.md"
+     "stable": null,
+     "unstable": 0.05,
+     "n": 210
     }
    }
   }
@@ -670,115 +666,5 @@
    ]
   }
  ],
- "reliability_meaning": "observed hit rate of the plain threshold-0 stable/unstable call on the WBM calibration set, per chemistry family x predicted hull bin; reports/validation_report.md \u00a76c",
- "promotions": [
-  {
-   "promoted_at": "2026-09-19T23:14:38+00:00",
-   "family": "pnictide",
-   "thresholds": {
-    "stable_ev_per_atom": -0.02,
-    "unstable_ev_per_atom": 0.0
-   },
-   "applied_to": [
-    "without_second_engine (Path A)",
-    "with_second_engine (Path B)"
-   ],
-   "status": "PREREGISTERED HELD-OUT CONFIRMED",
-   "replaced": {
-    "without_second_engine": {
-     "stable": null,
-     "unstable": 0.05,
-     "n": 210
-    },
-    "with_second_engine": {
-     "stable": null,
-     "unstable": null,
-     "n": 202
-    }
-   },
-   "development_source": {
-    "path_A_fit": "reports/round4_carried_over.{md,json} - pnictide labelable, n=3,637",
-    "path_B_fit": "reports/round4_pathb_refit.{md,json} - B-refit, n=3,501",
-    "note": "the thresholds were SELECTED on these development populations and are not re-derived here; the held-out evaluation tested them as fixed values"
-   },
-   "preregistration": {
-    "file": "data/pnictide_evaluation_preregistration.json",
-    "sha256": "effe583b501cd0b7021481eeaf77ffec0c80fb48588f9510d9a222a99252852b",
-    "commit": "0826a393f08e63bb21b4983d0e05c4677d667a4d",
-    "committed_before_the_sample_was_drawn": true
-   },
-   "held_out_sample": {
-    "file": "data/wbm_split_pnictide_eval.json",
-    "sha256": "f304bd2064e0cc92d20a13978f818816226265b3c24222901df1692205c08a71",
-    "n_drawn": 3500,
-    "commit": "01538e72be670ce76367230c67f7121b89f5160f"
-   },
-   "evaluation": {
-    "opened_at": "2026-09-19T05:26:57+00:00",
-    "evaluated_at": "2026-09-19T06:06:53+00:00",
-    "result_file": "reports/pnictide_test.json",
-    "commit": "33b9d610bd0c17decd64db2b906a242b316507d2",
-    "opening_log_commit": "66ade48753f6c1ed9d42fc84842ec92591e461ec",
-    "population": {
-     "drawn": 3500,
-     "usable": 3500,
-     "unusable": 0,
-     "labelable_path_A": 3176,
-     "labelable_path_B": 3066,
-     "removed_by_disagreement": 110
-    },
-    "hypotheses": {
-     "PA1": {
-      "path": "A",
-      "side": "stable",
-      "calls": 275,
-      "errors": 12,
-      "point": 0.9563636363636364,
-      "cp_lower_primary": 0.9201478941138468,
-      "target": 0.9,
-      "verdict": "PASS"
-     },
-     "PA2": {
-      "path": "A",
-      "side": "unstable",
-      "calls": 2739,
-      "errors": 66,
-      "point": 0.9759036144578314,
-      "cp_lower_primary": 0.9684764004657977,
-      "target": 0.95,
-      "verdict": "PASS"
-     },
-     "PB1": {
-      "path": "B",
-      "side": "stable",
-      "calls": 273,
-      "errors": 12,
-      "point": 0.9560439560439561,
-      "cp_lower_primary": 0.9195741819446239,
-      "target": 0.9,
-      "verdict": "PASS"
-     },
-     "PB2": {
-      "path": "B",
-      "side": "unstable",
-      "calls": 2631,
-      "errors": 66,
-      "point": 0.9749144811858609,
-      "cp_lower_primary": 0.9671875252602239,
-      "target": 0.95,
-      "verdict": "PASS"
-     }
-    },
-    "statistics": {
-     "bound": "one-sided Clopper-Pearson lower bound; never a bootstrap",
-     "primary_confidence": 0.9875,
-     "multiplicity": "Bonferroni over the 4 pre-registered hypotheses (1 - 0.05/4). NO grid correction: the thresholds were fixed before the sample existed, so nothing was selected on held-out data. NO family correction: only pnictide was tested.",
-     "dependence": "Path B is a strict subset of Path A. Bonferroni is valid under arbitrary dependence (Boole's inequality), and the conjunctive promotion rule makes the correction strictly conservative. Resolved in the pre-registration before any result existed.",
-     "verdict_rule": "read from the bound, never the point estimate"
-    },
-    "power_limit": "powered against the development POINT estimate. A pass means the thresholds behave as development suggested; it does NOT establish that true precision is comfortably above 0.90."
-   }
-  }
- ],
- "modified_at": "2026-09-19T23:14:38+00:00"
+ "reliability_meaning": "observed hit rate of the plain threshold-0 stable/unstable call on the WBM calibration set, per chemistry family x predicted hull bin; reports/validation_report.md \u00a76c"
 }

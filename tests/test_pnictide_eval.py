@@ -120,12 +120,59 @@ def _unused_no_result_check():
         assert not ids & have, f"{len(ids & have)} drawn ids already have {model} results"
 
 
-def test_production_is_untouched_by_the_draw():
+def test_the_promoted_pnictide_rule_is_the_preregistered_one():
+    """Was: "production untouched by the draw", which asserted the none/none defect was still present.
+
+    The rule has since been promoted on the strength of the held-out result, so what must now be
+    pinned is that production carries EXACTLY the pre-registered thresholds - not a refitted, retuned
+    or re-optimised variant - in BOTH rule sets.
+    """
     from harness import confidence as C
 
     b = json.loads((pnictide_eval.DATA_DIR / "calibration_bundle.json").read_text())
+    P = json.loads(pnictide_eval.PREREG_FILE.read_text())
+    want_s = P["thresholds_under_test"]["stable_ev_per_atom"]
+    want_u = P["thresholds_under_test"]["unstable_ev_per_atom"]
+    assert (want_s, want_u) == (-0.02, 0.0)
+    for path in ("with_second_engine", "without_second_engine"):
+        e = b["rules"][path]["thresholds"]["pnictide"]
+        assert e["stable"] == want_s, f"{path}: stable is not the pre-registered value"
+        assert e["unstable"] == want_u, f"{path}: unstable is not the pre-registered value"
+        assert e["status"] == "PREREGISTERED HELD-OUT CONFIRMED"
+    # the fit date is provenance and must not be rewritten by a promotion
     assert b["created_at"] == "2026-09-12T20:21:45+00:00"
     assert "fluoride" not in C.FAMILIES
-    # the very defect the evaluation exists to test a fix for is still present
-    assert b["rules"]["with_second_engine"]["thresholds"]["pnictide"] == {
-        "stable": None, "unstable": None, "n": 202}
+
+
+def test_the_promotion_records_full_provenance():
+    b = json.loads((pnictide_eval.DATA_DIR / "calibration_bundle.json").read_text())
+    proms = [p for p in b.get("promotions", []) if p["family"] == "pnictide"]
+    assert len(proms) == 1, "exactly one pnictide promotion"
+    p = proms[0]
+    assert p["status"] == "PREREGISTERED HELD-OUT CONFIRMED"
+    assert p["preregistration"]["sha256"] == hashlib.sha256(
+        pnictide_eval.PREREG_FILE.read_bytes()).hexdigest()
+    assert p["held_out_sample"]["sha256"] == pnictide_eval.load()["test"]["sha256"]
+    for h in ("PA1", "PA2", "PB1", "PB2"):
+        rec = p["evaluation"]["hypotheses"][h]
+        assert rec["verdict"] == "PASS"
+        assert rec["cp_lower_primary"] >= rec["target"], h
+    assert p["evaluation"]["statistics"]["primary_confidence"] == 1 - 0.05 / 4
+    assert "NO grid correction" in p["evaluation"]["statistics"]["multiplicity"]
+    # the honest limit must travel with the rule
+    assert "does NOT establish" in p["evaluation"]["power_limit"]
+
+
+def test_no_other_family_was_changed_by_the_promotion():
+    """The pre-promotion bundle is kept on disk precisely so this can be asserted, not argued."""
+    pre = json.loads((pnictide_eval.DATA_DIR / "calibration_bundle_pre_pnictide.json").read_text())
+    now = json.loads((pnictide_eval.DATA_DIR / "calibration_bundle.json").read_text())
+    for path in ("with_second_engine", "without_second_engine"):
+        a = {k: v for k, v in pre["rules"][path]["thresholds"].items() if k != "pnictide"}
+        b = {k: v for k, v in now["rules"][path]["thresholds"].items() if k != "pnictide"}
+        assert a == b, f"a non-pnictide threshold changed in {path}"
+        for key in ("target_precision", "target_npv", "certification_confidence", "n_labelable"):
+            assert pre["rules"][path][key] == now["rules"][path][key]
+    for key in ("created_at", "engine", "second_engine", "calibration_set", "conformal",
+                "weak_elements", "disagreement_tol_ev", "reliability"):
+        assert pre[key] == now[key], f"top-level {key} changed"

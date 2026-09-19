@@ -250,16 +250,54 @@ def test_warns_when_the_engine_is_not_the_calibrated_one(monkeypatch, bundle):
 
 def test_bundle_matches_the_published_calibration_tables(bundle):
     """Guards against a silent refit: these are the numbers in reports/validation_report.md §6c and
-    reports/final_test.md."""
+    reports/final_test.md.
+
+    PNICTIDE IS THE ONE DELIBERATE EXCEPTION. On 2026-09-19 its rule was promoted to
+    stable -20 meV / unstable +0 meV after a pre-registered held-out evaluation in which all four
+    hypotheses passed (reports/pnictide_test.md). This test caught that change, which is what it is
+    for; the value is updated here rather than the guard relaxed, and the promotion is asserted
+    against the PRE-REGISTERED numbers so a later refit would still fail.
+
+    Consequence to be aware of: validation_report.md §6c and final_test.md are historical documents
+    and still record pnictide's superseded +50 meV rule. They are not rewritten - see
+    test_the_published_reports_are_not_retconned below.
+    """
     assert sorted(bundle.weak_elements) == ["Be", "Pm", "Pu", "Tc"]
     assert bundle.disagreement_tol * 1000 == pytest.approx(165.3, abs=0.1)
     without = bundle.rule(with_second_engine=False).thresholds
     assert without["f-electron"] == {"stable": -0.02, "unstable": 0.01, "n": 1801}
     assert without["intermetallic"]["unstable"] == 0.0
-    assert without["oxide"]["unstable"] == 0.03 and without["pnictide"]["unstable"] == 0.05
+    assert without["oxide"]["unstable"] == 0.03
+    # promoted, and pinned to the pre-registered values rather than to whatever is in the file
+    import json as _json
+    from harness.config import DATA_DIR as _D
+    _P = _json.loads((_D / "pnictide_evaluation_preregistration.json").read_text())
+    assert without["pnictide"]["unstable"] == _P["thresholds_under_test"]["unstable_ev_per_atom"] == 0.0
+    assert without["pnictide"]["stable"] == _P["thresholds_under_test"]["stable_ev_per_atom"] == -0.02
     assert bundle.raw["calibration_set"]["n_usable"] == 3998
     halide = [r for r in bundle.raw["reliability"] if r["family"] == "halide" and r["predicted_bin"] == "<0"][0]
     assert halide["n"] == 65 and halide["hit_rate"] == pytest.approx(0.72, abs=0.005)
+
+
+def test_the_published_reports_are_not_retconned():
+    """A promotion changes the product, not the record of what was measured before it.
+
+    reports/final_test.md and reports/validation_report.md report the calibration and final-test
+    numbers as they stood in September 2026, when pnictide's rule was +50 meV. Rewriting them to
+    match today's bundle would destroy the provenance the promotion rests on. They must keep saying
+    what they said.
+    """
+    from harness.config import REPORTS_DIR
+
+    vr = REPORTS_DIR / "validation_report.md"
+    if not vr.is_file():
+        pytest.skip("validation_report.md not present")
+    text = vr.read_text()
+    # §6c records the thresholds as they stood when the report was written. It must still say +50.
+    assert "pnictide: stable \u2264 \u2014, unstable > +50 meV/atom (n=210)" in text, (
+        "validation_report.md \u00a76c has been rewritten to match the promoted bundle. It is a "
+        "historical record of what was measured in September 2026 and must keep saying +50 meV; "
+        "the promotion is documented in reports/pnictide_test.md and the bundle's promotions[].")
 
 
 def test_the_trusted_range_refusal_is_off_for_every_suite():
