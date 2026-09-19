@@ -1,0 +1,109 @@
+{
+ "evaluated_at": "2026-09-19T06:04:07+00:00",
+ "opened_at": "2026-09-19T05:26:57+00:00",
+ "sample_sha256": "f304bd2064e0cc92d20a13978f818816226265b3c24222901df1692205c08a71",
+ "preregistration_sha256": "effe583b501cd0b7021481eeaf77ffec0c80fb48588f9510d9a222a99252852b",
+ "thresholds": {
+  "stable": -0.02,
+  "unstable": 0.0
+ },
+ "primary_confidence": 0.9875,
+ "secondary_confidence": 0.95,
+ "population": {
+  "drawn": 3500,
+  "usable": 3500,
+  "unusable": 0,
+  "guard_rejected_engine1": 0,
+  "guard_rejected_engine2": 1,
+  "labelable_A": 3176,
+  "labelable_B": 3066,
+  "labelable_C": 2723,
+  "removed_by_disagreement": 110,
+  "missing_second_engine": 0
+ },
+ "inconclusive_triggers_fired": [],
+ "hypotheses": {
+  "PA1": {
+   "threshold": -0.02,
+   "calls": 275,
+   "correct": 263,
+   "errors": 12,
+   "point": 0.9563636363636364,
+   "cp_lower_primary": 0.9201478941138468,
+   "cp_lower_secondary": 0.9302574364060726,
+   "target": 0.9,
+   "margin": 0.020147894113846765,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "PA2": {
+   "threshold": 0.0,
+   "calls": 2739,
+   "correct": 2673,
+   "errors": 66,
+   "point": 0.9759036144578314,
+   "cp_lower_primary": 0.9684764004657977,
+   "cp_lower_secondary": 0.9705056601107124,
+   "target": 0.95,
+   "margin": 0.018476400465797793,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "PB1": {
+   "threshold": -0.02,
+   "calls": 273,
+   "correct": 261,
+   "errors": 12,
+   "point": 0.9560439560439561,
+   "cp_lower_primary": 0.9195741819446239,
+   "cp_lower_secondary": 0.9297535773779803,
+   "target": 0.9,
+   "margin": 0.019574181944623903,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "PB2": {
+   "threshold": 0.0,
+   "calls": 2631,
+   "correct": 2565,
+   "errors": 66,
+   "point": 0.9749144811858609,
+   "cp_lower_primary": 0.9671875252602239,
+   "cp_lower_secondary": 0.9692984370031922,
+   "target": 0.95,
+   "margin": 0.017187525260223935,
+   "verdict": "PASS",
+   "note": ""
+  }
+ },
+ "overall": "PASS",
+ "path_C_descriptive": {
+  "labelable": 2723,
+  "stable": {
+   "threshold": -0.02,
+   "calls": 273,
+   "correct": 261,
+   "errors": 12,
+   "point": 0.9560439560439561,
+   "cp_lower_primary": 0.9195741819446239,
+   "cp_lower_secondary": 0.9297535773779803,
+   "target": 0.9,
+   "margin": 0.019574181944623903,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "unstable": {
+   "threshold": 0.0,
+   "calls": 2288,
+   "correct": 2222,
+   "errors": 66,
+   "point": 0.9711538461538461,
+   "cp_lower_primary": 0.9622910004082789,
+   "cp_lower_secondary": 0.964711160653314,
+   "target": 0.95,
+   "margin": 0.012291000408278907,
+   "verdict": "PASS",
+   "note": ""
+  }
+ }
+}
