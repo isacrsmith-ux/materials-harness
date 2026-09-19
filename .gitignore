@@ -67,6 +67,9 @@ results/*
 # written by `python -m harness checkpoint`: the databases' schema and counts, small and diffable
 !results/schema.sql
 !results/summary.json
+# The aggregate public export. The directory is un-ignored so git descends into it; which files may
+# actually live here is enforced by name in scripts/preflight_publish.sh, not by this pattern.
+!results/public/
 
 # Model checkpoints, wherever they land (models/ above covers the usual place)
 *.model

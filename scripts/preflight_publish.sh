@@ -212,10 +212,17 @@ sys.exit(rc)
 fi
 
 echo "== 5. directories that must never be published =="
-# results/ is a deliberate exception: exactly four files there are published (the exported table, its
-# data dictionary, and the database schema/summary that `python -m harness checkpoint` writes). Anything
-# else appearing under results/ is a mistake -- most of the directory is ~1 GB of SQLite job stores.
-RESULTS_ALLOWED="results/README.md results/results.parquet results/schema.sql results/summary.json"
+# results/ is a deliberate exception: only the named files there are published (the exported table, its
+# data dictionary, the database schema/summary that `python -m harness checkpoint` writes, and the
+# aggregate public export). Anything else appearing under results/ is a mistake -- most of the
+# directory is ~1 GB of SQLite job stores.
+#
+# The public-export files are listed INDIVIDUALLY on purpose. A glob such as results/public/* would
+# let a job store dropped into that directory through, which is exactly what this check exists to
+# stop. Adding a public file means adding its name here.
+RESULTS_ALLOWED="results/README.md results/results.parquet results/schema.sql results/summary.json
+results/public/SCHEMA.md results/public/round4_aggregate.csv results/public/round4_aggregate.json
+results/public/round4_population.csv"
 for d in models cache logs config/launchd .envs .venv; do
   n=$(git ls-files "$d" | wc -l | tr -d ' ')
   if [ "$n" != 0 ]; then bad "$d has $n tracked file(s)"; else note "$d: not tracked"; fi

@@ -1,0 +1,4 @@
+family,evidence_tier,n_drawn,n_guard_rejected_engine1,n_guard_rejected_engine2,n_usable,n_excluded_not_labelable,n_labelable_pathA,n_labelable_pathB,n_labelable_pathC_product,n_removed_by_disagreement,disagreement_fraction_of_pathA,n_missing_second_engine_result,n_failed_jobs,base_rate_truly_stable_pathA,prior_threshold_fitted_on_n_pathA,prior_threshold_fitted_on_n_pathB
+f-electron,development,4000,0,7,4000,505,3495,3412,3130,83,0.023748,7,0,0.184835,1801,1747
+intermetallic,development,4000,0,0,4000,387,3613,3547,3073,66,0.018267,0,0,0.097426,665,645
+pnictide,development,4000,0,0,4000,363,3637,3501,3133,136,0.037393,0,0,0.138576,210,202

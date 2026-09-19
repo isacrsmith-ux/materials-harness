@@ -1,0 +1,31 @@
+experiment,path,family,side,evidence_tier,n_population_labelable,threshold_ev_per_atom,n_calls,n_errors,point_estimate,cp_lower_bound,target,margin_vs_target,meets_target_in_development,recall_truly_stable,dft_routing_fraction,note
+round4_pathA_fit,A_single_engine,f-electron,stable,development,3495,,0,,,,0.9,,,0.0,0.19628040057224608,no stable threshold certified in development
+round4_pathA_fit,A_single_engine,f-electron,unstable,development,3495,0.0,2809,71,0.9747241011035955,0.9639881900401936,0.95,0.013988,True,0.0,0.19628040057224608,
+round4_pathA_fit,A_single_engine,intermetallic,stable,development,3613,-0.02,182,4,0.978021978021978,0.9197369487841499,0.9,0.019737,True,0.5056818181818182,0.018267367838361474,
+round4_pathA_fit,A_single_engine,intermetallic,unstable,development,3613,-0.01,3365,115,0.9658246656760773,0.9548171456377657,0.95,0.004817,True,0.5056818181818182,0.018267367838361474,
+round4_pathA_fit,A_single_engine,pnictide,stable,development,3637,-0.02,306,12,0.9607843137254902,0.9127943399138314,0.9,0.012794,True,0.5833333333333334,0.04866648336541105,
+round4_pathA_fit,A_single_engine,pnictide,unstable,development,3637,0.0,3154,82,0.974001268230818,0.9638281795801172,0.95,0.013828,True,0.5833333333333334,0.04866648336541105,
+round4c_path_comparison,A_single_engine_v1_table,f-electron,stable,development,3495,-0.02,441,27,0.9387755102040817,0.8944406850681692,0.9,-0.005559,False,0.6408668730650154,0.11359084406294706,
+round4c_path_comparison,A_single_engine_v1_table,f-electron,unstable,development,3495,0.01,2657,35,0.9868272487768159,0.9783038695493012,0.95,0.028304,True,0.6408668730650154,0.11359084406294706,
+round4c_path_comparison,B_old_second_engine_v1_table,f-electron,stable,development,3412,-0.02,429,24,0.9440559440559441,0.9003593247319843,0.9,0.000359,True,0.6367924528301887,0.11547479484173505,
+round4c_path_comparison,B_old_second_engine_v1_table,f-electron,unstable,development,3412,0.01,2589,35,0.9864812668984164,0.9777365538035913,0.95,0.027737,True,0.6367924528301887,0.11547479484173505,
+round4c_path_comparison,B_refit_second_engine_development,f-electron,stable,development,3412,-0.02,429,24,0.9440559440559441,0.9003593247319843,0.9,0.000359,True,0.6367924528301887,0.07121922626025791,
+round4c_path_comparison,B_refit_second_engine_development,f-electron,unstable,development,3412,0.0,2740,71,0.974087591240876,0.963086461138964,0.95,0.013086,True,0.6367924528301887,0.07121922626025791,
+round4c_path_comparison,A_single_engine_v1_table,intermetallic,stable,development,3613,,0,0,,,0.9,,,0.0,0.10019374481040687,no rule on this side; all such candidates routed to DFT
+round4c_path_comparison,A_single_engine_v1_table,intermetallic,unstable,development,3613,0.0,3251,51,0.9843125192248539,0.9761961606333673,0.95,0.026196,True,0.0,0.10019374481040687,
+round4c_path_comparison,B_old_second_engine_v1_table,intermetallic,stable,development,3547,,0,0,,,0.9,,,0.0,0.10177614885819002,no rule on this side; all such candidates routed to DFT
+round4c_path_comparison,B_old_second_engine_v1_table,intermetallic,unstable,development,3547,0.0,3186,51,0.9839924670433146,0.9757125688269154,0.95,0.025713,True,0.0,0.10177614885819002,
+round4c_path_comparison,B_refit_second_engine_development,intermetallic,stable,development,3547,-0.02,181,4,0.9779005524861878,0.9193070550111793,0.9,0.019307,True,0.5042735042735043,0.018607273752466874,
+round4c_path_comparison,B_refit_second_engine_development,intermetallic,unstable,development,3547,-0.01,3300,115,0.9651515151515152,0.953932370368454,0.95,0.003932,True,0.5042735042735043,0.018607273752466874,
+round4c_path_comparison,A_single_engine_v1_table,pnictide,stable,development,3637,,0,0,,,0.9,,,0.0,0.3120703876821556,no rule on this side; all such candidates routed to DFT
+round4c_path_comparison,A_single_engine_v1_table,pnictide,unstable,development,3637,0.05,2502,6,0.9976019184652278,0.9926844618870847,0.95,0.042684,True,0.0,0.3120703876821556,
+round4c_path_comparison,B_old_second_engine_v1_table,pnictide,stable,development,3501,,0,0,,,0.9,,,0.0,1.0,no rule on this side; all such candidates routed to DFT
+round4c_path_comparison,B_old_second_engine_v1_table,pnictide,unstable,development,3501,,0,0,,,0.95,,,0.0,1.0,no rule on this side; all such candidates routed to DFT
+round4c_path_comparison,B_refit_second_engine_development,pnictide,stable,development,3501,-0.02,306,12,0.9607843137254902,0.9127943399138314,0.9,0.012794,True,0.5833333333333334,0.050556983718937444,
+round4c_path_comparison,B_refit_second_engine_development,pnictide,unstable,development,3501,0.0,3018,82,0.9728296885354539,0.9622070964334437,0.95,0.012207,True,0.5833333333333334,0.050556983718937444,
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,f-electron,stable,development,3412,,,,,,0.9,,False,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,f-electron,unstable,development,3412,0.0,,,,,0.95,,True,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,intermetallic,stable,development,3547,-0.02,,,,,0.9,,True,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,intermetallic,unstable,development,3547,-0.01,,,,,0.95,,True,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,pnictide,stable,development,3501,-0.02,,,,,0.9,,True,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction
+round4c_family_corrected_sensitivity,B_refit_second_engine_development,pnictide,unstable,development,3501,0.0,,,,,0.95,,True,,,threshold under an ADDITIONAL 6-fold Bonferroni over families x sides; 'none' here means the selection did not survive that correction

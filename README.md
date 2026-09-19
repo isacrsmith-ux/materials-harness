@@ -190,6 +190,70 @@ the one the published reports were computed from.
 
 ---
 
+## Round 4: the carried-over families (development evidence)
+
+> **Round 4 and Path-B results are development/calibration results. Unless explicitly identified as
+> preregistered held-out results, they must not be interpreted as independent estimates of production
+> performance.**
+
+**The experiment.** Three chemistry families — `f-electron`, `intermetallic` and `pnictide` — still
+carried decision thresholds fitted on 1,801, 665 and 210 rows. Nothing in two prior rounds had
+touched them, and in the rule set the product uses when a second engine is available, only
+`f-electron` could return *likely stable* at all. 4,000 fresh development structures were drawn per
+family from the never-used pool, then the same 12,000 structures were run again on the second engine
+so the disagreement-filtered path could be scored too. 48,000 jobs, zero failures.
+
+**What was learned.**
+
+- **pnictide's empty second-engine rule was a small-sample artefact.** Production gives it
+  `stable none / unstable none` from a 202-row fit, which routes **100%** of pnictide candidates to
+  DFT. Refitting on 3,501 rows selects `stable = −20 meV`, `unstable = +0 meV` — bounds 0.9128 and
+  0.9622 — and those selections survive the family-level correction.
+- **Supplying a second engine makes the product worse**, more than doubling the share sent to DFT
+  (0.1763 → 0.4069) across these families. Adding information should not cost routing; the cause is a
+  stale rule table, not the engines.
+- **Most of the apparent gain is sample size, not the second engine.** Fitting the single-engine path
+  on the same rows reaches the same threshold in **5 of 6** selections.
+- **f-electron lost its stable certification** on a fresh, composition-matched draw: the live rule's
+  corrected bound is 0.8944 against a 0.90 target. An apparent second-engine rescue **does not
+  survive** the family-level multiplicity correction (bound 0.892556, margin −0.0074).
+- **intermetallic gained a stable side** but its unstable margin is only **+0.0039** — flagged, not
+  banked.
+
+**What remains unresolved.** Whether f-electron's stable rule is sound (unresolved on *both* paths —
+neither sample separates 0.90 from 0.94). Whether pnictide's thresholds hold out of sample (a held-out
+test is **pre-registered but not run**; its sample does not exist). Whether one shared rule table or
+two is right. Whether any of it generalises off WBM. **Nothing here is adopted in production** — the
+active bundle is unchanged, and the pnictide defect is still present.
+
+**Reproducing the published aggregates.**
+
+```bash
+python -m harness models fetch mace-mpa-0-medium && python -m harness models fetch mace-mp-0-medium
+python -m harness data fetch wbm                      # Matbench Discovery, doi:10.6084/m9.figshare.22715158
+
+HARNESS_MODEL=mace-mpa-0-medium python scripts/round4.py enqueue        # primary engine
+HARNESS_MODEL=mace-mp-0-medium  python scripts/round4.py enqueue-second # second engine
+./run_unattended.sh full                                                # drain the queue
+
+HARNESS_MODEL=mace-mpa-0-medium python scripts/round4_analyse.py       reports/round4_carried_over.md
+HARNESS_MODEL=mace-mpa-0-medium python scripts/round4_second_engine.py reports/round4_second_engine.md
+HARNESS_MODEL=mace-mpa-0-medium python scripts/round4_pathb_refit.py   reports/round4_pathb_refit.md
+python scripts/build_public_export.py                                   # regenerates results/public/
+```
+
+The draw itself (`scripts/round4.py split`) is made once and refuses to regenerate; its committed id
+list is what the above reproduces against.
+
+| where | what |
+|---|---|
+| [`reports/public/round4_development_results.md`](reports/public/round4_development_results.md) | the results, with every negative finding |
+| [`results/public/`](results/public/SCHEMA.md) | machine-readable aggregates + documented schema |
+| [`docs/methodology/`](docs/methodology/) | statistics, evidence tiers, provenance, environment |
+| [`reports/public/WITHHELD.md`](reports/public/WITHHELD.md) | what is deliberately not published, and why |
+
+---
+
 ## Data sources and attribution
 
 This project builds on data published by others. Every number in `reports/` is derived from one of
