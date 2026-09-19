@@ -1,11 +1,12 @@
 {
- "created_at": "2026-09-18T22:35:17+00:00",
+ "created_at": "2026-09-19T04:52:49+00:00",
  "purpose": "every held-out set this project has created, its hash, its provenance and its state. Nothing here hands out ids: each set's accessor still raises PermissionError without unlock=True.",
  "accessor_contract": {
   "original WBM": "splits.test_ids(unlock=True)",
   "round-1 families": "splits.family_test_ids(fam, unlock=True)",
   "round-2 groups": "round2.test_ids(group, unlock=True)",
-  "round-3 groups": "round2.test_ids3(group, unlock=True)"
+  "round-3 groups": "round2.test_ids3(group, unlock=True)",
+  "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)"
  },
  "sets": [
   {
@@ -61,6 +62,15 @@
    "source_file": "data/wbm_split_round3.json",
    "status": "UNOPENED",
    "note": "reserved for the provisional other threshold, order 3-4 in the protocol"
+  },
+  {
+   "name": "pnictide evaluation (round 4)",
+   "n": 3500,
+   "sha256": "f304bd2064e0cc92d20a13978f818816226265b3c24222901df1692205c08a71",
+   "hash_verifies": true,
+   "source_file": "data/wbm_split_pnictide_eval.json",
+   "status": "DRAWN, UNOPENED",
+   "note": "drawn 2026-09-19T04:51:26+00:00 under reports/pnictide_evaluation_preregistration.md (prereg sha256 effe583b501cd0b7...). Tests the FIXED thresholds stable -20 meV / unstable +0 meV against four pre-registered hypotheses on both production paths. No job queued, nothing scored, no opening log exists. Refitting on this sample is forbidden by the pre-registration."
   }
  ],
  "all_hashes_verify": true

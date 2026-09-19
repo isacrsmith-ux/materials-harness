@@ -24,6 +24,7 @@ from harness.config import DATA_DIR, MODELS, settings_tag
 
 SPEC_FILE = DATA_DIR / "calibration_spec_v2.json"
 REGISTRY_FILE = DATA_DIR / "locked_sets_registry.json"
+PNICTIDE_SPLIT = DATA_DIR / "wbm_split_pnictide_eval.json"
 FINAL = "reports/round3_final_spec.json"
 
 
@@ -243,6 +244,26 @@ def build_registry() -> dict:
         add(f"{g} locked test (round 3)", r3["groups"][g]["test"], "data/wbm_split_round3.json",
             "UNOPENED", f"reserved for the provisional {g.replace('_residual','')} threshold, order 3-4 in the protocol")
 
+    # Drawn under its own pre-registration, after round 4. State is read from the opening log rather
+    # than asserted, for the same reason halide's is: a registry that can go stale is worse than none.
+    if PNICTIDE_SPLIT.is_file():
+        pn = json.loads(PNICTIDE_SPLIT.read_text())
+        plog = DATA_DIR / "pnictide_eval_log.json"
+        if plog.is_file():
+            d = json.loads(plog.read_text())
+            status, note = "OPENED ONCE", (
+                f"opened {d['opened_at']} at commit {d.get('harness_commit')} under "
+                "reports/pnictide_evaluation_preregistration.md. Never to be re-opened.")
+        else:
+            status, note = "DRAWN, UNOPENED", (
+                "drawn " + pn["created_at"] + " under reports/pnictide_evaluation_preregistration.md "
+                f"(prereg sha256 {pn['preregistration']['sha256'][:16]}...). Tests the FIXED thresholds "
+                "stable -20 meV / unstable +0 meV against four pre-registered hypotheses on both "
+                "production paths. No job queued, nothing scored, no opening log exists. Refitting on "
+                "this sample is forbidden by the pre-registration.")
+        add("pnictide evaluation (round 4)", pn["test"], "data/wbm_split_pnictide_eval.json",
+            status, note)
+
     return {"created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "purpose": ("every held-out set this project has created, its hash, its provenance and "
                         "its state. Nothing here hands out ids: each set's accessor still raises "
@@ -251,7 +272,8 @@ def build_registry() -> dict:
                 "original WBM": "splits.test_ids(unlock=True)",
                 "round-1 families": "splits.family_test_ids(fam, unlock=True)",
                 "round-2 groups": "round2.test_ids(group, unlock=True)",
-                "round-3 groups": "round2.test_ids3(group, unlock=True)"},
+                "round-3 groups": "round2.test_ids3(group, unlock=True)",
+                "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)"},
             "sets": sets,
             "all_hashes_verify": all(s["hash_verifies"] for s in sets)}
 
