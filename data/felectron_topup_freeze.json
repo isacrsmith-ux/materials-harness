@@ -1,0 +1,66 @@
+{
+ "created_at": "2026-09-21T21:35:43+00:00",
+ "state": "FROZEN BEFORE ANY OUTCOME WAS COMPUTED. No job has been run for the top-up ids.",
+ "tier": "DEVELOPMENT EVIDENCE ONLY",
+ "question": "After adequate development sample size and the FULL family correction, can the f-electron stable side clear the 0.90 precision requirement on either or both production paths?",
+ "why": "Round 4 found no certifiable f-electron stable threshold at n=3,495 and the live -20 meV rule scored a corrected bound of 0.8944 against a 0.90 target. Round 4b appeared to rescue it on the second-engine path (bound 0.900359) but round 4c showed that rescue does not survive the 6-fold family correction (bound 0.892556, margin -0.0074). f-electron is therefore unresolved on both paths, and it is the only family that can currently return 'likely stable' in production.",
+ "hypotheses": {
+  "F1": {
+   "path": "A (single engine)",
+   "claim": "a stable threshold certifies on the enlarged development population under the full family correction",
+   "target": 0.9
+  },
+  "F2": {
+   "path": "B (second engine / disagreement filter)",
+   "claim": "same",
+   "target": 0.9
+  }
+ },
+ "secondary_descriptive": "the LIVE -20 meV rule's bound on the enlarged population, under both the grid-only and the family-corrected standard, on both paths. Descriptive: it cannot by itself change the production rule.",
+ "analysis_population": "the round-4 f-electron development draw (4,000 ids, already spent) PLUS this top-up (4800 ids) = 8800 structures. Both are development data; combining them is legitimate precisely because neither is nor ever can be held-out.",
+ "correction_procedure": {
+  "primary": "Bonferroni over the 61-point threshold grid AND over the 6 family x side selections round 4 made: level 0.999863. This is the FULL family correction.",
+  "secondary": "grid only, level 0.999180 - the standard round 4 used, reported for comparability and NOT the primary criterion",
+  "bound": "one-sided Clopper-Pearson; verdict read from the bound, never the point estimate"
+ },
+ "sample_size": {
+  "topup": 4800,
+  "combined": 8800,
+  "basis": "sized for >= 90% power on Path B under the full family correction against the round-4 point estimate; this is the size previously proposed (~3,320 at 80%, ~4,793 at 90%)"
+ },
+ "prespecified_power": {
+  "A": {
+   "assumed_truth": 0.9387755102040817,
+   "expected_total_calls": 970,
+   "expected_topup_calls": 529,
+   "max_errors_allowed_family_corrected": 64,
+   "power_family_corrected": 0.7565112457193734,
+   "power_grid_only": 0.8872525102888964,
+   "current_bound_family_corrected": 0.8865866639394064,
+   "current_bound_grid_only": 0.8944406850681692
+  },
+  "B": {
+   "assumed_truth": 0.9440559440559441,
+   "expected_total_calls": 944,
+   "expected_topup_calls": 515,
+   "max_errors_allowed_family_corrected": 62,
+   "power_family_corrected": 0.9124215971710498,
+   "power_grid_only": 0.9704559541881221,
+   "current_bound_family_corrected": 0.8925559153499346,
+   "current_bound_grid_only": 0.9003593247319843
+  }
+ },
+ "acknowledged_limitation": "At this size Path A is UNDERPOWERED under the full family correction - roughly 5,325 top-up structures would be needed for 80% power there against 4,800 drawn. This is recorded now, before any result: a Path-A failure to certify must therefore be reported as inconclusive-at-this-size, NOT as evidence that no Path-A threshold exists.",
+ "stopping_rule": "One analysis, after every job for every combined id has completed. No interim looks, no sequential testing, no adding structures after seeing a result. If jobs fail, the failure count is reported and the analysis proceeds on what completed; it is not rescued by retrying into a different relaxation rung.",
+ "forbidden": [
+  "changing the live f-electron production rule on the basis of this result, in either direction - this is development evidence and a production change needs a pre-registered held-out evaluation",
+  "opening any locked set, or reading the pnictide held-out sample",
+  "changing the family definition, precedence, labelable definition, exclusions or targets",
+  "enlarging the top-up after seeing an outcome",
+  "reporting the grid-only bound as if it were the primary criterion"
+ ],
+ "candidate_ids_file": {
+  "file": "data/felectron_topup_ids.json",
+  "sha256": "e7a2cee730d295ba7c13d2f86de86ec8fb5ae04421f615ec1afb92e675f7e315"
+ }
+}
