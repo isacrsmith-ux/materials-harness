@@ -63,6 +63,38 @@ def main() -> None:
     if len(tags) > 1:
         print(f"  NOTE: pending jobs under {len(tags)} settings tags: {tags}")
         print("  A runner executes ONE tag. Drain this engine before queueing the other.")
+    _warn_if_a_runner_holds_the_lock_for_another_engine(tag)
+
+
+def _warn_if_a_runner_holds_the_lock_for_another_engine(job_tag: str) -> None:
+    """One runner per queue, and it executes ONE settings tag.
+
+    This has now cost two separate incidents: during the pnictide evaluation a runner started under
+    the production engine refused 7,000 second-engine jobs with SettingsMismatch, and during the
+    f-electron top-up a still-alive production-engine runner held the fcntl lock so the second-engine
+    runner never started at all - `run_unattended.sh` reports that only as a missing log file. Both
+    are the same root cause seen from different angles, so the check looks at the RUNNER rather than
+    at the queue.
+    """
+    from harness.orchestrator import paths as _paths
+
+    state = _paths(QUEUE_DB)["state"]
+    if not state.is_file():
+        return
+    try:
+        st = json.loads(state.read_text())
+    except Exception:
+        return
+    if st.get("status") not in ("running", "paused"):
+        return
+    running_tag = (st.get("settings_tag") or st.get("tag") or "")
+    print(f"\n  WARNING: a runner is already active (run {st.get('run_id')}, pid {st.get('pid')}).")
+    if running_tag and running_tag != job_tag:
+        print(f"  It executes settings tag {running_tag}, but these jobs are tagged {job_tag}.")
+    print("  Only one runner may hold the queue, and it runs one engine. Stop it first:")
+    print("      python -m harness stop")
+    print("  then start a runner under THIS engine's HARNESS_MODEL. Starting one now would either")
+    print("  fail to acquire the lock silently, or fail every job here with SettingsMismatch.")
 
 
 if __name__ == "__main__":
