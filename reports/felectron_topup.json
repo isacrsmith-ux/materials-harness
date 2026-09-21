@@ -1,0 +1,110 @@
+{
+ "generated_at": "2026-09-21T23:36:50+00:00",
+ "tier": "DEVELOPMENT EVIDENCE ONLY",
+ "freeze": "2026-09-21T21:35:43+00:00",
+ "levels": {
+  "family_corrected": 0.9998633879781421,
+  "grid_only": 0.9991803278688525
+ },
+ "population": {
+  "n_combined_ids": 8800,
+  "sha256_combined": "7980f45e18e5213b0a16c78eb6867454bd93db389100b3eccbc7cb5094025326",
+  "n_round4": 4000,
+  "n_topup": 4800,
+  "n_usable": 8800,
+  "n_unusable": 0,
+  "guard_rejected": {
+   "engine1": 0,
+   "engine2": 22
+  },
+  "n_missing_second_engine": 22
+ },
+ "results": {
+  "F1_path_A": {
+   "n_labelable": 7719,
+   "base_rate": 0.1844798549034849,
+   "family_corrected": {
+    "certified_threshold": -0.02,
+    "calls": 963,
+    "correct": 913,
+    "errors": 50,
+    "point": 0.9480789200415368,
+    "cp_lower": 0.9171001204569145
+   },
+   "grid_only": {
+    "certified_threshold": -0.02,
+    "calls": 963,
+    "correct": 913,
+    "errors": 50,
+    "point": 0.9480789200415368,
+    "cp_lower": 0.9216709152443013
+   },
+   "live_rule_minus20meV": {
+    "calls": 963,
+    "correct": 913,
+    "errors": 50,
+    "point": 0.9480789200415368,
+    "cp_lower_family_corrected": 0.9171001204569145,
+    "cp_lower_grid_only": 0.9216709152443013
+   }
+  },
+  "F2_path_B": {
+   "n_labelable": 7504,
+   "base_rate": 0.18736673773987206,
+   "family_corrected": {
+    "certified_threshold": -0.02,
+    "calls": 942,
+    "correct": 898,
+    "errors": 44,
+    "point": 0.9532908704883227,
+    "cp_lower": 0.9231223733474045
+   },
+   "grid_only": {
+    "certified_threshold": -0.01,
+    "calls": 1153,
+    "correct": 1073,
+    "errors": 80,
+    "point": 0.9306157849089333,
+    "cp_lower": 0.9039491648926857
+   },
+   "live_rule_minus20meV": {
+    "calls": 942,
+    "correct": 898,
+    "errors": 44,
+    "point": 0.9532908704883227,
+    "cp_lower_family_corrected": 0.9231223733474045,
+    "cp_lower_grid_only": 0.9276012963318684
+   }
+  }
+ },
+ "cohort_heterogeneity": {
+  "A": {
+   "round4": [
+    414,
+    441
+   ],
+   "topup": [
+    499,
+    522
+   ],
+   "difference": 0.01716318711392595,
+   "se": 0.014350026435942473,
+   "z": 1.196038710488878,
+   "p_two_sided": 0.23168145312980393
+  },
+  "B": {
+   "round4": [
+    405,
+    429
+   ],
+   "topup": [
+    493,
+    513
+   ],
+   "difference": 0.01695770116822748,
+   "se": 0.013805486847054146,
+   "z": 1.2283305439420966,
+   "p_two_sided": 0.2193229094704674
+  }
+ }
+}
