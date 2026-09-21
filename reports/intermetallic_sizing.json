@@ -1,0 +1,667 @@
+{
+ "generated_at": "2026-09-21T21:33:40+00:00",
+ "kind": "sizing analysis only; nothing drawn, nothing pre-registered",
+ "procedure": {
+  "bound": "one-sided Clopper-Pearson",
+  "primary_confidence": 0.9875,
+  "multiplicity": "Bonferroni over 4 hypotheses; no grid correction; no family correction",
+  "targets": {
+   "stable_precision": 0.9,
+   "unstable_npv": 0.95
+  }
+ },
+ "unspent_pool": 33707,
+ "development": {
+  "IA1 Path-A stable": {
+   "calls": 182,
+   "errors": 4,
+   "target": 0.9,
+   "bound": 0.9197369487841499,
+   "point": 0.978021978021978,
+   "rate": 0.0455
+  },
+  "IA2 Path-A unstable": {
+   "calls": 3365,
+   "errors": 115,
+   "target": 0.95,
+   "bound": 0.9548,
+   "point": 0.9658246656760773,
+   "rate": 0.84125
+  },
+  "IB1 Path-B stable": {
+   "calls": 181,
+   "errors": 4,
+   "target": 0.9,
+   "bound": 0.9193,
+   "point": 0.9779005524861878,
+   "rate": 0.04525
+  },
+  "IB2 Path-B unstable": {
+   "calls": 3300,
+   "errors": 115,
+   "target": 0.95,
+   "bound": 0.9539,
+   "point": 0.9651515151515152,
+   "rate": 0.825
+  }
+ },
+ "at_development_point": {
+  "IA1 Path-A stable": {
+   "80%": {
+    "calls": 94,
+    "structures": 2066,
+    "feasible": true
+   },
+   "90%": {
+    "calls": 124,
+    "structures": 2726,
+    "feasible": true
+   },
+   "95%": {
+    "calls": 138,
+    "structures": 3033,
+    "feasible": true
+   }
+  },
+  "IA2 Path-A unstable": {
+   "80%": {
+    "calls": 1587,
+    "structures": 1887,
+    "feasible": true
+   },
+   "90%": {
+    "calls": 2039,
+    "structures": 2424,
+    "feasible": true
+   },
+   "95%": {
+    "calls": 2463,
+    "structures": 2928,
+    "feasible": true
+   }
+  },
+  "IB1 Path-B stable": {
+   "80%": {
+    "calls": 94,
+    "structures": 2078,
+    "feasible": true
+   },
+   "90%": {
+    "calls": 124,
+    "structures": 2741,
+    "feasible": true
+   },
+   "95%": {
+    "calls": 138,
+    "structures": 3050,
+    "feasible": true
+   }
+  },
+  "IB2 Path-B unstable": {
+   "80%": {
+    "calls": 1769,
+    "structures": 2145,
+    "feasible": true
+   },
+   "90%": {
+    "calls": 2240,
+    "structures": 2716,
+    "feasible": true
+   },
+   "95%": {
+    "calls": 2728,
+    "structures": 3307,
+    "feasible": true
+   }
+  }
+ },
+ "sensitivity": {
+  "IA1 Path-A stable": {
+   "0.9": {
+    "80%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "90%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "95%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    }
+   },
+   "0.92": {
+    "80%": {
+     "calls": 1979,
+     "structures": 43495,
+     "feasible": false
+    },
+    "90%": {
+     "calls": 2560,
+     "structures": 56264,
+     "feasible": false
+    },
+    "95%": {
+     "calls": 3137,
+     "structures": 68946,
+     "feasible": false
+    }
+   },
+   "0.94": {
+    "80%": {
+     "calls": 453,
+     "structures": 9957,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 582,
+     "structures": 12792,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 697,
+     "structures": 15319,
+     "feasible": true
+    }
+   },
+   "0.96": {
+    "80%": {
+     "calls": 180,
+     "structures": 3957,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 232,
+     "structures": 5099,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 270,
+     "structures": 5935,
+     "feasible": true
+    }
+   },
+   "0.978": {
+    "80%": {
+     "calls": 94,
+     "structures": 2066,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 124,
+     "structures": 2726,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 138,
+     "structures": 3033,
+     "feasible": true
+    }
+   },
+   "0.98": {
+    "80%": {
+     "calls": 94,
+     "structures": 2066,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 110,
+     "structures": 2418,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 124,
+     "structures": 2726,
+     "feasible": true
+    }
+   },
+   "0.99": {
+    "80%": {
+     "calls": 62,
+     "structures": 1363,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 79,
+     "structures": 1737,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 94,
+     "structures": 2066,
+     "feasible": true
+    }
+   }
+  },
+  "IA2 Path-A unstable": {
+   "0.95": {
+    "80%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "90%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "95%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    }
+   },
+   "0.955": {
+    "80%": {
+     "calls": 17387,
+     "structures": 20669,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 22566,
+     "structures": 26825,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 27395,
+     "structures": 32565,
+     "feasible": true
+    }
+   },
+   "0.96": {
+    "80%": {
+     "calls": 4255,
+     "structures": 5058,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 5546,
+     "structures": 6593,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 6549,
+     "structures": 7785,
+     "feasible": true
+    }
+   },
+   "0.965": {
+    "80%": {
+     "calls": 1769,
+     "structures": 2103,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 2285,
+     "structures": 2717,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 2750,
+     "structures": 3269,
+     "feasible": true
+    }
+   },
+   "0.9658": {
+    "80%": {
+     "calls": 1587,
+     "structures": 1887,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 2039,
+     "structures": 2424,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 2463,
+     "structures": 2928,
+     "feasible": true
+    }
+   },
+   "0.97": {
+    "80%": {
+     "calls": 937,
+     "structures": 1114,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 1219,
+     "structures": 1450,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 1473,
+     "structures": 1751,
+     "feasible": true
+    }
+   },
+   "0.975": {
+    "80%": {
+     "calls": 571,
+     "structures": 679,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 744,
+     "structures": 885,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 865,
+     "structures": 1029,
+     "feasible": true
+    }
+   }
+  },
+  "IB1 Path-B stable": {
+   "0.9": {
+    "80%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "90%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "95%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    }
+   },
+   "0.92": {
+    "80%": {
+     "calls": 1979,
+     "structures": 43735,
+     "feasible": false
+    },
+    "90%": {
+     "calls": 2560,
+     "structures": 56575,
+     "feasible": false
+    },
+    "95%": {
+     "calls": 3137,
+     "structures": 69326,
+     "feasible": false
+    }
+   },
+   "0.94": {
+    "80%": {
+     "calls": 453,
+     "structures": 10012,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 582,
+     "structures": 12862,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 697,
+     "structures": 15404,
+     "feasible": true
+    }
+   },
+   "0.96": {
+    "80%": {
+     "calls": 180,
+     "structures": 3978,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 232,
+     "structures": 5128,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 270,
+     "structures": 5967,
+     "feasible": true
+    }
+   },
+   "0.9779": {
+    "80%": {
+     "calls": 94,
+     "structures": 2078,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 124,
+     "structures": 2741,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 138,
+     "structures": 3050,
+     "feasible": true
+    }
+   },
+   "0.98": {
+    "80%": {
+     "calls": 94,
+     "structures": 2078,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 110,
+     "structures": 2431,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 124,
+     "structures": 2741,
+     "feasible": true
+    }
+   },
+   "0.99": {
+    "80%": {
+     "calls": 62,
+     "structures": 1371,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 79,
+     "structures": 1746,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 94,
+     "structures": 2078,
+     "feasible": true
+    }
+   }
+  },
+  "IB2 Path-B unstable": {
+   "0.95": {
+    "80%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "90%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    },
+    "95%": {
+     "calls": null,
+     "structures": null,
+     "feasible": false
+    }
+   },
+   "0.955": {
+    "80%": {
+     "calls": 17387,
+     "structures": 21076,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 22566,
+     "structures": 27353,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 27395,
+     "structures": 33207,
+     "feasible": true
+    }
+   },
+   "0.96": {
+    "80%": {
+     "calls": 4255,
+     "structures": 5158,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 5546,
+     "structures": 6723,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 6549,
+     "structures": 7939,
+     "feasible": true
+    }
+   },
+   "0.965": {
+    "80%": {
+     "calls": 1769,
+     "structures": 2145,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 2285,
+     "structures": 2770,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 2750,
+     "structures": 3334,
+     "feasible": true
+    }
+   },
+   "0.9652": {
+    "80%": {
+     "calls": 1723,
+     "structures": 2089,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 2218,
+     "structures": 2689,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 2706,
+     "structures": 3280,
+     "feasible": true
+    }
+   },
+   "0.97": {
+    "80%": {
+     "calls": 937,
+     "structures": 1136,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 1219,
+     "structures": 1478,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 1473,
+     "structures": 1786,
+     "feasible": true
+    }
+   },
+   "0.975": {
+    "80%": {
+     "calls": 571,
+     "structures": 693,
+     "feasible": true
+    },
+    "90%": {
+     "calls": 744,
+     "structures": 902,
+     "feasible": true
+    },
+    "95%": {
+     "calls": 865,
+     "structures": 1049,
+     "feasible": true
+    }
+   }
+  }
+ },
+ "power_at_candidate_n": {
+  "2000": {
+   "IA1 Path-A stable": 0.6766875558063391,
+   "IA2 Path-A unstable": 0.8275700560030104,
+   "IB1 Path-B stable": 0.6797121532918056,
+   "IB2 Path-B unstable": 0.7525922699057521
+  },
+  "2500": {
+   "IA1 Path-A stable": 0.892681190954061,
+   "IA2 Path-A unstable": 0.8971353575233384,
+   "IB1 Path-B stable": 0.8937989185177401,
+   "IB2 Path-B unstable": 0.8754262175495451
+  },
+  "2750": {
+   "IA1 Path-A stable": 0.9414865520978487,
+   "IA2 Path-A unstable": 0.9354324504171043,
+   "IB1 Path-B stable": 0.9420695072613433,
+   "IB2 Path-B unstable": 0.9026720621649859
+  },
+  "3000": {
+   "IA1 Path-A stable": 0.9194273152692012,
+   "IA2 Path-A unstable": 0.9497207996856485,
+   "IB1 Path-B stable": 0.9177846428193561,
+   "IB2 Path-B unstable": 0.9243720368352059
+  },
+  "3500": {
+   "IA1 Path-A stable": 0.9749504373341475,
+   "IA2 Path-A unstable": 0.9757773647602735,
+   "IB1 Path-B stable": 0.9750624812311143,
+   "IB2 Path-B unstable": 0.9623838352570351
+  },
+  "4000": {
+   "IA1 Path-A stable": 0.992584327778044,
+   "IA2 Path-A unstable": 0.9907316248114851,
+   "IB1 Path-B stable": 0.992588227169352,
+   "IB2 Path-B unstable": 0.9815916928117941
+  }
+ },
+ "recommended": {
+  "n_draw": 3500,
+  "budget": {
+   "IA1 Path-A stable": {
+    "expected_calls": 159,
+    "expected_errors": 3.5,
+    "max_errors_allowed": 7
+   },
+   "IA2 Path-A unstable": {
+    "expected_calls": 2944,
+    "expected_errors": 100.6,
+    "max_errors_allowed": 120
+   },
+   "IB1 Path-B stable": {
+    "expected_calls": 158,
+    "expected_errors": 3.5,
+    "max_errors_allowed": 7
+   },
+   "IB2 Path-B unstable": {
+    "expected_calls": 2888,
+    "expected_errors": 100.6,
+    "max_errors_allowed": 118
+   }
+  }
+ }
+}
