@@ -25,6 +25,7 @@ from harness.config import DATA_DIR, MODELS, settings_tag
 SPEC_FILE = DATA_DIR / "calibration_spec_v2.json"
 REGISTRY_FILE = DATA_DIR / "locked_sets_registry.json"
 PNICTIDE_SPLIT = DATA_DIR / "wbm_split_pnictide_eval.json"
+FELECTRON_SPLIT = DATA_DIR / "wbm_split_felectron_eval.json"
 FINAL = "reports/round3_final_spec.json"
 
 
@@ -264,6 +265,24 @@ def build_registry() -> dict:
         add("pnictide evaluation (round 4)", pn["test"], "data/wbm_split_pnictide_eval.json",
             status, note)
 
+    # f-electron: drawn under its own pre-registration, which was PUSHED before the draw.
+    if FELECTRON_SPLIT.is_file():
+        fe = json.loads(FELECTRON_SPLIT.read_text())
+        flog = DATA_DIR / "felectron_eval_log.json"
+        if flog.is_file():
+            e = json.loads(flog.read_text())
+            status, note = "OPENED ONCE", (
+                f"opened {e['opened_at']} at commit {e.get('harness_commit')} under "
+                "reports/felectron_evaluation_preregistration.md. Never to be re-opened.")
+        else:
+            status, note = "DRAWN, UNOPENED", (
+                "drawn " + fe["created_at"] + " under reports/felectron_evaluation_preregistration.md "
+                f"(prereg sha256 {fe['preregistration']['sha256'][:16]}..., published before the draw). "
+                "Tests the LIVE production rule - stable -20 meV / unstable +10 meV - against four "
+                "pre-registered hypotheses on both paths. Consumes no earlier locked half: round 4 "
+                "reserved no f-electron half, so this was a fresh draw. No job queued, nothing scored.")
+        add("f-electron evaluation", fe["test"], "data/wbm_split_felectron_eval.json", status, note)
+
     return {"created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "purpose": ("every held-out set this project has created, its hash, its provenance and "
                         "its state. Nothing here hands out ids: each set's accessor still raises "
@@ -273,7 +292,8 @@ def build_registry() -> dict:
                 "round-1 families": "splits.family_test_ids(fam, unlock=True)",
                 "round-2 groups": "round2.test_ids(group, unlock=True)",
                 "round-3 groups": "round2.test_ids3(group, unlock=True)",
-                "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)"},
+                "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)",
+                "f-electron evaluation": "felectron_eval.test_ids(unlock=True)"},
             "sets": sets,
             "all_hashes_verify": all(s["hash_verifies"] for s in sets)}
 
