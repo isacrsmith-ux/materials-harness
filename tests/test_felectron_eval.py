@@ -12,8 +12,20 @@ from harness import felectron_eval as FE, pnictide_eval as PE, round2, round4, s
 pytestmark = pytest.mark.skipif(not FE.SPLIT_FILE.exists(), reason="f-electron sample not drawn")
 
 
-def test_the_sample_is_not_opened():
-    assert not FE.is_opened() and not FE.LOG_FILE.exists()
+def test_the_sample_is_unopened_or_opened_exactly_once_and_recorded():
+    """Was: "not opened". Opening was authorised on 2026-09-24; before it, nothing may exist, and after
+    it the log must record everything item 4 of the pre-registration's chain of custody lists."""
+    if not FE.is_opened():
+        assert not FE.LOG_FILE.exists()
+        return
+    log = json.loads(FE.LOG_FILE.read_text())
+    for field in ("opened_at", "authorised_by", "harness_commit", "sha256", "preregistration",
+                  "active_bundle", "engines"):
+        assert field in log, f"the opening log must record {field}"
+    assert log["sha256"] == FE.load()["test"]["sha256"]
+    assert log["preregistration"]["sha256"] == hashlib.sha256(FE.PREREG_FILE.read_bytes()).hexdigest()
+    assert {e["model"] for e in log["engines"]} == {"mace-mpa-0-medium", "mace-mp-0-medium"}
+    assert all(e["checkpoint_sha256"] for e in log["engines"])
 
 
 def test_ids_are_locked_without_unlock():
@@ -84,7 +96,11 @@ def test_the_thresholds_under_test_are_the_live_production_rule():
         assert e["unstable"] == d["thresholds_under_test"]["unstable"] == 0.01
 
 
-def test_no_result_exists_for_any_drawn_id():
+def test_no_result_exists_for_any_drawn_id_until_opened():
+    """Before opening, no drawn id may have a result. After opening this is vacuous: coverage is
+    checked by the scorer's unusable / missing-second-engine triggers instead."""
+    if FE.is_opened():
+        return
     from harness import config
     from harness.suites import ood
 
