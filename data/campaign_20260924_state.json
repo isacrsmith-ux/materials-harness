@@ -1,0 +1,19 @@
+{
+ "campaign": "2026-09-24",
+ "created_at": "2026-09-24T19:37:42+00:00",
+ "steps": {
+  "fe_open": {
+   "phase": "1",
+   "attempts": 0,
+   "started_at": "2026-09-24T19:37:42+00:00",
+   "outcome": "committed fe639de",
+   "finished_at": "2026-09-24T19:37:53+00:00"
+  },
+  "fe_run_production": {
+   "phase": "1",
+   "attempts": 0,
+   "started_at": "2026-09-24T19:37:53+00:00"
+  }
+ },
+ "finished_at": null
+}
