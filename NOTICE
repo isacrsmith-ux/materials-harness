@@ -102,6 +102,30 @@ the model metadata files in the matbench-discovery repository
   SOFTWARE.
 
 --------------------------------------------------------------------------------
+OQMD (Open Quantum Materials Database) -- CC BY 4.0
+--------------------------------------------------------------------------------
+
+Used as an external validation source (campaign 2026-09-24). Licence as stated on
+oqmd.org, read 2026-09-24: "The data in OQMD is licensed under CC-BY 4.0".
+https://creativecommons.org/licenses/by/4.0/
+
+Source: OQMD v1.8 bulk database dump (February 2026), https://oqmd.org/download/
+Nothing from it is redistributed here: the dump and everything derived from it at
+row level live in gitignored cache/external/oqmd/. Files under data/ and reports/
+may contain OQMD entry identifiers and aggregate statistics derived from OQMD
+data; these are adaptations and further redistribution must keep this notice.
+
+  J. E. Saal, S. Kirklin, M. Aykol, B. Meredig, C. Wolverton, "Materials Design
+  and Discovery with High-Throughput Density Functional Theory: The Open Quantum
+  Materials Database (OQMD)", JOM 65, 1501-1509 (2013).
+  doi:10.1007/s11837-013-0755-4
+
+  S. Kirklin, J. E. Saal, B. Meredig, A. Thompson, J. W. Doak, M. Aykol, S. Ruhl,
+  C. Wolverton, "The Open Quantum Materials Database (OQMD): assessing the
+  accuracy of DFT formation energies", npj Computational Materials 1, 15010
+  (2015). doi:10.1038/npjcompumats.2015.10
+
+--------------------------------------------------------------------------------
 MPtrj -- MIT; not used and not redistributed
 --------------------------------------------------------------------------------
 
