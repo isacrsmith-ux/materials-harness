@@ -364,6 +364,7 @@ def hull_disagreement() -> None:
                "oqmd_quantity": "formation_energies.stability, 'standard' fit (signed; negative = below the hull of the other phases)",
                "mp_quantity": "thermo GGA_GGA+U decomposition_enthalpy (signed; MP2020-corrected)",
                "per_family": per}
+    d[["entry_id", "formula", "family", "stability", "mp"]].to_parquet(OQMD_DIR / "stage2_matched.parquet")
     (ROOT / "reports" / "oqmd_hull_disagreement.json").write_text(json.dumps(payload, indent=1) + "\n")
     (ROOT / "reports" / "oqmd_hull_disagreement.md").write_text(_hull_md(payload))
     print(f"ok: {len(d):,} matched materials; ALL side disagreement at 0 meV {per['ALL'].get('side_disagreement', {}).get('+0 meV', {}).get('rate')}")
@@ -410,8 +411,12 @@ def _hull_md(p: dict) -> str:
 
 
 if __name__ == "__main__":
+    import oqmd_phase3 as P3                        # scripts/oqmd_phase3.py (lock, pilot, plan, runs, report)
+
     cmds = {"download": download, "normalise": normalise, "protostructures": protostructures,
-            "overlap": overlap, "hull-disagreement": hull_disagreement}
+            "overlap": overlap, "hull-disagreement": hull_disagreement, "lock": P3.lock,
+            "pilot-enqueue": P3.pilot_enqueue, "plan": P3.plan, "dev-enqueue": P3.dev_enqueue,
+            "prefetch-hull": P3.prefetch_hull, "dev-report": P3.dev_report}
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     if sys.argv[1] not in cmds:
