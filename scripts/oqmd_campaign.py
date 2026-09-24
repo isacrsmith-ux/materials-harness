@@ -91,8 +91,38 @@ def download() -> None:
     print(f"ok: downloaded and verified, sha256 {sha.hexdigest()}")
 
 
+def normalise() -> None:
+    """Two streaming passes over the pinned dump, both checkpointed, then the normalised table."""
+    import pickle
+
+    from harness import external_oqmd as X
+
+    lk = _lock("normalise")  # noqa: F841
+    if not DOWNLOAD_RECORD.is_file():
+        print("the dump is not downloaded and verified yet")
+        sys.exit(75)
+    if X.ENTRIES.is_file() and X.STRUCTS.is_file():
+        print(f"ok: {X.ENTRIES.name} exists")
+        return
+    if X.PASS1.is_file():
+        p1 = pickle.loads(X.PASS1.read_bytes())
+    else:
+        p1 = X.pass1(log=lambda m: print(f"[{now()}] pass1 {m}", flush=True))
+        X.PASS1.write_bytes(pickle.dumps(p1, protocol=5))
+    if X.PASS2.is_file():
+        atoms = pickle.loads(X.PASS2.read_bytes())
+    else:
+        need = {p1["calc"][c][2] for c in X._representatives(p1["fes"], p1["calc"], p1["entries"]).values()
+                if c in p1["calc"]}
+        atoms = X.pass2(need, log=lambda m: print(f"[{now()}] pass2 {m}", flush=True))
+        X.PASS2.write_bytes(pickle.dumps(atoms, protocol=5))
+    df, counts = X.normalise(p1, atoms, log=lambda m: print(f"[{now()}] {m}", flush=True))
+    (OQMD_DIR / "normalise_counts.json").write_text(json.dumps(counts, indent=1) + "\n")
+    print(f"ok: {counts['usable']:,} usable entries of {counts['entries_with_a_standard_fit_label']:,} labelled")
+
+
 if __name__ == "__main__":
-    cmds = {"download": download}
+    cmds = {"download": download, "normalise": normalise}
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     if sys.argv[1] not in cmds:
