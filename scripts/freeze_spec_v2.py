@@ -283,6 +283,24 @@ def build_registry() -> dict:
                 "reserved no f-electron half, so this was a fresh draw. No job queued, nothing scored.")
         add("f-electron evaluation", fe["test"], "data/wbm_split_felectron_eval.json", status, note)
 
+    # OQMD external held-out half (campaign 2026-09-24): locked before any ML job, never opened by it.
+    oqmd_split = DATA_DIR / "oqmd_split.json"
+    if oqmd_split.is_file():
+        oq = json.loads(oqmd_split.read_text())
+        olog = DATA_DIR / "oqmd_heldout_log.json"
+        if olog.is_file():
+            o = json.loads(olog.read_text())
+            status, note = "OPENED ONCE", f"opened {o['opened_at']} under its own pre-registration."
+        else:
+            status, note = "LOCKED, UNOPENED", (
+                "OQMD v1.8 entries independent of the MP 2023-01-10 snapshot (MPtrj superset) and of WBM "
+                "by reduced formula; drawn " + oq["created_at"] + " by family x OQMD-stability-bin "
+                "stratification, locked BEFORE any ML job ran. No OQMD evaluation is pre-registered; "
+                "opening it requires one.")
+        t = {"n": oq["heldout"]["n"], "sha256": oq["heldout"]["sha256"],
+             "ids": [str(i) for i in sorted(oq["heldout"]["ids"])]}
+        add("OQMD external held-out (campaign 2026-09-24)", t, "data/oqmd_split.json", status, note)
+
     return {"created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "purpose": ("every held-out set this project has created, its hash, its provenance and "
                         "its state. Nothing here hands out ids: each set's accessor still raises "
@@ -293,7 +311,8 @@ def build_registry() -> dict:
                 "round-2 groups": "round2.test_ids(group, unlock=True)",
                 "round-3 groups": "round2.test_ids3(group, unlock=True)",
                 "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)",
-                "f-electron evaluation": "felectron_eval.test_ids(unlock=True)"},
+                "f-electron evaluation": "felectron_eval.test_ids(unlock=True)",
+                "OQMD external held-out": "external_oqmd.heldout_ids(unlock=True)"},
             "sets": sets,
             "all_hashes_verify": all(s["hash_verifies"] for s in sets)}
 

@@ -318,3 +318,116 @@ def _counts(atoms: list) -> dict:
     for a in atoms:
         out[a[0]] = out.get(a[0], 0) + 1
     return out
+
+
+# --- the OQMD job suite, the locked half and its accessor ------------------------------------------
+
+SUITE = "oqmd"
+SPLIT_FILE = ROOT / "data" / "oqmd_split.json"
+OPEN_LOG = ROOT / "data" / "oqmd_heldout_log.json"
+
+
+def job_key(entry_id: int, tag: str) -> str:
+    return f"oqmd-{entry_id}@{tag}"
+
+
+def build_jobs(entry_ids: list[int], compute: dict, tag: str, settings: dict) -> list[dict]:
+    """One relaxation per entry from OQMD's DFT-relaxed structure, at DEFAULT_RELAX (the product's)."""
+    import gzip
+    import json
+
+    from pymatgen.core import Lattice, Structure
+
+    want = set(entry_ids)
+    ref = {}
+    import pandas as pd
+
+    df = pd.read_parquet(ENTRIES, columns=["entry_id", "formula", "family", "delta_e", "stability"])
+    for r in df[df.entry_id.isin(want)].itertuples():
+        ref[r.entry_id] = {"formula": r.formula, "family": r.family, "delta_e": r.delta_e, "stability": r.stability}
+    jobs = []
+    with gzip.open(STRUCTS, "rt") as fh:
+        for line in fh:
+            rec = json.loads(line)
+            if rec["id"] not in want:
+                continue
+            s = Structure(Lattice(rec["lattice"]), rec["species"], rec["frac"])
+            key = job_key(rec["id"], tag)
+            jobs.append({"suite": SUITE, "job_key": key, "n_atoms": len(s), "model": settings.get("model"),
+                         "settings": settings, "priority": len(s),
+                         "inputs": {"job_key": key, "suite": SUITE, "entry_id": rec["id"], "structure": s,
+                                    "ref": ref[rec["id"]]}})
+    missing = want - {j["inputs"]["entry_id"] for j in jobs}
+    if missing:
+        raise RuntimeError(f"{len(missing)} requested OQMD entries have no normalised structure")
+    return jobs
+
+
+def _record(job: dict, res: dict) -> None:
+    """Runner-side recorder: the relaxation and the product's own guard. Hull placement is done later,
+    in bulk, against MP's hull (mode (a)) - it needs network and is shared across rows."""
+    from harness import compare, store
+
+    key, eid = job["job_key"], job["entry_id"]
+    if res.get("status") != "ok":
+        store.record_job(SUITE, key, res["status"], payload={"entry_id": eid}, error=res.get("error"),
+                         runtime_s=res.get("job_wall_s"))
+        return
+    relaxed = res["relaxed"]
+    rejection = compare.rejection_reason(res)
+    if relaxed.composition.reduced_formula != job["ref"]["formula"]:
+        rejection = rejection or f"composition mismatch ({relaxed.composition.reduced_formula})"
+    try:
+        changed = not compare.relaxed_into_target(relaxed, job["structure"])
+    except Exception:  # noqa: BLE001 - matcher failure is recorded, never guessed
+        changed = None
+    store.record_job(SUITE, key, "ok", payload={
+        "entry_id": eid, "formula": job["ref"]["formula"], "family": job["ref"]["family"],
+        "stability": job["ref"]["stability"], "e_engine": res["energy_per_atom"], "converged": res["converged"],
+        "n_steps": res["n_steps"], "rejection": rejection, "structure_changed": changed, "relaxed": relaxed,
+        "wall_time_s": res["wall_time_s"]}, settings=res.get("metadata"), runtime_s=res.get("job_wall_s"))
+
+
+def _sha(ids) -> str:
+    import hashlib
+
+    return hashlib.sha256(",".join(sorted(str(i) for i in ids)).encode()).hexdigest()   # as freeze_spec_v2.sha
+
+
+def load_split(path=SPLIT_FILE) -> dict:
+    import json
+
+    return json.loads(path.read_text())
+
+
+def heldout_ids(unlock: bool = False, path=SPLIT_FILE) -> list[int]:
+    """The OQMD held-out half. Locked: nothing in the 2026-09-24 campaign may pass unlock=True, and a
+    future evaluation needs its own pre-registration first."""
+    if not unlock:
+        raise PermissionError("the OQMD held-out half is locked (external_oqmd.heldout_ids(unlock=True)) "
+                              "and may only be opened by a pre-registered evaluation")
+    t = load_split(path)["heldout"]
+    if _sha(t["ids"]) != t["sha256"]:
+        raise RuntimeError("OQMD held-out ids do not match their recorded hash")
+    return t["ids"]
+
+
+def excluded_heldout_ids(path=SPLIT_FILE) -> set[int]:
+    """The held-out ids as an EXCLUSION filter only (for any later development draw)."""
+    if not path.exists():
+        return set()
+    t = load_split(path)["heldout"]
+    if _sha(t["ids"]) != t["sha256"]:
+        raise RuntimeError("OQMD held-out ids do not match their recorded hash")
+    return set(t["ids"])
+
+
+def development_ids(path=SPLIT_FILE) -> list[int]:
+    t = load_split(path)["development"]
+    if _sha(t["ids"]) != t["sha256"]:
+        raise RuntimeError("OQMD development ids do not match their recorded hash")
+    return t["ids"]
+
+
+def is_opened() -> bool:
+    return OPEN_LOG.is_file()
