@@ -138,7 +138,13 @@ def script(name: str, *args: str, model: str | None = PROD) -> str:
         if now() > BUILD_DEADLINE:
             return f"skipped: scripts/{name} was not written before {BUILD_DEADLINE}"
         raise Wait(f"scripts/{name} not written yet")
-    r = sh([PY, str(path), *args], model=model)
+    r = sh([PY, str(path), *args], model=model, check=False)
+    if r.returncode == 75:                     # EX_TEMPFAIL: busy elsewhere, or not implemented yet
+        if "not implemented" in r.stdout and now() > BUILD_DEADLINE:
+            return f"skipped: scripts/{name} {' '.join(args)} was not implemented before {BUILD_DEADLINE}"
+        raise Wait(f"scripts/{name} {' '.join(args)}: {(r.stdout.strip().splitlines() or ['busy'])[-1][:200]}")
+    if r.returncode:
+        raise RuntimeError(f"exit {r.returncode}: {(r.stdout + r.stderr)[-800:]}")
     return (r.stdout.strip().splitlines() or ["ok"])[-1][:300]
 
 

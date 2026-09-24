@@ -101,3 +101,12 @@ def test_the_campaign_runs_production_before_second_and_phase_1_first():
     names = [s.name for s in D.STEPS]
     assert names.index("fe_run_production") < names.index("fe_run_second") < names.index("oqmd_download")
     assert names[-1] == "finish"
+
+
+def test_exit_75_waits_and_an_unimplemented_subcommand_skips_only_after_the_deadline(monkeypatch):
+    R = type("R", (), {"returncode": 75, "stdout": "lock: not implemented yet", "stderr": ""})
+    monkeypatch.setattr(D, "sh", lambda *a, **k: R())
+    with pytest.raises(D.Wait):
+        D.script("oqmd_campaign.py", "lock")
+    monkeypatch.setattr(D, "BUILD_DEADLINE", "2000-01-01T00:00:00+00:00")
+    assert D.script("oqmd_campaign.py", "lock").startswith("skipped")
