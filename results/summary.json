@@ -3,7 +3,7 @@
   "file": "queue.sqlite",
   "jobs": {
    "ood": {
-    "done": 170407
+    "done": 179407
    },
    "stability": {
     "done": 4737,
@@ -22,7 +22,7 @@
    "mode": "full",
    "n_done": 9000,
    "n_failed": 0,
-   "run_id": "20260924-133753",
+   "run_id": "20260924-143403",
    "status": "finished"
   }
  },
@@ -41,7 +41,7 @@
     "ok": 594
    },
    "ood": {
-    "ok": 187409
+    "ok": 196409
    },
    "polymorph": {
     "ok": 1144
@@ -65,7 +65,7 @@
   "result_rows": {
    "bulk": 332,
    "experimental": 264,
-   "ood": 382800,
+   "ood": 400800,
    "polymorph": 1144,
    "smoke": 6,
    "stability": 200,
@@ -74,13 +74,13 @@
   }
  },
  "scorecard": {
-  "file": "reports/20260924-133753/scorecard.json",
-  "model": "MACE-MPA-0 medium",
-  "routing_share sent to DFT": 0.43346673336668334,
-  "settings_tag": "c2480e74",
-  "wbm_daf_0": 5.410572313885432,
-  "wbm_f1_opt": 0.6423200859291086,
-  "wbm_npv_opt": 0.9154201794941529,
-  "wbm_precision_opt": 0.9314641744548287
+  "file": "reports/20260924-143403/scorecard.json",
+  "model": "MACE-MP-0 medium",
+  "routing_share sent to DFT": 0.6356123215627348,
+  "settings_tag": "207ccc81",
+  "wbm_daf_0": 3.606534888071335,
+  "wbm_f1_opt": 0.078003120124805,
+  "wbm_npv_opt": 0.8525624842211563,
+  "wbm_precision_opt": 0.78125
  }
 }
