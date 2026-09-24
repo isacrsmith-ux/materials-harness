@@ -230,11 +230,17 @@ def _engine_ratio() -> dict:
         wid, _, tag = k.partition("@")
         if wid.split(":")[0] in ids and tag in t and s is not None:
             t[tag].append(s)
+    source = "Phase-1 f-electron held-out jobs (runtime only; no outcome is read)"
     if not t["c2480e74"] or not t["207ccc81"]:
-        raise SystemExit("no Phase-1 runtimes for both engines; cannot measure the engine cost ratio")
+        # Phase 3 must not depend on Phase 1: fall back to every WBM job both engines have run
+        source = "all WBM 'ood' jobs run under both engines (Phase-1 runtimes unavailable)"
+        for k, s in rows:
+            tag = k.partition("@")[2]
+            if tag in t and s is not None:
+                t[tag].append(s)
     a, b = float(np.mean(t["c2480e74"])), float(np.mean(t["207ccc81"]))
     return {"production_mean_s": a, "second_mean_s": b, "ratio": b / a, "n": [len(t["c2480e74"]), len(t["207ccc81"])],
-            "source": "Phase-1 f-electron held-out jobs (runtime only; no outcome is read)"}
+            "source": source}
 
 
 def plan() -> None:
