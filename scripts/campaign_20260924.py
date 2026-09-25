@@ -70,7 +70,8 @@ def load_state() -> dict:
 def save_state(st: dict) -> None:
     STATE.parent.mkdir(parents=True, exist_ok=True)
     tmp = STATE.with_suffix(".tmp")
-    tmp.write_text(json.dumps(st, indent=1) + "\n")
+    # never record the absolute repository path (preflight rejects it, and it identifies the machine)
+    tmp.write_text(json.dumps(st, indent=1).replace(str(ROOT), ".") + "\n")
     tmp.replace(STATE)
 
 

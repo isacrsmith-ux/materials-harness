@@ -85,3 +85,6 @@ backups/
 scratch/
 tmp/
 *.tmp
+
+# campaign driver run state: local, may hold absolute paths; summarised in reports/campaign_20260924_summary.md
+data/campaign_20260924_state.json
