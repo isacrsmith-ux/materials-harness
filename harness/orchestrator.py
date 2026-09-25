@@ -100,6 +100,9 @@ def _recorder(suite: str):
     if suite == "stability":
         from harness.suites.stability import _record_competitor
         return _record_competitor
+    if suite == "oqmd":
+        from harness.external_oqmd import _record
+        return _record
     raise KeyError(f"no recorder for suite {suite!r}")
 
 

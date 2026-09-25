@@ -1,0 +1,36 @@
+{
+ "opened_at": "2026-09-24T19:37:44+00:00",
+ "authorised_by": "Isac Smith, 2026-09-24",
+ "harness_commit": "1aa315a",
+ "set": "f-electron evaluation",
+ "n": 4500,
+ "sha256": "43a675a7b4d67d44a18c0ed35b5a12f5d27b3f09452fc55556aa2f27aa348445",
+ "source_file": "data/wbm_split_felectron_eval.json",
+ "preregistration": {
+  "file": "data/felectron_evaluation_preregistration.json",
+  "sha256": "d3995f66d562efd9893137e95a200ef103bc9a7e01ba3d7620356e7c7aafd4d2"
+ },
+ "thresholds_under_test": {
+  "stable": -0.02,
+  "unstable": 0.01
+ },
+ "active_bundle": {
+  "file": "data/calibration_bundle.json",
+  "sha256": "419c11514d6a54854584258375eadab6b2be0c449e955125799fc51df2310288"
+ },
+ "engines": [
+  {
+   "model": "mace-mpa-0-medium",
+   "settings_tag": "c2480e74",
+   "role": "primary",
+   "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638"
+  },
+  {
+   "model": "mace-mp-0-medium",
+   "settings_tag": "207ccc81",
+   "role": "second / disagreement check",
+   "checkpoint_sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845"
+  }
+ ],
+ "rule": "every threshold, exclusion, hypothesis, target, confidence and correction was fixed before this file was written; nothing is fitted on this sample, and it is opened once"
+}
