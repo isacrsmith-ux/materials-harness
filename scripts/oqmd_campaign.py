@@ -440,7 +440,7 @@ if __name__ == "__main__":
     cmds = {"download": download, "normalise": normalise, "protostructures": protostructures,
             "overlap": overlap, "hull-disagreement": hull_disagreement, "lock": P3.lock,
             "pilot-enqueue": P3.pilot_enqueue, "plan": P3.plan, "dev-enqueue": P3.dev_enqueue,
-            "prefetch-hull": P3.prefetch_hull, "dev-report": P3.dev_report}
+            "prefetch-hull": P3.prefetch_hull, "mp-bulk": P3.mp_bulk, "dev-report": P3.dev_report}
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     if sys.argv[1] not in cmds:

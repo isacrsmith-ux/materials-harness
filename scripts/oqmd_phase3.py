@@ -372,18 +372,117 @@ def prefetch_hull() -> None:
 
 # --- the development report -----------------------------------------------------------------------
 
+MP_INDEX = ROOT / "cache" / "external" / "mp" / "gga_ggau_pd_index.pkl"
+MP_INDEX_META = ROOT / "cache" / "external" / "mp" / "gga_ggau_pd_index.json"
+
+
+def _correct_chunk(dicts: list) -> list:
+    """MP2020-process raw MP entry dicts exactly as hull.process does; keep (id, elements, composition,
+    corrected energy). MP2020 corrections are per entry, so chunking cannot change them."""
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
+
+    from harness import hull, mp_data
+
+    ents = []
+    for d in dicts:
+        e = ComputedStructureEntry.from_dict(d)
+        e.data = mp_data.str_keys(e.data)
+        ents.append(e)
+    out = []
+    for e in hull.process(ents):
+        out.append((hull.material_id(e), tuple(sorted(el.symbol for el in e.composition.elements)),
+                    e.composition.as_dict(), float(e.energy)))
+    return out
+
+
+def mp_bulk() -> None:
+    """Every MP GGA/GGA+U thermo document's entries, once, MP2020-corrected, indexed by element set.
+    This is what mp_data.entries_in_chemsys fetches one system at a time (get_entries_in_chemsys with
+    thermo_types=[GGA_GGA+U] = every entry of every thermo doc whose chemsys is a subsystem); it is
+    VALIDATED against that path on cached systems before the report may use it."""
+    import pickle
+    from concurrent.futures import ProcessPoolExecutor
+
+    from harness import hull, mp_data
+
+    lk = _lock("mp_bulk")  # noqa: F841
+    if MP_INDEX_META.is_file() and json.loads(MP_INDEX_META.read_text()).get("validated"):
+        print("ok: MP bulk index exists and is validated")
+        return
+    raw = ROOT / "cache" / "external" / "mp" / "thermo_GGA_GGA+U_entries.pkl"
+    if raw.is_file():
+        dicts, version = pickle.loads(raw.read_bytes())
+    else:
+        with mp_data._rester() as mpr:
+            version = mpr.get_database_version()
+            docs = mpr.materials.thermo.search(thermo_types=["GGA_GGA+U"], fields=["material_id", "entries"])
+        dicts = [e for doc in docs for e in doc.model_dump()["entries"].values()]
+        raw.write_bytes(pickle.dumps((dicts, version), protocol=5))
+        print(f"[{now()}] fetched {len(docs):,} thermo docs, {len(dicts):,} entries (MP {version})", flush=True)
+    chunks = [dicts[i:i + 2000] for i in range(0, len(dicts), 2000)]
+    index: dict = {}
+    with ProcessPoolExecutor(max_workers=4) as ex:        # gentle: a runner is usually busy
+        for out in ex.map(_correct_chunk, chunks):
+            for mid, els, comp, energy in out:
+                index.setdefault(els, []).append((mid, comp, energy))
+    # validation against the per-system product path, on systems already in the on-disk cache
+    cached = _cached_systems()
+    pick = cached[:40] + random.Random(SEED).sample(cached[40:], min(20, max(0, len(cached) - 40)))
+    checked, bad = 0, []
+    for cs in pick:
+        want = sorted((hull.material_id(e), round(float(e.energy), 6)) for e in hull.mp_competitors(cs))
+        got = sorted((mid, round(en, 6)) for mid, _, en in _competitors(index, cs))
+        checked += 1
+        if want != got:
+            bad.append(cs)
+    meta = {"mp_database_version": version, "built_at": now(), "entries": sum(len(v) for v in index.values()),
+            "element_sets": len(index), "validated_on_systems": checked, "mismatches": bad,
+            "validated": checked >= 20 and not bad}
+    MP_INDEX.write_bytes(pickle.dumps(index, protocol=5))
+    MP_INDEX_META.write_text(json.dumps(meta, indent=1) + "\n")
+    if not meta["validated"]:
+        raise SystemExit(f"MP bulk index does NOT reproduce the product path: {meta}")
+    print(f"ok: MP bulk index validated on {checked} systems, {meta['entries']:,} entries")
+
+
+def _cached_systems() -> list[str]:
+    """Chemical systems already fetched one-by-one through mp_data (the prefetch), largest first."""
+    import re
+
+    systems = set()
+    for f in (ROOT / "cache" / "mp" / "entries_chemsys").glob("*.json"):
+        with open(f) as fh:
+            m = re.search(r'"chemsys": "([^"]+)"', fh.read(400))
+        if m:
+            systems.add(m.group(1))
+    return sorted(systems, key=lambda s: (-s.count("-"), s))
+
+
+def _competitors(index: dict, chemsys: str) -> list:
+    from itertools import combinations
+
+    els = sorted(chemsys.split("-"))
+    out = []
+    for k in range(1, len(els) + 1):
+        for sub in combinations(els, k):
+            out += index.get(sub, [])
+    return out
+
+
 def _place_group(args):
     """Mode (a) for every result of one (chemsys, formula) group: MP GGA/GGA+U hull, MP2020, the group's
-    own reduced formula removed from MP (the material is scored as new). One PhaseDiagram per group."""
-    chemsys, formula, rows = args
-    from pymatgen.analysis.phase_diagram import PhaseDiagram
+    own reduced formula removed from MP (the material is scored as new). One PhaseDiagram per group.
+    `comp` is the list of (mp id, composition, MP2020-corrected energy) from the validated bulk index."""
+    chemsys, formula, rows, comp = args
+    from pymatgen.analysis.phase_diagram import PDEntry, PhaseDiagram
+    from pymatgen.core import Composition
 
     from harness import hull
 
-    try:
-        comp = hull.mp_competitors(chemsys)
-    except Exception as exc:  # noqa: BLE001
-        return [(k, None, f"no MP hull: {type(exc).__name__}") for k, _, _ in rows]
+    comp = [PDEntry(Composition(c), en, name=mid) for mid, c, en in comp]
+    corners = {e.composition.elements[0].symbol for e in comp if len(e.composition.elements) == 1}
+    if set(chemsys.split("-")) - corners:
+        return [(k, None, "no MP hull: IncompleteHullError") for k, _, _ in rows]
     keep = [e for e in comp if e.composition.reduced_formula != formula]
     try:
         pd_ = PhaseDiagram(keep)
@@ -423,8 +522,12 @@ def _predictions(tag: str, ids: set):
         cs = "-".join(sorted(e.symbol for e in Composition(pl["formula"]).elements))
         groups.setdefault((cs, pl["formula"]), []).append((eid, pl["relaxed"], pl["e_engine"]))
         res[eid] = (None, pl.get("structure_changed"), "pending")
+    import pickle
+
+    index = pickle.loads(MP_INDEX.read_bytes())
+    work = [(cs, f, rows, _competitors(index, cs)) for (cs, f), rows in groups.items()]
     with ProcessPoolExecutor(max_workers=12) as ex:
-        for out in ex.map(_place_group, [(cs, f, rows) for (cs, f), rows in groups.items()], chunksize=4):
+        for out in ex.map(_place_group, work, chunksize=16):
             for eid, pred, why in out:
                 res[eid] = (pred, res[eid][1], why)
     return res
@@ -477,8 +580,8 @@ def dev_report() -> None:
     from harness import calibration as CAL, confidence as C, metrics as M, routing as R
     from harness import external_oqmd as X
 
-    if not (OQMD_DIR / "prefetch.done").is_file():
-        prefetch_hull()
+    if not (MP_INDEX_META.is_file() and json.loads(MP_INDEX_META.read_text()).get("validated")):
+        mp_bulk()
     p = json.loads(PLAN_JSON.read_text())
     ids = set(p["ids"]["ids"])
     assert not ids & X.excluded_heldout_ids()
