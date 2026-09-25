@@ -341,7 +341,20 @@ def hull_disagreement() -> None:
     d = df[df.mp_proto].copy()
     d["mp"] = [key.get((f, pr), np.nan) for f, pr in zip(d.formula, d.proto)]
     d = d[d.mp.notna()]
+    # one row per MATERIAL: OQMD often holds several entries of one (formula, protostructure) - ICSD
+    # copies and prototype decorations - and only one of them is the hull vertex. Per-entry figures
+    # are kept as a secondary line; the primary comparison is material against material.
+    per_entry = {f"{t * 1000:+.0f} meV": float(((d.stability <= t) != (d.mp <= t)).mean()) for t in THRESHOLDS}
+    n_entries = len(d)
+    d = (d.sort_values("stability").groupby(["formula", "proto"], as_index=False)
+         .agg(entry_id=("entry_id", "first"), family=("family", "first"), stability=("stability", "min"),
+              mp=("mp", "first"), n_oqmd_entries=("entry_id", "size")))
+    d["bin"] = [compare.hull_bin(e, below_zero_bin=True) for e in d.stability]
     d["mp_bin"] = [compare.hull_bin(e, below_zero_bin=True) for e in d.mp]
+    t0 = (d.stability <= 0) != (d.mp <= 0)
+    near_zero = {"disagreements_at_0meV": int(t0.sum()),
+                 "of_which_both_within_5meV_of_zero": int((t0 & (d.stability.abs() <= 0.005) & (d.mp.abs() <= 0.005)).sum()),
+                 "of_which_oqmd_within_5meV_of_zero": int((t0 & (d.stability.abs() <= 0.005)).sum())}
     fams = ("f-electron", "intermetallic", "oxide", "halide", "chalcogenide", "pnictide", "other")
     per = {}
     for f in fams + ("ALL",):
@@ -359,12 +372,14 @@ def hull_disagreement() -> None:
                       "rate": float(((x.stability <= t) != (x.mp <= t)).mean())} for t in THRESHOLDS}}
     payload = {"generated_at": now(), "mp_database_version": meta["database_version"],
                "mp_thermo_retrieved_at": meta["retrieved_at"], "mp_thermo_docs": meta["n"],
-               "matched_materials": len(d), "match_rule": "same reduced formula AND same protostructure label; "
-               "several MP materials on one key -> the lowest MP decomposition enthalpy",
+               "matched_materials": len(d), "matched_oqmd_entries": n_entries,
+               "match_rule": "same reduced formula AND same protostructure label; one row per material: the lowest "
+               "OQMD stability and the lowest MP decomposition enthalpy on that key",
+               "per_entry_side_disagreement_all": per_entry, "near_zero_sensitivity": near_zero,
                "oqmd_quantity": "formation_energies.stability, 'standard' fit (signed; negative = below the hull of the other phases)",
                "mp_quantity": "thermo GGA_GGA+U decomposition_enthalpy (signed; MP2020-corrected)",
                "per_family": per}
-    d[["entry_id", "formula", "family", "stability", "mp"]].to_parquet(OQMD_DIR / "stage2_matched.parquet")
+    d[["entry_id", "formula", "proto", "family", "stability", "mp", "n_oqmd_entries"]].to_parquet(OQMD_DIR / "stage2_matched.parquet")
     (ROOT / "reports" / "oqmd_hull_disagreement.json").write_text(json.dumps(payload, indent=1) + "\n")
     (ROOT / "reports" / "oqmd_hull_disagreement.md").write_text(_hull_md(payload))
     print(f"ok: {len(d):,} matched materials; ALL side disagreement at 0 meV {per['ALL'].get('side_disagreement', {}).get('+0 meV', {}).get('rate')}")
@@ -376,7 +391,8 @@ def _hull_md(p: dict) -> str:
     L = ["# OQMD against MP on the same materials — stage 2 (no ML)", "",
          f"Generated {p['generated_at']}. MP database version **{p['mp_database_version']}** "
          f"({p['mp_thermo_docs']:,} GGA/GGA+U thermo documents retrieved {p['mp_thermo_retrieved_at']}).", "",
-         f"**{p['matched_materials']:,}** OQMD entries are the same material as an MP material ({p['match_rule']}). "
+         f"**{p['matched_materials']:,}** materials are in both databases ({p['matched_oqmd_entries']:,} OQMD entries; "
+         f"{p['match_rule']}). "
          f"OQMD quantity: {p['oqmd_quantity']}. MP quantity: {p['mp_quantity']}. Both are signed, so the "
          "stable side can be compared at a negative threshold.", "",
          "## The ceiling this sets", ""]
@@ -391,7 +407,15 @@ def _hull_md(p: dict) -> str:
               "OQMD 'error' is a convention difference, not a model failure, and an OQMD 'success' may be one too. "
               "An OQMD precision or NPV can therefore not be read as the rule's accuracy unless it is well clear of "
               "the disagreement rate at the matching threshold, and the development report splits these rows out "
-              "for exactly that reason.", ""]
+              "for exactly that reason.", "",
+              f"*Per OQMD entry instead of per material* the rates are higher ("
+              + ", ".join(f"{k}: {v:.4f}" for k, v in p["per_entry_side_disagreement_all"].items())
+              + "), because OQMD's duplicate entries of a material sit slightly above its hull vertex.", "",
+              f"*Near zero.* Of the {p['near_zero_sensitivity']['disagreements_at_0meV']:,} materials on opposite sides "
+              f"at exactly 0 meV, {p['near_zero_sensitivity']['of_which_oqmd_within_5meV_of_zero']:,} have an OQMD value "
+              f"within 5 meV of zero and {p['near_zero_sensitivity']['of_which_both_within_5meV_of_zero']:,} have both "
+              "values within 5 meV of zero: the 0 meV comparison is dominated by meV-scale differences at the hull, "
+              "which is why the -20 and +10 meV rows are the ones that match the live rules.", ""]
     L += ["## Side disagreement per family and threshold", "",
           "| family | n | " + " | ".join(f"{t * 1000:+.0f} meV" for t in THRESHOLDS) + " | MAE (meV) | median OQMD−MP (meV) |",
           "|---|---:|" + "---:|" * (len(THRESHOLDS) + 2)]
