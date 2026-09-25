@@ -1,5 +1,5 @@
 {
- "created_at": "2026-09-22T17:16:04+00:00",
+ "created_at": "2026-09-25T01:27:24+00:00",
  "purpose": "every held-out set this project has created, its hash, its provenance and its state. Nothing here hands out ids: each set's accessor still raises PermissionError without unlock=True.",
  "accessor_contract": {
   "original WBM": "splits.test_ids(unlock=True)",
@@ -7,7 +7,8 @@
   "round-2 groups": "round2.test_ids(group, unlock=True)",
   "round-3 groups": "round2.test_ids3(group, unlock=True)",
   "pnictide evaluation": "pnictide_eval.test_ids(unlock=True)",
-  "f-electron evaluation": "felectron_eval.test_ids(unlock=True)"
+  "f-electron evaluation": "felectron_eval.test_ids(unlock=True)",
+  "OQMD external held-out": "external_oqmd.heldout_ids(unlock=True)"
  },
  "sets": [
   {
@@ -79,8 +80,8 @@
    "sha256": "43a675a7b4d67d44a18c0ed35b5a12f5d27b3f09452fc55556aa2f27aa348445",
    "hash_verifies": true,
    "source_file": "data/wbm_split_felectron_eval.json",
-   "status": "DRAWN, UNOPENED",
-   "note": "drawn 2026-09-22T17:14:51+00:00 under reports/felectron_evaluation_preregistration.md (prereg sha256 d3995f66d562efd9..., published before the draw). Tests the LIVE production rule - stable -20 meV / unstable +10 meV - against four pre-registered hypotheses on both paths. Consumes no earlier locked half: round 4 reserved no f-electron half, so this was a fresh draw. No job queued, nothing scored."
+   "status": "OPENED ONCE",
+   "note": "opened 2026-09-24T19:37:44+00:00 at commit 1aa315a under reports/felectron_evaluation_preregistration.md. Never to be re-opened."
   }
  ],
  "all_hashes_verify": true

@@ -1,0 +1,152 @@
+{
+ "evaluated_at": "2026-09-24T21:11:35+00:00",
+ "opened_at": "2026-09-24T19:37:44+00:00",
+ "authorised_by": "Isac Smith, 2026-09-24",
+ "harness_commit_at_open": "1aa315a",
+ "harness_commit_at_score": "147dd09",
+ "sample_sha256": "43a675a7b4d67d44a18c0ed35b5a12f5d27b3f09452fc55556aa2f27aa348445",
+ "preregistration_sha256": "d3995f66d562efd9893137e95a200ef103bc9a7e01ba3d7620356e7c7aafd4d2",
+ "active_bundle_sha256": "419c11514d6a54854584258375eadab6b2be0c449e955125799fc51df2310288",
+ "thresholds": {
+  "stable": -0.02,
+  "unstable": 0.01
+ },
+ "primary_confidence": 0.9875,
+ "secondary_confidence": 0.95,
+ "population": {
+  "drawn": 4500,
+  "usable": 4500,
+  "unusable": 0,
+  "guard_rejected_engine1": 0,
+  "guard_rejected_engine2": 13,
+  "second_engine_usable": 4487,
+  "labelable_A": 3942,
+  "labelable_B": 3847,
+  "labelable_C": 3516,
+  "removed_by_disagreement": 95,
+  "missing_second_engine": 10
+ },
+ "inconclusive_triggers_fired": [],
+ "hypotheses": {
+  "EA1": {
+   "path": "A",
+   "side": "stable",
+   "threshold": -0.02,
+   "calls": 481,
+   "correct": 468,
+   "errors": 13,
+   "point": 0.972972972972973,
+   "cp_lower_primary": 0.9512999325466913,
+   "cp_lower_secondary": 0.9573728441790684,
+   "target": 0.9,
+   "margin": 0.051299932546691296,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "EA2": {
+   "path": "A",
+   "side": "unstable",
+   "threshold": 0.01,
+   "calls": 3020,
+   "correct": 2987,
+   "errors": 33,
+   "point": 0.9890728476821192,
+   "cp_lower_primary": 0.9840188181186738,
+   "cp_lower_secondary": 0.9854159938689139,
+   "target": 0.95,
+   "margin": 0.0340188181186738,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "EB1": {
+   "path": "B",
+   "side": "stable",
+   "threshold": -0.02,
+   "calls": 475,
+   "correct": 462,
+   "errors": 13,
+   "point": 0.9726315789473684,
+   "cp_lower_primary": 0.950691757777572,
+   "cp_lower_secondary": 0.956838785415879,
+   "target": 0.9,
+   "margin": 0.050691757777571955,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "EB2": {
+   "path": "B",
+   "side": "unstable",
+   "threshold": 0.01,
+   "calls": 2933,
+   "correct": 2900,
+   "errors": 33,
+   "point": 0.9887487214456189,
+   "cp_lower_primary": 0.9835460258605001,
+   "cp_lower_secondary": 0.9849842205583439,
+   "target": 0.95,
+   "margin": 0.03354602586050015,
+   "verdict": "PASS",
+   "note": ""
+  }
+ },
+ "overall": "PASS",
+ "expected": {
+  "EA1": {
+   "expected_calls": 492,
+   "expected_errors": 25.5,
+   "min_correct_to_pass": 458,
+   "max_errors_allowed": 34,
+   "power_at_dev_point": 0.960827195732007
+  },
+  "EA2": {
+   "expected_calls": 3018,
+   "expected_errors": 33.7,
+   "min_correct_to_pass": 2894,
+   "max_errors_allowed": 124,
+   "power_at_dev_point": 1.0
+  },
+  "EB1": {
+   "expected_calls": 482,
+   "expected_errors": 22.5,
+   "min_correct_to_pass": 449,
+   "max_errors_allowed": 33,
+   "power_at_dev_point": 0.9877191767849691
+  },
+  "EB2": {
+   "expected_calls": 2921,
+   "expected_errors": 33.2,
+   "min_correct_to_pass": 2802,
+   "max_errors_allowed": 119,
+   "power_at_dev_point": 1.0
+  }
+ },
+ "path_C_descriptive": {
+  "labelable": 3516,
+  "stable": {
+   "threshold": -0.02,
+   "calls": 475,
+   "correct": 462,
+   "errors": 13,
+   "point": 0.9726315789473684,
+   "cp_lower_primary": 0.950691757777572,
+   "cp_lower_secondary": 0.956838785415879,
+   "target": 0.9,
+   "margin": 0.050691757777571955,
+   "verdict": "PASS",
+   "note": ""
+  },
+  "unstable": {
+   "threshold": 0.01,
+   "calls": 2602,
+   "correct": 2569,
+   "errors": 33,
+   "point": 0.9873174481168332,
+   "cp_lower_primary": 0.9814591360114069,
+   "cp_lower_secondary": 0.9830781691120407,
+   "target": 0.95,
+   "margin": 0.03145913601140693,
+   "verdict": "PASS",
+   "note": ""
+  }
+ }
+}
