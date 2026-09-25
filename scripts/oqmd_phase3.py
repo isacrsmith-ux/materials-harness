@@ -502,6 +502,69 @@ def _place_group(args):
     return out
 
 
+def _oqmd_index() -> dict:
+    """OQMD's own standard-fit formation energies (every labelled entry, any size), the lowest per
+    composition, indexed by element set: what OQMD's hull is built from."""
+    import pandas as pd
+    from pymatgen.core import Composition
+
+    from harness import external_oqmd as X
+
+    e = pd.read_parquet(X.ENTRIES, columns=["formula", "delta_e"]).dropna()
+    e = e.groupby("formula", as_index=False).delta_e.min()
+    index: dict = {}
+    for f, de in zip(e.formula, e.delta_e):
+        c = Composition(f)
+        index.setdefault(tuple(sorted(el.symbol for el in c.elements)), []).append((c.as_dict(), float(de)))
+    return index
+
+
+def _hull_shift_group(args):
+    """Formation-energy hull at `formula` in each convention, own formula excluded from both:
+    (chemsys, formula, h_mp, h_oqmd, reason). For a material with the same formation energy in both
+    conventions, the OQMD label minus the MP-convention label is exactly h_mp - h_oqmd."""
+    chemsys, formula, mp, oq = args
+    from pymatgen.analysis.phase_diagram import PDEntry, PhaseDiagram
+    from pymatgen.core import Composition
+
+    target = Composition(formula)
+    els = chemsys.split("-")
+    mp = [PDEntry(Composition(c), en) for _, c, en in mp]
+    if set(els) - {e.composition.elements[0].symbol for e in mp if len(e.composition.elements) == 1}:
+        return chemsys, formula, None, None, "no MP hull"
+    try:
+        pd_mp = PhaseDiagram([e for e in mp if e.composition.reduced_formula != formula])
+        h_mp = pd_mp.get_hull_energy_per_atom(target) - sum(
+            target.get_atomic_fraction(el) * pd_mp.el_refs[el].energy_per_atom for el in target.elements)
+        oqe = [PDEntry(Composition(c), de * Composition(c).num_atoms) for c, de in oq
+               if Composition(c).reduced_formula != formula]
+        have = {e.composition.elements[0].symbol for e in oqe if len(e.composition.elements) == 1}
+        oqe += [PDEntry(Composition(el), 0.0) for el in els if el not in have]   # elements define zero
+        h_oq = PhaseDiagram(oqe).get_hull_energy_per_atom(target)
+        return chemsys, formula, float(h_mp), float(h_oq), None
+    except Exception as exc:  # noqa: BLE001
+        return chemsys, formula, None, None, f"hull failed: {type(exc).__name__}"
+
+
+def _hull_shifts(formulas) -> dict:
+    """formula -> (h_mp, h_oqmd, reason) over the validated MP bulk index and OQMD's own entries."""
+    import pickle
+    from concurrent.futures import ProcessPoolExecutor
+
+    from pymatgen.core import Composition
+
+    mp_index, oq_index = pickle.loads(MP_INDEX.read_bytes()), _oqmd_index()
+    work = []
+    for f in sorted(set(formulas)):
+        cs = "-".join(sorted(el.symbol for el in Composition(f).elements))
+        work.append((cs, f, _competitors(mp_index, cs), _competitors(oq_index, cs)))
+    out = {}
+    with ProcessPoolExecutor(max_workers=12) as ex:
+        for cs, f, h_mp, h_oq, why in ex.map(_hull_shift_group, work, chunksize=16):
+            out[f] = (h_mp, h_oq, why)
+    return out
+
+
 def _predictions(tag: str, ids: set):
     """entry_id -> (pred, structure_changed, reason) for one engine; reason None when usable."""
     from concurrent.futures import ProcessPoolExecutor
@@ -531,26 +594,6 @@ def _predictions(tag: str, ids: set):
             for eid, pred, why in out:
                 res[eid] = (pred, res[eid][1], why)
     return res
-
-
-def _consistency(d, matched) -> list[str]:
-    """Per development row: are the stage-2 materials in its chemical (sub)systems on the same side of
-    the hull in OQMD and MP? 'consistent' / 'inconsistent' / 'not assessable'."""
-    from itertools import combinations
-
-    from pymatgen.core import Composition
-
-    by_cs = {}
-    for r in matched.itertuples():
-        cs = tuple(sorted(e.symbol for e in Composition(r.formula).elements))
-        bad = abs(r.stability - r.mp) > 0.025 or ((r.stability <= 0) != (r.mp <= 0))
-        by_cs[cs] = by_cs.get(cs, False) or bad
-    out = []
-    for f in d.formula:
-        els = sorted(e.symbol for e in Composition(f).elements)
-        seen = [by_cs[c] for k in range(1, len(els) + 1) for c in combinations(els, k) if c in by_cs]
-        out.append("not assessable" if not seen else ("inconsistent" if any(seen) else "consistent"))
-    return out
 
 
 def _side(sub, stable_t, unstable_t):
@@ -598,8 +641,16 @@ def dev_report() -> None:
     d["why_unusable"] = d.entry_id.map(lambda i: a.get(i, (None, None, "no production result"))[2])
     d["pred_2"] = d.entry_id.map(lambda i: b.get(i, (None,))[0])
     d["stable"] = d.each_true <= M.ON_HULL_TOL
-    matched = pd.read_parquet(OQMD_DIR / "stage2_matched.parquet")
-    d["hull_consistency"] = _consistency(d, matched)
+    # Hull shift at each row's own composition: OQMD's formation-energy hull minus MP's, own formula
+    # excluded from both. Outcome-free (no prediction enters it). Validated by reconstructing OQMD's own
+    # stability label from OQMD's hull.
+    shifts = _hull_shifts(d.formula)
+    d["h_mp"] = d.formula.map(lambda f: shifts[f][0])
+    d["h_oqmd"] = d.formula.map(lambda f: shifts[f][1])
+    d["hull_shift"] = d.h_oqmd - d.h_mp
+    d["recon_error"] = (ov.delta_e.values - d.h_oqmd) - d.each_true
+    d["hull_consistency"] = ["no hull" if pd.isna(x) else ("hulls agree (|shift| <= 25 meV)" if abs(x) <= 0.025
+                             else "hulls disagree (|shift| > 25 meV)") for x in d.hull_shift]
     usable = d[d.each_pred.notna()].copy()
     usable["each_pred"] = usable.each_pred.astype(float)
     usable["pred_2"] = pd.to_numeric(usable.pred_2)
@@ -620,7 +671,7 @@ def dev_report() -> None:
                 "all": _side(g, t.get("stable"), t.get("unstable")),
                 "by_hull_consistency": {c: {"n": int((g.hull_consistency == c).sum()),
                                             **_side(g[g.hull_consistency == c], t.get("stable"), t.get("unstable"))}
-                                        for c in ("consistent", "inconsistent", "not assessable")}}
+                                        for c in ("hulls agree (|shift| <= 25 meV)", "hulls disagree (|shift| > 25 meV)", "no hull")}}
     # does a threshold LOOK certifiable (development tier, grid x family-side corrected)?
     conf = 1 - 0.05 / N_FAMILY_SIDE
     level = 1 - 0.05 / (len(C.DEC_GRID) * N_FAMILY_SIDE)
@@ -656,6 +707,14 @@ def dev_report() -> None:
                .str.split(":").str[0].value_counts().to_dict(),
                "missing_second_engine": int(usable.pred_2.isna().sum()),
                "hull_consistency_counts": d.hull_consistency.value_counts().to_dict(),
+               "hull_shift": {"median_ev": float(d.hull_shift.median()), "mean_abs_ev": float(d.hull_shift.abs().mean()),
+                              "share_abs_gt_25meV": float((d.hull_shift.abs() > 0.025).mean())},
+               "oqmd_label_reconstruction": {
+                   "rows": int(d.recon_error.notna().sum()),
+                   "within_1meV": float((d.recon_error.abs() <= 0.001).mean()),
+                   "within_5meV": float((d.recon_error.abs() <= 0.005).mean()),
+                   "note": "OQMD's own stability recomputed as delta_e minus the OQMD hull built here; agreement "
+                           "validates the hull construction the split relies on"},
                "live_rules": live, "looks_certifiable": looks,
                "looks_certifiable_levels": {"certify_conf": conf, "bound_level": level,
                                             "family_side_selections": N_FAMILY_SIDE, "grid": len(C.DEC_GRID)},
@@ -694,9 +753,16 @@ def _dev_md(p: dict) -> str:
          "**How to read this.** The prediction is the product's own: the engine's relaxed energy placed on the "
          "Materials Project GGA/GGA+U hull with MP2020 corrections (mode (a)), the material's own formula removed "
          "from MP. The label is OQMD's hull distance on OQMD's hull. Where those two hulls disagree about the "
-         "competing phases, a 'wrong' call is a convention difference, not a model error — which is why every "
-         "table is split by stage-2 hull consistency (`reports/oqmd_hull_disagreement.md`). Counts: "
-         + ", ".join(f"{k} {v:,}" for k, v in p["hull_consistency_counts"].items()) + ".", ""]
+         "competing phases, a 'wrong' call is a convention difference, not a model error. Every table is therefore "
+         "split by the **hull shift** at the row's own composition: OQMD's formation-energy hull minus MP's (MP2020), "
+         "the row's own formula excluded from both. For a material with the same formation energy in both "
+         "conventions the two labels differ by exactly that shift, so the rows where the hulls agree within 25 meV "
+         "are the ones on which 'the rule fails' can be told apart from 'the hulls disagree'. Counts: "
+         + ", ".join(f"{k} {v:,}" for k, v in p["hull_consistency_counts"].items())
+         + f". Median shift {p['hull_shift']['median_ev'] * 1000:+.1f} meV, mean |shift| "
+         f"{p['hull_shift']['mean_abs_ev'] * 1000:.1f} meV. The construction is checked by rebuilding OQMD's own label "
+         f"from it: {p['oqmd_label_reconstruction']['within_1meV']:.4f} of {p['oqmd_label_reconstruction']['rows']:,} "
+         f"rows reproduce OQMD's stability within 1 meV ({p['oqmd_label_reconstruction']['within_5meV']:.4f} within 5 meV).", ""]
     for path in ("A", "B"):
         lv = p["live_rules"][path]
         L += [f"## Live production rules, Path {path} ({'no' if path == 'A' else 'with'} second engine) — labelable {lv['labelable']:,}", "",
@@ -708,11 +774,11 @@ def _dev_md(p: dict) -> str:
             L.append(f"| {fam} | {x['n']:,} | {_fmt(x['base_rate'], 3)} | {rule} | {s.get('calls', '—')} | "
                      f"{_fmt(s.get('precision'))} | {_fmt(s.get('cp95'))} | {u.get('calls', '—')} | "
                      f"{_fmt(u.get('npv'))} | {_fmt(u.get('cp95'))} |")
-        L += ["", f"### Path {path}, split by hull consistency (precision / NPV; calls in brackets)", "",
-              "| family | consistent | inconsistent | not assessable |", "|---|---|---|---|"]
+        L += ["", f"### Path {path}, split by hull shift (precision S / NPV U; calls in brackets)", "",
+              "| family | hulls agree (|shift| ≤ 25 meV) | hulls disagree (|shift| > 25 meV) | no hull |", "|---|---|---|---|"]
         for fam, x in lv["families"].items():
             cells = []
-            for c in ("consistent", "inconsistent", "not assessable"):
+            for c in ("hulls agree (|shift| <= 25 meV)", "hulls disagree (|shift| > 25 meV)", "no hull"):
                 y = x["by_hull_consistency"][c]
                 parts = []
                 if "stable" in y:
