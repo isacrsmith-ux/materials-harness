@@ -65,7 +65,10 @@ def lock() -> None:
 
     lk = _lock("lock")  # noqa: F841
     if X.SPLIT_FILE.is_file():
-        print(f"ok: {X.SPLIT_FILE.name} exists (locked {X.load_split()['created_at']})")
+        # 'exists' is not 'committed': a blocked commit must not be skipped on the retry
+        sha = _git_commit(["data/oqmd_split.json", "data/locked_sets_registry.json"],
+                          "Lock the OQMD external held-out half (retry of a blocked commit)")
+        print(f"ok: {X.SPLIT_FILE.name} exists (locked {X.load_split()['created_at']}; commit: {sha})")
         return
     df = pd.read_parquet(OQMD_DIR / "overlap.parquet")
     pool = df[df.independent & df.family.notna() & df.bin.notna()]
@@ -178,6 +181,7 @@ def pilot_enqueue() -> None:
 
     if PILOT_JSON.is_file():
         ids = json.loads(PILOT_JSON.read_text())["ids"]
+        _git_commit(["data/oqmd_pilot_ids.json"], "OQMD pilot ids (retry of a blocked commit)")
     else:
         d = _dev_frame()
         ids = _draw(d, _allocate(d, PILOT_N), random.Random(SEED + 1), set())
@@ -250,7 +254,9 @@ def plan() -> None:
     from harness.orchestrator import layout
 
     if PLAN_JSON.is_file():
-        print(f"ok: plan frozen at {json.loads(PLAN_JSON.read_text())['created_at']}")
+        sha = _git_commit(["data/oqmd_dev_plan.json", "reports/oqmd_dev_plan.md"],
+                          "Freeze the OQMD development plan (retry of a blocked commit)")
+        print(f"ok: plan frozen at {json.loads(PLAN_JSON.read_text())['created_at']} (commit: {sha})")
         return
     pilot = json.loads(PILOT_JSON.read_text())["ids"]
     rt = _runtimes("c2480e74", {X.job_key(i, "c2480e74") for i in pilot})
