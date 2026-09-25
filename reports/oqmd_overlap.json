@@ -1,0 +1,173 @@
+{
+ "generated_at": "2026-09-24T22:22:08+00:00",
+ "source": "OQMD v1.8 dump, sha256 66c3f1b752d4043b579e84485fe6c8e1913af52f41fc1a949c598e94b6646333",
+ "mp_snapshot": {
+  "file": "2023-01-10-mp-energies.csv.gz",
+  "sha256": "046814c1c556e0e5c9531df00650c56cb197b2c01ba22695a46efcfb4876a4a8",
+  "n": 154718
+ },
+ "wbm_summary_n": 256963,
+ "labeller": "matbench-discovery@71633e8bdfdfd41d56d64b1d777e5686d9eda3ec",
+ "label_drift_check_on_wbm": {
+  "n": 2000,
+  "compared": 2000,
+  "agree": 1784,
+  "agreement": 0.892
+ },
+ "filters": {
+  "entries_in_dump": 1407285,
+  "entries_with_a_standard_fit_label": 1259568,
+  "has_structure": 1259560,
+  "and_converged": 1259560,
+  "and_ordered": 1259560,
+  "and_le_40_atoms": 1218083,
+  "usable": 1218083,
+  "structures_written": 1218083
+ },
+ "per_family": {
+  "f-electron": {
+   "usable": 509062,
+   "removed_mp_formula": 53649,
+   "removed_wbm_formula_only": 70203,
+   "mp_protostructure_match": 20529,
+   "wbm_protostructure_match": 35297,
+   "unlabelled": 0,
+   "independent": 385210,
+   "independent_with_mp_anonymous_prototype": 282572,
+   "independent_by_bin": {
+    "<0": 25927,
+    "0\u20130.025": 46065,
+    "0.025\u20130.1": 45960,
+    "0.1\u20130.3": 75114,
+    ">0.3": 192144
+   }
+  },
+  "intermetallic": {
+   "usable": 264193,
+   "removed_mp_formula": 35836,
+   "removed_wbm_formula_only": 42560,
+   "mp_protostructure_match": 8756,
+   "wbm_protostructure_match": 19178,
+   "unlabelled": 0,
+   "independent": 185797,
+   "independent_with_mp_anonymous_prototype": 161765,
+   "independent_by_bin": {
+    "<0": 7882,
+    "0\u20130.025": 8667,
+    "0.025\u20130.1": 13980,
+    "0.1\u20130.3": 34294,
+    ">0.3": 120974
+   }
+  },
+  "oxide": {
+   "usable": 141566,
+   "removed_mp_formula": 27445,
+   "removed_wbm_formula_only": 13068,
+   "mp_protostructure_match": 10516,
+   "wbm_protostructure_match": 6056,
+   "unlabelled": 0,
+   "independent": 101053,
+   "independent_with_mp_anonymous_prototype": 62196,
+   "independent_by_bin": {
+    "<0": 3190,
+    "0\u20130.025": 5196,
+    "0.025\u20130.1": 16879,
+    "0.1\u20130.3": 33376,
+    ">0.3": 42412
+   }
+  },
+  "halide": {
+   "usable": 45132,
+   "removed_mp_formula": 12378,
+   "removed_wbm_formula_only": 6400,
+   "mp_protostructure_match": 5074,
+   "wbm_protostructure_match": 4922,
+   "unlabelled": 0,
+   "independent": 26354,
+   "independent_with_mp_anonymous_prototype": 18522,
+   "independent_by_bin": {
+    "<0": 2700,
+    "0\u20130.025": 4112,
+    "0.025\u20130.1": 7223,
+    "0.1\u20130.3": 6738,
+    ">0.3": 5581
+   }
+  },
+  "chalcogenide": {
+   "usable": 102393,
+   "removed_mp_formula": 11792,
+   "removed_wbm_formula_only": 11134,
+   "mp_protostructure_match": 4199,
+   "wbm_protostructure_match": 4341,
+   "unlabelled": 0,
+   "independent": 79467,
+   "independent_with_mp_anonymous_prototype": 40265,
+   "independent_by_bin": {
+    "<0": 2713,
+    "0\u20130.025": 5901,
+    "0.025\u20130.1": 14418,
+    "0.1\u20130.3": 35502,
+    ">0.3": 20933
+   }
+  },
+  "pnictide": {
+   "usable": 72679,
+   "removed_mp_formula": 10392,
+   "removed_wbm_formula_only": 9252,
+   "mp_protostructure_match": 3585,
+   "wbm_protostructure_match": 4730,
+   "unlabelled": 0,
+   "independent": 53035,
+   "independent_with_mp_anonymous_prototype": 37508,
+   "independent_by_bin": {
+    "<0": 3097,
+    "0\u20130.025": 3609,
+    "0.025\u20130.1": 5052,
+    "0.1\u20130.3": 11588,
+    ">0.3": 29689
+   }
+  },
+  "other": {
+   "usable": 83058,
+   "removed_mp_formula": 10642,
+   "removed_wbm_formula_only": 11350,
+   "mp_protostructure_match": 3678,
+   "wbm_protostructure_match": 5161,
+   "unlabelled": 0,
+   "independent": 61066,
+   "independent_with_mp_anonymous_prototype": 50112,
+   "independent_by_bin": {
+    "<0": 3014,
+    "0\u20130.025": 3317,
+    "0.025\u20130.1": 4980,
+    "0.1\u20130.3": 11357,
+    ">0.3": 38398
+   }
+  },
+  "ALL": {
+   "usable": 1218083,
+   "removed_mp_formula": 162134,
+   "removed_wbm_formula_only": 163967,
+   "mp_protostructure_match": 56337,
+   "wbm_protostructure_match": 79685,
+   "unlabelled": 0,
+   "independent": 891982,
+   "independent_with_mp_anonymous_prototype": 652940,
+   "independent_by_bin": {
+    "<0": 48523,
+    "0\u20130.025": 76867,
+    "0.025\u20130.1": 108492,
+    "0.1\u20130.3": 207969,
+    ">0.3": 450131
+   }
+  }
+ },
+ "independent_fluorides": 13734,
+ "independent_fluorides_by_bin": {
+  "<0": 1419,
+  "0\u20130.025": 1531,
+  "0.025\u20130.1": 3430,
+  "0.1\u20130.3": 4027,
+  ">0.3": 3327
+ }
+}
