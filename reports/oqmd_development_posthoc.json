@@ -1,0 +1,20 @@
+{
+ "f-electron": {
+  "stable_calls": 298,
+  "precision_oqmd_label": 0.3893,
+  "precision_other_compositions_label": 0.4195,
+  "cp95_other": 0.3715,
+  "errors": 182,
+  "errors_with_lower_same_formula_oqmd_entry": 29,
+  "errors_wrong_even_vs_other_compositions": 169
+ },
+ "pnictide": {
+  "stable_calls": 212,
+  "precision_oqmd_label": 0.5189,
+  "precision_other_compositions_label": 0.5566,
+  "cp95_other": 0.4978,
+  "errors": 102,
+  "errors_with_lower_same_formula_oqmd_entry": 13,
+  "errors_wrong_even_vs_other_compositions": 93
+ }
+}
