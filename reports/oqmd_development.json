@@ -1,0 +1,857 @@
+{
+ "generated_at": "2026-09-26T19:46:48+00:00",
+ "tier": "DEVELOPMENT / CALIBRATION TIER (licenses nothing)",
+ "plan_sha256": "fd7a459839b1fb4e934e4cad3d0d43b009b599a85d740d95c91d021a538337cd",
+ "n_planned": 94059,
+ "usable": 93602,
+ "unusable_reasons": {
+  "no MP hull": 294,
+  "guard": 163
+ },
+ "missing_second_engine": 310,
+ "hull_consistency_counts": {
+  "hulls disagree (|shift| > 25 meV)": 57117,
+  "hulls agree (|shift| <= 25 meV)": 36648,
+  "no hull": 294
+ },
+ "hull_shift": {
+  "median_ev": 0.006470664586839092,
+  "mean_abs_ev": 0.06860094822416653,
+  "share_abs_gt_25meV": 0.6072465154849616
+ },
+ "oqmd_label_reconstruction": {
+  "rows": 93765,
+  "within_1meV": 0.704876726310082,
+  "within_5meV": 0.8342636005060653,
+  "note": "OQMD's own stability recomputed as delta_e minus the OQMD hull built here; agreement validates the hull construction the split relies on"
+ },
+ "live_rules": {
+  "A": {
+   "labelable": 76094,
+   "families": {
+    "f-electron": {
+     "n": 3735,
+     "base_rate": 0.07255689424364123,
+     "rule": {
+      "stable": -0.02,
+      "unstable": 0.01
+     },
+     "all": {
+      "stable": {
+       "t": -0.02,
+       "calls": 298,
+       "correct": 116,
+       "precision": 0.38926174496644295,
+       "cp95": 0.34210406220206374,
+       "call_rate": 0.07978580990629183
+      },
+      "unstable": {
+       "t": 0.01,
+       "calls": 3044,
+       "correct": 3006,
+       "npv": 0.9875164257555847,
+       "cp95": 0.9836689576386578,
+       "call_rate": 0.8149933065595716
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1781,
+       "stable": {
+        "t": -0.02,
+        "calls": 34,
+        "correct": 21,
+        "precision": 0.6176470588235294,
+        "cp95": 0.4622478606475074,
+        "call_rate": 0.01909039865244245
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 1582,
+        "correct": 1574,
+        "npv": 0.9949431099873578,
+        "cp95": 0.9908942475617166,
+        "call_rate": 0.888265019651881
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 1954,
+       "stable": {
+        "t": -0.02,
+        "calls": 264,
+        "correct": 95,
+        "precision": 0.35984848484848486,
+        "cp95": 0.31072888899032947,
+        "call_rate": 0.13510747185261002
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 1462,
+        "correct": 1432,
+        "npv": 0.9794801641586868,
+        "cp95": 0.9722699176679386,
+        "call_rate": 0.7482088024564995
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "stable": {
+        "t": -0.02,
+        "calls": 0,
+        "correct": 0,
+        "precision": null,
+        "cp95": null,
+        "call_rate": null
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "intermetallic": {
+     "n": 20059,
+     "base_rate": 0.04531631686524752,
+     "rule": {
+      "stable": null,
+      "unstable": 0.0
+     },
+     "all": {
+      "unstable": {
+       "t": 0.0,
+       "calls": 18777,
+       "correct": 18593,
+       "npv": 0.990200777546999,
+       "cp95": 0.9889336091381274,
+       "call_rate": 0.936088538810509
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 15200,
+       "unstable": {
+        "t": 0.0,
+        "calls": 14598,
+        "correct": 14462,
+        "npv": 0.9906836552952459,
+        "cp95": 0.9892661926645061,
+        "call_rate": 0.9603947368421053
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 4859,
+       "unstable": {
+        "t": 0.0,
+        "calls": 4179,
+        "correct": 4131,
+        "npv": 0.9885139985642498,
+        "cp95": 0.9854131731814275,
+        "call_rate": 0.8600535089524594
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "unstable": {
+        "t": 0.0,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "oxide": {
+     "n": 13504,
+     "base_rate": 0.0404324644549763,
+     "rule": {
+      "stable": null,
+      "unstable": 0.03
+     },
+     "all": {
+      "unstable": {
+       "t": 0.03,
+       "calls": 11650,
+       "correct": 11600,
+       "npv": 0.9957081545064378,
+       "cp95": 0.9945707329742917,
+       "call_rate": 0.862707345971564
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1420,
+       "unstable": {
+        "t": 0.03,
+        "calls": 1275,
+        "correct": 1270,
+        "npv": 0.996078431372549,
+        "cp95": 0.9917722987095816,
+        "call_rate": 0.897887323943662
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 12084,
+       "unstable": {
+        "t": 0.03,
+        "calls": 10375,
+        "correct": 10330,
+        "npv": 0.9956626506024097,
+        "cp95": 0.9944424505956266,
+        "call_rate": 0.8585733200926845
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "unstable": {
+        "t": 0.03,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "halide": {
+     "n": 10191,
+     "base_rate": 0.09380826219213032,
+     "rule": {
+      "stable": null,
+      "unstable": null
+     },
+     "all": {},
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1091
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 9100
+      },
+      "no hull": {
+       "n": 0
+      }
+     }
+    },
+    "chalcogenide": {
+     "n": 11967,
+     "base_rate": 0.03768697250772959,
+     "rule": {
+      "stable": null,
+      "unstable": null
+     },
+     "all": {},
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 321
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 11646
+      },
+      "no hull": {
+       "n": 0
+      }
+     }
+    },
+    "pnictide": {
+     "n": 4188,
+     "base_rate": 0.06399235912129896,
+     "rule": {
+      "stable": -0.02,
+      "unstable": 0.0
+     },
+     "all": {
+      "stable": {
+       "t": -0.02,
+       "calls": 212,
+       "correct": 110,
+       "precision": 0.5188679245283019,
+       "cp95": 0.460135736936924,
+       "call_rate": 0.050620821394460364
+      },
+      "unstable": {
+       "t": 0.0,
+       "calls": 3831,
+       "correct": 3745,
+       "npv": 0.97755155311929,
+       "cp95": 0.9732023975696925,
+       "call_rate": 0.914756446991404
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1917,
+       "stable": {
+        "t": -0.02,
+        "calls": 48,
+        "correct": 35,
+        "precision": 0.7291666666666666,
+        "cp95": 0.6042708939440515,
+        "call_rate": 0.025039123630672927
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 1813,
+        "correct": 1785,
+        "npv": 0.9845559845559846,
+        "cp95": 0.9788865285347051,
+        "call_rate": 0.9457485654668754
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 2271,
+       "stable": {
+        "t": -0.02,
+        "calls": 164,
+        "correct": 75,
+        "precision": 0.4573170731707317,
+        "cp95": 0.39126562927455816,
+        "call_rate": 0.0722148833113166
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 2018,
+        "correct": 1960,
+        "npv": 0.9712586719524281,
+        "cp95": 0.9643596891650289,
+        "call_rate": 0.888595332452664
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "stable": {
+        "t": -0.02,
+        "calls": 0,
+        "correct": 0,
+        "precision": null,
+        "cp95": null,
+        "call_rate": null
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "other": {
+     "n": 12450,
+     "base_rate": 0.05196787148594378,
+     "rule": {
+      "stable": null,
+      "unstable": 0.03
+     },
+     "all": {
+      "unstable": {
+       "t": 0.03,
+       "calls": 10862,
+       "correct": 10842,
+       "npv": 0.9981587184680538,
+       "cp95": 0.9973255483321982,
+       "call_rate": 0.8724497991967871
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 9196,
+       "unstable": {
+        "t": 0.03,
+        "calls": 8456,
+        "correct": 8446,
+        "npv": 0.9988174077578051,
+        "cp95": 0.9979948868978606,
+        "call_rate": 0.9195302305350153
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 3254,
+       "unstable": {
+        "t": 0.03,
+        "calls": 2406,
+        "correct": 2396,
+        "npv": 0.9958437240232751,
+        "cp95": 0.9929602335327897,
+        "call_rate": 0.7393976644130301
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "unstable": {
+        "t": 0.03,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    }
+   }
+  },
+  "B": {
+   "labelable": 69610,
+   "families": {
+    "f-electron": {
+     "n": 3433,
+     "base_rate": 0.07835712205068453,
+     "rule": {
+      "stable": -0.02,
+      "unstable": 0.01
+     },
+     "all": {
+      "stable": {
+       "t": -0.02,
+       "calls": 295,
+       "correct": 114,
+       "precision": 0.3864406779661017,
+       "cp95": 0.3391243353794083,
+       "call_rate": 0.08593067288086222
+      },
+      "unstable": {
+       "t": 0.01,
+       "calls": 2746,
+       "correct": 2708,
+       "npv": 0.9861616897305171,
+       "cp95": 0.9819005201211749,
+       "call_rate": 0.7998834838333819
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1619,
+       "stable": {
+        "t": -0.02,
+        "calls": 34,
+        "correct": 21,
+        "precision": 0.6176470588235294,
+        "cp95": 0.4622478606475074,
+        "call_rate": 0.021000617665225447
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 1420,
+        "correct": 1412,
+        "npv": 0.9943661971830986,
+        "cp95": 0.9898577796689626,
+        "call_rate": 0.8770846201358864
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 1814,
+       "stable": {
+        "t": -0.02,
+        "calls": 261,
+        "correct": 93,
+        "precision": 0.3563218390804598,
+        "cp95": 0.30705480703329896,
+        "call_rate": 0.14388092613009923
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 1326,
+        "correct": 1296,
+        "npv": 0.9773755656108597,
+        "cp95": 0.9694373723761447,
+        "call_rate": 0.7309812568908489
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "stable": {
+        "t": -0.02,
+        "calls": 0,
+        "correct": 0,
+        "precision": null,
+        "cp95": null,
+        "call_rate": null
+       },
+       "unstable": {
+        "t": 0.01,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "intermetallic": {
+     "n": 18473,
+     "base_rate": 0.04915281762572403,
+     "rule": {
+      "stable": null,
+      "unstable": 0.0
+     },
+     "all": {
+      "unstable": {
+       "t": 0.0,
+       "calls": 17192,
+       "correct": 17008,
+       "npv": 0.9892973476035365,
+       "cp95": 0.9879140671520077,
+       "call_rate": 0.9306555513452065
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 13980,
+       "unstable": {
+        "t": 0.0,
+        "calls": 13378,
+        "correct": 13242,
+        "npv": 0.9898340559126925,
+        "cp95": 0.9882880930008552,
+        "call_rate": 0.9569384835479257
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 4493,
+       "unstable": {
+        "t": 0.0,
+        "calls": 3814,
+        "correct": 3766,
+        "npv": 0.9874147876245412,
+        "cp95": 0.9840196142821264,
+        "call_rate": 0.8488760293790341
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "unstable": {
+        "t": 0.0,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "oxide": {
+     "n": 12389,
+     "base_rate": 0.043990636855274844,
+     "rule": {
+      "stable": null,
+      "unstable": null
+     },
+     "all": {},
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1188
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 11201
+      },
+      "no hull": {
+       "n": 0
+      }
+     }
+    },
+    "halide": {
+     "n": 9393,
+     "base_rate": 0.1014585329500692,
+     "rule": {
+      "stable": null,
+      "unstable": null
+     },
+     "all": {},
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 959
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 8434
+      },
+      "no hull": {
+       "n": 0
+      }
+     }
+    },
+    "chalcogenide": {
+     "n": 11211,
+     "base_rate": 0.04013914905004014,
+     "rule": {
+      "stable": null,
+      "unstable": null
+     },
+     "all": {},
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 294
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 10917
+      },
+      "no hull": {
+       "n": 0
+      }
+     }
+    },
+    "pnictide": {
+     "n": 3719,
+     "base_rate": 0.07206238236084969,
+     "rule": {
+      "stable": -0.02,
+      "unstable": 0.0
+     },
+     "all": {
+      "stable": {
+       "t": -0.02,
+       "calls": 212,
+       "correct": 110,
+       "precision": 0.5188679245283019,
+       "cp95": 0.460135736936924,
+       "call_rate": 0.05700457112126916
+      },
+      "unstable": {
+       "t": 0.0,
+       "calls": 3362,
+       "correct": 3276,
+       "npv": 0.97441998810232,
+       "cp95": 0.9694736151504095,
+       "call_rate": 0.9040064533476742
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 1704,
+       "stable": {
+        "t": -0.02,
+        "calls": 48,
+        "correct": 35,
+        "precision": 0.7291666666666666,
+        "cp95": 0.6042708939440515,
+        "call_rate": 0.028169014084507043
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 1600,
+        "correct": 1572,
+        "npv": 0.9825,
+        "cp95": 0.9760849828342933,
+        "call_rate": 0.9389671361502347
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 2015,
+       "stable": {
+        "t": -0.02,
+        "calls": 164,
+        "correct": 75,
+        "precision": 0.4573170731707317,
+        "cp95": 0.39126562927455816,
+        "call_rate": 0.08138957816377171
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 1762,
+        "correct": 1704,
+        "npv": 0.9670828603859251,
+        "cp95": 0.9592026407750285,
+        "call_rate": 0.8744416873449131
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "stable": {
+        "t": -0.02,
+        "calls": 0,
+        "correct": 0,
+        "precision": null,
+        "cp95": null,
+        "call_rate": null
+       },
+       "unstable": {
+        "t": 0.0,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    },
+    "other": {
+     "n": 10992,
+     "base_rate": 0.05867903930131004,
+     "rule": {
+      "stable": null,
+      "unstable": 0.03
+     },
+     "all": {
+      "unstable": {
+       "t": 0.03,
+       "calls": 9409,
+       "correct": 9390,
+       "npv": 0.9979806568179402,
+       "cp95": 0.9970383587137562,
+       "call_rate": 0.8559861717612809
+      }
+     },
+     "by_hull_consistency": {
+      "hulls agree (|shift| <= 25 meV)": {
+       "n": 8027,
+       "unstable": {
+        "t": 0.03,
+        "calls": 7287,
+        "correct": 7277,
+        "npv": 0.9986276931521888,
+        "cp95": 0.9976733750248066,
+        "call_rate": 0.9078111374112371
+       }
+      },
+      "hulls disagree (|shift| > 25 meV)": {
+       "n": 2965,
+       "unstable": {
+        "t": 0.03,
+        "calls": 2122,
+        "correct": 2113,
+        "npv": 0.9957587181903864,
+        "cp95": 0.9926105533830843,
+        "call_rate": 0.7156829679595278
+       }
+      },
+      "no hull": {
+       "n": 0,
+       "unstable": {
+        "t": 0.03,
+        "calls": 0,
+        "correct": 0,
+        "npv": null,
+        "cp95": null,
+        "call_rate": null
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "looks_certifiable": {
+  "intermetallic": {
+   "n": 20059,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": -0.09,
+    "calls": 20022,
+    "point": 0.9558485665767655,
+    "cp_lower_corrected": 0.9500548028886555,
+    "call_rate": 0.9981554414477292,
+    "heldout_structures_for_80pct_power_at_dev_point": 12723,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": null
+   }
+  },
+  "oxide": {
+   "n": 13504,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": -0.3,
+    "calls": 13492,
+    "point": 0.9596798102579306,
+    "cp_lower_corrected": 0.9528360091738795,
+    "call_rate": 0.9991113744075829,
+    "heldout_structures_for_80pct_power_at_dev_point": 4627,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": 55264
+   }
+  },
+  "halide": {
+   "n": 10191,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": 0.0,
+    "calls": 8161,
+    "point": 0.968263693174856,
+    "cp_lower_corrected": 0.9602109835408847,
+    "call_rate": 0.8008046315376313,
+    "heldout_structures_for_80pct_power_at_dev_point": 1464,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": 4990
+   }
+  },
+  "chalcogenide": {
+   "n": 11967,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": -0.3,
+    "calls": 11958,
+    "point": 0.9626191670847968,
+    "cp_lower_corrected": 0.9555656141649308,
+    "call_rate": 0.9992479318124843,
+    "heldout_structures_for_80pct_power_at_dev_point": 2620,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": 14047
+   }
+  },
+  "other": {
+   "n": 12450,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": -0.05,
+    "calls": 12232,
+    "point": 0.9581425768476128,
+    "cp_lower_corrected": 0.9508132786734595,
+    "call_rate": 0.9824899598393574,
+    "heldout_structures_for_80pct_power_at_dev_point": 6536,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": null
+   }
+  },
+  "fluoride (any family)": {
+   "n": 3491,
+   "stable": {
+    "threshold": null
+   },
+   "unstable": {
+    "threshold": 0.0,
+    "calls": 2833,
+    "point": 0.968937522061419,
+    "cp_lower_corrected": 0.9545988951439194,
+    "call_rate": 0.8115153251217416,
+    "heldout_structures_for_80pct_power_at_dev_point": 1330,
+    "heldout_structures_for_80pct_power_at_dev_lower_bound": 25513
+   }
+  }
+ },
+ "looks_certifiable_levels": {
+  "certify_conf": 0.9958333333333333,
+  "bound_level": 0.999931693989071,
+  "family_side_selections": 12,
+  "grid": 61
+ },
+ "heldout_available_by_family": {
+  "chalcogenide": 39732,
+  "f-electron": 192604,
+  "halide": 13176,
+  "intermetallic": 92898,
+  "other": 30532,
+  "oxide": 50526,
+  "pnictide": 26516
+ },
+ "fluorides": {
+  "in_development_draw": 4810,
+  "usable": 4781,
+  "labelable_A": 3491
+ }
+}
