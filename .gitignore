@@ -88,3 +88,6 @@ tmp/
 
 # campaign driver run state: local, may hold absolute paths; summarised in reports/campaign_20260924_summary.md
 data/campaign_20260924_state.json
+
+# output of an unrelated session found in this directory on 2026-09-26; never publish it
+Claude outputs/
