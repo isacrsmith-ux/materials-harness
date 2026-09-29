@@ -1,0 +1,607 @@
+{
+ "engine": "mace-mpa-0-medium",
+ "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+ "device": "cpu",
+ "dtype": "float32",
+ "settings_tag": "c2480e74",
+ "relax": {
+  "fmax": 0.01,
+  "max_stress_gpa": 0.01,
+  "max_steps": 500,
+  "optimizer": "BFGS",
+  "cell_filter": "FrechetCellFilter",
+  "timeout_s": 900.0
+ },
+ "metals": {
+  "Ag": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaceicv",
+    "converged": true,
+    "e_engine_eV_per_atom": -2.8262710571289062
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaaacjt",
+     "formula": "Ag3O4",
+     "n_atoms": 14,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -0.710317056250001,
+     "converged": true,
+     "dEf_per_O_engine_eV": -0.7091002971850591,
+     "engine_minus_mp_eV": 0.001216759064941897,
+     "mp2020_correction_eV": -5.496
+    },
+    {
+     "material_id": "mp-aaaaaanp",
+     "formula": "Ag2O",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -0.9676649233333325,
+     "converged": true,
+     "dEf_per_O_engine_eV": -0.9751630336962887,
+     "engine_minus_mp_eV": -0.007498110362956112,
+     "mp2020_correction_eV": -1.374
+    },
+    {
+     "material_id": "mp-aaagdntk",
+     "formula": "AgO",
+     "n_atoms": 4,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -0.8955252066666652,
+     "converged": true,
+     "dEf_per_O_engine_eV": -0.8930039913378902,
+     "engine_minus_mp_eV": 0.0025212153287750283,
+     "mp2020_correction_eV": -1.374
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Ag2O",
+   "most_negative_engine": {
+    "formula": "Ag2O",
+    "dEf_per_O_eV": -0.9751630336962887
+   },
+   "most_negative_mp_value_eV": -0.9676649233333325
+  },
+  "Cu": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaabe",
+    "converged": true,
+    "e_engine_eV_per_atom": -4.100916862487793
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaabrxbr",
+     "formula": "Cu2O3",
+     "n_atoms": 40,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -1.388548347083334,
+     "converged": true,
+     "dEf_per_O_engine_eV": -1.3666743150276695,
+     "engine_minus_mp_eV": 0.021874032055664516,
+     "mp2020_correction_eV": -16.488
+    },
+    {
+     "material_id": "mp-aaaaaanx",
+     "formula": "Cu2O",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -1.9335163150000003,
+     "converged": true,
+     "dEf_per_O_engine_eV": -1.8957706005297847,
+     "engine_minus_mp_eV": 0.037745714470215574,
+     "mp2020_correction_eV": -1.374
+    },
+    {
+     "material_id": "mp-aaaaacnc",
+     "formula": "CuO",
+     "n_atoms": 4,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -1.8855898849999981,
+     "converged": true,
+     "dEf_per_O_engine_eV": -1.8721662075244137,
+     "engine_minus_mp_eV": 0.013423677475584483,
+     "mp2020_correction_eV": -1.374
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Cu2O",
+   "most_negative_engine": {
+    "formula": "Cu2O",
+    "dEf_per_O_eV": -1.8957706005297847
+   },
+   "most_negative_mp_value_eV": -1.9335163150000003
+  },
+  "Mo": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaaez",
+    "converged": true,
+    "e_engine_eV_per_atom": -10.841917037963867
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaabdbga",
+     "formula": "MoO2",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -3.0323327824999993,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.0369479458056645,
+     "engine_minus_mp_eV": -0.004615163305665249,
+     "mp2020_correction_eV": -9.152000000000001
+    },
+    {
+     "material_id": "mp-aaabofcs",
+     "formula": "Mo9O26",
+     "n_atoms": 140,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -2.603501140192308,
+     "converged": true,
+     "dEf_per_O_engine_eV": -2.600003592848746,
+     "engine_minus_mp_eV": 0.003497547343561891,
+     "mp2020_correction_eV": -186.72
+    },
+    {
+     "material_id": "mp-aaaabbxg",
+     "formula": "MoO3",
+     "n_atoms": 32,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -2.566095935416667,
+     "converged": true,
+     "dEf_per_O_engine_eV": -2.5668354071500645,
+     "engine_minus_mp_eV": -0.0007394717333975009,
+     "mp2020_correction_eV": -42.104
+    },
+    {
+     "material_id": "mp-aaabfwru",
+     "formula": "Mo8O23",
+     "n_atoms": 124,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -2.6083394593478255,
+     "converged": true,
+     "dEf_per_O_engine_eV": -2.605293171927651,
+     "engine_minus_mp_eV": 0.0030462874201746537,
+     "mp2020_correction_eV": -165.668
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "MoO2",
+   "most_negative_engine": {
+    "formula": "MoO2",
+    "dEf_per_O_eV": -3.0369479458056645
+   },
+   "most_negative_mp_value_eV": -3.0323327824999993
+  },
+  "Ti": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaacu",
+    "converged": true,
+    "e_engine_eV_per_atom": -7.874380111694336
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaaabut",
+     "formula": "Ti2O",
+     "n_atoms": 3,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -6.106687001666668,
+     "converged": true,
+     "dEf_per_O_engine_eV": -6.1251359493457045,
+     "engine_minus_mp_eV": -0.01844894767903682,
+     "mp2020_correction_eV": -0.687
+    },
+    {
+     "material_id": "mp-aaaciyop",
+     "formula": "TiO",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -5.815912558333333,
+     "converged": true,
+     "dEf_per_O_engine_eV": -5.486832192631836,
+     "engine_minus_mp_eV": 0.3290803657014969,
+     "mp2020_correction_eV": -2.061
+    },
+    {
+     "material_id": "mp-aaaaaarq",
+     "formula": "Ti2O3",
+     "n_atoms": 10,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -5.505732723888888,
+     "converged": true,
+     "dEf_per_O_engine_eV": -5.486498406621094,
+     "engine_minus_mp_eV": 0.019234317267793344,
+     "mp2020_correction_eV": -4.122
+    },
+    {
+     "material_id": "mp-aaabfnrm",
+     "formula": "Ti6O",
+     "n_atoms": 14,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -6.416867944999993,
+     "converged": true,
+     "dEf_per_O_engine_eV": -6.438032677861326,
+     "engine_minus_mp_eV": -0.021164732861333135,
+     "mp2020_correction_eV": -1.374
+    },
+    {
+     "material_id": "mp-aaaaadvr",
+     "formula": "Ti3O",
+     "n_atoms": 16,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -6.2796558499999975,
+     "converged": true,
+     "dEf_per_O_engine_eV": -6.318680337163084,
+     "engine_minus_mp_eV": -0.03902448716308626,
+     "mp2020_correction_eV": -2.748
+    },
+    {
+     "material_id": "mp-aaaaabsd",
+     "formula": "Ti3O5",
+     "n_atoms": 16,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -5.407908787000001,
+     "converged": true,
+     "dEf_per_O_engine_eV": -5.402412942143555,
+     "engine_minus_mp_eV": 0.005495844856445942,
+     "mp2020_correction_eV": -6.870000000000001
+    },
+    {
+     "material_id": "mp-aaabfnyk",
+     "formula": "TiO2",
+     "n_atoms": 12,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -5.252457081666668,
+     "converged": true,
+     "dEf_per_O_engine_eV": -5.257390549870605,
+     "engine_minus_mp_eV": -0.004933468203937252,
+     "mp2020_correction_eV": -5.496
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Ti6O",
+   "most_negative_engine": {
+    "formula": "Ti6O",
+    "dEf_per_O_eV": -6.438032677861326
+   },
+   "most_negative_mp_value_eV": -6.416867944999993
+  },
+  "Au": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaadd",
+    "converged": true,
+    "e_engine_eV_per_atom": -3.275815486907959
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaaboif",
+     "formula": "Au2O3",
+     "n_atoms": 10,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -0.7630889916666668,
+     "converged": true,
+     "dEf_per_O_engine_eV": -0.7257635306241864,
+     "engine_minus_mp_eV": 0.03732546104248036,
+     "mp2020_correction_eV": -4.122
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Au2O3",
+   "most_negative_engine": {
+    "formula": "Au2O3",
+    "dEf_per_O_eV": -0.7257635306241864
+   },
+   "most_negative_mp_value_eV": -0.7630889916666668
+  },
+  "Ni": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaaax",
+    "converged": true,
+    "e_engine_eV_per_atom": -5.786663055419922
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaabljsx",
+     "formula": "Ni3O4",
+     "n_atoms": 14,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -1.83181262125,
+     "converged": true,
+     "dEf_per_O_engine_eV": -1.6852467205249013,
+     "engine_minus_mp_eV": 0.14656590072509879,
+     "mp2020_correction_eV": -20.741999999999997
+    },
+    {
+     "material_id": "mp-aaaabcdd",
+     "formula": "NiO",
+     "n_atoms": 4,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -2.4361706000000005,
+     "converged": true,
+     "dEf_per_O_engine_eV": -2.186929864140625,
+     "engine_minus_mp_eV": 0.24924073585937556,
+     "mp2020_correction_eV": -6.4559999999999995
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "NiO",
+   "most_negative_engine": {
+    "formula": "NiO",
+    "dEf_per_O_eV": -2.186929864140625
+   },
+   "most_negative_mp_value_eV": -2.4361706000000005
+  },
+  "Nb": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaacx",
+    "converged": true,
+    "e_engine_eV_per_atom": -10.070858001708984
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaabfsbh",
+     "formula": "NbO2",
+     "n_atoms": 24,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.34644229125,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.3508668453417965,
+     "engine_minus_mp_eV": -0.004424554091796651,
+     "mp2020_correction_eV": -10.992
+    },
+    {
+     "material_id": "mp-aaaaaceo",
+     "formula": "Nb12O29",
+     "n_atoms": 82,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.296644072413793,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.319994237288523,
+     "engine_minus_mp_eV": -0.023350164874730517,
+     "mp2020_correction_eV": -39.846000000000004
+    },
+    {
+     "material_id": "mp-aaabhcxj",
+     "formula": "Nb2O5",
+     "n_atoms": 98,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.247887384571431,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.259773291526229,
+     "engine_minus_mp_eV": -0.011885906954797854,
+     "mp2020_correction_eV": -48.09
+    },
+    {
+     "material_id": "mp-aaaaadkx",
+     "formula": "NbO",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.575321861666666,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.58678806930013,
+     "engine_minus_mp_eV": -0.01146620763346462,
+     "mp2020_correction_eV": -2.061
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "NbO",
+   "most_negative_engine": {
+    "formula": "NbO",
+    "dEf_per_O_eV": -4.58678806930013
+   },
+   "most_negative_mp_value_eV": -4.575321861666666
+  },
+  "Ta": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaaby",
+    "converged": true,
+    "e_engine_eV_per_atom": -11.847088813781738
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaadjpcn",
+     "formula": "Ta2O5",
+     "n_atoms": 14,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.669800746000002,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.682645180913086,
+     "engine_minus_mp_eV": -0.012844434913084513,
+     "mp2020_correction_eV": -6.870000000000001
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Ta2O5",
+   "most_negative_engine": {
+    "formula": "Ta2O5",
+    "dEf_per_O_eV": -4.682645180913086
+   },
+   "most_negative_mp_value_eV": -4.669800746000002
+  },
+  "W": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaadn",
+    "converged": true,
+    "e_engine_eV_per_atom": -12.948840141296387
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaabcrc",
+     "formula": "WO2",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -3.054999787499998,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.013343999119872,
+     "engine_minus_mp_eV": 0.04165578838012607,
+     "mp2020_correction_eV": -11.623999999999999
+    },
+    {
+     "material_id": "mp-aaaffpkb",
+     "formula": "WO3",
+     "n_atoms": 32,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -2.9211474754166673,
+     "converged": true,
+     "dEf_per_O_engine_eV": -2.9115654461108407,
+     "engine_minus_mp_eV": 0.009582029305826634,
+     "mp2020_correction_eV": -51.992
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "WO2",
+   "most_negative_engine": {
+    "formula": "WO2",
+    "dEf_per_O_eV": -3.013343999119872
+   },
+   "most_negative_mp_value_eV": -3.054999787499998
+  },
+  "V": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaafq",
+    "converged": true,
+    "e_engine_eV_per_atom": -9.115653038024902
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaablkh",
+     "formula": "V2O5",
+     "n_atoms": 14,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -3.2046305440000014,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.186307748051758,
+     "engine_minus_mp_eV": 0.018322795948243265,
+     "mp2020_correction_eV": -13.670000000000002
+    },
+    {
+     "material_id": "mp-aaaabcgk",
+     "formula": "VO2",
+     "n_atoms": 6,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -3.7204135475000015,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.6661058933459465,
+     "engine_minus_mp_eV": 0.05430765415405503,
+     "mp2020_correction_eV": -6.148
+    },
+    {
+     "material_id": "mp-aaacukec",
+     "formula": "V3O5",
+     "n_atoms": 16,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.035753161,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.9849535686694333,
+     "engine_minus_mp_eV": 0.05079959233056641,
+     "mp2020_correction_eV": -17.07
+    },
+    {
+     "material_id": "mp-aaaabfxz",
+     "formula": "V2O3",
+     "n_atoms": 40,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -4.224246155416668,
+     "converged": true,
+     "dEf_per_O_engine_eV": -4.130434691004232,
+     "engine_minus_mp_eV": 0.09381146441243615,
+     "mp2020_correction_eV": -43.688
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "V2O3",
+   "most_negative_engine": {
+    "formula": "V2O3",
+    "dEf_per_O_eV": -4.130434691004232
+   },
+   "most_negative_mp_value_eV": -4.224246155416668
+  },
+  "Al": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaaaaafe",
+    "converged": true,
+    "e_engine_eV_per_atom": -3.740001678466797
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaaabrz",
+     "formula": "Al2O3",
+     "n_atoms": 10,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -5.710918346666667,
+     "converged": true,
+     "dEf_per_O_engine_eV": -5.71227126428711,
+     "engine_minus_mp_eV": -0.0013529176204425397,
+     "mp2020_correction_eV": -4.122
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Al2O3",
+   "most_negative_engine": {
+    "formula": "Al2O3",
+    "dEf_per_O_eV": -5.71227126428711
+   },
+   "most_negative_mp_value_eV": -5.710918346666667
+  },
+  "Li": {
+   "mu_O_mp_eV": -4.947961005,
+   "metal": {
+    "material_id": "mp-aaacfyda",
+    "converged": true,
+    "e_engine_eV_per_atom": -1.9052724838256836
+   },
+   "oxides": [
+    {
+     "material_id": "mp-aaaaabgj",
+     "formula": "Li2O2",
+     "n_atoms": 8,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -3.300340473333333,
+     "converged": true,
+     "dEf_per_O_engine_eV": -3.242080384465332,
+     "engine_minus_mp_eV": 0.058260088868000715,
+     "mp2020_correction_eV": -1.86
+    },
+    {
+     "material_id": "mp-aaaaacxk",
+     "formula": "Li2O",
+     "n_atoms": 3,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -6.184793741666665,
+     "converged": true,
+     "dEf_per_O_engine_eV": -6.170502236577148,
+     "engine_minus_mp_eV": 0.014291505089516932,
+     "mp2020_correction_eV": -0.687
+    },
+    {
+     "material_id": "mp-aaacshah",
+     "formula": "LiO8",
+     "n_atoms": 9,
+     "e_above_hull_mp": 0.0,
+     "dEf_per_O_mp_eV": -0.48045272416666673,
+     "converged": true,
+     "dEf_per_O_engine_eV": -0.5319497129641722,
+     "engine_minus_mp_eV": -0.051496988797505416,
+     "mp2020_correction_eV": -1.288
+    }
+   ],
+   "flag": "",
+   "most_negative_mp": "Li2O",
+   "most_negative_engine": {
+    "formula": "Li2O",
+    "dEf_per_O_eV": -6.170502236577148
+   },
+   "most_negative_mp_value_eV": -6.184793741666665
+  }
+ },
+ "wall_s": 141.5
+}

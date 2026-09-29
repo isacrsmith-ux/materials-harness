@@ -1,0 +1,464 @@
+{
+ "tier": "development / descriptive \u2014 no verdict",
+ "generated_at": "2026-09-29T02:24:27Z",
+ "flight_rows_sha256": "b1b352d80d14025a0a9d4eac4a8e62b85a8b01d09b758fd7a220948d6a81bebe",
+ "engines": {
+  "mace-mpa-0-medium": {
+   "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+   "dtype": "float32",
+   "settings_tag": "c2480e74"
+  },
+  "mace-mp-0-medium": {
+   "checkpoint_sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+   "dtype": "float64",
+   "settings_tag": "207ccc81"
+  }
+ },
+ "oxide_formation_per_O_eV": {
+  "mace-mpa-0-medium": {
+   "Ag": {
+    "n_stable_oxides": 3,
+    "most_negative": "Ag2O",
+    "most_negative_mp": -0.9676649233333325,
+    "most_negative_engine": -0.9751630336962887,
+    "highest_oxide": "Ag3O4",
+    "highest_oxide_mp": -0.710317056250001,
+    "highest_oxide_engine": -0.7091002971850591
+   },
+   "Cu": {
+    "n_stable_oxides": 3,
+    "most_negative": "Cu2O",
+    "most_negative_mp": -1.9335163150000003,
+    "most_negative_engine": -1.8957706005297847,
+    "highest_oxide": "Cu2O3",
+    "highest_oxide_mp": -1.388548347083334,
+    "highest_oxide_engine": -1.3666743150276695
+   },
+   "Mo": {
+    "n_stable_oxides": 4,
+    "most_negative": "MoO2",
+    "most_negative_mp": -3.0323327824999993,
+    "most_negative_engine": -3.0369479458056645,
+    "highest_oxide": "MoO3",
+    "highest_oxide_mp": -2.566095935416667,
+    "highest_oxide_engine": -2.5668354071500645
+   },
+   "Ti": {
+    "n_stable_oxides": 7,
+    "most_negative": "Ti6O",
+    "most_negative_mp": -6.416867944999993,
+    "most_negative_engine": -6.438032677861326,
+    "highest_oxide": "TiO2",
+    "highest_oxide_mp": -5.252457081666668,
+    "highest_oxide_engine": -5.257390549870605
+   },
+   "Au": {
+    "n_stable_oxides": 1,
+    "most_negative": "Au2O3",
+    "most_negative_mp": -0.7630889916666668,
+    "most_negative_engine": -0.7257635306241864,
+    "highest_oxide": "Au2O3",
+    "highest_oxide_mp": -0.7630889916666668,
+    "highest_oxide_engine": -0.7257635306241864
+   },
+   "Ni": {
+    "n_stable_oxides": 2,
+    "most_negative": "NiO",
+    "most_negative_mp": -2.4361706000000005,
+    "most_negative_engine": -2.186929864140625,
+    "highest_oxide": "Ni3O4",
+    "highest_oxide_mp": -1.83181262125,
+    "highest_oxide_engine": -1.6852467205249013
+   },
+   "Nb": {
+    "n_stable_oxides": 4,
+    "most_negative": "NbO",
+    "most_negative_mp": -4.575321861666666,
+    "most_negative_engine": -4.58678806930013,
+    "highest_oxide": "Nb2O5",
+    "highest_oxide_mp": -4.247887384571431,
+    "highest_oxide_engine": -4.259773291526229
+   },
+   "Ta": {
+    "n_stable_oxides": 1,
+    "most_negative": "Ta2O5",
+    "most_negative_mp": -4.669800746000002,
+    "most_negative_engine": -4.682645180913086,
+    "highest_oxide": "Ta2O5",
+    "highest_oxide_mp": -4.669800746000002,
+    "highest_oxide_engine": -4.682645180913086
+   },
+   "W": {
+    "n_stable_oxides": 2,
+    "most_negative": "WO2",
+    "most_negative_mp": -3.054999787499998,
+    "most_negative_engine": -3.013343999119872,
+    "highest_oxide": "WO3",
+    "highest_oxide_mp": -2.9211474754166673,
+    "highest_oxide_engine": -2.9115654461108407
+   },
+   "V": {
+    "n_stable_oxides": 4,
+    "most_negative": "V2O3",
+    "most_negative_mp": -4.224246155416668,
+    "most_negative_engine": -4.130434691004232,
+    "highest_oxide": "V2O5",
+    "highest_oxide_mp": -3.2046305440000014,
+    "highest_oxide_engine": -3.186307748051758
+   },
+   "Al": {
+    "n_stable_oxides": 1,
+    "most_negative": "Al2O3",
+    "most_negative_mp": -5.710918346666667,
+    "most_negative_engine": -5.71227126428711,
+    "highest_oxide": "Al2O3",
+    "highest_oxide_mp": -5.710918346666667,
+    "highest_oxide_engine": -5.71227126428711
+   },
+   "Li": {
+    "n_stable_oxides": 3,
+    "most_negative": "Li2O",
+    "most_negative_mp": -6.184793741666665,
+    "most_negative_engine": -6.170502236577148,
+    "highest_oxide": "LiO8",
+    "highest_oxide_mp": -0.48045272416666673,
+    "highest_oxide_engine": -0.5319497129641722
+   }
+  },
+  "mace-mp-0-medium": {
+   "Ag": {
+    "n_stable_oxides": 3,
+    "most_negative": "Ag2O",
+    "most_negative_mp": -0.9676649233333325,
+    "most_negative_engine": -0.9534234237879184,
+    "highest_oxide": "Ag3O4",
+    "highest_oxide_mp": -0.710317056250001,
+    "highest_oxide_engine": -0.7122239634231597
+   },
+   "Cu": {
+    "n_stable_oxides": 3,
+    "most_negative": "Cu2O",
+    "most_negative_mp": -1.9335163150000003,
+    "most_negative_engine": -1.9443191952425938,
+    "highest_oxide": "Cu2O3",
+    "highest_oxide_mp": -1.388548347083334,
+    "highest_oxide_engine": -1.349782494271275
+   },
+   "Mo": {
+    "n_stable_oxides": 4,
+    "most_negative": "MoO2",
+    "most_negative_mp": -3.0323327824999993,
+    "most_negative_engine": -3.0449242557397422,
+    "highest_oxide": "MoO3",
+    "highest_oxide_mp": -2.566095935416667,
+    "highest_oxide_engine": -2.5989201277340386
+   },
+   "Ti": {
+    "n_stable_oxides": 7,
+    "most_negative": "Ti6O",
+    "most_negative_mp": -6.416867944999993,
+    "most_negative_engine": -6.467120912780434,
+    "highest_oxide": "TiO2",
+    "highest_oxide_mp": -5.252457081666668,
+    "highest_oxide_engine": -5.289493156785465
+   },
+   "Au": {
+    "n_stable_oxides": 1,
+    "most_negative": "Au2O3",
+    "most_negative_mp": -0.7630889916666668,
+    "most_negative_engine": -0.7840551237828173,
+    "highest_oxide": "Au2O3",
+    "highest_oxide_mp": -0.7630889916666668,
+    "highest_oxide_engine": -0.7840551237828173
+   },
+   "Ni": {
+    "n_stable_oxides": 2,
+    "most_negative": "NiO",
+    "most_negative_mp": -2.4361706000000005,
+    "most_negative_engine": -2.3114196570465833,
+    "highest_oxide": "Ni3O4",
+    "highest_oxide_mp": -1.83181262125,
+    "highest_oxide_engine": -1.7912345007658654
+   },
+   "Nb": {
+    "n_stable_oxides": 4,
+    "most_negative": "NbO",
+    "most_negative_mp": -4.575321861666666,
+    "most_negative_engine": -4.600104778964353,
+    "highest_oxide": "Nb2O5",
+    "highest_oxide_mp": -4.247887384571431,
+    "highest_oxide_engine": -4.238375751263084
+   },
+   "Ta": {
+    "n_stable_oxides": 1,
+    "most_negative": "Ta2O5",
+    "most_negative_mp": -4.669800746000002,
+    "most_negative_engine": -4.66194558669214,
+    "highest_oxide": "Ta2O5",
+    "highest_oxide_mp": -4.669800746000002,
+    "highest_oxide_engine": -4.66194558669214
+   },
+   "W": {
+    "n_stable_oxides": 2,
+    "most_negative": "WO2",
+    "most_negative_mp": -3.054999787499998,
+    "most_negative_engine": -3.0220277409033347,
+    "highest_oxide": "WO3",
+    "highest_oxide_mp": -2.9211474754166673,
+    "highest_oxide_engine": -2.9829411575924234
+   },
+   "V": {
+    "n_stable_oxides": 4,
+    "most_negative": "V2O3",
+    "most_negative_mp": -4.224246155416668,
+    "most_negative_engine": -4.135553263074358,
+    "highest_oxide": "V2O5",
+    "highest_oxide_mp": -3.2046305440000014,
+    "highest_oxide_engine": -3.179564053109464
+   },
+   "Al": {
+    "n_stable_oxides": 1,
+    "most_negative": "Al2O3",
+    "most_negative_mp": -5.710918346666667,
+    "most_negative_engine": -5.7078659781493135,
+    "highest_oxide": "Al2O3",
+    "highest_oxide_mp": -5.710918346666667,
+    "highest_oxide_engine": -5.7078659781493135
+   },
+   "Li": {
+    "n_stable_oxides": 3,
+    "most_negative": "Li2O",
+    "most_negative_mp": -6.184793741666665,
+    "most_negative_engine": -6.161337010767969,
+    "highest_oxide": "LiO8",
+    "highest_oxide_mp": -0.48045272416666673,
+    "highest_oxide_engine": -0.46255286288260944
+   }
+  }
+ },
+ "engine_minus_mp": {
+  "mace-mpa-0-medium": {
+   "n": 35,
+   "median_abs": 0.018322795948243265,
+   "max_abs": 0.3290803657014969
+  },
+  "mace-mp-0-medium": {
+   "n": 35,
+   "median_abs": 0.03282419231737155,
+   "max_abs": 0.3908919666132027
+  }
+ },
+ "flight_coverage": {
+  "ntrs_19930001391": [
+   {
+    "material": "Ag",
+    "condition": "LDEF A0171, heat-sunk tray (structure never above 100 \u00b0F, p. 467)",
+    "quantities": [
+     "accommodation",
+     "reactivity"
+    ],
+    "element": "Ag"
+   },
+   {
+    "material": "Ag",
+    "condition": "LDEF A0171, thermally isolated; temperature extremes not calculated (p. 467)",
+    "quantities": [
+     "accommodation",
+     "reactivity"
+    ],
+    "element": "Ag"
+   },
+   {
+    "material": "Cu",
+    "condition": "LDEF A0171, heat-sunk tray",
+    "quantities": [
+     "accommodation",
+     "reactivity"
+    ],
+    "element": "Cu"
+   },
+   {
+    "material": "Mo",
+    "condition": "LDEF A0171, heat-sunk tray",
+    "quantities": [
+     "accommodation",
+     "reactivity"
+    ],
+    "element": "Mo"
+   },
+   {
+    "material": "Ti (75A)",
+    "condition": "LDEF A0171, heat-sunk tray",
+    "quantities": [
+     "accommodation",
+     "reactivity"
+    ],
+    "element": "Ti"
+   }
+  ],
+  "ntrs_19950021220": [
+   {
+    "material": "Cu",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Cu"
+   },
+   {
+    "material": "Cu",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Cu"
+   },
+   {
+    "material": "Au",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Au"
+   },
+   {
+    "material": "Ni",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Ni"
+   },
+   {
+    "material": "Ni",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Ni"
+   },
+   {
+    "material": "Nb",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Nb"
+   },
+   {
+    "material": "Nb",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Nb"
+   },
+   {
+    "material": "Ag",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Ag"
+   },
+   {
+    "material": "Ta",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Ta"
+   },
+   {
+    "material": "Ta",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Ta"
+   },
+   {
+    "material": "W",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "W"
+   },
+   {
+    "material": "W",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "W"
+   },
+   {
+    "material": "W",
+    "condition": "EOIM-3 200\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "W"
+   },
+   {
+    "material": "V",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "V"
+   },
+   {
+    "material": "V (pre-oxidized)",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "V"
+   },
+   {
+    "material": "Al-Li 2090",
+    "condition": "EOIM-3 60\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Al + Li"
+   },
+   {
+    "material": "Al-Li 2090",
+    "condition": "EOIM-3 120\u00b0C tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Al + Li"
+   },
+   {
+    "material": "Weldalite",
+    "condition": "EOIM-3 passive tray",
+    "quantities": [
+     "dm_mg",
+     "dm_per_area_mg_cm2"
+    ],
+    "element": "Al + Li"
+   }
+  ]
+ }
+}
