@@ -86,6 +86,7 @@ def test_a_wait_stops_the_invocation_without_failing(state):
 
 
 def test_a_missing_script_waits_until_the_deadline(monkeypatch):
+    monkeypatch.setattr(D, "BUILD_DEADLINE", "2999-01-01T00:00:00+00:00")  # the real deadline has passed
     with pytest.raises(D.Wait, match="not written yet"):
         D.script("no_such_script_20260924.py")
     monkeypatch.setattr(D, "BUILD_DEADLINE", "2000-01-01T00:00:00+00:00")
@@ -104,6 +105,7 @@ def test_the_campaign_runs_production_before_second_and_phase_1_first():
 
 
 def test_exit_75_waits_and_an_unimplemented_subcommand_skips_only_after_the_deadline(monkeypatch):
+    monkeypatch.setattr(D, "BUILD_DEADLINE", "2999-01-01T00:00:00+00:00")  # the real deadline has passed
     R = type("R", (), {"returncode": 75, "stdout": "lock: not implemented yet", "stderr": ""})
     monkeypatch.setattr(D, "sh", lambda *a, **k: R())
     with pytest.raises(D.Wait):
