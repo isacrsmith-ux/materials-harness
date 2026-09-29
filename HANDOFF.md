@@ -1,23 +1,30 @@
 # HANDOFF
 
-State transfer for the next session, written 2026-09-26 at the end of the 2026-09-24 campaign. Every
-figure was recomputed from the repository at write time, not copied from conversation.
+State transfer for the next session, written 2026-09-29 (UTC) at the end of the aerospace-durability
+pivot. Every figure was recomputed from the repository at write time, not copied from conversation.
+The two exceptions are marked *carried forward*.
 
-This supersedes the 2026-09-22 handoff (commit `2fbe8c9`). Its "Decisions", "Dead ends" and
-"Environment" sections are carried forward below and extended. Its open decision #1 (the f-electron
-test) and #4 (external validation, stages 1–2) are done.
+This supersedes the 2026-09-26 handoff (commit `961b44b`). Its "Decisions", "Dead ends", "Known
+issues" and "Environment" sections are carried forward below and extended. **None of its open decisions
+(a)–(d) was taken.** They are still open, now as the paused stability-screening track.
 
 **Start with the Verification block at the end.** If anything there disagrees with this document,
-trust the repository. The campaign's one-page account is `reports/campaign_20260924_summary.md`.
+trust the repository.
 
 ---
 
-## Goal
+## Goal — narrowed this phase
 
-A validation harness that measures whether a machine-learned interatomic potential can be trusted to
-decide *"is this hypothetical material worth a DFT calculation or a lab attempt?"*. The deliverable is
-`harness/predict.py`. It returns `likely stable` / `likely unstable` / `send to DFT`, each backed by a
-**certified** error rate rather than a point estimate.
+The harness still exists to measure whether a machine-learned interatomic potential can be trusted to
+decide *"is this hypothetical material worth a DFT calculation or a lab attempt?"*.
+`harness/predict.py` is unchanged: it returns `likely stable` / `likely unstable` / `send to DFT`,
+each backed by a certified error rate.
+
+**The phase decision:** narrow the product to one area, the **space-environment durability of
+ultralight aerospace metals** (atomic-oxygen erosion and radiation-induced defects in LEO). This was
+chosen over foams, lattices and fibre-metal laminates because durability is an atomic-scale question.
+The pivot ran Phases 0–2 of its brief. Its headline answer is below. What happens next is open
+decision 1.
 
 ## Evidence tiers (unchanged, still the thing to understand first)
 
@@ -27,74 +34,97 @@ decide *"is this hypothetical material worth a DFT calculation or a lab attempt?
 | **pre-registered held-out** | protocol frozen and committed before the sample is opened; opened once | a production change, on an explicit decision |
 | **production-adopted** | what `data/calibration_bundle.json` actually loads | the product's behaviour |
 
-Three held-out evaluations have now been run: **halide** (2026-09-18), **pnictide** (2026-09-19) and
-**f-electron** (2026-09-24). `docs/methodology/evidence_tiers.md` is **stale** (see Known issues).
+**Everything from the aerospace pivot is below tier 1 or at it.** The Phase 0 memo is a capability check
+with no tier. The Phase 2 report is **development / descriptive, with no verdict**. Nothing in it could
+license a production change.
 
 ---
 
-## Current state of the product — unchanged by this campaign
+## Current state of the product — unchanged by this phase
 
 `data/calibration_bundle.json`: sha256 `419c11514d6a5485…`, `created_at 2026-09-12T20:21:45+00:00`,
-one entry in `promotions[]` (pnictide), no `confirmations[]`. Thresholds are unchanged from the
-2026-09-22 handoff table. **Only f-electron and pnictide can return `likely stable`.**
+one entry in `promotions[]` (pnictide), no `confirmations[]`. **Only f-electron and pnictide can return
+`likely stable`.** No aerospace work touched the bundle, the registry or any locked set.
 
 ---
 
-## What happened in the 2026-09-24 campaign
+## What happened in the aerospace pivot (2026-09-28/29)
 
-### f-electron held-out evaluation — all four hypotheses PASS (tier 2)
+Four commits, all pushed. **`origin/main` = `8cb98f6`.** The push also published the whole 2026-09-24
+campaign, which had never been pushed before.
 
-- **Opening:** once, at 2026-09-24T19:37:44Z, authorised by Isac Smith on 2026-09-24 (`fe639de`).
-- **Scoring:** once, at 21:11:35Z, at the fixed live thresholds −20 / +10 meV (evidence commit `34c40d3`, `reports/felectron_test.md`).
-- **Population:** 4,500 drawn, all usable; 3,942 labelable on Path A, 3,847 on Path B. No inconclusive trigger fired.
+| commit | what |
+|---|---|
+| `6411257` | Test-only fix: two campaign-driver tests assumed "now" was before `BUILD_DEADLINE` (2026-09-27) and started failing after it. |
+| `bf17658` | **Phase 0** feasibility memo, `reports/aerospace_durability_feasibility.md` |
+| `77f8bc4` | **Phase 1** evidence: flight data acquired with provenance (row data gitignored) |
+| `8cb98f6` | **Phase 2** evidence: `reports/aerospace_durability_development.md/.json`, DEVELOPMENT / DESCRIPTIVE tier |
 
-| id | calls | errors | point | CP-lower @0.9875 | verdict |
-|---|---:|---:|---:|---:|---|
-| EA1 A stable | 481 | 13 | 0.9730 | 0.9513 | PASS |
-| EA2 A unstable | 3,020 | 33 | 0.9891 | 0.9840 | PASS |
-| EB1 B stable | 475 | 13 | 0.9726 | 0.9507 | PASS |
-| EB2 B unstable | 2,933 | 33 | 0.9887 | 0.9835 | PASS |
+### Phase 0 — what the engines can and cannot compute
 
-Call counts came in within 2.2% of the pre-registered 492 / 3,018 / 482 / 2,921. The held-out bounds
-exceed the development bounds (0.9171 / 0.9231) because this test paid only a 4-fold correction, not
-the 61 × 6 grid-and-family correction; that is **not** better data.
+`scripts/aerospace_phase0.py` ran on both engines (outputs in `reports/aerospace_phase0/`). Reference values
+were read from the primary sources on 2026-09-29.
 
-The pre-registered branch `all_four_pass` says to *record* the confirmation, changing no threshold. That
-is prepared and **not run**: `scripts/record_felectron_confirmation.py` refuses without
-`--i-have-an-explicit-decision`, and `reports/felectron_confirmation_proposal.md` explains it (`f7d6bec`).
+| case | MPA-0 (production) | MP-0 (second) | reference |
+|---|---:|---:|---|
+| Al vacancy formation (864 atoms, zero pressure) | **0.678** | 0.479 | 0.67 PBE / DMC; experiment 0.66–0.67 (Hood et al., arXiv:1210.5489, Table I) |
+| Al ⟨100⟩ dumbbell | 2.160 | 1.677 | 2.70 PBE, 2.94 DMC |
+| octahedral − dumbbell / tetrahedral − dumbbell | **0.200 / 0.516** | 0.193 / 0.437 | 0.21 / 0.53 PBE |
+| O on Ag(111), 0.25 ML: on-surface − sub-surface | **0.593** | 0.577 | 0.66 GGA (Li et al., arXiv:cond-mat/0302122) |
+| O₂ binding per O | 3.142 | 2.763 | 3.16 GGA, 2.56 experiment |
 
-### OQMD external validation, stages 1–2 (no ML) — `4043d5e`
+- **Static, near-equilibrium energies are usable** on the production engine. Interstitial *absolute*
+  energies carry a systematic −0.55 eV offset, so use relative energies.
+- **Close approach is not usable on either engine.** Below about 1.25 Å the dimer energies are 2–15× too
+  soft against ZBL. MP-0's Al–Al dimer goes *negative* between 0.5 and 0.9 Å, and both engines have
+  non-monotonic regions.
+- **Consequence:** collision cascades and hyperthermal O impacts need MD with a short-range-corrected
+  potential (ZBL-blended, as in arXiv:1904.00360). The harness has neither.
+- **Recommendation (a), restricted:** static quantities, production engine, descriptive tier. The dynamic
+  half is returned to the user as (b).
 
-- **Source.** OQMD v1.8 dump (February 2026), licensed CC BY 4.0 as read on oqmd.org on 2026-09-24,
-  sha256 `66c3f1b7…` (size and md5 match the published values). Parsed from the MySQL dump without a
-  server by `harness/external_oqmd.py`. Nothing raw is committed.
-- **Stage 1** (`reports/oqmd_overlap.md`):
-  - 1,218,083 usable entries (converged, ordered, ≤ 40 atoms, labelled);
-  - **891,982** of them are independent by reduced formula of the MP 2023-01-10 snapshot (an MPtrj superset) and of WBM, including **13,734 fluorides**;
-  - the protostructure labeller (matbench-discovery `71633e8b`, ephemeral Python 3.14 env) agrees with WBM's published labels on 0.8920 of 2,000 structures.
-  - **Caveat:** Alexandria (sAlex, part of the primary engine's training data) is not checked.
-- **Stage 2** (`reports/oqmd_hull_disagreement.md`). On **47,490** materials present in both databases, OQMD's hull and MP's (MP2020 GGA/GGA+U, database version 2026.04.13) put the material on opposite sides at −20 / 0 / +10 / +30 meV for **0.2070 / 0.2553 / 0.1813 / 0.1317** of them. **That is the ceiling on what any OQMD evaluation can mean.**
+### Phase 1 — the flight data is much thinner than the brief assumed
 
-### OQMD development tier — licenses nothing (`4bbbe76`, `6d234d0`)
+Sources, NTRS licence fields, sha256s and caveats are in `docs/methodology/data_provenance.md`
+("Aerospace durability sources") and `NOTICE`.
 
-- **Lock.** 445,984 held-out ids are locked and **unopened** (`cc8d40f`), registered, formula-guarded against every protected WBM set.
-- **Draw.** The frozen plan covers 94,059 development structures (`4411d92`), sized from a 500-structure pilot to about 35 h of compute across both engines.
-- **Runs.** Both engines ran over all of them with 0 failures; 93,602 are usable.
-- **Prediction.** The product's own mode (a): engine energy on MP's hull, with the row's own formula removed.
-- **The live unstable rules hold on OQMD labels:** NPV 0.971–0.998 per family, both paths.
-- **The live stable rules do not.** On Path A, f-electron −20 meV has precision **0.389** (298 calls) and pnictide −20 meV **0.519** (212 calls). Even where the two hulls agree within 25 meV at the row's composition, precision is 0.618 (34 calls) and 0.729 (48).
-- **Post-hoc check** (`reports/oqmd_development_posthoc.md`). Scoring against OQMD's hull of other compositions only raises precision just to 0.420 and 0.557, so this is **not** mainly a same-formula-sibling artefact. Convention and model **cannot be separated with this data**. Unmeasured candidates include the candidate's own formation-energy convention and OQMD's f-in-core lanthanide potentials. This does not impugn the WBM held-out confirmations, which tested the rules on the labels they were certified against.
-- **Development-tier certifiability** (12-fold family × side correction): an unstable threshold *looks* certifiable for intermetallic, oxide, halide, chalcogenide, other and fluoride. **No stable threshold looks certifiable for any of them.**
+| source | usable content |
+|---|---|
+| **LDEF A0171** (NTRS 19930001391) | 5 samples (Ag disk, Ag ribbon, Cu, Mo, Ti 75A): reactivity and accommodation. **No fluence, no Al.** Ti accommodation is ambiguous as printed, left null. |
+| **EOIM-3 metals paper** (NTRS 19950021220, *not* in the brief) | 19 mass-change samples (Δm and Δm/A), incl. Al-Li 2090 and Weldalite. Fluence 2.2×10²⁰ atoms/cm². |
+| EOIM-3 overview (NTRS 19950021216, the brief's source) | Describes single-crystal Ag/Cu at [100]/[111] and 60/120/200 °C, but gives **no numbers**. No retrieved document tabulates them. |
+| the three "Los Alamos" reports | Coatings, BN/Si₃N₄, and a plasma-asher silver study at Auburn. **No metal flight data.** Their ground-vs-flight comparison is qualitative. |
+| **MISSE** | **Blocked.** `materialsinspace.nasa.gov` does not resolve. MAPTIS needs registration, paid for non-NASA users since January 2026 (not registered). Public Glenn documents cover 630 samples, polymer- and coating-dominated. The metal fraction of MISSE is **unknown**. |
 
-### Incidents (details in the campaign summary)
+- **How values were read.** Every value was transcribed from scanned page images, because the OCR text
+  layers drop cells.
+- **The ingest check.** `scripts/aerospace_ingest.py` refuses to write unless:
+  - the PDF hashes match;
+  - the OCR, where it survives, agrees with the transcription (34 of 48 values confirmed);
+  - EOIM-3 Δm/A = Δm / 0.71 cm² within print rounding (15/15).
+- **Committed:** `reports/aerospace_phase1_ingest.json` — hashes, counts and checks. **No values.**
 
-- **Commits blocked for about 3 h.** Commits were refused because the driver's state file held absolute paths. The OQMD lock and plan were written before queueing but **committed after** it; the late commits say so. Fixed in `5c59cc5` and `6491460`.
-- **OS-update reboot on 2026-09-25.** The campaign resumed by itself, but the reboot **reloaded the nightly agent** (bootout does not persist).
-- **An unrelated project's file** appeared in `Claude outputs/`. It was git-ignored and left untouched.
+### Phase 2 — descriptive comparison, no verdict
+
+`scripts/aerospace_phase2.py` computes the **oxide formation energy per O atom** for the 12 elements the
+flight rows cover. It relaxes 35 MP-hull oxides on both engines (35/35 converged each), placed as mode (a)
+places a candidate: MP2020 corrections and MP's shared O reference. `scripts/aerospace_phase2_report.py`
+writes the report.
+
+| engine | median \|engine − MP\| (eV/O) | max | outliers > 0.1 eV/O |
+|---|---:|---:|---|
+| MPA-0 | 0.018 | 0.329 | TiO, NiO, Ni₃O₄ |
+| MP-0 | 0.033 | 0.391 | TiO, Ti₃O, Ti₂O, NiO, Li₂O₂ |
+
+- **Two hard limits, stated in the report.** Formation energy is not a rate, and impact/cascade physics
+  is left out entirely.
+- **Defect energies are left out.** No flight source measures radiation damage.
+- **Flight values stay out of the committed report,** per the brief's rule. The side-by-side table is
+  regenerated into gitignored `cache/external/aerospace/development_side_by_side.md`.
 
 ---
 
-## Locked / held-out sets (registry: 9 rows, all hashes verify)
+## Locked / held-out sets (registry: 9 rows, all hashes verify) — unchanged
 
 | set | n | status |
 |---|---:|---|
@@ -108,29 +138,63 @@ is prepared and **not run**: `scripts/record_felectron_confirmation.py` refuses 
 | f-electron evaluation | 4,500 | OPENED ONCE (2026-09-24) |
 | **OQMD external held-out** | **445,984** | **LOCKED, UNOPENED** |
 
-**Unspent WBM pool, fully guarded (recomputed 2026-09-26): 140,268.** By family: f-electron 89,273,
-intermetallic 33,707, other 7,991, oxide 4,517, chalcogenide 2,092, pnictide 1,523, halide 1,165.
-67,273 ids are spent. This is identical to the 2026-09-22 figure, because this campaign drew nothing
-from WBM (the f-electron sample was already counted). Rerun the recompute before sizing any draw.
+**Unspent WBM pool, fully guarded (recomputed 2026-09-29): 140,268.** By family:
 
-**OQMD held-out available by family:** f-electron 192,604, intermetallic 92,898, oxide 50,526,
-chalcogenide 39,732, other 30,532, pnictide 26,516, halide 13,176.
+| f-electron | intermetallic | other | oxide | chalcogenide | pnictide | halide |
+|---:|---:|---:|---:|---:|---:|---:|
+| 89,273 | 33,707 | 7,991 | 4,517 | 2,092 | 1,523 | 1,165 |
+
+67,273 ids are spent. This is unchanged, because nothing was drawn.
+
+**OQMD held-out available by family** (*carried forward* from 2026-09-26, not recomputed because the
+half is locked):
+
+| f-electron | intermetallic | oxide | chalcogenide | other | pnictide | halide |
+|---:|---:|---:|---:|---:|---:|---:|
+| 192,604 | 92,898 | 50,526 | 39,732 | 30,532 | 26,516 | 13,176 |
 
 ---
 
 ## Open decisions — nothing here is mine to make
 
-**(a) Record the f-electron confirmation?** The evidence says all four hypotheses pass. The action changes no threshold, only status and provenance. Review `reports/felectron_confirmation_proposal.md`, then run the script as its own production commit and update the bundle-sha invariant.
+### Aerospace pivot (from the end of `reports/aerospace_durability_development.md`)
 
-**(b) Intermetallic: pre-register or not.** Unchanged since 2026-09-22 (`reports/intermetallic_sizing.md`): the stable side's 4.5% call rate binds. New input: OQMD development finds no certifiable stable threshold for intermetallic either.
+1. **Engine or new tool?** Static energies are usable at a descriptive tier. Everything the flight data
+   measures is kinetic or impact-driven. The real question needs MD with a short-range-corrected potential.
+   **Not built; scoping it is your call.**
+2. **MISSE:** arrange paid MAPTIS access, or drop it? Ingestion is not worth building without access.
+3. **Which alloy first?**
+   - **Single-crystal Ag/Cu:** has no numbers available.
+   - **EOIM-3 Al-Li rows:** relevant, but give no composition, confound alloy with temperature, and have an
+     unreconstructable Δm/A.
+   - **EOIM-3 pure metals:** cleaner, but 7 of 15 Δm are within 2× the ±0.02 mg of zero.
+4. **The paused stability-screening track** (decisions (a)–(d) below): resume in parallel, or stay parked?
+   The aerospace work does not compete for compute.
+5. **Commit flight values?** The sources are public-use NASA documents, and
+   `reference_data/space_ao_erosion.csv` already commits MISSE-2 values. The brief's rule kept these
+   gitignored.
+
+### Paused stability-screening track (carried forward unchanged from 2026-09-26)
+
+**(a) Record the f-electron confirmation?** All four hypotheses passed. Recording changes no threshold,
+only status and provenance. Review `reports/felectron_confirmation_proposal.md`, then run
+`scripts/record_felectron_confirmation.py --i-have-an-explicit-decision` as its own production commit and
+update the bundle-sha invariant.
+
+**(b) Intermetallic: pre-register or not.** The stable side's 4.5% call rate binds
+(`reports/intermetallic_sizing.md`). OQMD development finds no certifiable stable threshold either.
 
 **(c) Pre-register an OQMD held-out evaluation, and for which family?** Stage 2 caps what it can mean.
-- **Unstable side.** Development suggests any of intermetallic / oxide / halide / chalcogenide / other would pass. Held-out sizes needed at 80% power are 12,723 / 4,627 / 1,464 / 2,620 / 6,536 structures at the development point estimate, and far more at the lower bound. The locked half has enough.
-- **Stable side.** Do **not** use OQMD for stable-side claims until the convention question behind the 0.389 / 0.519 precision is resolved, most cleanly with a small MP-settings DFT campaign on a sample of those very candidates.
+- **Unstable side.** Development suggests intermetallic, oxide, halide, chalcogenide or other would pass.
+- **Stable side.** Do not use OQMD for stable-side claims until the convention question behind the
+  0.389 / 0.519 precision is resolved.
 
-**(d) Fluoride.** OQMD has 13,734 independent fluorides (about half locked). At the development tier only an unstable +0 meV threshold looks certifiable. At 80% power a held-out test would need 1,330 structures at the point estimate and 25,513 at the lower bound, against 6,928 locked fluorides. The stable fluoride question WBM could not settle remains unanswered, and OQMD's convention problem applies to it too.
+**(d) Fluoride.** At the development tier only an unstable +0 meV threshold looks certifiable. The stable
+fluoride question remains unanswered.
 
-Also for a decision: whether to extend the curated public export beyond round 4, and whether to refresh `docs/methodology/evidence_tiers.md` (see Known issues).
+**Also for a decision:**
+- extending the curated public export beyond round 4;
+- refreshing `docs/methodology/evidence_tiers.md`.
 
 ---
 
@@ -143,12 +207,19 @@ Carried forward:
 - A pre-registration is pushed before its sample is drawn.
 - Carve-outs need a validity deficit.
 - The sulfide half is sealed, not deleted.
+- A confirmation of a live rule goes in `confirmations[]`, not `promotions[]`.
+- OQMD stage 2 is per material.
+- OQMD development rows are split by the hull shift at the row's own composition.
+- MP hull placement for bulk evaluations uses the validated bulk index.
 
-New:
-- **A confirmation of a live rule is recorded in `confirmations[]`, not `promotions[]`.** Nothing is promoted when the rule is already live.
-- **OQMD stage 2 is per material, not per OQMD entry** (one row per formula + protostructure).
-- **OQMD development rows are split by the hull shift at the row's own composition,** not by a chemical-subsystem flag, which was degenerate.
-- **MP hull placement for bulk evaluations uses the validated bulk index** (`scripts/oqmd_phase3.py mp-bulk`). It must reproduce `hull.mp_competitors` exactly on cached systems, or the report refuses to use it.
+New (aerospace pivot):
+- **Aerospace flight data is ingested by a plain script, not a harness module.** It is a handful of PDFs,
+  not an API.
+- **Row-level flight values stay gitignored** until open decision 5 says otherwise.
+- **The Phase 2 quantity is oxide formation energy per O on the MP-corrected convention, with MP's O
+  reference.** The O reference is shared by every metal, so its GGA overbinding cannot reorder them.
+- **Reference values are cited from the primary source, not a secondary table.** arXiv:1904.00360
+  labels Hood et al.'s DMC-paper values "DFT"; the memo cites Hood et al. directly.
 
 ## Failed approaches / dead ends
 
@@ -167,26 +238,43 @@ Carried forward:
 - margin is not effect size;
 - a stricter correction can buy a tighter threshold;
 - a held-out bound can exceed a development bound;
-- use the bisection sizer.
+- use the bisection sizer;
+- never write absolute paths into a tracked file;
+- "file exists" is not "committed";
+- `launchctl bootout` does not survive a reboot;
+- the queue claims smallest cells first;
+- per-system MP API fetching does not scale;
+- the OQMD protostructure function needs Python ≥ 3.14;
+- MP's terms page sits behind a Cloudflare bot check.
 
 New:
-- **Never write absolute paths into a tracked file.** The pre-commit hook scans the whole index, so one staged file blocks every commit. Run state belongs in gitignored files.
-- **"File exists" is not "committed".** A step that retries after a failed commit must retry the commit.
-- **`launchctl bootout` does not survive a reboot.** Everything in `~/Library/LaunchAgents` reloads at login. An unattended campaign that unloads the nightly agent must re-unload it on every invocation.
-- **The queue claims smallest cells first** (`ORDER BY priority` = n_atoms). Early throughput overstates the run. Size from a random pilot's **mean**, not the observed rate.
-- **Per-system MP API fetching does not scale** (about 2,300 systems per hour). Use the bulk index.
-- **The OQMD protostructure function is not on PyPI** and needs Python ≥ 3.14. Use `./uvw run --python 3.14 --with "matbench-discovery @ git+…@71633e8b"`.
-- **MP's terms page sits behind a Cloudflare bot check.** Do not try to bypass it; record it as not re-read.
+- **The nightly checkpoint commits every changed path at 23:00 local** (`ops.checkpoint`, `git add -A`).
+  Commit or keep work out of the tree before then.
+- **MISSE via MAPTIS** is paid registration for non-NASA users, and `materialsinspace.nasa.gov` does not
+  resolve. Do not re-search for free access.
+- **NTRS scanned tables:** the OCR text layer drops cells. Extract the page image
+  (`pypdf page.images` → PIL crop) and read it.
+- **NTRS search:** hyphenated or long queries return nothing. Short keyword queries work
+  (`EOIM+metals` found the EOIM-3 metals paper).
+- **Tests pinned to a real date expire.** Pin deadlines inside the test (fixed in `6411257`).
+- **`pdftoppm` is not installed.** Read PDFs with `./uvw run --with pypdf`.
 
 ## Known issues
 
-- `docs/methodology/evidence_tiers.md` still says pnictide is "pre-registered but not run" and the bundle is unchanged since 2026-09-12. It is public and stale. Refreshing it is a decision, not something done unattended.
-- The curated public export (`reports/public/`, `results/public/`) covers round 4 only. Its id guard matches WBM ids only; OQMD entry ids are plain integers.
-- `results/results.parquet` has grown past the checkpoint's 5 MB limit, so checkpoints no longer update the tracked copy. The committed file is older than the local one.
-- The OQMD label reconstruction (formation energy minus the OQMD hull built here) matches OQMD's stored `stability` within 5 meV for 0.8343 of development rows. Some stored labels predate later OQMD entries.
+- `docs/methodology/evidence_tiers.md` is still stale (pnictide "pre-registered but not run"). Refreshing
+  it is a decision.
+- **Local `results/results.parquet` is newer than the committed copy.** It has grown past the checkpoint's
+  5 MB limit, so checkpoints leave it out.
+- **gitleaks is not installed.** The preflight's full-history scan relies on its built-in patterns only.
+- **The Phase 0 memo quotes 23 literature reference values** in its two results tables (value plus locator). If open decision
+  5 reads the rule strictly, those would need the same treatment as flight values.
+- **Regenerating the Phase 2 report dirties the tree.** `scripts/aerospace_phase2_report.py` writes a new
+  timestamp into the `.md` and `.json`.
 - Carried forward:
+  - the curated public export covers round 4 only;
+  - the OQMD label reconstruction matches the stored `stability` for 0.8343 of development rows;
   - `reports/round2_results.md` is on the all-usable footing;
-  - `data/calibration_spec_v2.json` is frozen and says "NOT yet executed";
+  - `data/calibration_spec_v2.json` says "NOT yet executed";
   - the registry omits the MP unseen test (n = 325);
   - `scripts/round2_ledger.py` flags the authorised halide opening;
   - the public history contains ids of four unopened WBM halves;
@@ -195,17 +283,31 @@ New:
 
 ## Environment / configuration
 
-- Apple M4 Max, 14 cores, 36 GB, CPU only; macOS was updated to Darwin 27.0 during the campaign.
-- `.venv/bin/python` (3.12) and `./uvw`. Ephemeral deps come via `./uvw run --with`; Python 3.14 is only for the protostructure labeller.
-- **`HARNESS_MODEL`:** unset means the *second* engine (`mace-mp-0-medium`, tag `207ccc81`). The production engine is `mace-mpa-0-medium`, tag `c2480e74`.
-- **Throughput measured this campaign.** f-electron WBM: 9,000 jobs in 0.93 h (production) and 0.62 h (second). OQMD development: 94,059 structures in 17.6 h (production) and about 23.8 h of AC time (second).
-- `cache/external/oqmd/` holds about 21 GB of dump plus intermediates, all gitignored. `cache/external/mp/` holds the bulk index.
-- The nightly agent is loaded again and unchanged. The campaign agent is gone.
+- Apple M4 Max, 14 cores, 36 GB, CPU only, Darwin 27.0.
+- `.venv/bin/python` (3.12) and `./uvw`.
+- **`HARNESS_MODEL`:** unset means the *second* engine (`mace-mp-0-medium`). The production engine is
+  `mace-mpa-0-medium`.
+- **Per-engine precision:** MPA-0 runs float32 per `config/compute-mace-mpa-0-medium.json`; MP-0 runs
+  float64.
+- **Aerospace throughput:**
+
+  | run | MPA-0 | MP-0 |
+  |---|---:|---:|
+  | Phase 0, incl. 864-atom supercells | 12 min | 18 min |
+  | Phase 2, 35 oxides + 12 metals | 2.4 min | 3.3 min |
+
+- **`cache/external/aerospace/`** (gitignored) holds:
+  - `ntrs/`: 9 PDFs and their metadata;
+  - `provenance/`: arXiv and LAMMPS captures, and the MAPTIS page;
+  - `transcription.json`, `durability_rows.csv` and `development_side_by_side.md`.
+- The runner is idle: the queue is 100% done and the lock holds a dead pid. The nightly agent is loaded
+  and unchanged.
 
 ```bash
 HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python -m pytest tests/ reference_data/tests/ -q
-HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python scripts/freeze_spec_v2.py
+HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python scripts/freeze_spec_v2.py   # rewrites the registry timestamp: git checkout it after
 HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python -m harness status
+./uvw run --with pypdf python scripts/aerospace_ingest.py                     # rebuild the flight rows from the cached PDFs
 bash scripts/preflight_publish.sh
 ```
 
@@ -214,14 +316,14 @@ bash scripts/preflight_publish.sh
 ## Verification
 
 ```bash
-# 1. Repository
+# 1. Repository: expect HEAD == origin/main
 git status --porcelain && git log --oneline -1 && git fetch -q && git rev-parse HEAD origin/main
 
 # 2. Tests: expect 344 passed with the env var
 HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python -m pytest tests/ reference_data/tests/ -q
 
 # 3. Locked sets: expect 9 rows, all hashes ok; f-electron OPENED ONCE; OQMD LOCKED, UNOPENED
-HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python scripts/freeze_spec_v2.py
+HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python scripts/freeze_spec_v2.py && git checkout -- data/locked_sets_registry.json
 
 # 4. The product: unchanged, one promotion, no confirmation recorded
 HARNESS_MODEL=mace-mpa-0-medium .venv/bin/python -c "
@@ -240,7 +342,11 @@ for f in (FE.test_ids, X.heldout_ids):
     except PermissionError: pass
 print('f-electron opened once; OQMD half locked and unopened')"
 
-# 6. Agents and publication
+# 6. Aerospace: flight rows rebuild to the committed hash; no flight value in committed reports
+./uvw run -q --with pypdf python scripts/aerospace_ingest.py | grep rows_sha256   # expect b1b352d8…
+git diff --quiet reports/aerospace_phase1_ingest.json && echo "ingest report reproduced"
+
+# 7. Agents and publication
 launchctl print gui/$(id -u)/com.materials-harness.nightly | grep -m1 path
 bash scripts/preflight_publish.sh
 ```
@@ -253,3 +359,5 @@ bash scripts/preflight_publish.sh
 - The registry has 9 rows and every recorded sha256 verifies.
 - `confidence.FAMILIES` contains no `fluoride`; the taxonomy is unchanged.
 - `data/calibration_spec_v2.json`'s sha256 still matches the value in `data/halide_test_log.json`.
+- **New:** no committed file contains a row-level flight value. Check `reports/aerospace_durability_development.*`
+  and `reports/aerospace_phase1_ingest.json`.
