@@ -91,6 +91,72 @@ pinned dump.
 **Why not OPTIMADE.** It serves the live database without a version pin and exposes only a
 `calculation_id`, not the DFT settings; the v1.8 dump is pinned and carries each calculation's settings.
 
+## Aerospace durability sources (2026-09-29)
+
+Every entry was read **from the source itself on 2026-09-29 (UTC)**, in-session. PDFs, NTRS metadata
+captures and the transcription sit under `cache/external/aerospace/`, which is gitignored. **No row is
+committed.** `reports/aerospace_phase1_ingest.json` carries hashes, counts and check results only.
+
+### Flight data actually used
+
+The "licence" column is NTRS's `copyright.determinationType` field, read from `ntrs.nasa.gov/api/citations/<id>`
+that day. Every entry also had `containsThirdPartyMaterial: false`.
+
+| source | NTRS id | retrieved (UTC) | licence as read | sha256 | what it gives |
+|---|---|---|---|---|---|
+| Whitaker, "Selected results for metals from LDEF experiment A0171" (MSFC, 1992) | 19930001391 | 2026-09-29T02:10:23Z | GOV_PUBLIC_USE_PERMITTED | `5dbe1f283037b0daf7651008f21762d0576dd263fd9c8f8c07ab59f77a5adcd8` | Table II (p. 471): AO accommodation and reactivity for **5 samples**: Ag disk, Ag ribbon (thermally isolated), Cu, Mo, Ti 75A. Duration 5.8 years (p. 467). **No fluence, no Al, no Al-Li.** |
+| Vaughn, Linton, Finckenor, Kamenetzky, "Evaluation of space environmental effects on metals and optical thin films on EOIM-3" (MSFC, 1995) | 19950021220 | 2026-09-29T02:12:22Z | GOV_PUBLIC_USE_PERMITTED | `763ace569f26f11a70683cf21da515e9021e5f7a5889b65dca3320d712298add` | Table I (p. 1056): Δm and Δm/A for 99.9999% pure Cu, Au, Ni, Nb, Ag, Ta, W and V, and the Al-Li alloys 2090 and Weldalite, by tray (60 / 120 / 200 °C / passive). Fluence 2.2×10²⁰ atoms/cm² (p. 1054); 0.71 cm² exposed area for the pure metals (p. 1055). |
+| Linton, Vaughn, Finckenor, Kamenetzky, "Orbital atomic oxygen effects on materials: an overview of MSFC experiments on the STS-46 EOIM-3" (MSFC, 1995) | 19950021216 | 2026-09-29T02:10:23Z | GOV_PUBLIC_USE_PERMITTED | `9b13c44909bc310ac2c1af5d6f29fed149c5a0b8398a65122453c8c336bdd8c3` | Context only. It describes the single-crystal Ag/Cu at [100]/[111] and 60/120/200 °C (PDF p. 2), but **gives no numbers for them**. They are also absent from 19950021220's Table I. |
+
+**How values were read.** The text layers are 1990s OCR and drop or garble many cells. Every value was
+therefore transcribed from the page image and recorded as printed with its locator
+(`cache/external/aerospace/transcription.json`). `scripts/aerospace_ingest.py` then refuses to write unless:
+
+- every PDF hash matches;
+- where OCR survives, it agrees with the transcription (34 of 48 values confirmed; 14 dropped by OCR);
+- the EOIM-3 pure-metal Δm/A is reproduced by Δm / 0.71 cm² within the print's rounding (15/15).
+
+**Caveats that travel with these rows:**
+
+- **Ti 75A accommodation is printed "9/2 x 10⁵"** and cannot be read unambiguously. Its value is left null.
+- **EOIM-3 Al-Li areas.** The implied exposed areas (Δm ÷ Δm/A) are 3.29 / 3.27 cm² for 2090 and 1.67 cm² for
+  Weldalite. Neither matches the covers described on p. 1055 (half-covered or "D"-ringed 2.54 cm discs). The
+  per-area values cannot be reconstructed from the text.
+- **Al-Li confound.** The source attributes the Al-Li mass loss to lithium loss, not oxidation (p. 1057).
+  Weldalite flew only on passive trays and 2090 only on heated ones, so alloy and temperature are confounded.
+- **EOIM-3 Δm precision is ±0.02 mg,** per the Table I header. Several pure-metal changes are within 1–2σ of zero.
+- **EOIM-3 text vs table.** The text says Ag also flew on the 200 °C tray (p. 1055), but Table I has no
+  such row.
+- **LDEF A0171 prints no fluence.** Its reactivities (cm³/atom) are the author's normalisation and assume
+  the highest oxide formed (p. 467).
+- **Different quantities, not comparable.** LDEF reports reactivity/accommodation; EOIM-3 reports raw mass
+  change. They are different quantities under very different exposures (5.8 years vs 42 hours) and must
+  never be pooled.
+
+### Sources checked and not usable
+
+| source | checked (UTC) | outcome |
+|---|---|---|
+| MISSE database, `materialsinspace.nasa.gov` | 2026-09-29T02:09:16Z | **Host does not resolve** (curl: could not resolve host). |
+| MAPTIS, `maptis.nasa.gov` (home of MISSE data) | 2026-09-29T02:09:16Z, capture `5cd7bc88…` | **Registration required, and paid for non-NASA users.** The home page says that from January 2026 "all non-NASA users and NASA programs must pay based on the number of registered users", and that unaffiliated accounts "will be temporarily locked until payment is arranged". It also showed a system-outage notice. **Not registered; source stopped.** |
+| de Groh, "NASA Glenn Research Center's Materials International Space Station Experiments (MISSE 1-7)" | NTRS 20090005995, sha256 `1ba550c4…`, PUBLIC_USE_PERMITTED | Glenn's share only: "39 individual materials flight experiments (>540 samples)" (PDF pp. 5, 44), essentially polymers, coatings and thin films. **No bare-metal erosion data.** |
+| de Groh, "MISSE: Overview, Accomplishments and Future Needs" (2014) | NTRS 20150000889, sha256 `9fd6966b…`, PUBLIC_USE_PERMITTED | "NASA Glenn has flown 41 experiments with 630 samples". No MISSE-wide total or metal fraction is given. |
+| "Atomic Oxygen Erosion Data from the MISSE 2-8 Missions" (2019) | NTRS 20190025445, sha256 `d203dd4b…`, PUBLIC_USE_PERMITTED | 71 materials, **all polymers / carbon**. |
+| Lan, Smith, Cross, LANL O-atom facility, coatings (1988) | NTRS 19890003221, sha256 `a147a0a3…`, GOV_PUBLIC_USE_PERMITTED | Ground-based fluence lifetimes of **coatings** (Teflon, Al₂O₃, SiO₂, silicone). No metal-erosion data. |
+| Fromhold, "Experimental results on atomic oxygen corrosion of silver" (1988) | NTRS 19890012367, sha256 `69c4d64c…`, GOV_PUBLIC_USE_PERMITTED | Ground-based (plasma asher, **not the LANL facility**) Ag oxide-growth kinetics, 0–70 °C, Auburn University / MSFC. No flight comparison. |
+| Cross, Lan, Smith, Whatley, BN and Si₃N₄, ground vs flight (1990) | NTRS 19910009833, sha256 `9a5b75a7…`, GOV_PUBLIC_USE_PERMITTED | The only ground-vs-flight comparison of the three. It is **qualitative**, and the materials are BN and Si₃N₄, not metals. |
+
+**MISSE's metal fraction is unknown.** Public NASA documents cover only Glenn's experiments (630 samples),
+which are polymer- and coating-dominated. The MISSE-wide population and its metal fraction could not be
+read from any accessible source, so no such figure is written here.
+
+### Reference values used by the Phase 0 feasibility memo
+
+These are journal articles (value and locator only, no text or table reproduced): Hood, Kent & Reboredo,
+arXiv:1210.5489; Li, Stampfl & Scheffler, arXiv:cond-mat/0302122; and ZBL constants from
+`docs.lammps.org/pair_zbl.html`. Retrieval times, licences as read and hashes are in
+`reports/aerospace_durability_feasibility.md`.
+
 ## Vendored third-party content, and why it is allowed
 
 Two public-domain sources are vendored verbatim under `reference_data/raw/` so the reference-data

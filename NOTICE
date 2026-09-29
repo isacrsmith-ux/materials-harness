@@ -126,6 +126,33 @@ data; these are adaptations and further redistribution must keep this notice.
   (2015). doi:10.1038/npjcompumats.2015.10
 
 --------------------------------------------------------------------------------
+NASA Technical Reports Server documents (aerospace durability, 2026-09-29)
+--------------------------------------------------------------------------------
+
+Flight-exposure results for metals, read from NASA conference papers retrieved
+from the NASA Technical Reports Server (ntrs.nasa.gov) on 2026-09-29. NTRS
+recorded each as "GOV_PUBLIC_USE_PERMITTED" or "PUBLIC_USE_PERMITTED" with no
+third-party material that day. Nothing from them is redistributed here: the PDFs,
+the transcription and the row-level table live in gitignored
+cache/external/aerospace/. reports/ may contain aggregates and values derived
+from them, with the locator of each. Reuse implies no NASA endorsement, and the
+NASA insignia is not reproduced.
+
+  A. F. Whitaker, "Selected results for metals from LDEF experiment A0171",
+  NASA conference paper, 1992. NTRS 19930001391.
+
+  J. A. Vaughn, R. C. Linton, M. M. Finckenor, R. R. Kamenetzky, "Evaluation of
+  space environmental effects on metals and optical thin films on EOIM-3", NASA
+  conference paper, 1995. NTRS 19950021220.
+
+  R. C. Linton, J. A. Vaughn, M. M. Finckenor, R. R. Kamenetzky, "Orbital atomic
+  oxygen effects on materials: An overview of MSFC experiments on the STS-46
+  EOIM-3", NASA conference paper, 1995. NTRS 19950021216.
+
+Further NTRS documents read for context, with no values used, are listed in
+docs/methodology/data_provenance.md.
+
+--------------------------------------------------------------------------------
 MPtrj -- MIT; not used and not redistributed
 --------------------------------------------------------------------------------
 

@@ -1,0 +1,58 @@
+{
+ "documents": {
+  "ntrs_19930001391": {
+   "sha256": "5dbe1f283037b0daf7651008f21762d0576dd263fd9c8f8c07ab59f77a5adcd8",
+   "pdf": "ntrs/19930001391.pdf"
+  },
+  "ntrs_19950021220": {
+   "sha256": "763ace569f26f11a70683cf21da515e9021e5f7a5889b65dca3320d712298add",
+   "pdf": "ntrs/19950021220.pdf"
+  }
+ },
+ "checks": {
+  "pdf_sha256_all_match": true,
+  "transcribed_values_confirmed_by_ocr": 34,
+  "transcribed_values_ocr_dropped_or_garbled": 14,
+  "eoim3_pure_metal_dm_over_area_reproduced": "15/15",
+  "eoim3_al_li_implied_exposed_area_cm2": {
+   "Al-Li 2090": [
+    3.29,
+    3.27
+   ],
+   "Weldalite": [
+    1.67,
+    1.67
+   ]
+  }
+ },
+ "counts": {
+  "rows": 48,
+  "by_source": {
+   "ntrs_19930001391": 10,
+   "ntrs_19950021220": 38
+  },
+  "by_quantity": {
+   "accommodation": 5,
+   "dm_mg": 19,
+   "dm_per_area_mg_cm2": 19,
+   "reactivity": 5
+  },
+  "null_values": 1,
+  "materials": [
+   "Ag",
+   "Al-Li 2090",
+   "Au",
+   "Cu",
+   "Mo",
+   "Nb",
+   "Ni",
+   "Ta",
+   "Ti (75A)",
+   "V",
+   "V (pre-oxidized)",
+   "W",
+   "Weldalite"
+  ]
+ },
+ "rows_sha256": "b1b352d80d14025a0a9d4eac4a8e62b85a8b01d09b758fd7a220948d6a81bebe"
+}
