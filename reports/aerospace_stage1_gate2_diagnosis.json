@@ -1,0 +1,262 @@
+{
+ "dtype": "float32",
+ "summary": {
+  "plain_minus_ref": {
+   "max_abs_eV": 0.0048828125,
+   "n_over_1meV": 1,
+   "n": 40
+  },
+  "corrected_minus_ref": {
+   "max_abs_eV": 0.00048828125,
+   "n_over_1meV": 0,
+   "n": 40
+  },
+  "corrected_minus_plain": {
+   "max_abs_eV": 0.0048828125,
+   "n_over_1meV": 1,
+   "n": 40
+  }
+ },
+ "values": {
+  "/al_defects/by_mode/fixed_cell/108/vacancy/E_f_eV": {
+   "ref": 0.6785730432580976,
+   "plain_minus_ref": 9.1552734375e-05,
+   "corrected_minus_ref": 3.0517578125e-05,
+   "corrected_minus_plain": -6.103515625e-05
+  },
+  "/al_defects/by_mode/fixed_cell/108/octahedral/E_f_eV": {
+   "ref": 2.4934240270544024,
+   "plain_minus_ref": -0.000152587890625,
+   "corrected_minus_ref": 3.0517578125e-05,
+   "corrected_minus_plain": 0.00018310546875
+  },
+  "/al_defects/by_mode/fixed_cell/108/tetrahedral/E_f_eV": {
+   "ref": 2.8801122594762774,
+   "plain_minus_ref": -6.103515625e-05,
+   "corrected_minus_ref": -3.0517578125e-05,
+   "corrected_minus_plain": 3.0517578125e-05
+  },
+  "/al_defects/by_mode/fixed_cell/108/dumbbell_100/E_f_eV": {
+   "ref": 2.2908178258825274,
+   "plain_minus_ref": 6.103515625e-05,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": -6.103515625e-05
+  },
+  "/al_defects/by_mode/fixed_cell/256/vacancy/E_f_eV": {
+   "ref": 0.677605152130127,
+   "plain_minus_ref": 6.103515625e-05,
+   "corrected_minus_ref": 6.103515625e-05,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/fixed_cell/256/octahedral/E_f_eV": {
+   "ref": 2.422858715057373,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": -6.103515625e-05,
+   "corrected_minus_plain": -6.103515625e-05
+  },
+  "/al_defects/by_mode/fixed_cell/256/tetrahedral/E_f_eV": {
+   "ref": 2.746284008026123,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/fixed_cell/256/dumbbell_100/E_f_eV": {
+   "ref": 2.215400218963623,
+   "plain_minus_ref": -0.00018310546875,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.00018310546875
+  },
+  "/al_defects/by_mode/fixed_cell/500/vacancy/E_f_eV": {
+   "ref": 0.675537109375,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/fixed_cell/500/octahedral/E_f_eV": {
+   "ref": 2.3951416015625,
+   "plain_minus_ref": -0.000244140625,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.000244140625
+  },
+  "/al_defects/by_mode/fixed_cell/500/tetrahedral/E_f_eV": {
+   "ref": 2.710693359375,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0001220703125,
+   "corrected_minus_plain": 0.0001220703125
+  },
+  "/al_defects/by_mode/fixed_cell/500/dumbbell_100/E_f_eV": {
+   "ref": 2.1895751953125,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0001220703125,
+   "corrected_minus_plain": 0.0001220703125
+  },
+  "/al_defects/by_mode/fixed_cell/864/vacancy/E_f_eV": {
+   "ref": 0.678223503960453,
+   "plain_minus_ref": -0.000244140625,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.000244140625
+  },
+  "/al_defects/by_mode/fixed_cell/864/octahedral/E_f_eV": {
+   "ref": 2.379149542914547,
+   "plain_minus_ref": -0.000244140625,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.000244140625
+  },
+  "/al_defects/by_mode/fixed_cell/864/tetrahedral/E_f_eV": {
+   "ref": 2.695067511664547,
+   "plain_minus_ref": -0.000244140625,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.000244140625
+  },
+  "/al_defects/by_mode/fixed_cell/864/dumbbell_100/E_f_eV": {
+   "ref": 2.172606574164547,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/108/vacancy/E_f_eV": {
+   "ref": 0.6748804163049726,
+   "plain_minus_ref": 3.0517578125e-05,
+   "corrected_minus_ref": -3.0517578125e-05,
+   "corrected_minus_plain": -6.103515625e-05
+  },
+  "/al_defects/by_mode/zero_pressure/108/octahedral/E_f_eV": {
+   "ref": 2.3386388708044024,
+   "plain_minus_ref": 3.0517578125e-05,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": -3.0517578125e-05
+  },
+  "/al_defects/by_mode/zero_pressure/108/tetrahedral/E_f_eV": {
+   "ref": 2.7050329137731524,
+   "plain_minus_ref": 6.103515625e-05,
+   "corrected_minus_ref": 3.0517578125e-05,
+   "corrected_minus_plain": -3.0517578125e-05
+  },
+  "/al_defects/by_mode/zero_pressure/108/dumbbell_100/E_f_eV": {
+   "ref": 2.1526952672887774,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/256/vacancy/E_f_eV": {
+   "ref": 0.677605152130127,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": -0.0001220703125,
+   "corrected_minus_plain": -0.0001220703125
+  },
+  "/al_defects/by_mode/zero_pressure/256/octahedral/E_f_eV": {
+   "ref": 2.357551097869873,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": -6.103515625e-05,
+   "corrected_minus_plain": -6.103515625e-05
+  },
+  "/al_defects/by_mode/zero_pressure/256/tetrahedral/E_f_eV": {
+   "ref": 2.672797679901123,
+   "plain_minus_ref": -6.103515625e-05,
+   "corrected_minus_ref": -6.103515625e-05,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/256/dumbbell_100/E_f_eV": {
+   "ref": 2.158698558807373,
+   "plain_minus_ref": -0.0001220703125,
+   "corrected_minus_ref": 6.103515625e-05,
+   "corrected_minus_plain": 0.00018310546875
+  },
+  "/al_defects/by_mode/zero_pressure/500/vacancy/E_f_eV": {
+   "ref": 0.67529296875,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/500/octahedral/E_f_eV": {
+   "ref": 2.3597412109375,
+   "plain_minus_ref": -0.0001220703125,
+   "corrected_minus_ref": -0.0001220703125,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/500/tetrahedral/E_f_eV": {
+   "ref": 2.6756591796875,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": -0.0001220703125,
+   "corrected_minus_plain": -0.0001220703125
+  },
+  "/al_defects/by_mode/zero_pressure/500/dumbbell_100/E_f_eV": {
+   "ref": 2.1597900390625,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/al_defects/by_mode/zero_pressure/864/vacancy/E_f_eV": {
+   "ref": 0.677979363335453,
+   "plain_minus_ref": 0.000244140625,
+   "corrected_minus_ref": 0.00048828125,
+   "corrected_minus_plain": 0.000244140625
+  },
+  "/al_defects/by_mode/zero_pressure/864/octahedral/E_f_eV": {
+   "ref": 2.360106574164547,
+   "plain_minus_ref": 0.000732421875,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": -0.000732421875
+  },
+  "/al_defects/by_mode/zero_pressure/864/tetrahedral/E_f_eV": {
+   "ref": 2.676024542914547,
+   "plain_minus_ref": -0.0048828125,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0048828125
+  },
+  "/al_defects/by_mode/zero_pressure/864/dumbbell_100/E_f_eV": {
+   "ref": 2.160155402289547,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/ag_oxygen/fcc_hollow/E_total_eV": {
+   "ref": -59.0875244140625,
+   "plain_minus_ref": -1.52587890625e-05,
+   "corrected_minus_ref": -1.9073486328125e-05,
+   "corrected_minus_plain": -3.814697265625e-06
+  },
+  "/ag_oxygen/fcc_hollow/E_ad_vs_free_O_eV": {
+   "ref": 3.6170746088027954,
+   "plain_minus_ref": 3.814697265625e-05,
+   "corrected_minus_ref": 4.57763671875e-05,
+   "corrected_minus_plain": 7.62939453125e-06
+  },
+  "/ag_oxygen/subsurface_octa/E_total_eV": {
+   "ref": -58.4940299987793,
+   "plain_minus_ref": -2.6702880859375e-05,
+   "corrected_minus_ref": -2.6702880859375e-05,
+   "corrected_minus_plain": 0.0
+  },
+  "/ag_oxygen/subsurface_octa/E_ad_vs_free_O_eV": {
+   "ref": 3.0235801935195923,
+   "plain_minus_ref": 4.9591064453125e-05,
+   "corrected_minus_ref": 5.340576171875e-05,
+   "corrected_minus_plain": 3.814697265625e-06
+  },
+  "/ag_oxygen/free_O_atom_eV": {
+   "ref": -1.548387885093689,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/ag_oxygen/O2/E_eV": {
+   "ref": -9.38170337677002,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/ag_oxygen/O2/binding_per_O_eV": {
+   "ref": 3.142463803291321,
+   "plain_minus_ref": 0.0,
+   "corrected_minus_ref": 0.0,
+   "corrected_minus_plain": 0.0
+  },
+  "/ag_oxygen/fcc_minus_octa_E_ad_eV": {
+   "ref": 0.5934944152832031,
+   "plain_minus_ref": -1.1444091796875e-05,
+   "corrected_minus_ref": -7.62939453125e-06,
+   "corrected_minus_plain": 3.814697265625e-06
+  }
+ }
+}

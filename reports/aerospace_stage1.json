@@ -1,0 +1,73 @@
+{
+ "engine": "mace-mpa-0-medium",
+ "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+ "dtype": "float32",
+ "frac_a": 0.4,
+ "frac_b": 0.7,
+ "tolerances": {
+  "zbl_rel": 1e-06,
+  "invariance_eV": 0.001
+ },
+ "table_build_s": 21.1,
+ "gate3_switching_range": {
+  "pass": true,
+  "n_structures": 59,
+  "n_species_pairs": 20,
+  "pairs_inside_R_b": {},
+  "tightest_margin": {
+   "pair": "O-V",
+   "d": 1.6098411204112713,
+   "R_b": 1.533,
+   "d_over_R_b": 1.0501246708488396,
+   "material_id": "mp-aaaablkh"
+  }
+ },
+ "gate1_dimers": {
+  "pass": true,
+  "pairs": {
+   "Al-Al": {
+    "R_a": 0.968,
+    "R_b": 1.694,
+    "max_rel_dev_from_zbl_below_R_a": 4.440892098500626e-16,
+    "strictly_decreasing_below_R_b": true,
+    "r_where_energy_rises": []
+   },
+   "Al-O": {
+    "R_a": 0.7480000000000001,
+    "R_b": 1.309,
+    "max_rel_dev_from_zbl_below_R_a": 4.440892098500626e-16,
+    "strictly_decreasing_below_R_b": true,
+    "r_where_energy_rises": []
+   },
+   "Ag-O": {
+    "R_a": 0.844,
+    "R_b": 1.4769999999999999,
+    "max_rel_dev_from_zbl_below_R_a": 2.220446049250313e-16,
+    "strictly_decreasing_below_R_b": true,
+    "r_where_energy_rises": []
+   },
+   "Ag-Ag": {
+    "R_a": 1.16,
+    "R_b": 2.03,
+    "max_rel_dev_from_zbl_below_R_a": 4.440892098500626e-16,
+    "strictly_decreasing_below_R_b": true,
+    "r_where_energy_rises": []
+   },
+   "O-O": {
+    "R_a": 0.528,
+    "R_b": 0.9239999999999999,
+    "max_rel_dev_from_zbl_below_R_a": 4.440892098500626e-16,
+    "strictly_decreasing_below_R_b": true,
+    "r_where_energy_rises": []
+   }
+  }
+ },
+ "gate2_invariance": {
+  "pass": false,
+  "n_values": 40,
+  "max_abs_diff_eV": 0.00537109375,
+  "worst": "/al_defects/by_mode/zero_pressure/864/tetrahedral/E_f_eV"
+ },
+ "all_gates_pass": false,
+ "wall_s": 749.6
+}
