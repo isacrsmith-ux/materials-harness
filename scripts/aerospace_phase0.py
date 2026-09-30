@@ -26,6 +26,7 @@ from ase.optimize import BFGS
 
 from harness import config
 from harness.engine import get_calculator
+from harness.zbl import universal
 
 FMAX = config.DEFAULT_RELAX.fmax
 MAX_STEPS = 2000
@@ -135,14 +136,7 @@ def ag_oxygen() -> dict:
     return res
 
 
-def zbl(z1: int, z2: int, r: np.ndarray) -> np.ndarray:
-    """ZBL universal screened nuclear repulsion, constants as printed in the LAMMPS pair_zbl docs."""
-    k = units._e ** 2 / (4 * np.pi * units._eps0) / units._e * 1e10  # e^2/(4 pi eps0) in eV·Å
-    a = 0.46850 / (z1 ** 0.23 + z2 ** 0.23)
-    x = r / a
-    phi = (0.18175 * np.exp(-3.19980 * x) + 0.50986 * np.exp(-0.94229 * x)
-           + 0.28022 * np.exp(-0.40290 * x) + 0.02817 * np.exp(-0.20162 * x))
-    return k * z1 * z2 / r * phi
+zbl = universal  # ZBL universal screened nuclear repulsion (LAMMPS pair_zbl constants), harness.zbl
 
 
 def dimers() -> dict:
