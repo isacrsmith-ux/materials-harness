@@ -1,0 +1,233 @@
+{
+ "checkpoint_zbl": {
+  "mace-mpa-0-medium": {
+   "pair_repulsion": true,
+   "c": [
+    0.1818,
+    0.5099,
+    0.2802,
+    0.02817
+   ],
+   "a_prefactor": 0.4543,
+   "a_exp": 0.3,
+   "envelope_p": 5
+  },
+  "mace-mp-0-medium": {
+   "pair_repulsion": false
+  }
+ },
+ "mpa0_dimer_decomposition": {
+  "Al-Al": [
+   {
+    "r": 0.3,
+    "universal_zbl": 1509.4798795425702,
+    "mace_zbl_term": 361.9897082461541,
+    "model_total": 291.4601002037525,
+    "learned_part": -70.5296080424016,
+    "universal_over_mace_zbl": 4.169952474218188
+   },
+   {
+    "r": 0.5,
+    "universal_zbl": 418.11134856351794,
+    "mace_zbl_term": 59.21629782262499,
+    "model_total": 56.9062137901783,
+    "learned_part": -2.3100840324466887,
+    "universal_over_mace_zbl": 7.060747867350948
+   },
+   {
+    "r": 0.8,
+    "universal_zbl": 100.65377152082418,
+    "mace_zbl_term": 7.018390487266775,
+    "model_total": 19.882501631975174,
+    "learned_part": 12.8641111447084,
+    "universal_over_mace_zbl": 14.34143222772185
+   },
+   {
+    "r": 1.0,
+    "universal_zbl": 46.028749273653595,
+    "mace_zbl_term": 2.069334358735746,
+    "model_total": 21.03979304432869,
+    "learned_part": 18.970458685592945,
+    "universal_over_mace_zbl": 22.24326343364575
+   },
+   {
+    "r": 1.25,
+    "universal_zbl": 19.274998692698095,
+    "mace_zbl_term": 0.4899989104834194,
+    "model_total": 18.23477366566658,
+    "learned_part": 17.744774755183162,
+    "universal_over_mace_zbl": 39.33681949145951
+   }
+  ],
+  "Al-O": [
+   {
+    "r": 0.3,
+    "universal_zbl": 994.3461114782382,
+    "mace_zbl_term": 257.87069807311,
+    "model_total": 230.5306962877512,
+    "learned_part": -27.340001785358822,
+    "universal_over_mace_zbl": 3.8559872017577077
+   },
+   {
+    "r": 0.5,
+    "universal_zbl": 282.69190018102523,
+    "mace_zbl_term": 44.16751080604441,
+    "model_total": 68.32355822622776,
+    "learned_part": 24.15604742018335,
+    "universal_over_mace_zbl": 6.400448995697948
+   },
+   {
+    "r": 0.8,
+    "universal_zbl": 70.14750433845693,
+    "mace_zbl_term": 5.17662371118146,
+    "model_total": 30.066998854279518,
+    "learned_part": 24.89037514309806,
+    "universal_over_mace_zbl": 13.550821588005125
+   },
+   {
+    "r": 1.0,
+    "universal_zbl": 32.69883192584287,
+    "mace_zbl_term": 1.3790495065398165,
+    "model_total": 12.097967520356178,
+    "learned_part": 10.718918013816362,
+    "universal_over_mace_zbl": 23.71113710622888
+   },
+   {
+    "r": 1.25,
+    "universal_zbl": 14.007149367870236,
+    "mace_zbl_term": 0.24198453501430794,
+    "model_total": -0.8183654397726059,
+    "learned_part": -1.0603499747869138,
+    "universal_over_mace_zbl": 57.88448161384375
+   }
+  ],
+  "Ag-O": [
+   {
+    "r": 0.3,
+    "universal_zbl": 2892.3273429554656,
+    "mace_zbl_term": 568.0448183145118,
+    "model_total": 484.9876651763916,
+    "learned_part": -83.05715313812016,
+    "universal_over_mace_zbl": 5.091723838864522
+   },
+   {
+    "r": 0.5,
+    "universal_zbl": 757.8232409504342,
+    "mace_zbl_term": 80.71531458761527,
+    "model_total": 114.0168628692627,
+    "learned_part": 33.30154828164743,
+    "universal_over_mace_zbl": 9.388840826827582
+   },
+   {
+    "r": 0.8,
+    "universal_zbl": 170.60618846420303,
+    "mace_zbl_term": 8.005726352135337,
+    "model_total": 63.10240364074707,
+    "learned_part": 55.09667728861173,
+    "universal_over_mace_zbl": 21.310519615587147
+   },
+   {
+    "r": 1.0,
+    "universal_zbl": 74.76189419791027,
+    "mace_zbl_term": 2.0747680695850406,
+    "model_total": 40.52551460266113,
+    "learned_part": 38.45074653307609,
+    "universal_over_mace_zbl": 36.03385616632458
+   },
+   {
+    "r": 1.25,
+    "universal_zbl": 29.809102560011336,
+    "mace_zbl_term": 0.3875352847266296,
+    "model_total": 13.806650161743164,
+    "learned_part": 13.419114877016534,
+    "universal_over_mace_zbl": 76.91971217805084
+   }
+  ],
+  "Ag-Ag": [
+   {
+    "r": 0.3,
+    "universal_zbl": 13002.494495876443,
+    "mace_zbl_term": 1855.6435889534484,
+    "model_total": 1462.0517723560333,
+    "learned_part": -393.5918165974151,
+    "universal_over_mace_zbl": 7.006999928908562
+   },
+   {
+    "r": 0.5,
+    "universal_zbl": 3095.165902809833,
+    "mace_zbl_term": 211.8529463718994,
+    "model_total": 191.34266591072083,
+    "learned_part": -20.51028046117858,
+    "universal_over_mace_zbl": 14.609973360372305
+   },
+   {
+    "r": 0.8,
+    "universal_zbl": 615.8220008706032,
+    "mace_zbl_term": 17.692302740194545,
+    "model_total": 46.666579484939575,
+    "learned_part": 28.97427674474503,
+    "universal_over_mace_zbl": 34.80734022663641
+   },
+   {
+    "r": 1.0,
+    "universal_zbl": 249.9336257190367,
+    "mace_zbl_term": 4.334975839789869,
+    "model_total": 40.17785573005676,
+    "learned_part": 35.84287989026689,
+    "universal_over_mace_zbl": 57.65513695023312
+   },
+   {
+    "r": 1.25,
+    "universal_zbl": 91.73731938707174,
+    "mace_zbl_term": 0.8124948081938568,
+    "model_total": 34.42181706428528,
+    "learned_part": 33.609322256091424,
+    "universal_over_mace_zbl": 112.90819148863253
+   }
+  ]
+ },
+ "ao_impact": {
+  "orbital_speed_m_s": 8000.0,
+  "E_lab_eV": 5.306174364260951,
+  "targets": {
+   "Al": {
+    "E_cm_eV": 3.3310133584533816,
+    "closest_approach_universal_zbl_A": 1.7432165065572636,
+    "closest_approach_mpa0_dimer_A": 1.1696873677104285
+   },
+   "Ag": {
+    "E_cm_eV": 4.6208154988485495,
+    "closest_approach_universal_zbl_A": 1.8753447797761313,
+    "closest_approach_mpa0_dimer_A": 1.4250423277574849
+   }
+  }
+ },
+ "throughput_mpa0": [
+  {
+   "n_atoms": 500,
+   "s_per_force_call": 0.540811707964167,
+   "device": "cpu",
+   "dtype": "float32",
+   "us_per_atom_step": 1081.623415928334,
+   "peak_rss_gb": 4.029218816
+  },
+  {
+   "n_atoms": 2048,
+   "s_per_force_call": 2.2409458750043996,
+   "device": "cpu",
+   "dtype": "float32",
+   "us_per_atom_step": 1094.211853029492,
+   "peak_rss_gb": 14.488158208
+  },
+  {
+   "n_atoms": 4000,
+   "s_per_force_call": 7.6663256250321865,
+   "device": "cpu",
+   "dtype": "float32",
+   "us_per_atom_step": 1916.5814062580466,
+   "peak_rss_gb": 26.312015872
+  }
+ ],
+ "machine_memory_gb": 38.654705664,
+ "wall_s": 50.7
+}
