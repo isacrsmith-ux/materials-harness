@@ -245,6 +245,17 @@ references behind the "recommended 25 eV" in arXiv:1904.00360 (paywalled); Jung 
 **IAEA CascadesDB** (`cascadesdb.iaea.org`) could **not** be read: curl returned HTTP 403 with a JavaScript challenge ("Just a moment ...") and WebFetch returned HTTP 402, both at 2026-10-08T02:51:03Z.
 Its Al coverage and licence are unknown; a web-search summary (secondary, unverified) says Al is not among its materials. Nothing was bypassed or downloaded.
 
+
+### T-phase stretch sources (read 2026-10-08 UTC; 2026-10-07 local)
+
+| source | retrieved (UTC) | licence as read | sha256 |
+|---|---|---|---|
+| Tunes, Stemper, Greaves, Uggowitzer, Pogatscher, *Adv. Sci.* **7**, 2002397 (2020), doi:10.1002/advs.202002397, full-text XML from Europe PMC (PMC7675061) | 2026-10-08T03:00:24Z | **CC BY 4.0**, stated in the XML | `dec8267687038f4ac11ee5ea76cb1cd604c72127b5f7608492e89bd184da4614` |
+| Willenshofer, Tunes, Vo, Stemper, Alfreider, Renk, Greaves, Kiener, Uggowitzer, Pogatscher, *Adv. Mater.*, doi:10.1002/adma.202513450, full-text XML from Europe PMC (PMC13054116) | 2026-10-08T03:00:27Z | **CC BY 4.0**, stated in the XML | `2838724a26f8e56e2dd346f667ae8b80cb40cd4c165c4d00d093fa0adbc5bc6a` |
+
+The publisher's DOI pages returned HTTP 403 with a Cloudflare challenge (03:00:01Z) and were not bypassed. The Materials Project search was made through the harness's cached summary
+search (database version as of the query; MP is CC BY 4.0 per `NOTICE`). Two COD queries (03:02Z) returned empty bodies. Nothing from OQMD was read.
+
 ### DFT population reference (Phase C)
 
 | source | what | retrieved (UTC) | licence as read | sha256 |
