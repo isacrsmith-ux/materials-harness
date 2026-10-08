@@ -150,6 +150,96 @@ therefore transcribed from the page image and recorded as printed with its locat
 which are polymer- and coating-dominated. The MISSE-wide population and its metal fraction could not be
 read from any accessible source, so no such figure is written here.
 
+### Literature session additions (read 2026-10-08 UTC; 2026-10-07 local)
+
+Every entry was read **from the source itself in-session**. Licence fields were read from
+`ntrs.nasa.gov/api/citations/<id>` (`copyright.determinationType`, `containsThirdPartyMaterial`) at the time
+shown; every record had `containsThirdPartyMaterial: false`. PDFs, API captures (`<id>.meta.json`), the
+transcription (`transcription_v2.json`) and the row table (`durability_rows_v2.csv`) sit under
+`cache/external/aerospace/`, gitignored. **No row is committed.** Aggregates and check results are in
+`reports/aerospace_phase1_ingest.json` (regenerated, still without values).
+
+| source | NTRS id | record read / PDF fetched (UTC) | licence as read | sha256 | what it gave |
+|---|---|---|---|---|---|
+| de Rooij (ESA/ESTEC), "Some results of the oxidation investigation of copper and silver samples flown on LDEF", *LDEF Materials Workshop 1991, Part 2* (NASA LaRC, listed 1992-09-01), printed pp. 479-490 | 19930001392 | 02:14:21Z / 02:14:52Z | GOV_PUBLIC_USE_PERMITTED | `cdb2b7b4761e3306e8732017c2995f237192befc5f06ea57fc7bb23fb6e8eb46` | Table I (fluence for 5 Cu grounding strips) and Table II (oxide thickness by X-ray, Auger-XPS, colour, average; 4 strips). The stated thickness-fluence law is a form only (Fig. 8): **its constants are not printed**. Ag results are qualitative. |
+| Raikar, Gregory, Christl, Peters, "The interaction of atomic oxygen with copper: an XPS, AES, XRD, optical transmission and stylus profilometry study", *LDEF - 69 Months in Space, Part 3: Second Post-Retrieval Symposium* (NASA LaRC, listed 1993-04-01), printed pp. 1169-1186 | 19930019095 | 02:14:22Z / 02:14:54Z | GOV_PUBLIC_USE_PERMITTED | `117fe74285269ab69289b59308c364f4f03dd1fcc57595b35e89ebbdb0303613` | **The archival version.** One Cu thin film and one solid OFHC Cu sample, flown on the leading-edge C9 tray (row 9, A0114): film thickness before and after, derived Cu2O and Cu-consumed thickness, CuO overlayer, fluence for row 9. |
+| Gregory (PI), "Analysis of surfaces from the LDEF A0114, phase 2", NASA CR-192306, Univ. of Alabama in Huntsville semi-annual report, 1 Mar - 31 Aug 1992 (NAG1-1228) | 19930011567 | 02:14:22Z / 02:14:55Z | GOV_PUBLIC_USE_PERMITTED | `1a8bea5dfa39b7635574087fcc7ba1761115c1361bb0685b94ea2a89d9e919d4` | **Not a second version of the paper.** The brief named this id as one; NTRS says it is a grant report that *encloses a copy* of the Raikar paper. Same sample, same numbers (7 of 7 key numbers found in both, checked). Not ingested, so nothing is double-counted. |
+| Gregory, "Results from LDEF experiment A0114: the interaction of atomic oxygen with materials surfaces at orbital altitudes", NASA CR-196016, final report, June 1994 | 19940030882 | 02:14:23Z / 02:14:56Z | GOV_PUBLIC_USE_PERMITTED | `b94ce803b83ceae7c2bbfddaeff871bac477395d918b1d54a0bbd04751dcdb18` | Six-page narrative. **No tabulated oxidation rates for Ag or Cu.** It states qualitatively that thick oxide films form on copper at 20 C, and lists follow-on papers (below). |
+| Morton, Ferguson, "Atomic oxygen exposure of power system and other spacecraft materials: results of the EOIM-3 experiment", NASA TM-107427, NASA Lewis, May 1997 | 19970025577 | 02:14:23Z / 02:14:58Z | GOV_PUBLIC_USE_PERMITTED | `8d916d16f47e09dbbfe97df69d0283b15b932b6ba43b13b4afa13366d4795fa6` | Appendix A mass table (pre, post, change, for 60 C, 200 C and a control) and Table II (stated detection limit, AES oxygen and carbon signal changes, SEM remarks) for 12 metals. **A different set of samples and hardware from the MSFC paper (19950021220).** |
+| Finckenor, Golden, Kravchenko, O'Rourke, "Analysis of International Space Station vehicle materials on MISSE 6", National Space & Missile Materials Symposium, Scottsdale AZ, 28 Jun - 2 Jul 2010 (NSMMS report M10-0758) | 20100033233 | 02:14:23Z / 02:14:59Z | PUBLIC_USE_PERMITTED | `cf3bceeea97eebfc86887c3995c828c4178b8edc0859a72642b41d8de0e85a30` | Slides 7 and 9: pre/post optical properties with ESH and AO fluence for anodized Al (6 samples) and electroless Ni (3). Born-digital text layer, not OCR. **Sn-plated Be-Cu is a MISSE 7 sample here: no result.** |
+| Burns, Finckenor, Henrie, "MISSE in the Materials and Processes Technical Information System (MAPTIS)", NSMMS 2013 (M13-2718) | 20140000657 | 02:14:24Z / 02:15:01Z | GOV_PUBLIC_USE_PERMITTED | `5086f3fe744bc9aecab7718c3cf23ca3519b643c9a44d6d69e1fb9cddece3c4d` | Read for `docs/methodology/maptis_query_plan.md` only. No flight values ingested. |
+
+**Dropped: Pippin, Normand, Finckenor, "Estimated environmental exposures for MISSE-3 and MISSE-4"**
+(NTRS 20080033099, record read 02:14:24Z). The record is an **abstract only** (`downloadsAvailable: false`, no
+PDF), its licence field reads `OTHER`, and the abstract prints no per-tray fluence or dose. There is no exposure
+table to transcribe, so nothing was acquired. The per-tray record the brief wanted would have to come from the
+full paper, which is not on NTRS.
+
+**How values were read.** Scanned sources (de Rooij, Raikar, Morton, CR-192306): from the page images, with a
+locator per row, then checked row by row against the OCR text layer (`aerospace_ingest.py`). One of 65 Morton rows
+the OCR garbled; the image was unambiguous. The MISSE-6 deck is born-digital, so its text layer is the source;
+row alignment was confirmed in layout mode.
+
+**Caveats that travel with these rows:**
+
+- **de Rooij E02 fluence is printed with the exponent "09"** in Table I. It is not read as 10^9 or 10^19; the
+  fluence is left null. The probable typo is an inference, not something the source says. Table I also states
+  the fluences are maxima, because the strips are not in plane with their trays.
+- **de Rooij's D01 strip has no oxide thickness:** the depth profile shows a silicon-oxide contaminant.
+- **de Rooij's accuracy statements:** thickness "not better than +-30%", Talystep calibration +-20% (p. 487).
+- **Strip-to-tray mapping** (D01 to tray 1, and so on) rests on the matching numerals and on the one explicit
+  "tray 10 (E10)". The text does not tabulate it.
+- **Raikar's CuO overlayer** (about 2-3 nm on the solid sample) is hypothesised by the authors to have formed
+  after return to Earth; de Rooij says the same of his CuO top layer. It is not flight-grown oxide.
+- **Raikar internal consistency.** The source's own Table 1 densities reproduce its stated 114 nm and 117 nm
+  full-conversion thicknesses, and its 55 / 92 / 13 nm split. Two statements do **not** hold, and are recorded,
+  not fixed: the mask-edge step height differs from the film-thickness difference by 2.0 combined sigma although
+  the text says they agree, and "40% greater" is 54.9% from the printed thicknesses.
+- **Morton's detection limit is "<0.1 mg"** (Table II). The 20 samples with "no detectable change" are stored as
+  **upper bounds** equal to that limit, with the measured Appendix A change kept alongside. The largest control
+  change in Appendix A is 0.09 mg. Two flight samples are quantified: 6061-T6 Al at 200 C (a loss printed as 0.1
+  mg, exactly at the limit) and tungsten at 60 C (a gain of 0.94 mg that its 200 C partner and control do not
+  show, unexplained in the summary).
+- **Morton's Table II prints identical AES cells for Tungsten and Molybdenum** (O +51/-40, C -77/-85), checked on
+  the page image. A duplicated cell is suspected; both are kept as printed and flagged. The AES percentages do
+  not say what they are relative to.
+- **Brass and titanium flew only at 200 C** in the Lewis set (no 60 C sample).
+- **EOIM-3 fluence is printed twice.** The Lewis memorandum gives a preliminary mass-spectrometer value; the MSFC
+  paper's value is 4.4% lower. Different samples, so they are not pooled.
+- **MISSE-6 quantity labels.** The anodize and electroless-Ni slides print two lines per sample without naming
+  them. They are treated as solar absorptance then emittance, which is how the same deck labels its beta-cloth
+  slides. That is an inference, flagged on every row.
+
+**Follow-on papers cited by NTRS 19940030882 (pointers only; titles as printed there; not fetched, not verified):**
+Raikar, Gregory, Peters, "Oxidation of Copper by Fast Atomic Oxygen", *Oxidation of Metals* 42, 1-15 (1994, "in
+press"); Gregory, Christl, Raikar, Peters, "Effects on LDEF Exposed Copper Film, and Bulk", First LDEF
+Post-Retrieval Symposium (NASA CP-3134, part 2, pp. 755-762); Peters, Gregory, Raikar, "Changes in Chemical and
+Optical Properties of Thin Film Metals Mirrors on LDEF", LDEF Materials Results for Spacecraft Applications
+conference (Huntsville, 27-28 Oct 1992); Peters, Gregory, Nag, "Measurements of the Optical Properties of Thin
+Films of Silver and Silver Oxide", Third LDEF Post-Retrieval Symposium (1993, "in press"); Gregory, Christl,
+Peters, "Measurements of Erosion Characteristics for Metal and Polymer Surfaces Using Profilometry" (CP-3134,
+part 2, pp. 723-735). The journal paper is the one most likely to hold more Cu data; it is publisher-copyrighted.
+
+### DFT population reference (Phase C)
+
+| source | what | retrieved (UTC) | licence as read | sha256 |
+|---|---|---|---|---|
+| Angsten, Mayeshiba, Wu, Morgan, "Elemental vacancy diffusion database from high-throughput first-principles calculations for fcc and hcp structures", *New J. Phys.* **16**, 015018 (2014), doi:10.1088/1367-2630/16/1/015018 | landing page `https://doi.org/10.1088/1367-2630/16/1/015018` (resolved to `iopscience.iop.org`), which carries the full text and the appendix tables A.1 (fcc) and A.2 (hcp) | 2026-10-08T02:19:17Z | **CC BY 3.0**, stated on the page: use is allowed with attribution to the authors, the title, the journal citation and the DOI | `a48f8a37d6024ce52f2c9f22b3b966d00aa652f260905686b98288dc1ecca51e` (235,755 bytes) |
+
+- **The NIST dataset (hdl:11256/102) could not be read.** `https://hdl.handle.net/11256/102` returned HTTP 500
+  ("cannot be found", 02:18:29Z and 02:19:19Z) and `https://materialsdata.nist.gov/handle/11256/102` returned HTTP
+  404 (02:19:17Z). Its licence was therefore **not** read. The paper's own appendix tables, which it says list
+  all calculated data, are the reference, and they carry the paper's CC BY 3.0 licence.
+- **The IOP PDF endpoint answered with a bot-detection challenge** (02:19:56Z). It was not bypassed. The capture
+  is kept as `BLOCKED_iop_pdf_botcheck_*.html` so it cannot be mistaken for the paper.
+- **The paper's DFT settings** (what the reference is, not ours): VASP 5.2.2 with MAST and pymatgen; PBE
+  exchange-correlation, PAW; first-order Methfessel-Paxton smearing, 0.2 eV, for relaxations; tetrahedron method
+  with Bloechl corrections for fixed-ion energies; no spin polarisation except Co, Ni, Mn and hcp Fe; plane-wave
+  cutoff 1.5 x ENMAX. Cells: fcc 3x3x3 conventional (108 sites), 4x4x4 Monkhorst-Pack k-mesh; hcp 3x3x2
+  conventional (36 sites), 9x9x9 Gamma-centred. Vacancy formation: the defect cell at the fixed volume of the
+  relaxed perfect cell, ions relaxed. Stated size-effect error 20-30 meV, k-point error 18 meV for Al (fcc) and 9
+  meV for Mg (hcp).
+
 ### Reference values used by the Phase 0 feasibility memo
 
 These are journal articles (value and locator only, no text or table reproduced): Hood, Kent & Reboredo,

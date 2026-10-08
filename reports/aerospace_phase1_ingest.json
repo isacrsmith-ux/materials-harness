@@ -54,5 +54,122 @@
    "Weldalite"
   ]
  },
- "rows_sha256": "b1b352d80d14025a0a9d4eac4a8e62b85a8b01d09b758fd7a220948d6a81bebe"
+ "phase1_rows_sha256": "b1b352d80d14025a0a9d4eac4a8e62b85a8b01d09b758fd7a220948d6a81bebe",
+ "documents_literature_session": {
+  "ntrs_19930001392": {
+   "sha256": "cdb2b7b4761e3306e8732017c2995f237192befc5f06ea57fc7bb23fb6e8eb46",
+   "pdf": "ntrs/19930001392.pdf"
+  },
+  "ntrs_19930019095": {
+   "sha256": "117fe74285269ab69289b59308c364f4f03dd1fcc57595b35e89ebbdb0303613",
+   "pdf": "ntrs/19930019095.pdf"
+  },
+  "ntrs_19930011567": {
+   "sha256": "1a8bea5dfa39b7635574087fcc7ba1761115c1361bb0685b94ea2a89d9e919d4",
+   "pdf": "ntrs/19930011567.pdf"
+  },
+  "ntrs_19940030882": {
+   "sha256": "b94ce803b83ceae7c2bbfddaeff871bac477395d918b1d54a0bbd04751dcdb18",
+   "pdf": "ntrs/19940030882.pdf"
+  },
+  "ntrs_19970025577": {
+   "sha256": "8d916d16f47e09dbbfe97df69d0283b15b932b6ba43b13b4afa13366d4795fa6",
+   "pdf": "ntrs/19970025577.pdf"
+  },
+  "ntrs_20100033233": {
+   "sha256": "cf3bceeea97eebfc86887c3995c828c4178b8edc0859a72642b41d8de0e85a30",
+   "pdf": "ntrs/20100033233.pdf"
+  },
+  "ntrs_20140000657": {
+   "sha256": "5086f3fe744bc9aecab7718c3cf23ca3519b643c9a44d6d69e1fb9cddece3c4d",
+   "pdf": "ntrs/20140000657.pdf"
+  }
+ },
+ "literature_session": {
+  "tier": "development / descriptive, no verdict",
+  "checks": {
+   "pdf_sha256_all_match": true,
+   "ocr_row_confirmed_by_source": {
+    "ntrs_19930001392": 14,
+    "ntrs_19930019095": 7,
+    "ntrs_19970025577": 64,
+    "ntrs_20100033233": 18
+   },
+   "ocr_row_dropped_or_garbled": {
+    "ntrs_19970025577": 1
+   },
+   "derooij_table_ii_average_equals_mean_of_methods": "4/4",
+   "derooij_text_vs_table_E10": true,
+   "raikar_pilling_bedworth_relation": {
+    "full_conversion_cu2o_reproduced": true,
+    "full_conversion_cuo_within_stated_density_range": true,
+    "cu_consumed_reproduced": true,
+    "cu2o_thickness_reproduced": true,
+    "cu_unoxidised_reproduced": true
+   },
+   "morton": {
+    "per_sample_fluence_reproduced": true,
+    "appendix_change_equals_post_minus_pre": true,
+    "no_detectable_rows_below_limit": true,
+    "quantified_rows_match_table_ii": true,
+    "control_max_abs_dm_mg_below_limit": true
+   },
+   "morton_control_max_abs_dm_mg": 0.09,
+   "misse6_printed_delta_equals_post_minus_pre": "18/18",
+   "cr192306_carries_same_raikar_numbers": {
+    "ntrs_19930019095": 7,
+    "ntrs_19930011567": 7
+   },
+   "derooij_fluence_exponent_printed_with_leading_zero": true
+  },
+  "recorded_mismatches_not_corrected": [
+   {
+    "id": "raikar_step_height_vs_film_thickness_difference",
+    "source": "ntrs_19930019095",
+    "what": "text says the mask-edge step is 'in agreement with the difference in total film thickness'",
+    "relative_discrepancy": 0.08,
+    "in_combined_sigma": 2.0
+   },
+   {
+    "id": "raikar_percent_greater_statement",
+    "source": "ntrs_19930019095",
+    "what": "text says the exposed film is '40% greater' than the unexposed one",
+    "printed_percent": 40,
+    "from_printed_thicknesses_percent": 54.9
+   },
+   {
+    "id": "eoim3_fluence_two_sources",
+    "source": "ntrs_19950021220 vs ntrs_19970025577",
+    "what": "EOIM-3 total AO fluence as printed by the MSFC paper and by the Lewis memorandum (preliminary mass spectrometer value)",
+    "relative_difference": 0.044
+   }
+  ],
+  "counts": {
+   "rows": 153,
+   "new_rows": 105,
+   "by_quantity_kind": {
+    "accommodation": 5,
+    "film_thickness": 4,
+    "mass_change": 60,
+    "optical_property": 18,
+    "oxide_thickness": 17,
+    "reactivity": 5,
+    "surface_composition": 44
+   },
+   "by_source": {
+    "ntrs_19930001391": 10,
+    "ntrs_19930001392": 14,
+    "ntrs_19930019095": 7,
+    "ntrs_19950021220": 38,
+    "ntrs_19970025577": 66,
+    "ntrs_20100033233": 18
+   },
+   "upper_bound_rows": 20,
+   "null_values": 5,
+   "pooling_groups": 19,
+   "qualitative_notes": 8
+  },
+  "rule": "rows are pooled only within one (quantity_kind, quantity, unit), never across kinds, and never mixing measured values with upper bounds (assert_poolable)"
+ },
+ "rows_sha256": "aece86512773b148824f079755ddde87e17e7184fe78e2378b86b74467ca3cfc"
 }

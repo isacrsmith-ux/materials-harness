@@ -149,7 +149,51 @@ NASA insignia is not reproduced.
   oxygen effects on materials: An overview of MSFC experiments on the STS-46
   EOIM-3", NASA conference paper, 1995. NTRS 19950021216.
 
-Further NTRS documents read for context, with no values used, are listed in
+Six further NTRS documents were read on 2026-10-08 (UTC) under the same terms and with the
+same handling (NTRS licence fields: GOV_PUBLIC_USE_PERMITTED, except PUBLIC_USE_PERMITTED for
+the MISSE 6 presentation; no third-party material):
+
+  A. de Rooij, "Some results of the oxidation investigation of copper and silver
+  samples flown on LDEF", LDEF Materials Workshop 1991, Part 2, NASA LaRC, 1992.
+  NTRS 19930001392.
+
+  G. N. Raikar, J. C. Gregory, L. C. Christl, P. N. Peters, "The interaction of
+  atomic oxygen with copper: an XPS, AES, XRD, optical transmission and stylus
+  profilometry study", LDEF - 69 Months in Space, Part 3: Second Post-Retrieval
+  Symposium, NASA LaRC, 1993. NTRS 19930019095. (NTRS 19930011567, NASA CR-192306,
+  encloses a copy and was checked, not ingested.)
+
+  J. C. Gregory, "Results from LDEF experiment A0114: the interaction of atomic oxygen
+  with materials surfaces at orbital altitudes", NASA CR-196016, 1994. NTRS 19940030882.
+
+  T. L. Morton, D. C. Ferguson, "Atomic oxygen exposure of power system and other
+  spacecraft materials: results of the EOIM-3 experiment", NASA TM-107427, 1997.
+  NTRS 19970025577.
+
+  M. M. Finckenor, J. L. Golden, M. Kravchenko, M. J. O'Rourke, "Analysis of
+  International Space Station vehicle materials on MISSE 6", National Space & Missile
+  Materials Symposium, 2010. NTRS 20100033233.
+
+  D. Burns, M. Finckenor, B. Henrie, "MISSE in the Materials and Processes Technical
+  Information System (MAPTIS)", National Space and Missile Materials Symposium, 2013.
+  NTRS 20140000657. (Read for a query plan only.)
+
+--------------------------------------------------------------------------------
+Angsten et al. vacancy database -- CC BY 3.0
+--------------------------------------------------------------------------------
+
+Per-element PBE vacancy formation energies in reports/aerospace_vacancy_population.*
+are taken from Tables A.1 and A.2 of the paper below, which is open access under the
+Creative Commons Attribution 3.0 licence (https://creativecommons.org/licenses/by/3.0/).
+Changes were made: values were selected by stated rules, set beside this project's
+engine values, and summarised. The dataset the paper points to (NIST hdl:11256/102)
+could not be reached and is not used.
+
+  T. Angsten, T. Mayeshiba, H. Wu, D. Morgan, "Elemental vacancy diffusion database
+  from high-throughput first-principles calculations for fcc and hcp structures",
+  New Journal of Physics 16, 015018 (2014). doi:10.1088/1367-2630/16/1/015018
+
+Other NTRS documents read for context, with no values used, are listed in
 docs/methodology/data_provenance.md.
 
 --------------------------------------------------------------------------------
