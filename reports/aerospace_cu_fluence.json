@@ -1,0 +1,434 @@
+{
+ "tier": "development / descriptive, no verdict",
+ "generated_at": "2026-10-08T02:39:40Z",
+ "rows_v2_sha256": "aece86512773b148824f079755ddde87e17e7184fe78e2378b86b74467ca3cfc",
+ "variants": {
+  "V1_as_printed": {
+   "description": "de Rooij strips with a readable fluence (E02's exponent is printed '09' and is not read)",
+   "n": 3,
+   "fluence_span_decades": 2.2,
+   "fits": [
+    {
+     "form": "stated_logarithmic",
+     "parameters": 2,
+     "n": 3,
+     "dof": 1,
+     "rmse_A": 6.1,
+     "relative_rms_pct": 1.2,
+     "max_abs_relative_residual_pct": 1.6,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "inverse_logarithmic",
+     "parameters": 2,
+     "n": 3,
+     "dof": 1,
+     "rmse_A": 13.7,
+     "relative_rms_pct": 2.7,
+     "max_abs_relative_residual_pct": 3.5,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "parabolic",
+     "parameters": 1,
+     "n": 3,
+     "dof": 2,
+     "rmse_A": 179.5,
+     "relative_rms_pct": 51.8,
+     "max_abs_relative_residual_pct": 85.2,
+     "points_within_source_accuracy": 2,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "linear",
+     "parameters": 1,
+     "n": 3,
+     "dof": 2,
+     "rmse_A": 240.3,
+     "relative_rms_pct": 64.8,
+     "max_abs_relative_residual_pct": 98.8,
+     "points_within_source_accuracy": 1,
+     "prediction_finite_and_positive": true
+    }
+   ]
+  },
+  "V2_E02_read_as_1e19": {
+   "description": "V1 plus E02 with its exponent read as 19 (an inference, not stated by the source)",
+   "n": 4,
+   "fluence_span_decades": 2.75,
+   "fits": [
+    {
+     "form": "stated_logarithmic",
+     "parameters": 2,
+     "n": 4,
+     "dof": 2,
+     "rmse_A": 37.1,
+     "relative_rms_pct": 16.7,
+     "max_abs_relative_residual_pct": 28.6,
+     "points_within_source_accuracy": 4,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "inverse_logarithmic",
+     "parameters": 2,
+     "n": 4,
+     "dof": 2,
+     "rmse_A": 78.9,
+     "relative_rms_pct": 22.1,
+     "max_abs_relative_residual_pct": 31.2,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "parabolic",
+     "parameters": 1,
+     "n": 4,
+     "dof": 3,
+     "rmse_A": 169.0,
+     "relative_rms_pct": 61.4,
+     "max_abs_relative_residual_pct": 85.1,
+     "points_within_source_accuracy": 2,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "linear",
+     "parameters": 1,
+     "n": 4,
+     "dof": 3,
+     "rmse_A": 222.4,
+     "relative_rms_pct": 74.9,
+     "max_abs_relative_residual_pct": 99.3,
+     "points_within_source_accuracy": 1,
+     "prediction_finite_and_positive": true
+    }
+   ]
+  },
+  "V3_with_Raikar": {
+   "description": "V1 plus the Raikar Cu2O thin-film point (a different sample type; see 'same hardware?')",
+   "n": 4,
+   "fluence_span_decades": 2.25,
+   "fits": [
+    {
+     "form": "stated_logarithmic",
+     "parameters": 2,
+     "n": 4,
+     "dof": 2,
+     "rmse_A": 154.1,
+     "relative_rms_pct": 23.2,
+     "max_abs_relative_residual_pct": 30.3,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "inverse_logarithmic",
+     "parameters": 2,
+     "n": 4,
+     "dof": 2,
+     "rmse_A": 151.4,
+     "relative_rms_pct": 19.2,
+     "max_abs_relative_residual_pct": 30.2,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "parabolic",
+     "parameters": 1,
+     "n": 4,
+     "dof": 3,
+     "rmse_A": 187.0,
+     "relative_rms_pct": 46.7,
+     "max_abs_relative_residual_pct": 82.3,
+     "points_within_source_accuracy": 2,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "linear",
+     "parameters": 1,
+     "n": 4,
+     "dof": 3,
+     "rmse_A": 222.8,
+     "relative_rms_pct": 57.3,
+     "max_abs_relative_residual_pct": 98.6,
+     "points_within_source_accuracy": 1,
+     "prediction_finite_and_positive": true
+    }
+   ]
+  },
+  "V4_all": {
+   "description": "V1 plus E02 read as 1e19 plus Raikar",
+   "n": 5,
+   "fluence_span_decades": 2.8,
+   "fits": [
+    {
+     "form": "stated_logarithmic",
+     "parameters": 2,
+     "n": 5,
+     "dof": 3,
+     "rmse_A": 138.5,
+     "relative_rms_pct": 22.1,
+     "max_abs_relative_residual_pct": 30.8,
+     "points_within_source_accuracy": 4,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "inverse_logarithmic",
+     "parameters": 2,
+     "n": 5,
+     "dof": 3,
+     "rmse_A": 126.4,
+     "relative_rms_pct": 24.9,
+     "max_abs_relative_residual_pct": 36.0,
+     "points_within_source_accuracy": 3,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "parabolic",
+     "parameters": 1,
+     "n": 5,
+     "dof": 4,
+     "rmse_A": 176.7,
+     "relative_rms_pct": 55.3,
+     "max_abs_relative_residual_pct": 82.3,
+     "points_within_source_accuracy": 2,
+     "prediction_finite_and_positive": true
+    },
+    {
+     "form": "linear",
+     "parameters": 1,
+     "n": 5,
+     "dof": 4,
+     "rmse_A": 211.2,
+     "relative_rms_pct": 67.8,
+     "max_abs_relative_residual_pct": 99.2,
+     "points_within_source_accuracy": 1,
+     "prediction_finite_and_positive": true
+    }
+   ]
+  }
+ },
+ "forms": {
+  "stated_logarithmic": {
+   "parameters": 2,
+   "description": "T = A*log(B*F), the form printed in de Rooij Fig. 8; linear in ln F, so it is also the 'linear-log' form"
+  },
+  "inverse_logarithmic": {
+   "parameters": 2,
+   "description": "1/T = a - b*ln F, the other low-temperature law the text names (p. 487); fitted in 1/T"
+  },
+  "parabolic": {
+   "parameters": 1,
+   "description": "T^2 = k*F, the diffusion-limited law with fluence standing in for time"
+  },
+  "linear": {
+   "parameters": 1,
+   "description": "T = k*F, constant reaction probability"
+  }
+ },
+ "fluence_exponent_E02": "printed 09; excluded from V1, read as 19 only in V2 and V4, labelled an inference",
+ "raikar_fraction_of_film_copper_converted_pct": 81.0,
+ "raikar_over_nearest_strip_thickness_ratio": 1.79,
+ "raikar_over_nearest_strip_fluence_ratio": 1.12,
+ "oxygen_retained_in_oxide_fraction_of_incident_range": [
+  1.7e-05,
+  0.0017
+ ],
+ "null_set": {
+  "table": [
+   {
+    "material": "6061-T6 Al",
+    "phase2_elements": [
+     "Al"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 1,
+    "quantified": 1,
+    "most_negative_oxide_per_O_eV": {
+     "Al": {
+      "oxide": "Al2O3",
+      "MP": -5.711,
+      "MPA-0": -5.712
+     }
+    }
+   },
+   {
+    "material": "Titanium",
+    "phase2_elements": [
+     "Ti"
+    ],
+    "flight_samples": 1,
+    "at_or_under_upper_bound": 1,
+    "quantified": 0,
+    "most_negative_oxide_per_O_eV": {
+     "Ti": {
+      "oxide": "Ti6O",
+      "MP": -6.417,
+      "MPA-0": -6.438
+     }
+    }
+   },
+   {
+    "material": "Molybdenum",
+    "phase2_elements": [
+     "Mo"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 2,
+    "quantified": 0,
+    "most_negative_oxide_per_O_eV": {
+     "Mo": {
+      "oxide": "MoO2",
+      "MP": -3.032,
+      "MPA-0": -3.037
+     }
+    }
+   },
+   {
+    "material": "Tungsten",
+    "phase2_elements": [
+     "W"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 1,
+    "quantified": 1,
+    "most_negative_oxide_per_O_eV": {
+     "W": {
+      "oxide": "WO2",
+      "MP": -3.055,
+      "MPA-0": -3.013
+     }
+    }
+   },
+   {
+    "material": "Nb-1Zr",
+    "phase2_elements": [
+     "Nb"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 2,
+    "quantified": 0,
+    "most_negative_oxide_per_O_eV": {
+     "Nb": {
+      "oxide": "NbO",
+      "MP": -4.575,
+      "MPA-0": -4.587
+     }
+    }
+   },
+   {
+    "material": "Mo-13Re",
+    "phase2_elements": [
+     "Mo"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 2,
+    "quantified": 0,
+    "most_negative_oxide_per_O_eV": {
+     "Mo": {
+      "oxide": "MoO2",
+      "MP": -3.032,
+      "MPA-0": -3.037
+     }
+    }
+   },
+   {
+    "material": "W/Nb composite",
+    "phase2_elements": [
+     "W",
+     "Nb"
+    ],
+    "flight_samples": 2,
+    "at_or_under_upper_bound": 2,
+    "quantified": 0,
+    "most_negative_oxide_per_O_eV": {
+     "W": {
+      "oxide": "WO2",
+      "MP": -3.055,
+      "MPA-0": -3.013
+     },
+     "Nb": {
+      "oxide": "NbO",
+      "MP": -4.575,
+      "MPA-0": -4.587
+     }
+    }
+   }
+  ],
+  "unmapped_materials": [
+   "304 stainless steel",
+   "Brass",
+   "Inconel 718",
+   "PWC-11",
+   "Udimet 720"
+  ],
+  "unmapped_reason": "alloy composition is not given in the source, or an alloying element has no Phase 2 oxide energy",
+  "detection_limit_mg": 0.1,
+  "lewis_flight_samples": 22,
+  "lewis_at_or_under_upper_bound": 20,
+  "lewis_quantified": 2,
+  "per_sample_fluence_atoms": 1.64e+20,
+  "mass_gain_if_every_incident_O_stuck_mg": 4.36,
+  "upper_bound_net_retained_fraction_of_incident_O_pct": 2.3,
+  "msfc_eoim3_pure_metal_rows_by_element": {
+   "Ag": {
+    "flight_samples": 1,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -0.968
+   },
+   "Au": {
+    "flight_samples": 1,
+    "above_2x_printed_uncertainty": 0,
+    "most_negative_oxide_per_O_eV_MP": -0.763
+   },
+   "Cu": {
+    "flight_samples": 2,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -1.934
+   },
+   "Nb": {
+    "flight_samples": 2,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -4.575
+   },
+   "Ni": {
+    "flight_samples": 2,
+    "above_2x_printed_uncertainty": 2,
+    "most_negative_oxide_per_O_eV_MP": -2.436
+   },
+   "Ta": {
+    "flight_samples": 2,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -4.67
+   },
+   "V": {
+    "flight_samples": 1,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -4.224
+   },
+   "W": {
+    "flight_samples": 3,
+    "above_2x_printed_uncertainty": 1,
+    "most_negative_oxide_per_O_eV_MP": -3.055
+   }
+  },
+  "cu_like_oxide_O_mass_on_a_lewis_disc_mg": [
+   0.00156,
+   0.00246
+  ],
+  "detection_limit_over_largest_cu_like_oxide_mass": 41,
+  "msfc_2sigma_mg": 0.04,
+  "msfc_2sigma_over_largest_cu_like_oxide_mass": 16,
+  "elements_with_no_gain_at_or_above_limit": [
+   "Al",
+   "Mo",
+   "Nb",
+   "Ti"
+  ],
+  "elements_with_a_gain_at_or_above_limit": [
+   "W"
+  ],
+  "aes_oxygen_signal_rows": 21,
+  "aes_oxygen_signal_rows_rising": 14
+ }
+}
