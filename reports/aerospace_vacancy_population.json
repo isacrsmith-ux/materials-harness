@@ -1,0 +1,2934 @@
+{
+ "tier": "development / descriptive evidence, no verdict",
+ "generated_at": "2026-10-08T02:43:19Z",
+ "reference": "Angsten, Mayeshiba, Wu, Morgan, New J. Phys. 16, 015018 (2014), Tables A.1/A.2; PBE DFT, not experiment",
+ "reference_html_sha256": "a48f8a37d6024ce52f2c9f22b3b966d00aa652f260905686b98288dc1ecca51e",
+ "checkpoint_sha256": {
+  "mace-mpa-0-medium": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+  "mace-mp-0-medium": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845"
+ },
+ "population": {
+  "table_rows": 114,
+  "in_population": 78,
+  "excluded": 36,
+  "excluded_by_reason": {
+   "Mn": 1,
+   "negative H_vf": 3,
+   "noble gas (vdW solid)": 7,
+   "non-magnetic row superseded by the spin-polarised row (kept as second reference)": 4,
+   "paper footnote a": 14,
+   "paper footnote b": 5,
+   "paper footnote c": 2
+  },
+  "fcc": 42,
+  "hcp": 36
+ },
+ "not_computed_or_not_converged": {
+  "mace-mpa-0-medium": [],
+  "mace-mp-0-medium": []
+ },
+ "outlier_threshold_eV": 0.2,
+ "stats": {
+  "mace-mpa-0-medium": {
+   "all": {
+    "n": 78,
+    "median_abs_eV": 0.095,
+    "mean_abs_eV": 0.126,
+    "max_abs_eV": 0.653,
+    "median_signed_eV": 0.009,
+    "within_0.05_eV": 28,
+    "within_0.1_eV": 41,
+    "over_0.2_eV": 14
+   },
+   "fcc": {
+    "n": 42,
+    "median_abs_eV": 0.098,
+    "mean_abs_eV": 0.14,
+    "max_abs_eV": 0.653,
+    "median_signed_eV": 0.025,
+    "within_0.05_eV": 13,
+    "within_0.1_eV": 21,
+    "over_0.2_eV": 10
+   },
+   "hcp": {
+    "n": 36,
+    "median_abs_eV": 0.079,
+    "mean_abs_eV": 0.111,
+    "max_abs_eV": 0.608,
+    "median_signed_eV": -0.003,
+    "within_0.05_eV": 15,
+    "within_0.1_eV": 20,
+    "over_0.2_eV": 4
+   },
+   "six_focus_elements": {
+    "n": 6,
+    "median_abs_eV": 0.083,
+    "mean_abs_eV": 0.087,
+    "max_abs_eV": 0.195,
+    "median_signed_eV": 0.083,
+    "within_0.05_eV": 2,
+    "within_0.1_eV": 4,
+    "over_0.2_eV": 0
+   },
+   "wall_s": 638.0
+  },
+  "mace-mp-0-medium": {
+   "all": {
+    "n": 78,
+    "median_abs_eV": 0.189,
+    "mean_abs_eV": 0.372,
+    "max_abs_eV": 2.272,
+    "median_signed_eV": -0.17,
+    "within_0.05_eV": 17,
+    "within_0.1_eV": 27,
+    "over_0.2_eV": 38
+   },
+   "fcc": {
+    "n": 42,
+    "median_abs_eV": 0.18,
+    "mean_abs_eV": 0.364,
+    "max_abs_eV": 2.272,
+    "median_signed_eV": -0.155,
+    "within_0.05_eV": 11,
+    "within_0.1_eV": 16,
+    "over_0.2_eV": 20
+   },
+   "hcp": {
+    "n": 36,
+    "median_abs_eV": 0.199,
+    "mean_abs_eV": 0.382,
+    "max_abs_eV": 1.664,
+    "median_signed_eV": -0.183,
+    "within_0.05_eV": 6,
+    "within_0.1_eV": 11,
+    "over_0.2_eV": 18
+   },
+   "six_focus_elements": {
+    "n": 6,
+    "median_abs_eV": 0.078,
+    "mean_abs_eV": 0.191,
+    "max_abs_eV": 0.671,
+    "median_signed_eV": -0.078,
+    "within_0.05_eV": 3,
+    "within_0.1_eV": 3,
+    "over_0.2_eV": 2
+   },
+   "wall_s": 1012.0
+  }
+ },
+ "stats_common": {
+  "mace-mpa-0-medium": {
+   "n": 78,
+   "median_abs_eV": 0.095,
+   "mean_abs_eV": 0.126,
+   "max_abs_eV": 0.653,
+   "median_signed_eV": 0.009,
+   "within_0.05_eV": 28,
+   "within_0.1_eV": 41,
+   "over_0.2_eV": 14
+  },
+  "mace-mp-0-medium": {
+   "n": 78,
+   "median_abs_eV": 0.189,
+   "mean_abs_eV": 0.372,
+   "max_abs_eV": 2.272,
+   "median_signed_eV": -0.17,
+   "within_0.05_eV": 17,
+   "within_0.1_eV": 27,
+   "over_0.2_eV": 38
+  }
+ },
+ "outliers": {
+  "mace-mpa-0-medium": [
+   [
+    "fcc:Er",
+    0.653
+   ],
+   [
+    "hcp:Fe",
+    -0.608
+   ],
+   [
+    "fcc:Fe",
+    -0.579
+   ],
+   [
+    "fcc:Ce",
+    0.506
+   ],
+   [
+    "fcc:Sc",
+    -0.393
+   ],
+   [
+    "fcc:Cs",
+    -0.317
+   ],
+   [
+    "hcp:Cs",
+    -0.285
+   ],
+   [
+    "fcc:Pa",
+    0.272
+   ],
+   [
+    "fcc:Rh",
+    0.268
+   ],
+   [
+    "hcp:Zr",
+    0.262
+   ],
+   [
+    "fcc:Ir",
+    0.234
+   ],
+   [
+    "fcc:Pt",
+    0.217
+   ],
+   [
+    "hcp:Re",
+    -0.216
+   ],
+   [
+    "fcc:Ru",
+    0.206
+   ]
+  ],
+  "mace-mp-0-medium": [
+   [
+    "fcc:Os",
+    -2.272
+   ],
+   [
+    "hcp:Re",
+    -1.664
+   ],
+   [
+    "hcp:Ru",
+    -1.551
+   ],
+   [
+    "hcp:Os",
+    -1.549
+   ],
+   [
+    "fcc:Ru",
+    -1.437
+   ],
+   [
+    "fcc:Re",
+    -1.34
+   ],
+   [
+    "hcp:Tc",
+    -1.314
+   ],
+   [
+    "fcc:Tc",
+    -1.13
+   ],
+   [
+    "fcc:Rh",
+    -0.822
+   ],
+   [
+    "hcp:Fe",
+    -0.802
+   ],
+   [
+    "hcp:Rh",
+    -0.762
+   ],
+   [
+    "fcc:Fe",
+    -0.719
+   ],
+   [
+    "fcc:Er",
+    0.703
+   ],
+   [
+    "hcp:Ti",
+    -0.671
+   ],
+   [
+    "fcc:Ir",
+    -0.662
+   ],
+   [
+    "fcc:Ti",
+    -0.612
+   ],
+   [
+    "hcp:Co:mag",
+    -0.568
+   ],
+   [
+    "hcp:Ba",
+    -0.546
+   ],
+   [
+    "fcc:Ba",
+    -0.533
+   ],
+   [
+    "hcp:Zr",
+    0.532
+   ],
+   [
+    "fcc:Zr",
+    0.484
+   ],
+   [
+    "fcc:Co:mag",
+    -0.458
+   ],
+   [
+    "fcc:Sc",
+    -0.41
+   ],
+   [
+    "hcp:Si",
+    -0.41
+   ],
+   [
+    "fcc:La",
+    -0.376
+   ],
+   [
+    "fcc:Ce",
+    -0.345
+   ],
+   [
+    "fcc:Cs",
+    -0.332
+   ],
+   [
+    "hcp:Sr",
+    -0.316
+   ],
+   [
+    "fcc:Ni:mag",
+    -0.315
+   ],
+   [
+    "hcp:Cs",
+    -0.302
+   ],
+   [
+    "fcc:Pb",
+    -0.294
+   ],
+   [
+    "hcp:Ir",
+    -0.292
+   ],
+   [
+    "fcc:Sr",
+    -0.286
+   ],
+   [
+    "hcp:Ni:mag",
+    -0.254
+   ],
+   [
+    "hcp:Pb",
+    -0.249
+   ],
+   [
+    "fcc:Cd",
+    -0.217
+   ],
+   [
+    "hcp:Y",
+    -0.202
+   ],
+   [
+    "hcp:Rb",
+    -0.2
+   ]
+  ]
+ },
+ "engine_vs_engine": {
+  "n": 78,
+  "median_abs_eV": 0.118,
+  "mean_abs_eV": 0.347,
+  "max_abs_eV": 2.339,
+  "median_signed_eV": 0.1,
+  "within_0.05_eV": 14,
+  "within_0.1_eV": 34,
+  "over_0.2_eV": 31
+ },
+ "focus_convergence": {
+  "fcc:Ag": {
+   "ref_Hvf": 0.68,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      0.776,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      0.773,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      0.777,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      0.777,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      0.776,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      0.775,
+      true
+     ]
+    ],
+    "spread_eV": 0.004,
+    "largest_cell_zero_pressure": 0.775
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      0.679,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      0.675,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      0.678,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      0.678,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      0.678,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      0.678,
+      true
+     ]
+    ],
+    "spread_eV": 0.004,
+    "largest_cell_zero_pressure": 0.678
+   }
+  },
+  "fcc:Al": {
+   "ref_Hvf": 0.61,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      0.679,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      0.675,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      0.677,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      0.677,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      0.676,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      0.676,
+      true
+     ]
+    ],
+    "spread_eV": 0.004,
+    "largest_cell_zero_pressure": 0.676
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      0.48,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      0.478,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      0.479,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      0.479,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      0.479,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      0.479,
+      true
+     ]
+    ],
+    "spread_eV": 0.002,
+    "largest_cell_zero_pressure": 0.479
+   }
+  },
+  "fcc:Cu": {
+   "ref_Hvf": 1.07,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      1.068,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      1.064,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      1.068,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      1.068,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      1.056,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      1.057,
+      true
+     ]
+    ],
+    "spread_eV": 0.012,
+    "largest_cell_zero_pressure": 1.057
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      1.044,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      1.039,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      1.042,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      1.041,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      1.042,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      1.042,
+      true
+     ]
+    ],
+    "spread_eV": 0.005,
+    "largest_cell_zero_pressure": 1.042
+   }
+  },
+  "fcc:Ni:mag": {
+   "ref_Hvf": 1.43,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      1.54,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      1.534,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      1.536,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      1.533,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      1.537,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      1.536,
+      true
+     ]
+    ],
+    "spread_eV": 0.007,
+    "largest_cell_zero_pressure": 1.536
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      108,
+      "fixed_cell",
+      1.115,
+      true
+     ],
+     [
+      108,
+      "zero_pressure",
+      1.109,
+      true
+     ],
+     [
+      256,
+      "fixed_cell",
+      1.113,
+      true
+     ],
+     [
+      256,
+      "zero_pressure",
+      1.11,
+      true
+     ],
+     [
+      500,
+      "fixed_cell",
+      1.112,
+      true
+     ],
+     [
+      500,
+      "zero_pressure",
+      1.111,
+      true
+     ]
+    ],
+    "spread_eV": 0.006,
+    "largest_cell_zero_pressure": 1.111
+   }
+  },
+  "hcp:Mg": {
+   "ref_Hvf": 0.78,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      36,
+      "fixed_cell",
+      0.827,
+      true
+     ],
+     [
+      36,
+      "zero_pressure",
+      0.822,
+      true
+     ],
+     [
+      96,
+      "fixed_cell",
+      0.829,
+      true
+     ],
+     [
+      96,
+      "zero_pressure",
+      0.827,
+      true
+     ],
+     [
+      288,
+      "fixed_cell",
+      0.827,
+      true
+     ],
+     [
+      288,
+      "zero_pressure",
+      0.827,
+      true
+     ]
+    ],
+    "spread_eV": 0.007,
+    "largest_cell_zero_pressure": 0.827
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      36,
+      "fixed_cell",
+      0.775,
+      true
+     ],
+     [
+      36,
+      "zero_pressure",
+      0.77,
+      true
+     ],
+     [
+      96,
+      "fixed_cell",
+      0.772,
+      true
+     ],
+     [
+      96,
+      "zero_pressure",
+      0.77,
+      true
+     ],
+     [
+      288,
+      "fixed_cell",
+      0.771,
+      true
+     ],
+     [
+      288,
+      "zero_pressure",
+      0.771,
+      true
+     ]
+    ],
+    "spread_eV": 0.005,
+    "largest_cell_zero_pressure": 0.771
+   }
+  },
+  "hcp:Ti": {
+   "ref_Hvf": 2.06,
+   "mace-mpa-0-medium": {
+    "runs": [
+     [
+      36,
+      "fixed_cell",
+      2.255,
+      true
+     ],
+     [
+      36,
+      "zero_pressure",
+      2.24,
+      true
+     ],
+     [
+      96,
+      "fixed_cell",
+      2.225,
+      true
+     ],
+     [
+      96,
+      "zero_pressure",
+      2.218,
+      true
+     ],
+     [
+      288,
+      "fixed_cell",
+      2.21,
+      true
+     ],
+     [
+      288,
+      "zero_pressure",
+      2.204,
+      true
+     ]
+    ],
+    "spread_eV": 0.051,
+    "largest_cell_zero_pressure": 2.204
+   },
+   "mace-mp-0-medium": {
+    "runs": [
+     [
+      36,
+      "fixed_cell",
+      1.389,
+      true
+     ],
+     [
+      36,
+      "zero_pressure",
+      1.323,
+      true
+     ],
+     [
+      96,
+      "fixed_cell",
+      1.329,
+      true
+     ],
+     [
+      96,
+      "zero_pressure",
+      1.301,
+      true
+     ],
+     [
+      288,
+      "fixed_cell",
+      1.317,
+      true
+     ],
+     [
+      288,
+      "zero_pressure",
+      1.294,
+      true
+     ]
+    ],
+    "spread_eV": 0.095,
+    "largest_cell_zero_pressure": 1.294
+   }
+  }
+ },
+ "volume_check_engine_over_paper": {
+  "mace-mpa-0-medium": {
+   "median_ratio": 1.001,
+   "min_ratio": 0.749,
+   "max_ratio": 1.133,
+   "pairs_off_by_more_than_10pct": [
+    [
+     "fcc:Er",
+     0.749
+    ],
+    [
+     "hcp:Cs",
+     1.133
+    ],
+    [
+     "fcc:Cs",
+     1.132
+    ]
+   ]
+  },
+  "mace-mp-0-medium": {
+   "median_ratio": 1.008,
+   "min_ratio": 0.759,
+   "max_ratio": 1.072,
+   "pairs_off_by_more_than_10pct": [
+    [
+     "fcc:Er",
+     0.759
+    ]
+   ]
+  }
+ },
+ "phase0_al_vacancy_reproduced_abs_diff_eV": {
+  "mace-mpa-0-medium": {
+   "fixed_cell_108": 0.0002,
+   "fixed_cell_256": 0.0004,
+   "fixed_cell_500": 0.0001,
+   "zero_pressure_108": 0.0,
+   "zero_pressure_256": 0.0003,
+   "zero_pressure_500": 0.0004
+  },
+  "mace-mp-0-medium": {
+   "fixed_cell_108": 0.0006,
+   "fixed_cell_256": 0.0006,
+   "fixed_cell_500": 0.0006,
+   "zero_pressure_108": 0.0007,
+   "zero_pressure_256": 0.0005,
+   "zero_pressure_500": 0.0005
+  }
+ },
+ "al_reference_values_eV": {
+  "angsten_table_A1": 0.61,
+  "hood_pbe_from_phase0_memo": 0.67
+ },
+ "migration": {
+  "mace-mpa-0-medium": {
+   "all": {
+    "n": 112,
+    "median_abs_eV": 0.071,
+    "mean_abs_eV": 0.183,
+    "max_abs_eV": 3.634,
+    "median_signed_eV": -0.014,
+    "within_0.05_eV": 44,
+    "within_0.1_eV": 64,
+    "over_0.2_eV": 26
+   },
+   "all_excluding_negative_barriers": {
+    "n": 108,
+    "median_abs_eV": 0.068,
+    "mean_abs_eV": 0.125,
+    "max_abs_eV": 0.837,
+    "median_signed_eV": -0.012,
+    "within_0.05_eV": 44,
+    "within_0.1_eV": 64,
+    "over_0.2_eV": 22
+   },
+   "negative_barriers": [
+    [
+     "fcc:Ti",
+     "hop",
+     -0.093
+    ],
+    [
+     "hcp:Ga",
+     "out_of_plane",
+     -0.046
+    ],
+    [
+     "hcp:Si",
+     "in_plane",
+     -2.592
+    ],
+    [
+     "hcp:Si",
+     "out_of_plane",
+     -3.374
+    ]
+   ],
+   "hop": {
+    "n": 42,
+    "median_abs_eV": 0.071,
+    "mean_abs_eV": 0.126,
+    "max_abs_eV": 0.543,
+    "median_signed_eV": -0.027,
+    "within_0.05_eV": 17,
+    "within_0.1_eV": 26,
+    "over_0.2_eV": 9
+   },
+   "in_plane": {
+    "n": 36,
+    "median_abs_eV": 0.064,
+    "mean_abs_eV": 0.18,
+    "max_abs_eV": 2.632,
+    "median_signed_eV": -0.002,
+    "within_0.05_eV": 14,
+    "within_0.1_eV": 21,
+    "over_0.2_eV": 7
+   },
+   "out_of_plane": {
+    "n": 34,
+    "median_abs_eV": 0.096,
+    "mean_abs_eV": 0.257,
+    "max_abs_eV": 3.634,
+    "median_signed_eV": -0.016,
+    "within_0.05_eV": 13,
+    "within_0.1_eV": 17,
+    "over_0.2_eV": 10
+   },
+   "pairs": [
+    [
+     "fcc:Ac",
+     "hop",
+     0.744,
+     0.45
+    ],
+    [
+     "fcc:Ag",
+     "hop",
+     0.563,
+     0.7
+    ],
+    [
+     "fcc:Al",
+     "hop",
+     0.601,
+     0.58
+    ],
+    [
+     "fcc:Au",
+     "hop",
+     0.554,
+     0.53
+    ],
+    [
+     "fcc:Ba",
+     "hop",
+     0.605,
+     0.36
+    ],
+    [
+     "fcc:Ca",
+     "hop",
+     0.471,
+     0.47
+    ],
+    [
+     "fcc:Cd",
+     "hop",
+     0.169,
+     0.23
+    ],
+    [
+     "fcc:Ce",
+     "hop",
+     0.613,
+     0.54
+    ],
+    [
+     "fcc:Co:mag",
+     "hop",
+     1.079,
+     1.01
+    ],
+    [
+     "fcc:Cs",
+     "hop",
+     0.177,
+     0.13
+    ],
+    [
+     "fcc:Cu",
+     "hop",
+     0.707,
+     0.72
+    ],
+    [
+     "fcc:Er",
+     "hop",
+     0.549,
+     0.47
+    ],
+    [
+     "fcc:Fe",
+     "hop",
+     0.859,
+     1.38
+    ],
+    [
+     "fcc:Hf",
+     "hop",
+     0.27,
+     0.81
+    ],
+    [
+     "fcc:Ho",
+     "hop",
+     0.631,
+     0.73
+    ],
+    [
+     "fcc:In",
+     "hop",
+     0.224,
+     0.23
+    ],
+    [
+     "fcc:Ir",
+     "hop",
+     2.488,
+     2.54
+    ],
+    [
+     "fcc:K",
+     "hop",
+     0.19,
+     0.16
+    ],
+    [
+     "fcc:La",
+     "hop",
+     0.434,
+     0.21
+    ],
+    [
+     "fcc:Li",
+     "hop",
+     0.103,
+     0.13
+    ],
+    [
+     "fcc:Mg",
+     "hop",
+     0.369,
+     0.41
+    ],
+    [
+     "fcc:Na",
+     "hop",
+     0.131,
+     0.14
+    ],
+    [
+     "fcc:Ni:mag",
+     "hop",
+     1.078,
+     1.08
+    ],
+    [
+     "fcc:Os",
+     "hop",
+     2.333,
+     2.73
+    ],
+    [
+     "fcc:Pa",
+     "hop",
+     0.515,
+     0.77
+    ],
+    [
+     "fcc:Pb",
+     "hop",
+     0.47,
+     0.54
+    ],
+    [
+     "fcc:Pd",
+     "hop",
+     0.985,
+     0.95
+    ],
+    [
+     "fcc:Pt",
+     "hop",
+     1.25,
+     1.24
+    ],
+    [
+     "fcc:Rb",
+     "hop",
+     0.182,
+     0.14
+    ],
+    [
+     "fcc:Re",
+     "hop",
+     1.782,
+     1.81
+    ],
+    [
+     "fcc:Rh",
+     "hop",
+     1.704,
+     1.79
+    ],
+    [
+     "fcc:Ru",
+     "hop",
+     1.684,
+     1.85
+    ],
+    [
+     "fcc:Sc",
+     "hop",
+     0.437,
+     0.6
+    ],
+    [
+     "fcc:Sn",
+     "hop",
+     0.352,
+     0.38
+    ],
+    [
+     "fcc:Sr",
+     "hop",
+     0.596,
+     0.45
+    ],
+    [
+     "fcc:Tb",
+     "hop",
+     0.615,
+     0.71
+    ],
+    [
+     "fcc:Tc",
+     "hop",
+     1.046,
+     1.17
+    ],
+    [
+     "fcc:Th",
+     "hop",
+     1.132,
+     1.25
+    ],
+    [
+     "fcc:Ti",
+     "hop",
+     -0.093,
+     0.45
+    ],
+    [
+     "fcc:Tl",
+     "hop",
+     0.127,
+     0.1
+    ],
+    [
+     "fcc:Y",
+     "hop",
+     0.557,
+     0.67
+    ],
+    [
+     "fcc:Zr",
+     "hop",
+     0.279,
+     0.5
+    ],
+    [
+     "hcp:Ag",
+     "in_plane",
+     0.485,
+     0.5
+    ],
+    [
+     "hcp:Ag",
+     "out_of_plane",
+     0.56,
+     0.6
+    ],
+    [
+     "hcp:Al",
+     "in_plane",
+     0.463,
+     0.41
+    ],
+    [
+     "hcp:Al",
+     "out_of_plane",
+     0.471,
+     0.46
+    ],
+    [
+     "hcp:Au",
+     "in_plane",
+     0.472,
+     0.49
+    ],
+    [
+     "hcp:Au",
+     "out_of_plane",
+     0.557,
+     0.57
+    ],
+    [
+     "hcp:Ba",
+     "in_plane",
+     0.567,
+     0.34
+    ],
+    [
+     "hcp:Ba",
+     "out_of_plane",
+     0.508,
+     0.37
+    ],
+    [
+     "hcp:Be",
+     "in_plane",
+     0.788,
+     0.74
+    ],
+    [
+     "hcp:Be",
+     "out_of_plane",
+     0.865,
+     0.87
+    ],
+    [
+     "hcp:Ca",
+     "in_plane",
+     0.431,
+     0.38
+    ],
+    [
+     "hcp:Ca",
+     "out_of_plane",
+     0.481,
+     0.42
+    ],
+    [
+     "hcp:Cd",
+     "in_plane",
+     0.244,
+     0.23
+    ],
+    [
+     "hcp:Co:mag",
+     "in_plane",
+     0.93,
+     0.81
+    ],
+    [
+     "hcp:Co:mag",
+     "out_of_plane",
+     0.999,
+     0.78
+    ],
+    [
+     "hcp:Cs",
+     "in_plane",
+     0.193,
+     0.12
+    ],
+    [
+     "hcp:Cs",
+     "out_of_plane",
+     0.188,
+     0.13
+    ],
+    [
+     "hcp:Cu",
+     "in_plane",
+     0.601,
+     0.57
+    ],
+    [
+     "hcp:Cu",
+     "out_of_plane",
+     0.68,
+     0.69
+    ],
+    [
+     "hcp:Fe",
+     "in_plane",
+     0.958,
+     1.52
+    ],
+    [
+     "hcp:Fe",
+     "out_of_plane",
+     0.997,
+     1.51
+    ],
+    [
+     "hcp:Ga",
+     "in_plane",
+     0.06,
+     0.12
+    ],
+    [
+     "hcp:Ga",
+     "out_of_plane",
+     -0.046,
+     0.16
+    ],
+    [
+     "hcp:Hf",
+     "in_plane",
+     0.63,
+     0.89
+    ],
+    [
+     "hcp:Hf",
+     "out_of_plane",
+     0.771,
+     1.0
+    ],
+    [
+     "hcp:In",
+     "in_plane",
+     0.143,
+     0.2
+    ],
+    [
+     "hcp:In",
+     "out_of_plane",
+     0.16,
+     0.21
+    ],
+    [
+     "hcp:Ir",
+     "in_plane",
+     1.452,
+     1.57
+    ],
+    [
+     "hcp:Ir",
+     "out_of_plane",
+     1.658,
+     1.95
+    ],
+    [
+     "hcp:K",
+     "in_plane",
+     0.156,
+     0.12
+    ],
+    [
+     "hcp:K",
+     "out_of_plane",
+     0.181,
+     0.14
+    ],
+    [
+     "hcp:Li",
+     "in_plane",
+     0.102,
+     0.1
+    ],
+    [
+     "hcp:Li",
+     "out_of_plane",
+     0.13,
+     0.12
+    ],
+    [
+     "hcp:Mg",
+     "in_plane",
+     0.371,
+     0.4
+    ],
+    [
+     "hcp:Mg",
+     "out_of_plane",
+     0.398,
+     0.42
+    ],
+    [
+     "hcp:Ni:mag",
+     "in_plane",
+     0.816,
+     0.77
+    ],
+    [
+     "hcp:Ni:mag",
+     "out_of_plane",
+     0.929,
+     0.89
+    ],
+    [
+     "hcp:Os",
+     "in_plane",
+     2.627,
+     3.03
+    ],
+    [
+     "hcp:Os",
+     "out_of_plane",
+     2.883,
+     3.22
+    ],
+    [
+     "hcp:Pb",
+     "in_plane",
+     0.372,
+     0.44
+    ],
+    [
+     "hcp:Pb",
+     "out_of_plane",
+     0.392,
+     0.41
+    ],
+    [
+     "hcp:Pd",
+     "in_plane",
+     0.725,
+     0.68
+    ],
+    [
+     "hcp:Pd",
+     "out_of_plane",
+     0.851,
+     0.73
+    ],
+    [
+     "hcp:Rb",
+     "in_plane",
+     0.143,
+     0.13
+    ],
+    [
+     "hcp:Rb",
+     "out_of_plane",
+     0.171,
+     0.12
+    ],
+    [
+     "hcp:Re",
+     "in_plane",
+     1.968,
+     1.79
+    ],
+    [
+     "hcp:Re",
+     "out_of_plane",
+     2.007,
+     1.17
+    ],
+    [
+     "hcp:Rh",
+     "in_plane",
+     1.176,
+     1.25
+    ],
+    [
+     "hcp:Rh",
+     "out_of_plane",
+     1.335,
+     1.47
+    ],
+    [
+     "hcp:Ru",
+     "in_plane",
+     1.918,
+     2.17
+    ],
+    [
+     "hcp:Ru",
+     "out_of_plane",
+     2.068,
+     2.18
+    ],
+    [
+     "hcp:Sc",
+     "in_plane",
+     0.733,
+     0.74
+    ],
+    [
+     "hcp:Sc",
+     "out_of_plane",
+     0.668,
+     0.69
+    ],
+    [
+     "hcp:Si",
+     "in_plane",
+     -2.592,
+     0.04
+    ],
+    [
+     "hcp:Si",
+     "out_of_plane",
+     -3.374,
+     0.26
+    ],
+    [
+     "hcp:Sn",
+     "in_plane",
+     0.148,
+     0.31
+    ],
+    [
+     "hcp:Sn",
+     "out_of_plane",
+     0.177,
+     0.33
+    ],
+    [
+     "hcp:Sr",
+     "in_plane",
+     0.509,
+     0.36
+    ],
+    [
+     "hcp:Sr",
+     "out_of_plane",
+     0.534,
+     0.4
+    ],
+    [
+     "hcp:Tc",
+     "in_plane",
+     1.371,
+     1.21
+    ],
+    [
+     "hcp:Tc",
+     "out_of_plane",
+     1.407,
+     0.63
+    ],
+    [
+     "hcp:Ti",
+     "in_plane",
+     0.286,
+     0.49
+    ],
+    [
+     "hcp:Ti",
+     "out_of_plane",
+     0.386,
+     0.59
+    ],
+    [
+     "hcp:Tl",
+     "in_plane",
+     0.099,
+     0.23
+    ],
+    [
+     "hcp:Tl",
+     "out_of_plane",
+     0.126,
+     0.16
+    ],
+    [
+     "hcp:Y",
+     "in_plane",
+     0.726,
+     0.69
+    ],
+    [
+     "hcp:Y",
+     "out_of_plane",
+     0.749,
+     0.67
+    ],
+    [
+     "hcp:Zn",
+     "in_plane",
+     0.375,
+     0.34
+    ],
+    [
+     "hcp:Zr",
+     "in_plane",
+     0.447,
+     0.57
+    ],
+    [
+     "hcp:Zr",
+     "out_of_plane",
+     0.567,
+     0.7
+    ]
+   ],
+   "al_fcc_migration_wall_s": 3.9
+  },
+  "mace-mp-0-medium": {
+   "all": {
+    "n": 113,
+    "median_abs_eV": 0.149,
+    "mean_abs_eV": 0.366,
+    "max_abs_eV": 3.515,
+    "median_signed_eV": -0.102,
+    "within_0.05_eV": 17,
+    "within_0.1_eV": 37,
+    "over_0.2_eV": 47
+   },
+   "all_excluding_negative_barriers": {
+    "n": 106,
+    "median_abs_eV": 0.145,
+    "mean_abs_eV": 0.287,
+    "max_abs_eV": 2.26,
+    "median_signed_eV": -0.092,
+    "within_0.05_eV": 17,
+    "within_0.1_eV": 37,
+    "over_0.2_eV": 42
+   },
+   "negative_barriers": [
+    [
+     "fcc:Ce",
+     "hop",
+     -1.566
+    ],
+    [
+     "fcc:Os",
+     "hop",
+     -0.711
+    ],
+    [
+     "fcc:Ti",
+     "hop",
+     -0.161
+    ],
+    [
+     "hcp:Ga",
+     "in_plane",
+     -0.068
+    ],
+    [
+     "hcp:Ga",
+     "out_of_plane",
+     -0.011
+    ],
+    [
+     "hcp:Si",
+     "in_plane",
+     -3.475
+    ],
+    [
+     "hcp:Sn",
+     "in_plane",
+     -0.631
+    ]
+   ],
+   "hop": {
+    "n": 42,
+    "median_abs_eV": 0.18,
+    "mean_abs_eV": 0.404,
+    "max_abs_eV": 3.441,
+    "median_signed_eV": -0.145,
+    "within_0.05_eV": 7,
+    "within_0.1_eV": 12,
+    "over_0.2_eV": 19
+   },
+   "in_plane": {
+    "n": 36,
+    "median_abs_eV": 0.15,
+    "mean_abs_eV": 0.409,
+    "max_abs_eV": 3.515,
+    "median_signed_eV": -0.132,
+    "within_0.05_eV": 4,
+    "within_0.1_eV": 12,
+    "over_0.2_eV": 15
+   },
+   "out_of_plane": {
+    "n": 35,
+    "median_abs_eV": 0.132,
+    "mean_abs_eV": 0.277,
+    "max_abs_eV": 2.26,
+    "median_signed_eV": -0.088,
+    "within_0.05_eV": 6,
+    "within_0.1_eV": 13,
+    "over_0.2_eV": 13
+   },
+   "pairs": [
+    [
+     "fcc:Ac",
+     "hop",
+     0.791,
+     0.45
+    ],
+    [
+     "fcc:Ag",
+     "hop",
+     0.522,
+     0.7
+    ],
+    [
+     "fcc:Al",
+     "hop",
+     0.551,
+     0.58
+    ],
+    [
+     "fcc:Au",
+     "hop",
+     0.431,
+     0.53
+    ],
+    [
+     "fcc:Ba",
+     "hop",
+     0.632,
+     0.36
+    ],
+    [
+     "fcc:Ca",
+     "hop",
+     0.562,
+     0.47
+    ],
+    [
+     "fcc:Cd",
+     "hop",
+     0.087,
+     0.23
+    ],
+    [
+     "fcc:Ce",
+     "hop",
+     -1.566,
+     0.54
+    ],
+    [
+     "fcc:Co:mag",
+     "hop",
+     0.863,
+     1.01
+    ],
+    [
+     "fcc:Cs",
+     "hop",
+     0.081,
+     0.13
+    ],
+    [
+     "fcc:Cu",
+     "hop",
+     0.591,
+     0.72
+    ],
+    [
+     "fcc:Er",
+     "hop",
+     0.614,
+     0.47
+    ],
+    [
+     "fcc:Fe",
+     "hop",
+     0.824,
+     1.38
+    ],
+    [
+     "fcc:Hf",
+     "hop",
+     0.717,
+     0.81
+    ],
+    [
+     "fcc:Ho",
+     "hop",
+     0.539,
+     0.73
+    ],
+    [
+     "fcc:In",
+     "hop",
+     0.206,
+     0.23
+    ],
+    [
+     "fcc:Ir",
+     "hop",
+     1.35,
+     2.54
+    ],
+    [
+     "fcc:K",
+     "hop",
+     0.271,
+     0.16
+    ],
+    [
+     "fcc:La",
+     "hop",
+     0.256,
+     0.21
+    ],
+    [
+     "fcc:Li",
+     "hop",
+     0.109,
+     0.13
+    ],
+    [
+     "fcc:Mg",
+     "hop",
+     0.421,
+     0.41
+    ],
+    [
+     "fcc:Na",
+     "hop",
+     0.192,
+     0.14
+    ],
+    [
+     "fcc:Ni:mag",
+     "hop",
+     0.815,
+     1.08
+    ],
+    [
+     "fcc:Os",
+     "hop",
+     -0.711,
+     2.73
+    ],
+    [
+     "fcc:Pa",
+     "hop",
+     0.246,
+     0.77
+    ],
+    [
+     "fcc:Pb",
+     "hop",
+     0.337,
+     0.54
+    ],
+    [
+     "fcc:Pd",
+     "hop",
+     0.911,
+     0.95
+    ],
+    [
+     "fcc:Pt",
+     "hop",
+     0.775,
+     1.24
+    ],
+    [
+     "fcc:Rb",
+     "hop",
+     0.249,
+     0.14
+    ],
+    [
+     "fcc:Re",
+     "hop",
+     1.06,
+     1.81
+    ],
+    [
+     "fcc:Rh",
+     "hop",
+     0.838,
+     1.79
+    ],
+    [
+     "fcc:Ru",
+     "hop",
+     0.66,
+     1.85
+    ],
+    [
+     "fcc:Sc",
+     "hop",
+     0.132,
+     0.6
+    ],
+    [
+     "fcc:Sn",
+     "hop",
+     0.198,
+     0.38
+    ],
+    [
+     "fcc:Sr",
+     "hop",
+     0.71,
+     0.45
+    ],
+    [
+     "fcc:Tb",
+     "hop",
+     0.558,
+     0.71
+    ],
+    [
+     "fcc:Tc",
+     "hop",
+     0.695,
+     1.17
+    ],
+    [
+     "fcc:Th",
+     "hop",
+     0.852,
+     1.25
+    ],
+    [
+     "fcc:Ti",
+     "hop",
+     -0.161,
+     0.45
+    ],
+    [
+     "fcc:Tl",
+     "hop",
+     0.203,
+     0.1
+    ],
+    [
+     "fcc:Y",
+     "hop",
+     0.615,
+     0.67
+    ],
+    [
+     "fcc:Zr",
+     "hop",
+     0.206,
+     0.5
+    ],
+    [
+     "hcp:Ag",
+     "in_plane",
+     0.438,
+     0.5
+    ],
+    [
+     "hcp:Ag",
+     "out_of_plane",
+     0.498,
+     0.6
+    ],
+    [
+     "hcp:Al",
+     "in_plane",
+     0.484,
+     0.41
+    ],
+    [
+     "hcp:Al",
+     "out_of_plane",
+     0.505,
+     0.46
+    ],
+    [
+     "hcp:Au",
+     "in_plane",
+     0.345,
+     0.49
+    ],
+    [
+     "hcp:Au",
+     "out_of_plane",
+     0.384,
+     0.57
+    ],
+    [
+     "hcp:Ba",
+     "in_plane",
+     0.559,
+     0.34
+    ],
+    [
+     "hcp:Ba",
+     "out_of_plane",
+     0.644,
+     0.37
+    ],
+    [
+     "hcp:Be",
+     "in_plane",
+     0.679,
+     0.74
+    ],
+    [
+     "hcp:Be",
+     "out_of_plane",
+     0.74,
+     0.87
+    ],
+    [
+     "hcp:Ca",
+     "in_plane",
+     0.516,
+     0.38
+    ],
+    [
+     "hcp:Ca",
+     "out_of_plane",
+     0.567,
+     0.42
+    ],
+    [
+     "hcp:Cd",
+     "in_plane",
+     0.079,
+     0.23
+    ],
+    [
+     "hcp:Cd",
+     "out_of_plane",
+     0.069,
+     0.16
+    ],
+    [
+     "hcp:Co:mag",
+     "in_plane",
+     0.802,
+     0.81
+    ],
+    [
+     "hcp:Co:mag",
+     "out_of_plane",
+     0.858,
+     0.78
+    ],
+    [
+     "hcp:Cs",
+     "in_plane",
+     0.071,
+     0.12
+    ],
+    [
+     "hcp:Cs",
+     "out_of_plane",
+     0.075,
+     0.13
+    ],
+    [
+     "hcp:Cu",
+     "in_plane",
+     0.509,
+     0.57
+    ],
+    [
+     "hcp:Cu",
+     "out_of_plane",
+     0.578,
+     0.69
+    ],
+    [
+     "hcp:Fe",
+     "in_plane",
+     0.778,
+     1.52
+    ],
+    [
+     "hcp:Fe",
+     "out_of_plane",
+     0.843,
+     1.51
+    ],
+    [
+     "hcp:Ga",
+     "in_plane",
+     -0.068,
+     0.12
+    ],
+    [
+     "hcp:Ga",
+     "out_of_plane",
+     -0.011,
+     0.16
+    ],
+    [
+     "hcp:Hf",
+     "in_plane",
+     0.652,
+     0.89
+    ],
+    [
+     "hcp:Hf",
+     "out_of_plane",
+     0.735,
+     1.0
+    ],
+    [
+     "hcp:In",
+     "in_plane",
+     0.15,
+     0.2
+    ],
+    [
+     "hcp:In",
+     "out_of_plane",
+     0.184,
+     0.21
+    ],
+    [
+     "hcp:Ir",
+     "in_plane",
+     1.245,
+     1.57
+    ],
+    [
+     "hcp:Ir",
+     "out_of_plane",
+     1.377,
+     1.95
+    ],
+    [
+     "hcp:K",
+     "in_plane",
+     0.235,
+     0.12
+    ],
+    [
+     "hcp:K",
+     "out_of_plane",
+     0.277,
+     0.14
+    ],
+    [
+     "hcp:Li",
+     "in_plane",
+     0.023,
+     0.1
+    ],
+    [
+     "hcp:Li",
+     "out_of_plane",
+     0.089,
+     0.12
+    ],
+    [
+     "hcp:Mg",
+     "in_plane",
+     0.391,
+     0.4
+    ],
+    [
+     "hcp:Mg",
+     "out_of_plane",
+     0.417,
+     0.42
+    ],
+    [
+     "hcp:Ni:mag",
+     "in_plane",
+     0.703,
+     0.77
+    ],
+    [
+     "hcp:Ni:mag",
+     "out_of_plane",
+     0.792,
+     0.89
+    ],
+    [
+     "hcp:Os",
+     "in_plane",
+     0.827,
+     3.03
+    ],
+    [
+     "hcp:Os",
+     "out_of_plane",
+     0.96,
+     3.22
+    ],
+    [
+     "hcp:Pb",
+     "in_plane",
+     0.281,
+     0.44
+    ],
+    [
+     "hcp:Pb",
+     "out_of_plane",
+     0.322,
+     0.41
+    ],
+    [
+     "hcp:Pd",
+     "in_plane",
+     0.79,
+     0.68
+    ],
+    [
+     "hcp:Pd",
+     "out_of_plane",
+     0.849,
+     0.73
+    ],
+    [
+     "hcp:Rb",
+     "in_plane",
+     0.213,
+     0.13
+    ],
+    [
+     "hcp:Rb",
+     "out_of_plane",
+     0.252,
+     0.12
+    ],
+    [
+     "hcp:Re",
+     "in_plane",
+     1.183,
+     1.79
+    ],
+    [
+     "hcp:Re",
+     "out_of_plane",
+     1.232,
+     1.17
+    ],
+    [
+     "hcp:Rh",
+     "in_plane",
+     0.763,
+     1.25
+    ],
+    [
+     "hcp:Rh",
+     "out_of_plane",
+     0.857,
+     1.47
+    ],
+    [
+     "hcp:Ru",
+     "in_plane",
+     0.906,
+     2.17
+    ],
+    [
+     "hcp:Ru",
+     "out_of_plane",
+     0.951,
+     2.18
+    ],
+    [
+     "hcp:Sc",
+     "in_plane",
+     0.13,
+     0.74
+    ],
+    [
+     "hcp:Sc",
+     "out_of_plane",
+     0.249,
+     0.69
+    ],
+    [
+     "hcp:Si",
+     "in_plane",
+     -3.475,
+     0.04
+    ],
+    [
+     "hcp:Sn",
+     "in_plane",
+     -0.631,
+     0.31
+    ],
+    [
+     "hcp:Sn",
+     "out_of_plane",
+     0.084,
+     0.33
+    ],
+    [
+     "hcp:Sr",
+     "in_plane",
+     0.63,
+     0.36
+    ],
+    [
+     "hcp:Sr",
+     "out_of_plane",
+     0.669,
+     0.4
+    ],
+    [
+     "hcp:Tc",
+     "in_plane",
+     0.829,
+     1.21
+    ],
+    [
+     "hcp:Tc",
+     "out_of_plane",
+     0.87,
+     0.63
+    ],
+    [
+     "hcp:Ti",
+     "in_plane",
+     0.014,
+     0.49
+    ],
+    [
+     "hcp:Ti",
+     "out_of_plane",
+     0.15,
+     0.59
+    ],
+    [
+     "hcp:Tl",
+     "in_plane",
+     0.177,
+     0.23
+    ],
+    [
+     "hcp:Tl",
+     "out_of_plane",
+     0.19,
+     0.16
+    ],
+    [
+     "hcp:Y",
+     "in_plane",
+     0.571,
+     0.69
+    ],
+    [
+     "hcp:Y",
+     "out_of_plane",
+     0.611,
+     0.67
+    ],
+    [
+     "hcp:Zn",
+     "in_plane",
+     0.191,
+     0.34
+    ],
+    [
+     "hcp:Zn",
+     "out_of_plane",
+     0.195,
+     0.2
+    ],
+    [
+     "hcp:Zr",
+     "in_plane",
+     0.07,
+     0.57
+    ],
+    [
+     "hcp:Zr",
+     "out_of_plane",
+     0.439,
+     0.7
+    ]
+   ],
+   "al_fcc_migration_wall_s": 8.1
+  }
+ },
+ "per_element": {
+  "fcc:Ac": {
+   "ref": 1.26,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.417,
+   "mace-mp-0-medium": 1.235
+  },
+  "fcc:Ag": {
+   "ref": 0.68,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.776,
+   "mace-mp-0-medium": 0.679
+  },
+  "fcc:Al": {
+   "ref": 0.61,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.679,
+   "mace-mp-0-medium": 0.48
+  },
+  "fcc:Au": {
+   "ref": 0.4,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.467,
+   "mace-mp-0-medium": 0.439
+  },
+  "fcc:Ba": {
+   "ref": 1.09,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.926,
+   "mace-mp-0-medium": 0.557
+  },
+  "fcc:Ca": {
+   "ref": 1.13,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.021,
+   "mace-mp-0-medium": 0.95
+  },
+  "fcc:Cd": {
+   "ref": 0.3,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.147,
+   "mace-mp-0-medium": 0.083
+  },
+  "fcc:Ce": {
+   "ref": 1.3,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.806,
+   "mace-mp-0-medium": 0.955
+  },
+  "fcc:Co:mag": {
+   "ref": 1.79,
+   "ref_nonmagnetic": 1.84,
+   "mace-mpa-0-medium": 1.799,
+   "mace-mp-0-medium": 1.332
+  },
+  "fcc:Cs": {
+   "ref": 0.34,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.023,
+   "mace-mp-0-medium": 0.008
+  },
+  "fcc:Cu": {
+   "ref": 1.07,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.068,
+   "mace-mp-0-medium": 1.044
+  },
+  "fcc:Er": {
+   "ref": 1.02,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.673,
+   "mace-mp-0-medium": 1.723
+  },
+  "fcc:Fe": {
+   "ref": 2.32,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.741,
+   "mace-mp-0-medium": 1.601
+  },
+  "fcc:Hf": {
+   "ref": 2.09,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.141,
+   "mace-mp-0-medium": 2.256
+  },
+  "fcc:Ho": {
+   "ref": 1.74,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.619,
+   "mace-mp-0-medium": 1.726
+  },
+  "fcc:In": {
+   "ref": 0.28,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.312,
+   "mace-mp-0-medium": 0.257
+  },
+  "fcc:Ir": {
+   "ref": 1.55,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.784,
+   "mace-mp-0-medium": 0.888
+  },
+  "fcc:K": {
+   "ref": 0.34,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.21,
+   "mace-mp-0-medium": 0.202
+  },
+  "fcc:La": {
+   "ref": 1.44,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.394,
+   "mace-mp-0-medium": 1.064
+  },
+  "fcc:Li": {
+   "ref": 0.6,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.588,
+   "mace-mp-0-medium": 0.621
+  },
+  "fcc:Mg": {
+   "ref": 0.82,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.821,
+   "mace-mp-0-medium": 0.77
+  },
+  "fcc:Na": {
+   "ref": 0.38,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.374,
+   "mace-mp-0-medium": 0.443
+  },
+  "fcc:Ni:mag": {
+   "ref": 1.43,
+   "ref_nonmagnetic": 1.39,
+   "mace-mpa-0-medium": 1.54,
+   "mace-mp-0-medium": 1.115
+  },
+  "fcc:Os": {
+   "ref": 2.75,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.817,
+   "mace-mp-0-medium": 0.478
+  },
+  "fcc:Pa": {
+   "ref": 1.54,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.812,
+   "mace-mp-0-medium": 1.559
+  },
+  "fcc:Pb": {
+   "ref": 0.45,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.432,
+   "mace-mp-0-medium": 0.156
+  },
+  "fcc:Pd": {
+   "ref": 1.16,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.209,
+   "mace-mp-0-medium": 1.181
+  },
+  "fcc:Pt": {
+   "ref": 0.61,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.827,
+   "mace-mp-0-medium": 0.439
+  },
+  "fcc:Rb": {
+   "ref": 0.3,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.187,
+   "mace-mp-0-medium": 0.12
+  },
+  "fcc:Re": {
+   "ref": 2.94,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.976,
+   "mace-mp-0-medium": 1.6
+  },
+  "fcc:Rh": {
+   "ref": 1.57,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.838,
+   "mace-mp-0-medium": 0.748
+  },
+  "fcc:Ru": {
+   "ref": 2.51,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.716,
+   "mace-mp-0-medium": 1.073
+  },
+  "fcc:Sc": {
+   "ref": 2.07,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.677,
+   "mace-mp-0-medium": 1.66
+  },
+  "fcc:Sn": {
+   "ref": 0.26,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.322,
+   "mace-mp-0-medium": 0.224
+  },
+  "fcc:Sr": {
+   "ref": 0.95,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.945,
+   "mace-mp-0-medium": 0.664
+  },
+  "fcc:Tb": {
+   "ref": 1.75,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.661,
+   "mace-mp-0-medium": 1.686
+  },
+  "fcc:Tc": {
+   "ref": 2.62,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.514,
+   "mace-mp-0-medium": 1.49
+  },
+  "fcc:Th": {
+   "ref": 1.92,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.015,
+   "mace-mp-0-medium": 1.953
+  },
+  "fcc:Ti": {
+   "ref": 1.95,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.076,
+   "mace-mp-0-medium": 1.338
+  },
+  "fcc:Tl": {
+   "ref": 0.37,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.387,
+   "mace-mp-0-medium": 0.294
+  },
+  "fcc:Y": {
+   "ref": 1.72,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.719,
+   "mace-mp-0-medium": 1.662
+  },
+  "fcc:Zr": {
+   "ref": 2.02,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.12,
+   "mace-mp-0-medium": 2.504
+  },
+  "hcp:Ag": {
+   "ref": 0.76,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.771,
+   "mace-mp-0-medium": 0.691
+  },
+  "hcp:Al": {
+   "ref": 0.62,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.629,
+   "mace-mp-0-medium": 0.489
+  },
+  "hcp:Au": {
+   "ref": 0.4,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.46,
+   "mace-mp-0-medium": 0.456
+  },
+  "hcp:Ba": {
+   "ref": 1.11,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.926,
+   "mace-mp-0-medium": 0.564
+  },
+  "hcp:Be": {
+   "ref": 1.04,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.888,
+   "mace-mp-0-medium": 1.004
+  },
+  "hcp:Ca": {
+   "ref": 1.06,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.014,
+   "mace-mp-0-medium": 0.952
+  },
+  "hcp:Cd": {
+   "ref": 0.25,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.289,
+   "mace-mp-0-medium": 0.113
+  },
+  "hcp:Co:mag": {
+   "ref": 1.93,
+   "ref_nonmagnetic": 1.67,
+   "mace-mpa-0-medium": 1.802,
+   "mace-mp-0-medium": 1.362
+  },
+  "hcp:Cs": {
+   "ref": 0.31,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.025,
+   "mace-mp-0-medium": 0.008
+  },
+  "hcp:Cu": {
+   "ref": 1.04,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.057,
+   "mace-mp-0-medium": 1.054
+  },
+  "hcp:Fe": {
+   "ref": 2.43,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.822,
+   "mace-mp-0-medium": 1.628
+  },
+  "hcp:Ga": {
+   "ref": 0.21,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.255,
+   "mace-mp-0-medium": 0.153
+  },
+  "hcp:Hf": {
+   "ref": 2.26,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.412,
+   "mace-mp-0-medium": 2.292
+  },
+  "hcp:In": {
+   "ref": 0.31,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.343,
+   "mace-mp-0-medium": 0.281
+  },
+  "hcp:Ir": {
+   "ref": 1.25,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.441,
+   "mace-mp-0-medium": 0.958
+  },
+  "hcp:K": {
+   "ref": 0.35,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.212,
+   "mace-mp-0-medium": 0.201
+  },
+  "hcp:Li": {
+   "ref": 0.63,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.601,
+   "mace-mp-0-medium": 0.654
+  },
+  "hcp:Mg": {
+   "ref": 0.78,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.827,
+   "mace-mp-0-medium": 0.775
+  },
+  "hcp:Ni:mag": {
+   "ref": 1.37,
+   "ref_nonmagnetic": 1.35,
+   "mace-mpa-0-medium": 1.465,
+   "mace-mp-0-medium": 1.116
+  },
+  "hcp:Os": {
+   "ref": 3.03,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 3.055,
+   "mace-mp-0-medium": 1.481
+  },
+  "hcp:Pb": {
+   "ref": 0.41,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.41,
+   "mace-mp-0-medium": 0.161
+  },
+  "hcp:Pd": {
+   "ref": 1.1,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.186,
+   "mace-mp-0-medium": 1.191
+  },
+  "hcp:Rb": {
+   "ref": 0.32,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.184,
+   "mace-mp-0-medium": 0.12
+  },
+  "hcp:Re": {
+   "ref": 3.42,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 3.204,
+   "mace-mp-0-medium": 1.756
+  },
+  "hcp:Rh": {
+   "ref": 1.53,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.601,
+   "mace-mp-0-medium": 0.768
+  },
+  "hcp:Ru": {
+   "ref": 2.68,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.856,
+   "mace-mp-0-medium": 1.129
+  },
+  "hcp:Sc": {
+   "ref": 1.87,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.82,
+   "mace-mp-0-medium": 1.701
+  },
+  "hcp:Si": {
+   "ref": 0.08,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": -0.05,
+   "mace-mp-0-medium": -0.33
+  },
+  "hcp:Sn": {
+   "ref": 0.4,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.35,
+   "mace-mp-0-medium": 0.235
+  },
+  "hcp:Sr": {
+   "ref": 0.98,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.948,
+   "mace-mp-0-medium": 0.664
+  },
+  "hcp:Tc": {
+   "ref": 2.85,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.803,
+   "mace-mp-0-medium": 1.536
+  },
+  "hcp:Ti": {
+   "ref": 2.06,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.255,
+   "mace-mp-0-medium": 1.389
+  },
+  "hcp:Tl": {
+   "ref": 0.4,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.394,
+   "mace-mp-0-medium": 0.303
+  },
+  "hcp:Y": {
+   "ref": 1.87,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 1.75,
+   "mace-mp-0-medium": 1.668
+  },
+  "hcp:Zn": {
+   "ref": 0.47,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 0.361,
+   "mace-mp-0-medium": 0.272
+  },
+  "hcp:Zr": {
+   "ref": 2.03,
+   "ref_nonmagnetic": null,
+   "mace-mpa-0-medium": 2.292,
+   "mace-mp-0-medium": 2.562
+  }
+ }
+}

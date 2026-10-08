@@ -1,0 +1,4049 @@
+{
+ "engine": "mace-mpa-0-medium",
+ "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+ "dtype": "float32",
+ "fmax_eV_per_A": 0.01,
+ "reference_html_sha256": "a48f8a37d6024ce52f2c9f22b3b966d00aa652f260905686b98288dc1ecca51e",
+ "pairs": {
+  "fcc:Al": {
+   "symbol": "Al",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.61,
+   "reference_Hvm_eV": 0.58,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.6787866663049726,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    },
+    {
+     "N": 108,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.6749109338830976,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.677238941192627,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.677299976348877,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.6756591796875,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.6756591796875,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.0388,
+      4.0388,
+      4.0388
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.601287841796875,
+     "hop_length_A": 2.8558553006534297,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.9,
+   "wall_s": 20.0
+  },
+  "hcp:Al": {
+   "symbol": "Al",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.62,
+   "reference_Hvm_eV": 0.41,
+   "reference_Hvm_c_eV": 0.46,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.6287829081217353,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.8298,
+      2.8298,
+      4.7435
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.4625396728515625,
+     "hop_length_A": 2.8297786022622557,
+     "steps": 33,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.471405029296875,
+     "hop_length_A": 2.8799937659977286,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.5,
+   "wall_s": 5.1
+  },
+  "fcc:Ac": {
+   "symbol": "Ac",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.26,
+   "reference_Hvm_eV": 0.45,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.4167952360929803,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.6527,
+      5.6527,
+      5.6527
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.743896484375,
+     "hop_length_A": 3.997054064954712,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 2.7,
+   "wall_s": 3.7
+  },
+  "fcc:Ag": {
+   "symbol": "Ag",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.68,
+   "reference_Hvm_eV": 0.7,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.7764816284179688,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    },
+    {
+     "N": 108,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.7733386004412637,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.7769091129302979,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.7768480777740479,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.7758125000000291,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.7750800781250291,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1614,
+      4.1614,
+      4.1614
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.56298828125,
+     "hop_length_A": 2.9425434408452786,
+     "steps": 28,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 7.0,
+   "wall_s": 29.7
+  },
+  "fcc:Au": {
+   "symbol": "Au",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.4,
+   "reference_Hvm_eV": 0.53,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.4668030915436816,
+     "steps": 10,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 1,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1657,
+      4.1657,
+      4.1657
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.55364990234375,
+     "hop_length_A": 2.945604265859952,
+     "steps": 31,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 8.6,
+   "wall_s": 11.1
+  },
+  "fcc:Ba": {
+   "symbol": "Ba",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.09,
+   "reference_Hvm_eV": 0.36,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.9263455426251426,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      6.3252,
+      6.3252,
+      6.3252
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.604736328125,
+     "hop_length_A": 4.472602983374525,
+     "steps": 26,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.9,
+   "wall_s": 4.7
+  },
+  "fcc:Ca": {
+   "symbol": "Ca",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.13,
+   "reference_Hvm_eV": 0.47,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.0205942789713447,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.5449,
+      5.5449,
+      5.5449
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.470550537109375,
+     "hop_length_A": 3.920828622754392,
+     "steps": 39,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 5.5,
+   "wall_s": 6.1
+  },
+  "fcc:Cd": {
+   "symbol": "Cd",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.3,
+   "reference_Hvm_eV": 0.23,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.1473067954734546,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.488,
+      4.488,
+      4.488
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.16866302490234375,
+     "hop_length_A": 3.173519313202312,
+     "steps": 29,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 7.7,
+   "wall_s": 10.7
+  },
+  "fcc:Ce": {
+   "symbol": "Ce",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.3,
+   "reference_Hvm_eV": 0.54,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.8055261682580976,
+     "steps": 8,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 3,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.755,
+      4.755,
+      4.755
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.61334228515625,
+     "hop_length_A": 3.3622956108693187,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 5.2,
+   "wall_s": 6.9
+  },
+  "fcc:Co:mag": {
+   "symbol": "Co",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.79,
+   "reference_Hvm_eV": 1.01,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": true,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.7994927300346717,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5196,
+      3.5196,
+      3.5196
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.07855224609375,
+     "hop_length_A": 2.488745562003786,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 5.7,
+   "wall_s": 7.2
+  },
+  "fcc:Cs": {
+   "symbol": "Cs",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.34,
+   "reference_Hvm_eV": 0.13,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.022620024504476532,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 41,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      8.08,
+      8.08,
+      8.08
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.1768341064453125,
+     "hop_length_A": 5.7134259573445005,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 2.7,
+   "wall_s": 4.0
+  },
+  "fcc:Cu": {
+   "symbol": "Cu",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.07,
+   "reference_Hvm_eV": 0.72,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.0675068608036327,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    },
+    {
+     "N": 108,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.0635698106553377,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.068385124206543,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.068140983581543,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.0563222656248854,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.0568105468748854,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.6398,
+      3.6398,
+      3.6398
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.70684814453125,
+     "hop_length_A": 2.5737344964899083,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 7.7,
+   "wall_s": 42.9
+  },
+  "fcc:Er": {
+   "symbol": "Er",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.02,
+   "reference_Hvm_eV": 0.47,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.6730886388708086,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 5,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.9698,
+      4.9698,
+      4.9698
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.548828125,
+     "hop_length_A": 3.5141713484415114,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.1,
+   "wall_s": 4.0
+  },
+  "fcc:Fe": {
+   "symbol": "Fe",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.32,
+   "reference_Hvm_eV": 1.38,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.7413974338106755,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.4522,
+      3.4522,
+      3.4522
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.85919189453125,
+     "hop_length_A": 2.441089890206121,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.5,
+   "wall_s": 8.2
+  },
+  "fcc:Hf": {
+   "symbol": "Hf",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.09,
+   "reference_Hvm_eV": 0.81,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.1406871654369297,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.4638,
+      4.4638,
+      4.4638
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.2703857421875,
+     "hop_length_A": 3.156354491268548,
+     "steps": 29,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.1,
+   "wall_s": 7.4
+  },
+  "fcc:Ho": {
+   "symbol": "Ho",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.74,
+   "reference_Hvm_eV": 0.73,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.6190510502567577,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.9859,
+      4.9859,
+      4.9859
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.631195068359375,
+     "hop_length_A": 3.525558939724877,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.0,
+   "wall_s": 3.8
+  },
+  "fcc:In": {
+   "symbol": "In",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.28,
+   "reference_Hvm_eV": 0.23,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.31241918493196863,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.7743,
+      4.7743,
+      4.7743
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.22381591796875,
+     "hop_length_A": 3.3759377712202063,
+     "steps": 35,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 8.8,
+   "wall_s": 11.7
+  },
+  "fcc:Ir": {
+   "symbol": "Ir",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.55,
+   "reference_Hvm_eV": 2.54,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.7838552969473085,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 3,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.8568,
+      3.8568,
+      3.8568
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 2.48809814453125,
+     "hop_length_A": 2.727137474530192,
+     "steps": 14,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.9,
+   "wall_s": 5.2
+  },
+  "fcc:K": {
+   "symbol": "K",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.34,
+   "reference_Hvm_eV": 0.16,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.209774723759395,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      6.7633,
+      6.7633,
+      6.7633
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.19008636474609375,
+     "hop_length_A": 4.782358921580177,
+     "steps": 10,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 1.6,
+   "wall_s": 2.1
+  },
+  "fcc:La": {
+   "symbol": "La",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.44,
+   "reference_Hvm_eV": 0.21,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.3943526656539689,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.2806,
+      5.2806,
+      5.2806
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.4337158203125,
+     "hop_length_A": 3.7339378503799754,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 2.9,
+   "wall_s": 3.6
+  },
+  "fcc:Li": {
+   "symbol": "Li",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.6,
+   "reference_Hvm_eV": 0.13,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.5880884241174726,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.3084,
+      4.3084,
+      4.3084
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.10296630859375,
+     "hop_length_A": 3.046477570695024,
+     "steps": 48,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 9.1,
+   "wall_s": 10.2
+  },
+  "fcc:Mg": {
+   "symbol": "Mg",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.82,
+   "reference_Hvm_eV": 0.41,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.820995048240377,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.5082,
+      4.5082,
+      4.5082
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.3694610595703125,
+     "hop_length_A": 3.1878088337309833,
+     "steps": 26,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 5.1,
+   "wall_s": 5.8
+  },
+  "fcc:Na": {
+   "symbol": "Na",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.38,
+   "reference_Hvm_eV": 0.14,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.37362388328270413,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.2649,
+      5.2649,
+      5.2649
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.13079833984375,
+     "hop_length_A": 3.7228740611508746,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 2.8,
+   "wall_s": 3.4
+  },
+  "fcc:Ni:mag": {
+   "symbol": "Ni",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.43,
+   "reference_Hvm_eV": 1.08,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": true,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.539995546694172,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    },
+    {
+     "N": 108,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.533708925600422,
+     "steps": 14,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.5362277030944824,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    },
+    {
+     "N": 256,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.5330538749694824,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 255,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.5365742187500473,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    },
+    {
+     "N": 500,
+     "mode": "zero_pressure",
+     "E_f_eV": 1.5363300781250473,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 499,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.5213,
+      3.5213,
+      3.5213
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.0784912109375,
+     "hop_length_A": 2.4899509963945374,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.4,
+   "wall_s": 45.5
+  },
+  "fcc:Os": {
+   "symbol": "Os",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.75,
+   "reference_Hvm_eV": 2.73,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.8174268934460542,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.8591,
+      3.8591,
+      3.8591
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 2.3333740234375,
+     "hop_length_A": 2.728767116083482,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 4.5,
+   "wall_s": 5.9
+  },
+  "fcc:Pa": {
+   "symbol": "Pa",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.54,
+   "reference_Hvm_eV": 0.77,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.8123462818286953,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.6431,
+      4.6431,
+      4.6431
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.5150146484375,
+     "hop_length_A": 3.28313956379169,
+     "steps": 31,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 8.0,
+   "wall_s": 10.5
+  },
+  "fcc:Pb": {
+   "symbol": "Pb",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.45,
+   "reference_Hvm_eV": 0.54,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.4322588885272012,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.0004,
+      5.0004,
+      5.0004
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.470428466796875,
+     "hop_length_A": 3.535805550825532,
+     "steps": 26,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 4.4,
+   "wall_s": 5.3
+  },
+  "fcc:Pd": {
+   "symbol": "Pd",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.16,
+   "reference_Hvm_eV": 0.95,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.2085689968532733,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.9594,
+      3.9594,
+      3.9594
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.98486328125,
+     "hop_length_A": 2.7996920982725158,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.5,
+   "wall_s": 8.1
+  },
+  "fcc:Pt": {
+   "symbol": "Pt",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.61,
+   "reference_Hvm_eV": 1.24,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.8270930537470349,
+     "steps": 8,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.9765,
+      3.9765,
+      3.9765
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.25006103515625,
+     "hop_length_A": 2.811836802352137,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.4,
+   "wall_s": 8.4
+  },
+  "fcc:Rb": {
+   "symbol": "Rb",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.3,
+   "reference_Hvm_eV": 0.14,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.18653106689453125,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      7.236,
+      7.236,
+      7.236
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.182098388671875,
+     "hop_length_A": 5.11665386395399,
+     "steps": 13,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 1.9,
+   "wall_s": 2.4
+  },
+  "fcc:Re": {
+   "symbol": "Re",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.94,
+   "reference_Hvm_eV": 1.81,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.975735134548586,
+     "steps": 8,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 3,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.9371,
+      3.9371,
+      3.9371
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.7823486328125,
+     "hop_length_A": 2.783916435230724,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 5.0,
+   "wall_s": 7.0
+  },
+  "fcc:Rh": {
+   "symbol": "Rh",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.57,
+   "reference_Hvm_eV": 1.79,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.8377453839336795,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.8394,
+      3.8394,
+      3.8394
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.7044677734375,
+     "hop_length_A": 2.714865285012139,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 4.1,
+   "wall_s": 5.3
+  },
+  "fcc:Ru": {
+   "symbol": "Ru",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.51,
+   "reference_Hvm_eV": 1.85,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.7162464283130703,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.8289,
+      3.8289,
+      3.8289
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.68389892578125,
+     "hop_length_A": 2.707413393454886,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.8,
+   "wall_s": 5.2
+  },
+  "fcc:Sc": {
+   "symbol": "Sc",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.07,
+   "reference_Hvm_eV": 0.6,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.6767945466217498,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.624,
+      4.624,
+      4.624
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.43701171875,
+     "hop_length_A": 3.269678426687422,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 4.9,
+   "wall_s": 6.2
+  },
+  "fcc:Sn": {
+   "symbol": "Sn",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.26,
+   "reference_Hvm_eV": 0.38,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.32222267433445495,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.7893,
+      4.7893,
+      4.7893
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.3521728515625,
+     "hop_length_A": 3.386522458063257,
+     "steps": 34,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 7.5,
+   "wall_s": 9.1
+  },
+  "fcc:Sr": {
+   "symbol": "Sr",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.95,
+   "reference_Hvm_eV": 0.45,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.9445098594382841,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 0,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      6.0273,
+      6.0273,
+      6.0273
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.5962982177734375,
+     "hop_length_A": 4.261932792857592,
+     "steps": 24,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.1,
+   "wall_s": 3.6
+  },
+  "fcc:Tb": {
+   "symbol": "Tb",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.75,
+   "reference_Hvm_eV": 0.71,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.6609703346534843,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.0387,
+      5.0387,
+      5.0387
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.61480712890625,
+     "hop_length_A": 3.562911660514572,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.1,
+   "wall_s": 4.1
+  },
+  "fcc:Tc": {
+   "symbol": "Tc",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.62,
+   "reference_Hvm_eV": 1.17,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.5136277940537184,
+     "steps": 10,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      3.8872,
+      3.8872,
+      3.8872
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.046142578125,
+     "hop_length_A": 2.748679131357787,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.7,
+   "wall_s": 9.1
+  },
+  "fcc:Th": {
+   "symbol": "Th",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.92,
+   "reference_Hvm_eV": 1.25,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.0147784197771443,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.0242,
+      5.0242,
+      5.0241
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 1.1318359375,
+     "hop_length_A": 3.552611394646237,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.4,
+   "wall_s": 4.2
+  },
+  "fcc:Ti": {
+   "symbol": "Ti",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.95,
+   "reference_Hvm_eV": 0.45,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.0762363009981755,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.1126,
+      4.1126,
+      4.1126
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": -0.092529296875,
+     "hop_length_A": 2.908014688086616,
+     "steps": 38,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 8.4,
+   "wall_s": 9.6
+  },
+  "fcc:Tl": {
+   "symbol": "Tl",
+   "structure": "fcc",
+   "reference_Hvf_eV": 0.37,
+   "reference_Hvm_eV": 0.1,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.3868662516275947,
+     "steps": 10,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.0,
+      5.0,
+      5.0
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.127471923828125,
+     "hop_length_A": 3.5355314606382837,
+     "steps": 56,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 8.4,
+   "wall_s": 9.9
+  },
+  "fcc:Y": {
+   "symbol": "Y",
+   "structure": "fcc",
+   "reference_Hvf_eV": 1.72,
+   "reference_Hvm_eV": 0.67,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.7185572871454724,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      5.0612,
+      5.0612,
+      5.0612
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.557373046875,
+     "hop_length_A": 3.5788423383262726,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 3.0,
+   "wall_s": 3.7
+  },
+  "fcc:Zr": {
+   "symbol": "Zr",
+   "structure": "fcc",
+   "reference_Hvf_eV": 2.02,
+   "reference_Hvm_eV": 0.5,
+   "reference_Hvm_c_eV": null,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 108,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.1202104356553946,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 107,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 4
+     },
+     "cell_lengths_A": [
+      4.5354,
+      4.5354,
+      4.5354
+     ]
+    }
+   ],
+   "migration": {
+    "hop": {
+     "Hvm_eV": 0.2786865234375,
+     "hop_length_A": 3.206995892939308,
+     "steps": 31,
+     "converged": true,
+     "n_atoms": 107
+    }
+   },
+   "migration_wall_s": 6.6,
+   "wall_s": 7.9
+  },
+  "hcp:Ag": {
+   "symbol": "Ag",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.76,
+   "reference_Hvm_eV": 0.5,
+   "reference_Hvm_c_eV": 0.6,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.7710641225178989,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.942,
+      2.942,
+      4.8104
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.560028076171875,
+     "hop_length_A": 2.94448288859404,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.4854583740234375,
+     "hop_length_A": 2.9419579455507243,
+     "steps": 28,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.0,
+   "wall_s": 5.6
+  },
+  "hcp:Au": {
+   "symbol": "Au",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.4,
+   "reference_Hvm_eV": 0.49,
+   "reference_Hvm_c_eV": 0.57,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.4604422251383511,
+     "steps": 8,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9367,
+      2.9367,
+      4.8426
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.5569915771484375,
+     "hop_length_A": 2.9559126216563785,
+     "steps": 29,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.4716644287109375,
+     "hop_length_A": 2.9366496959198907,
+     "steps": 31,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 6.2,
+   "wall_s": 7.0
+  },
+  "hcp:Ba": {
+   "symbol": "Ba",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.11,
+   "reference_Hvm_eV": 0.34,
+   "reference_Hvm_c_eV": 0.37,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.9261514875623931,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      4.4425,
+      4.4425,
+      7.3936
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.5671310424804688,
+     "hop_length_A": 4.4424768956190634,
+     "steps": 24,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.5079727172851562,
+     "hop_length_A": 4.499443653398687,
+     "steps": 28,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.2,
+   "wall_s": 3.6
+  },
+  "hcp:Be": {
+   "symbol": "Be",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.04,
+   "reference_Hvm_eV": 0.74,
+   "reference_Hvm_c_eV": 0.87,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.8881823221842353,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 6,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.2505,
+      2.2505,
+      3.5396
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.7883758544921875,
+     "hop_length_A": 2.250467579446246,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.8654327392578125,
+     "hop_length_A": 2.1955196031372597,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.1,
+   "wall_s": 6.1
+  },
+  "hcp:Ca": {
+   "symbol": "Ca",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.06,
+   "reference_Hvm_eV": 0.38,
+   "reference_Hvm_c_eV": 0.42,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.0141016642252652,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.9153,
+      3.9154,
+      6.409
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.48134613037109375,
+     "hop_length_A": 3.9215649133216446,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.43093109130859375,
+     "hop_length_A": 3.91535014919436,
+     "steps": 26,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.3,
+   "wall_s": 3.5
+  },
+  "hcp:Cd": {
+   "symbol": "Cd",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.25,
+   "reference_Hvm_eV": 0.23,
+   "reference_Hvm_c_eV": 0.16,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.28893555535210425,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 14,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.0289,
+      3.0289,
+      5.7841
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.24355506896972656,
+     "hop_length_A": 3.0288666162671602,
+     "steps": 51,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.5,
+   "wall_s": 7.6
+  },
+  "hcp:Co:mag": {
+   "symbol": "Co",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.93,
+   "reference_Hvm_eV": 0.81,
+   "reference_Hvm_c_eV": 0.78,
+   "magnetic_variant": true,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.8015407986111143,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 3,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.497,
+      2.497,
+      4.0269
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.9295196533203125,
+     "hop_length_A": 2.497035441132207,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.9994049072265625,
+     "hop_length_A": 2.476379529869131,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.9,
+   "wall_s": 5.7
+  },
+  "hcp:Cs": {
+   "symbol": "Cs",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.31,
+   "reference_Hvm_eV": 0.12,
+   "reference_Hvm_c_eV": 0.13,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.024863878885906132,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 19,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      5.7061,
+      5.7061,
+      9.357
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.18805694580078125,
+     "hop_length_A": 5.722005632498712,
+     "steps": 13,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.19254112243652344,
+     "hop_length_A": 5.7060566021804515,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 2.3,
+   "wall_s": 2.9
+  },
+  "hcp:Cu": {
+   "symbol": "Cu",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.04,
+   "reference_Hvm_eV": 0.57,
+   "reference_Hvm_c_eV": 0.69,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.0565719604492188,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.5703,
+      2.5703,
+      4.211
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.6011199951171875,
+     "hop_length_A": 2.5703399960935487,
+     "steps": 24,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.6795806884765625,
+     "hop_length_A": 2.575900892775618,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.1,
+   "wall_s": 5.8
+  },
+  "hcp:Fe": {
+   "symbol": "Fe",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.43,
+   "reference_Hvm_eV": 1.52,
+   "reference_Hvm_c_eV": 1.51,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.82159423828125,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 5,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.4371,
+      2.4371,
+      3.9108
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.958099365234375,
+     "hop_length_A": 2.437098979324259,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.99749755859375,
+     "hop_length_A": 2.4090200221314464,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.7,
+   "wall_s": 5.5
+  },
+  "hcp:Ga": {
+   "symbol": "Ga",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.21,
+   "reference_Hvm_eV": 0.12,
+   "reference_Hvm_c_eV": 0.16,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.2545377943250884,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 6,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9689,
+      2.9689,
+      4.9612
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.06037139892578125,
+     "hop_length_A": 2.9689547029004313,
+     "steps": 90,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": -0.04640960693359375,
+     "hop_length_A": 3.0152190017239375,
+     "steps": 167,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 23.3,
+   "wall_s": 24.8
+  },
+  "hcp:Hf": {
+   "symbol": "Hf",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.26,
+   "reference_Hvm_eV": 0.89,
+   "reference_Hvm_c_eV": 1.0,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.412327236599367,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1999,
+      3.1999,
+      5.0573
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.630279541015625,
+     "hop_length_A": 3.199851520335401,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.770660400390625,
+     "hop_length_A": 3.131627316643733,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.2,
+   "wall_s": 5.0
+  },
+  "hcp:In": {
+   "symbol": "In",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.31,
+   "reference_Hvm_eV": 0.2,
+   "reference_Hvm_c_eV": 0.21,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.3429228464762417,
+     "steps": 11,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.3689,
+      3.3689,
+      5.5768
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.16002655029296875,
+     "hop_length_A": 3.3997222609122972,
+     "steps": 47,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.14276885986328125,
+     "hop_length_A": 3.368873665619693,
+     "steps": 42,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 7.4,
+   "wall_s": 8.3
+  },
+  "hcp:Ir": {
+   "symbol": "Ir",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.25,
+   "reference_Hvm_eV": 1.57,
+   "reference_Hvm_c_eV": 1.95,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.4412375556098027,
+     "steps": 8,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7264,
+      2.7264,
+      4.4866
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 1.657989501953125,
+     "hop_length_A": 2.7404493859664694,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 1.452178955078125,
+     "hop_length_A": 2.7263492955055453,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.6,
+   "wall_s": 5.5
+  },
+  "hcp:K": {
+   "symbol": "K",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.35,
+   "reference_Hvm_eV": 0.12,
+   "reference_Hvm_c_eV": 0.14,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.21207989586724096,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      4.775,
+      4.775,
+      7.8713
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.18079376220703125,
+     "hop_length_A": 4.805136480297356,
+     "steps": 16,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.15604019165039062,
+     "hop_length_A": 4.774961355645195,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 2.2,
+   "wall_s": 2.5
+  },
+  "hcp:Li": {
+   "symbol": "Li",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.63,
+   "reference_Hvm_eV": 0.1,
+   "reference_Hvm_c_eV": 0.12,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.6014501783582915,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.0499,
+      3.0499,
+      4.9484
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.1302642822265625,
+     "hop_length_A": 3.036823722077698,
+     "steps": 27,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.1017913818359375,
+     "hop_length_A": 3.0499325147341843,
+     "steps": 29,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.1,
+   "wall_s": 5.6
+  },
+  "hcp:Mg": {
+   "symbol": "Mg",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.78,
+   "reference_Hvm_eV": 0.4,
+   "reference_Hvm_c_eV": 0.42,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.8271826638115769,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    },
+    {
+     "N": 36,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.8217963112725144,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    },
+    {
+     "N": 96,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.8286819458007812,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 95,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    },
+    {
+     "N": 96,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.8273994127909532,
+     "steps": 10,
+     "converged": true,
+     "n_atoms": 95,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    },
+    {
+     "N": 288,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.8268536461724239,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 287,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    },
+    {
+     "N": 288,
+     "mode": "zero_pressure",
+     "E_f_eV": 0.8270055982801523,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 287,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.1864,
+      3.1864,
+      5.1757
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.3984565734863281,
+     "hop_length_A": 3.1751323438097634,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.3707275390625,
+     "hop_length_A": 3.1864223515503336,
+     "steps": 24,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.6,
+   "wall_s": 12.4
+  },
+  "hcp:Ni:mag": {
+   "symbol": "Ni",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.37,
+   "reference_Hvm_eV": 0.77,
+   "reference_Hvm_c_eV": 0.89,
+   "magnetic_variant": true,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.464833153618713,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.489,
+      2.489,
+      4.0619
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.8159942626953125,
+     "hop_length_A": 2.488987520233356,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.928985595703125,
+     "hop_length_A": 2.487940814656296,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.7,
+   "wall_s": 5.3
+  },
+  "hcp:Os": {
+   "symbol": "Os",
+   "structure": "hcp",
+   "reference_Hvf_eV": 3.03,
+   "reference_Hvm_eV": 3.03,
+   "reference_Hvm_c_eV": 3.22,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 3.055185106065551,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 3,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7569,
+      2.7569,
+      4.3268
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 2.883087158203125,
+     "hop_length_A": 2.685864694072152,
+     "steps": 11,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 2.62689208984375,
+     "hop_length_A": 2.7569017118520134,
+     "steps": 13,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.0,
+   "wall_s": 3.7
+  },
+  "hcp:Pb": {
+   "symbol": "Pb",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.41,
+   "reference_Hvm_eV": 0.44,
+   "reference_Hvm_c_eV": 0.41,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.4095001220703125,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.5288,
+      3.5288,
+      5.8345
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.3719635009765625,
+     "hop_length_A": 3.528826241819424,
+     "steps": 34,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.3917694091796875,
+     "hop_length_A": 3.5582649912136475,
+     "steps": 32,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.3,
+   "wall_s": 4.6
+  },
+  "hcp:Pd": {
+   "symbol": "Pd",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.1,
+   "reference_Hvm_eV": 0.68,
+   "reference_Hvm_c_eV": 0.73,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.1860224405924384,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 5,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7978,
+      2.7978,
+      4.6077
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.7254791259765625,
+     "hop_length_A": 2.797808832402088,
+     "steps": 27,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.8512420654296875,
+     "hop_length_A": 2.813717262483181,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.2,
+   "wall_s": 6.0
+  },
+  "hcp:Rb": {
+   "symbol": "Rb",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.32,
+   "reference_Hvm_eV": 0.13,
+   "reference_Hvm_c_eV": 0.12,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.1839003033108142,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 7,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      5.0699,
+      5.0699,
+      8.4967
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.14272689819335938,
+     "hop_length_A": 5.069937077781576,
+     "steps": 30,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.17108154296875,
+     "hop_length_A": 5.159142703143803,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.0,
+   "wall_s": 3.3
+  },
+  "hcp:Re": {
+   "symbol": "Re",
+   "structure": "hcp",
+   "reference_Hvf_eV": 3.42,
+   "reference_Hvm_eV": 1.79,
+   "reference_Hvm_c_eV": 1.17,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 3.204245673285584,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 5,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.8048,
+      2.8048,
+      4.4584
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 1.96844482421875,
+     "hop_length_A": 2.804788800475646,
+     "steps": 17,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 2.00701904296875,
+     "hop_length_A": 2.755302220639961,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.0,
+   "wall_s": 4.7
+  },
+  "hcp:Rh": {
+   "symbol": "Rh",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.53,
+   "reference_Hvm_eV": 1.25,
+   "reference_Hvm_c_eV": 1.47,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.6013039482964473,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7123,
+      2.7123,
+      4.4149
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 1.176422119140625,
+     "hop_length_A": 2.7122673480228596,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 1.33544921875,
+     "hop_length_A": 2.706469583873429,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.2,
+   "wall_s": 4.9
+  },
+  "hcp:Ru": {
+   "symbol": "Ru",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.68,
+   "reference_Hvm_eV": 2.17,
+   "reference_Hvm_c_eV": 2.18,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.8559587266710196,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7288,
+      2.7288,
+      4.3007
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 1.917694091796875,
+     "hop_length_A": 2.728766545994793,
+     "steps": 15,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 2.06787109375,
+     "hop_length_A": 2.6657073439107677,
+     "steps": 12,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.3,
+   "wall_s": 4.0
+  },
+  "hcp:Sc": {
+   "symbol": "Sc",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.87,
+   "reference_Hvm_eV": 0.74,
+   "reference_Hvm_c_eV": 0.69,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.8203362358941035,
+     "steps": 9,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 7,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.3154,
+      3.3154,
+      5.1096
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.733306884765625,
+     "hop_length_A": 3.315383393395456,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.6682586669921875,
+     "hop_length_A": 3.1923358210642174,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.1,
+   "wall_s": 5.0
+  },
+  "hcp:Si": {
+   "symbol": "Si",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.08,
+   "reference_Hvm_eV": 0.04,
+   "reference_Hvm_c_eV": 0.26,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": -0.04975806342230271,
+     "steps": 28,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 7,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.6787,
+      2.6787,
+      4.5867
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": -3.3740997314453125,
+     "hop_length_A": 2.7660662703464807,
+     "steps": 76,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": -2.59161376953125,
+     "hop_length_A": 2.678670740859804,
+     "steps": 87,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 17.7,
+   "wall_s": 20.1
+  },
+  "hcp:Sn": {
+   "symbol": "Sn",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.4,
+   "reference_Hvm_eV": 0.31,
+   "reference_Hvm_c_eV": 0.33,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.3495924207899179,
+     "steps": 13,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.3709,
+      3.3709,
+      5.5842
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.1769866943359375,
+     "hop_length_A": 3.4034478443776606,
+     "steps": 88,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.148345947265625,
+     "hop_length_A": 3.370968202397914,
+     "steps": 68,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 11.7,
+   "wall_s": 12.8
+  },
+  "hcp:Sr": {
+   "symbol": "Sr",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.98,
+   "reference_Hvm_eV": 0.36,
+   "reference_Hvm_c_eV": 0.4,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.9477853775024414,
+     "steps": 2,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 4,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      4.2527,
+      4.2527,
+      7.0093
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.5087356567382812,
+     "hop_length_A": 4.252716649429923,
+     "steps": 39,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.5342864990234375,
+     "hop_length_A": 4.279132031802083,
+     "steps": 32,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.9,
+   "wall_s": 4.2
+  },
+  "hcp:Tc": {
+   "symbol": "Tc",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.85,
+   "reference_Hvm_eV": 1.21,
+   "reference_Hvm_c_eV": 0.63,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.802502950032533,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 6,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.7882,
+      2.7882,
+      4.3584
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 1.370941162109375,
+     "hop_length_A": 2.7881859715313193,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 1.406890869140625,
+     "hop_length_A": 2.7093017555006846,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.3,
+   "wall_s": 5.0
+  },
+  "hcp:Ti": {
+   "symbol": "Ti",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.06,
+   "reference_Hvm_eV": 0.49,
+   "reference_Hvm_c_eV": 0.59,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.254551357693117,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    },
+    {
+     "N": 36,
+     "mode": "zero_pressure",
+     "E_f_eV": 2.2396604749891367,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    },
+    {
+     "N": 96,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.225435256958008,
+     "steps": 6,
+     "converged": true,
+     "n_atoms": 95,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    },
+    {
+     "N": 96,
+     "mode": "zero_pressure",
+     "E_f_eV": 2.217744827270508,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 95,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    },
+    {
+     "N": 288,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.209890577528313,
+     "steps": 11,
+     "converged": true,
+     "n_atoms": 287,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    },
+    {
+     "N": 288,
+     "mode": "zero_pressure",
+     "E_f_eV": 2.203542921278313,
+     "steps": 23,
+     "converged": true,
+     "n_atoms": 287,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.9194,
+      2.9194,
+      4.6836
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.286285400390625,
+     "hop_length_A": 2.9193585986366326,
+     "steps": 21,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.386077880859375,
+     "hop_length_A": 2.885298129553855,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.3,
+   "wall_s": 29.3
+  },
+  "hcp:Tl": {
+   "symbol": "Tl",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.4,
+   "reference_Hvm_eV": 0.23,
+   "reference_Hvm_c_eV": 0.16,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.3939416673448335,
+     "steps": 7,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.5395,
+      3.5395,
+      5.7784
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.098876953125,
+     "hop_length_A": 3.539543843672021,
+     "steps": 43,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.126220703125,
+     "hop_length_A": 3.538874973490235,
+     "steps": 32,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 5.1,
+   "wall_s": 5.6
+  },
+  "hcp:Y": {
+   "symbol": "Y",
+   "structure": "hcp",
+   "reference_Hvf_eV": 1.87,
+   "reference_Hvm_eV": 0.69,
+   "reference_Hvm_c_eV": 0.67,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 1.749757978651246,
+     "steps": 4,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 5,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.6313,
+      3.6313,
+      5.6799
+     ]
+    }
+   ],
+   "migration": {
+    "out_of_plane": {
+     "Hvm_eV": 0.74920654296875,
+     "hop_length_A": 3.5299860734040047,
+     "steps": 18,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "in_plane": {
+     "Hvm_eV": 0.725830078125,
+     "hop_length_A": 3.6313412613202907,
+     "steps": 22,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 2.9,
+   "wall_s": 3.3
+  },
+  "hcp:Zn": {
+   "symbol": "Zn",
+   "structure": "hcp",
+   "reference_Hvf_eV": 0.47,
+   "reference_Hvm_eV": 0.34,
+   "reference_Hvm_c_eV": 0.2,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 0.36093033684624487,
+     "steps": 20,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 12,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      2.6503,
+      2.6503,
+      4.9936
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.37454986572265625,
+     "hop_length_A": 2.649860248370825,
+     "steps": 35,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 4.5,
+   "wall_s": 6.4
+  },
+  "hcp:Zr": {
+   "symbol": "Zr",
+   "structure": "hcp",
+   "reference_Hvf_eV": 2.03,
+   "reference_Hvm_eV": 0.57,
+   "reference_Hvm_c_eV": 0.7,
+   "magnetic_variant": false,
+   "runs": [
+    {
+     "N": 36,
+     "mode": "fixed_cell",
+     "E_f_eV": 2.2915590074327383,
+     "steps": 5,
+     "converged": true,
+     "n_atoms": 35,
+     "unit_cell_relax": {
+      "steps": 2,
+      "converged": true,
+      "n_atoms": 2
+     },
+     "cell_lengths_A": [
+      3.2318,
+      3.2318,
+      5.1882
+     ]
+    }
+   ],
+   "migration": {
+    "in_plane": {
+     "Hvm_eV": 0.4466552734375,
+     "hop_length_A": 3.2318473370266907,
+     "steps": 25,
+     "converged": true,
+     "n_atoms": 35
+    },
+    "out_of_plane": {
+     "Hvm_eV": 0.5670166015625,
+     "hop_length_A": 3.1954506363528807,
+     "steps": 19,
+     "converged": true,
+     "n_atoms": 35
+    }
+   },
+   "migration_wall_s": 3.7,
+   "wall_s": 4.2
+  }
+ },
+ "unsupported": [],
+ "wall_s_last_session": 613.4,
+ "excluded": [
+  {
+   "structure": "fcc",
+   "symbol": "Ar",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Be",
+   "magnetic_variant": false,
+   "excluded_because": "negative H_vf: paper says unstable"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Co",
+   "magnetic_variant": false,
+   "excluded_because": "non-magnetic row superseded by the spin-polarised row (kept as second reference)"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Dy",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote b: unstable in this structure"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Ga",
+   "magnetic_variant": false,
+   "excluded_because": "negative H_vf: paper says unstable"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Ge",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote b: unstable in this structure"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "He",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Kr",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Mn",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote c: different pseudopotential used"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Mn",
+   "magnetic_variant": true,
+   "excluded_because": "paper footnote c: different pseudopotential used"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Ni",
+   "magnetic_variant": false,
+   "excluded_because": "non-magnetic row superseded by the spin-polarised row (kept as second reference)"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Pr",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote b: unstable in this structure"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Ta",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote b: unstable in this structure"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "W",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote b: unstable in this structure"
+  },
+  {
+   "structure": "fcc",
+   "symbol": "Xe",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ar",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Bi",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ce",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Co",
+   "magnetic_variant": false,
+   "excluded_because": "non-magnetic row superseded by the spin-polarised row (kept as second reference)"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Cr",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ge",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "He",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Kr",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "La",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Mn",
+   "magnetic_variant": false,
+   "excluded_because": "Mn: different pseudopotentials for fcc and hcp in the paper"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Mo",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Nb",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ne",
+   "magnetic_variant": false,
+   "excluded_because": "negative H_vf: paper says unstable"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ni",
+   "magnetic_variant": false,
+   "excluded_because": "non-magnetic row superseded by the spin-polarised row (kept as second reference)"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "P",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Pt",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Ta",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Te",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "V",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "W",
+   "magnetic_variant": false,
+   "excluded_because": "paper footnote a: unstable in this structure"
+  },
+  {
+   "structure": "hcp",
+   "symbol": "Xe",
+   "magnetic_variant": false,
+   "excluded_because": "noble gas (vdW solid)"
+  }
+ ]
+}
