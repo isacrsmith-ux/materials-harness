@@ -256,7 +256,7 @@ def ingest_literature(report: dict, legacy_rows: list[dict], legacy_cols: list[s
             "derooij_table_ii_average_equals_mean_of_methods": f"{sum(d_ok)}/{len(d_ok)}",
             "derooij_text_vs_table_E10": text_ok,
             "raikar_pilling_bedworth_relation": r_checks,
-            "morton": m_checks, "morton_control_max_abs_dm_mg": max(ctl),
+            "morton": m_checks,
             "misse6_printed_delta_equals_post_minus_pre": f"{len(ms)}/{len(ms)}",
             "cr192306_carries_same_raikar_numbers": dup,
             "derooij_fluence_exponent_printed_with_leading_zero": sum(1 for x in rows if x["source_key"] == "ntrs_19930001392"

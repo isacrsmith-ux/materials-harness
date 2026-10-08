@@ -27,7 +27,7 @@ def test_pooling_refuses_different_quantities_and_upper_bounds():
 
 
 def test_print_conventions():
-    assert ing.parse_v2("7.78 x 10^21") == 7.78e21
-    assert ing.parse_v2("1.37 x 10^09") is None  # leading-zero exponent is not interpreted
-    assert ing.parse_v2("-") == 0.0 and ing.parse_v2("+0.02") == 0.02
+    assert ing.parse_v2("5.55 x 10^21") == pytest.approx(5.55e21)
+    assert ing.parse_v2("5.55 x 10^09") is None  # leading-zero exponent is not interpreted
+    assert ing.parse_v2("-") == 0.0 and ing.parse_v2("+0.13") == 0.13
     assert ing.parse_v2("400-500") is None and ing.parse_v2("No change") is None

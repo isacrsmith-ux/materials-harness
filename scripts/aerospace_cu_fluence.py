@@ -201,8 +201,9 @@ def main() -> None:
     for s in ("D01", "E02", "C06", "D07", "E10"):
         v = dr[s]["value"]
         L.append(f"| {s} | {flu_all[s]} | {dr[s]['fluence_atoms_per_cm2']} | {v} | de Rooij Table II (average) |")
-    L.append(f"| C9-16 Cu2O | 8.72 x 10^21 | {raikar[1]} | {raikar[2]} (92 nm) | Raikar p. 1173 (derived) |")
-    L += ["", "Raikar film: 68 nm before, 105.3 nm after, 55 nm of Cu converted (81% of the film).", "",
+    L.append(f"| C9-16 Cu2O | {rk['cu2o_thickness_nm']['fluence_atoms_per_cm2']} | {raikar[1]} | {raikar[2]} ({rk['cu2o_thickness_nm']['value']} nm) | Raikar p. 1173 (derived) |")
+    L += ["", f"Raikar film: {rk['film_thickness_unexposed_nm']['value']} nm before, {rk['film_thickness_exposed_nm']['value']} nm after, "
+          f"{rk['cu_consumed_nm']['value']} nm of Cu converted ({100 * film_consumed:.0f}% of the film).", "",
           "## Fitted constants", "", "| variant | form | constants | prediction at each point (A) |", "|---|---|---|---|"]
     for (v, f), c in constants.items():
         L.append(f"| {v} | {f} | " + ", ".join(f"{k}={x:.4g}" for k, x in c.items() if k != "pred_A" and x is not None) +

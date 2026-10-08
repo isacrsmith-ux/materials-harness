@@ -5,7 +5,7 @@
 > answered). No engine was run. Row values and fitted constants stay in the gitignored
 > `cache/external/aerospace/cu_fluence_side_by_side.md`; this report carries names, counts and residual summaries only.
 
-Generated 2026-10-08T02:39:40Z by `scripts/aerospace_cu_fluence.py` from the gitignored row table (sha256 `aece86512773b148824f079755ddde87e17e7184fe78e2378b86b74467ca3cfc`).
+Generated 2026-10-08T03:06:19Z by `scripts/aerospace_cu_fluence.py` from the gitignored row table (sha256 `aece86512773b148824f079755ddde87e17e7184fe78e2378b86b74467ca3cfc`).
 
 ## The data, and whether it is one dataset
 

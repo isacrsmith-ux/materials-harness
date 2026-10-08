@@ -196,8 +196,7 @@ row alignment was confirmed in layout mode.
   not fixed: the mask-edge step height differs from the film-thickness difference by 2.0 combined sigma although
   the text says they agree, and "40% greater" is 54.9% from the printed thicknesses.
 - **Morton's detection limit is "<0.1 mg"** (Table II). The 20 samples with "no detectable change" are stored as
-  **upper bounds** equal to that limit, with the measured Appendix A change kept alongside. The largest control
-  change in Appendix A is 0.09 mg. Two flight samples are quantified: 6061-T6 Al at 200 C (a loss printed as 0.1
+  **upper bounds** equal to that limit, with the measured Appendix A change kept alongside. Every control change in Appendix A is below that limit (checked). Two flight samples are quantified: 6061-T6 Al at 200 C (a loss printed as 0.1
   mg, exactly at the limit) and tungsten at 60 C (a gain of 0.94 mg that its 200 C partner and control do not
   show, unexplained in the summary).
 - **Morton's Table II prints identical AES cells for Tungsten and Molybdenum** (O +51/-40, C -77/-85), checked on
