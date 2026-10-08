@@ -220,6 +220,31 @@ Films of Silver and Silver Oxide", Third LDEF Post-Retrieval Symposium (1993, "i
 Peters, "Measurements of Erosion Characteristics for Metal and Polymer Surfaces Using Profilometry" (CP-3134,
 part 2, pp. 723-735). The journal paper is the one most likely to hold more Cu data; it is publisher-copyrighted.
 
+
+### Stage 2 draft sources (read 2026-10-08 UTC; 2026-10-07 local)
+
+Every entry was read in-session. Captures are under `cache/external/aerospace/ed/` and `.../comparators/`, gitignored. These are for the Stage 2 *draft*
+(`reports/drafts/aerospace_stage2_preregistration_DRAFT.md`); no E_d MD was run. "Abstract page only" means exactly that: the full text of the APS papers was not read.
+
+| source | retrieved (UTC) | licence as read | sha256 | what it gave |
+|---|---|---|---|---|
+| Nordlund et al., "Improving atomic displacement and replacement calculations with physically realistic damage models", *Nat. Commun.* **9**, 1084 (2018), doi:10.1038/s41467-018-03415-5 | article page 02:44:06Z | **CC BY 4.0**, stated on the page | `03222d0373b9e5805d5821b1ecef0ff6ce408489c3e198828689be372aee3c5d` | Definition of E_d used (average threshold displacement energy, citing Nordlund, Wallenius, Malerba 2005). **Al is not in its Table 1.** |
+| (same paper, Table 1 page) | 02:44:27Z | CC BY 4.0 | `d676c4a677f2742e4019f7d611dfe12219d3cf1034ed5f74782fe2e325875644` | Table 1: arc-dpa constants and E_d for Fe, Cu, Ni, Pd, Pt, W. |
+| Nordlund et al., "Primary radiation damage: a review of current understanding and models", *J. Nucl. Mater.* **512**, 450 (2018), doi:10.1016/j.jnucmat.2018.10.027: the **author's copy** (file `Nor18.pdf`) on the University of Helsinki site (`www.mv.helsinki.fi`, the first author's publications page) | 02:49:02Z (8,161,194 bytes) | **CC BY-NC-ND 4.0**, stated in the PDF's own front matter (open access). Read; **no text reproduced** | `cd1d46eb2a722d5ed7bcb620988bcf12cb529c66c32e5dc352f4b5f61db85702` | Section 2.1: how the threshold displacement energy is defined (per direction, stochastic near threshold, falls with temperature). **No Al-specific E_d**; 25 eV appears only as an assumed input in an ion-mixing table. The publisher's DOI page returned HTTP 403 (a bot check, not bypassed) and the OSTI accepted-manuscript PDF HTTP 429 (too many concurrent downloads), so the author's copy was used. |
+| Neely, Bauer, *Phys. Rev.* **149**, 535 (1966), doi:10.1103/PhysRev.149.535 | APS page 02:50:15Z | (c) 1966 American Physical Society. **Abstract page only; the full text was not read.** Values used as facts, text not reproduced | `db8ccb8d8be3392c0ba1e03e7633637ab3716efac2f2bd697f0177352285375c` | Al threshold 16 eV (extrapolating the damage rate to zero, near 8 K, 0.19-1.6 MeV electrons) and an effective 19 eV from a fit. |
+| Simpson, Chaplin, *Phys. Rev.* **185**, 958 (1969), doi:10.1103/PhysRev.185.958 | APS page 02:50:14Z | (c) 1969 American Physical Society. **Abstract page only.** Facts used, text not reproduced | `3b144adda75669bdf4a51f37d23e6c6d10c950f8b3ea4842af6988b43abe4c67` | Al threshold 16 eV from damage rates, 0.16-0.40 MeV electrons; the abstract gives no temperature or orientation. |
+| Sosin, "Radiation effects in metals at low temperatures", *J. Phys. Soc. Jpn.* **18** Suppl. III, 277 (1963) | 02:45:22Z | not read (journal PDF) | `97371f0e21a1ac131c35377a9d0fbdc3c75d27635b7be41106ae47a3ff5a525f` | Read in full: electron-irradiation recovery in Cu and Al. **Gave no Al E_d**; nothing was taken from it. |
+| Qiu, "Orbital-free density-functional theory simulations of displacement cascade in aluminum", arXiv:1709.08288 | 02:49:43Z | not read (PDF only; the arXiv abstract page was not fetched) | `9e9877ae6570d72a5cf9461546ce5a43b500283ccff9c85c718fa4080d7f0989` | Per-direction E_d(Al) from OF-DFT and MD at 100 K in a 32,000-atom cell; **values are in a figure only**. |
+| "Effect of crystal orientation on dislocation loop evolution under electron radiation in pure aluminum" (PMC12843142) | 02:49:43Z | **CC BY**, stated on the page | `f1af08cf5915cff8f1965dd69d6032dc9be934394227611fa12b479e38bc2203` | Used only to find refs 27 and 28 (Simpson & Chaplin; Neely & Bauer) and the electron-irradiation directions [110], [111], [310], [100]. Its own value for Al is secondary. |
+| OpenKIM item `MO_971738391444_000` (v000, 2NN MEAM, Al-Li; Roy, Dutta, Chakraborti 2021), doi:10.25950/96965eb6, and its LICENSE file | item page 02:51:40Z; LICENSE 02:51:56Z | Authors hold the copyright; **no commercial use without permission**; free for academic use at the user's risk if the 2021 paper is cited. Not an open-source licence | `b91739f08937a4d05b52ea72c1bcf51f64629ea5c70455695620629c184b18c7` | Comparator only; nothing downloaded beyond the item page and licence text. |
+| NIST Interatomic Potentials Repository, home page and Al system page (`ctcms.nist.gov/potentials`) | 02:51:04Z; 02:51:26Z | **No licence statement** on the pages read; the home page asks for acknowledgement | `2f227db57e39014dfef5deb33ded09be8d6cbfa494791c9cf0c8887f9419fc75` | Comparator only; no potential downloaded. |
+
+**Not read, and why:** G. S. Was, *Fundamentals of Radiation Materials Science* (Springer, 2016) and Norgett-Robinson-Torrens in the *Annual Book of ASTM Standards* (1975), the two
+references behind the "recommended 25 eV" in arXiv:1904.00360 (paywalled); Jung and Ehrhart in Landolt-Bornstein vol. 25 (1991); Lucasson & Walker (1962); Iseler et al. (1966).
+
+**IAEA CascadesDB** (`cascadesdb.iaea.org`) could **not** be read: curl returned HTTP 403 with a JavaScript challenge ("Just a moment ...") and WebFetch returned HTTP 402, both at 2026-10-08T02:51:03Z.
+Its Al coverage and licence are unknown; a web-search summary (secondary, unverified) says Al is not among its materials. Nothing was bypassed or downloaded.
+
 ### DFT population reference (Phase C)
 
 | source | what | retrieved (UTC) | licence as read | sha256 |

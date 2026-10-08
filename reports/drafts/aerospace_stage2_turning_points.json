@@ -1,0 +1,151 @@
+{
+ "R_a": 0.968,
+ "R_b": 1.694,
+ "rows": [
+  {
+   "E_PKA_eV": 10,
+   "E_cm_eV": 5.0,
+   "r_turn_zbl": 1.6954757240616372,
+   "r_turn_engine": 1.6225226934376538,
+   "r_turn_corrected": 1.6230729634687378,
+   "S_at_engine_turn": 0.008264725422374414,
+   "dV_at_engine_turn_eV": 0.009474699091181205
+  },
+  {
+   "E_PKA_eV": 12,
+   "E_cm_eV": 6.0,
+   "r_turn_zbl": 1.6309091266849116,
+   "r_turn_engine": 1.568263928178944,
+   "r_turn_corrected": 1.5704619030066482,
+   "S_at_engine_turn": 0.03946441053263675,
+   "dV_at_engine_turn_eV": 0.04697592513744945
+  },
+  {
+   "E_PKA_eV": 14,
+   "E_cm_eV": 7.0,
+   "r_turn_zbl": 1.57746293603075,
+   "r_turn_engine": 1.5233117798338776,
+   "r_turn_corrected": 1.5274412308659657,
+   "S_at_engine_turn": 0.08855670058790764,
+   "dV_at_engine_turn_eV": 0.10693470669040668
+  },
+  {
+   "E_PKA_eV": 16,
+   "E_cm_eV": 8.0,
+   "r_turn_zbl": 1.5319468361322868,
+   "r_turn_engine": 1.4859906451416758,
+   "r_turn_corrected": 1.4915545313899097,
+   "S_at_engine_turn": 0.14582187197630284,
+   "dV_at_engine_turn_eV": 0.17136827372919433
+  },
+  {
+   "E_PKA_eV": 18,
+   "E_cm_eV": 9.0,
+   "r_turn_zbl": 1.492415950756276,
+   "r_turn_engine": 1.4544474455631833,
+   "r_turn_corrected": 1.4607643583773071,
+   "S_at_engine_turn": 0.20501354811809513,
+   "dV_at_engine_turn_eV": 0.2241918941110705
+  },
+  {
+   "E_PKA_eV": 20,
+   "E_cm_eV": 10.0,
+   "r_turn_zbl": 1.457527203177768,
+   "r_turn_engine": 1.4272458563544184,
+   "r_turn_corrected": 1.4336952575364474,
+   "S_at_engine_turn": 0.26290400592630847,
+   "dV_at_engine_turn_eV": 0.2546932379221613
+  },
+  {
+   "E_PKA_eV": 22,
+   "E_cm_eV": 11.0,
+   "r_turn_zbl": 1.4263559197219442,
+   "r_turn_engine": 1.4032910036894701,
+   "r_turn_corrected": 1.4092335370417384,
+   "S_at_engine_turn": 0.3182366698729287,
+   "dV_at_engine_turn_eV": 0.2580115144597266
+  },
+  {
+   "E_PKA_eV": 25,
+   "E_cm_eV": 12.5,
+   "r_turn_zbl": 1.3851044212363575,
+   "r_turn_engine": 1.3713540257276826,
+   "r_turn_corrected": 1.375964565287286,
+   "S_at_engine_turn": 0.3966547268892659,
+   "dV_at_engine_turn_eV": 0.21749664783498324
+  },
+  {
+   "E_PKA_eV": 28,
+   "E_cm_eV": 14.0,
+   "r_turn_zbl": 1.3490362872261898,
+   "r_turn_engine": 1.341924108476148,
+   "r_turn_corrected": 1.344968987443104,
+   "S_at_engine_turn": 0.4718118315197287,
+   "dV_at_engine_turn_eV": 0.1506349191083691
+  },
+  {
+   "E_PKA_eV": 32,
+   "E_cm_eV": 16.0,
+   "r_turn_zbl": 1.3072295467518293,
+   "r_turn_engine": 1.3024745758887186,
+   "r_turn_corrected": 1.3052414071406278,
+   "S_at_engine_turn": 0.5733488213843403,
+   "dV_at_engine_turn_eV": 0.14167539495767736
+  },
+  {
+   "E_PKA_eV": 36,
+   "E_cm_eV": 18.0,
+   "r_turn_zbl": 1.2708800955018036,
+   "r_turn_engine": 1.256318737968429,
+   "r_turn_corrected": 1.2672444577501265,
+   "S_at_engine_turn": 0.6874359044156406,
+   "dV_at_engine_turn_eV": 0.6071161433809683
+  },
+  {
+   "E_PKA_eV": 40,
+   "E_cm_eV": 20.0,
+   "r_turn_zbl": 1.2388356090137065,
+   "r_turn_engine": 1.1860604161757775,
+   "r_turn_corrected": 1.2326969815329243,
+   "S_at_engine_turn": 0.8363307611702717,
+   "dV_at_engine_turn_eV": 3.234967101580552
+  },
+  {
+   "E_PKA_eV": 50,
+   "E_cm_eV": 25.0,
+   "r_turn_zbl": 1.1723569731128074,
+   "r_turn_engine": 0.6688532202013365,
+   "r_turn_corrected": 1.1646614324358264,
+   "S_at_engine_turn": 1.0,
+   "dV_at_engine_turn_eV": 153.76693121785902
+  },
+  {
+   "E_PKA_eV": 60,
+   "E_cm_eV": 30.0,
+   "r_turn_zbl": 1.1193939399989483,
+   "r_turn_engine": 0.619111161586967,
+   "r_turn_corrected": 1.1141337650571632,
+   "S_at_engine_turn": 1.0,
+   "dV_at_engine_turn_eV": 196.14871896321515
+  },
+  {
+   "E_PKA_eV": 80,
+   "E_cm_eV": 40.0,
+   "r_turn_zbl": 1.0384171616736584,
+   "r_turn_engine": 0.5592931944721518,
+   "r_turn_corrected": 1.0374436263903763,
+   "S_at_engine_turn": 1.0,
+   "dV_at_engine_turn_eV": 264.8206856315358
+  },
+  {
+   "E_PKA_eV": 100,
+   "E_cm_eV": 50.0,
+   "r_turn_zbl": 0.9777584913310936,
+   "r_turn_engine": 0.5205840230373904,
+   "r_turn_corrected": 0.9777532950425216,
+   "S_at_engine_turn": 1.0,
+   "dV_at_engine_turn_eV": 323.7439683933864
+  }
+ ],
+ "max_abs_dV_over_1.25_2.0_A": 0.730606057270296
+}
