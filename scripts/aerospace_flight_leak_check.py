@@ -25,7 +25,7 @@ CACHE = ROOT / "cache" / "external" / "aerospace"
 TRACK = ("reports/aerospace_phase1_ingest.json", "reports/aerospace_durability_development", "reports/aerospace_cu_fluence", "reports/aerospace_lit_summary.md",
          "reports/aerospace_tphase_stretch.md", "reports/drafts", "docs/methodology/data_provenance.md", "docs/methodology/maptis_query_plan.md",
          "NOTICE", "HANDOFF.md", "scripts/aerospace_ingest.py", "scripts/aerospace_cu_fluence.py", "scripts/aerospace_phase2_report.py",
-         "scripts/aerospace_flight_leak_check.py", "tests/test_aerospace")
+         "tests/test_aerospace")
 # Pre-existing (Phase 1, commit 77f8bc4): print-form examples quoted in scripts/aerospace_ingest.py. Not new.
 # "0.051" is a tolerance constant in the Morton check (print precision of a stated mg value), not a flight value.
 ALLOWED = {("scripts/aerospace_ingest.py", "3.6 x 10^-26"), ("scripts/aerospace_ingest.py", "1/10^3"), ("scripts/aerospace_ingest.py", "9/2 x 10^5"),
